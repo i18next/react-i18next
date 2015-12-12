@@ -15,7 +15,7 @@ $ bower install i18next/react-i18next
 
 ### Examples
 
-* [Example project](https://github.com/router5/examples/tree/master/apps/react)
+* [Example project](https://github.com/i18next/react-i18next/tree/master/example)
 
 ### Requirements
 
