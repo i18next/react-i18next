@@ -22,7 +22,7 @@ var gulp = require('gulp'),
 var pkg = require('./package.json');
 
 var entry = 'index.js',
-    standaloneName = 'reacti18next',
+    standaloneName = 'reactI18next',
     output = 'index.js';
 
 function compile(watch) {
