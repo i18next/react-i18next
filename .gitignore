@@ -1,0 +1,19 @@
+# Ignore specific files
+.settings.xml
+.monitor
+.DS_Store
+*.orig
+npm-debug.log
+npm-debug.log.*
+*.dat
+
+# Ignore various temporary files
+*~
+*.swp
+
+
+# Ignore various Node.js related directories and files
+node_modules
+node_modules/**/*
+coverage/**/*
+example/build/**/*

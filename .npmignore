@@ -1,0 +1,11 @@
+test/
+coverage/
+example/
+.babelrc
+.editorconfig
+.eslintignore
+.eslintrc
+.gitignore
+bower.json
+gulpfile.js
+karma.conf.js
