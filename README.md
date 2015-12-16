@@ -10,8 +10,10 @@ Source can be loaded via [npm](https://www.npmjs.com/package/react-i18next), bow
 $ npm install react-i18next
 
 # bower
-$ bower install i18next/react-i18next
+$ bower install react-i18next
 ```
+
+- If you don't use a module loader it will be added to `window.reactI18next`
 
 ### Examples
 
