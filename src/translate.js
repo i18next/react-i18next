@@ -18,6 +18,10 @@ function translate(namespaces) {
           };
         }
 
+        getChildContext() {
+          return { t: t };
+        }
+
         componentWillMount() {
           this.mounted = true;
           i18n.loadNamespaces(namespaces);
@@ -59,6 +63,10 @@ function translate(namespaces) {
 
     Translate.contextTypes = {
       i18n: PropTypes.object.isRequired
+    };
+
+    Translate.childContextTypes = {
+      t: PropTypes.func.isRequired
     };
 
     Translate.displayName = 'Translate[' + getDisplayName(WrappedComponent) + ']';

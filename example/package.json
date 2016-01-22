@@ -16,7 +16,7 @@
   "dependencies": {
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
-    "react-i18next": "0.0.2",
+    "react-i18next": "file:../",
     "i18next": "2.0.0",
     "i18next-browser-languagedetector": "0.0.10",
     "i18next-xhr-backend": "0.0.4"

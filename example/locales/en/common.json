@@ -1,3 +1,4 @@
 {
-  "appName": "react-i18next-example"
+  "appName": "react-i18next-example",
+  "interpolateSample": "you can interplate {{value}} or {{component}} via interpolate component!"
 }

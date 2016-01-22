@@ -49,6 +49,7 @@ __translate(namespaces)__: higher-order component to wrap a translatable compone
 
 - All given namespaces will be loaded.
 - props.t will default to first namespace in array of given namespaces (providing a string as namespace will convert automatically to array)
+- used nested inside I18nextProvider (context.i18n)
 
 
 ```javascript
@@ -62,6 +63,40 @@ function TranslatableView(props) {
     <div>
       <h1>{t('keyFromDefault')}</h1>
       <p>{t('anotherNamespace:key.from.another.namespace', { /* options t options */ })}</p>
+    </div>
+  )
+}
+
+export default translate(['defaultNamespace', 'anotherNamespace'])(TranslatableView);
+
+```
+
+### Interpolate Component
+
+__Interpolate__: component that allows to interpolate React Components or other props into translations.
+
+- used nested inside I18nextProvider and translation hoc (context.i18n, context.t)
+
+__props__:
+
+- i18nKey: the key to lookup
+- options: [options](http://i18next.com/docs/options/#t-options) to use for translation (exclude interpolation variables!)
+- parent: optional component to wrap translation into (default 'span')
+- ...props: values to interpolate into found translation (eg. `my value with {{replaceMe}} interpolation`)
+
+
+```javascript
+import React from 'react';
+import { translate, Interpolate } from 'react-i18next';
+
+function TranslatableView(props) {
+  const { t } = props;
+
+  let interpolateComponent = <strong>a interpolated component</strong>;
+
+  return (
+    <div>
+      <Interpolate i18nKey='ns:key' value='some string' component={interpolateComponent} />
     </div>
   )
 }
