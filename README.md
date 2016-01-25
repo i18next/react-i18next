@@ -85,6 +85,13 @@ __props__:
 - ...props: values to interpolate into found translation (eg. `my value with {{replaceMe}} interpolation`)
 
 
+
+```json
+  {
+    "interpolateSample": "you can interpolate {{value}} or {{component}} via interpolate component!"
+  }
+```
+
 ```javascript
 import React from 'react';
 import { translate, Interpolate } from 'react-i18next';
@@ -96,11 +103,13 @@ function TranslatableView(props) {
 
   return (
     <div>
-      <Interpolate i18nKey='ns:key' value='some string' component={interpolateComponent} />
+      <Interpolate i18nKey='ns:interpolateSample' value='"some string"' component={interpolateComponent} />
+      {/*
+        =>
+        <span>
+          you can interpolate "some string" or <strong>a interpolated component</strong> via interpolate component!
+        </span>
+      */}
     </div>
   )
 }
-
-export default translate(['defaultNamespace', 'anotherNamespace'])(TranslatableView);
-
-```
