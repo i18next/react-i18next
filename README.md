@@ -14,6 +14,7 @@ $ bower install react-i18next
 ```
 
 - If you don't use a module loader it will be added to `window.reactI18next`
+- If using webpack or browserify you can require non-prebuild source in lib folder -> `require('react-i18next/lib')` 
 
 ### Examples
 
