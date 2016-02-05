@@ -8,7 +8,7 @@ module.exports = {
     './app/main.js'
   ],
   output: {
-    path: 'build/',
+    path: './',
     filename: 'app.js'
   },
   plugins: [

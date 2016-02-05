@@ -1,5 +1,12 @@
 # react-i18next example
 
+## Run with webpack-dev-server
+
+```sh
+npm install -g webpack-dev-server
+webpack-dev-server
+```
+
 ## Build an example
 
 ```sh
