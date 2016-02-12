@@ -20,7 +20,9 @@
     "type": "git",
     "url": "https://github.com/i18next/react-i18next.git"
   },
-  "dependencies": {},
+  "dependencies": {
+    "react": ">=0.14.0"
+  },
   "devDependencies": {
     "babel": "5.8.21",
     "babel-eslint": "4.1.0",
