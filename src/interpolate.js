@@ -15,7 +15,7 @@ class Interpolate extends Component {
     let tOpts = {...{}, ...this.props.options, ...{interpolation: { prefix: '#$?', suffix: '?$#'}}}
     let format = this.t(this.props.i18nKey, tOpts);
 
-    if (!format || typeof format !== 'string') return <noscript></noscript>;
+    if (!format || typeof format !== 'string') return React.createElement('noscript', null);;
 
     let children = [];
 
