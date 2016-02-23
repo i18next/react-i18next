@@ -17,3 +17,5 @@ node_modules
 node_modules/**/*
 coverage/**/*
 example/build/**/*
+lib/**/*
+bin/**/*
