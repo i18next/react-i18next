@@ -1,6 +1,6 @@
 {
   "name": "react-i18next",
-  "version": "1.0.0",
+  "version": "0.9.0",
   "description": "React integration for i18next",
   "main": "./lib/index.js",
   "keywords": [
