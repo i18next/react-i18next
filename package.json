@@ -1,6 +1,6 @@
 {
   "name": "react-i18next",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "React integration for i18next",
   "main": "./lib/index.js",
   "keywords": [
@@ -40,7 +40,7 @@
   },
   "scripts": {
     "transpile": "babel src -d lib",
-    "browserify": "browserify ./src/index.js --outfile ./bin/index.js -g uglifyify -t babelify -s reactI18next",
+    "browserify": "browserify --external react ./src/index.js --outfile ./bin/index.js -g uglifyify -t babelify -s reactI18next",
     "copy": "cp ./bin/index.js ./react-i18next.min.js",
     "build": "npm run transpile && npm run browserify && npm run copy",
     "version": "npm run build",
