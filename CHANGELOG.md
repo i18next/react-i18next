@@ -1,3 +1,6 @@
+### 1.1.0
+- added WrappedComponent property to translate wrapper [PR 15](https://github.com/i18next/react-i18next/pull/15)
+
 ### 1.0.1
 - fixing export of index
 
