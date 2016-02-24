@@ -61,6 +61,8 @@ function translate(namespaces) {
         }
     }
 
+    Translate.WrappedComponent = WrappedComponent;
+
     Translate.contextTypes = {
       i18n: PropTypes.object.isRequired
     };
