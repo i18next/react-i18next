@@ -4,7 +4,7 @@
   "dependencies": {},
   "ignore": [
     "test/",
-    "lib/",
+    "dist/",
     "src/",
     "bin/"
     "coverage/",
