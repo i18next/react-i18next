@@ -1,5 +1,5 @@
 import React from 'react';
-import { translate, Interpolate } from 'react-i18next/lib';
+import { translate, Interpolate } from 'react-i18next';
 import AnotherComponent from './AnotherComponent';
 
 
