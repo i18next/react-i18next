@@ -78,8 +78,8 @@
 
   function translate(namespaces) {
     return function Wrapper(WrappedComponent) {
-      var t = undefined,
-          i18n = undefined;
+      var t = void 0,
+          i18n = void 0;
 
       var Translate = function (_Component) {
         babelHelpers.inherits(Translate, _Component);

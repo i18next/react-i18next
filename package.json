@@ -25,7 +25,8 @@
   "devDependencies": {
     "babel-cli": "6.5.1",
     "babel-core": "6.5.2",
-    "babel-eslint": "5.0.0",
+    "babel-eslint": "6.0.0-beta.5",
+    "babel-preset-es2015-native-modules": "^6.6.0",
     "babel-preset-es2015": "6.5.0",
     "babel-preset-es2015-rollup": "1.1.1",
     "babel-preset-stage-0": "6.5.0",
@@ -44,7 +45,7 @@
   "scripts": {
     "clean": "rimraf dist && mkdirp dist",
     "copy": "cp ./dist/umd/react-i18next.min.js ./react-i18next.min.js && cp ./dist/umd/react-i18next.js ./react-i18next.js",
-    "build:es": "BABEL_ENV=es babel src --out-dir dist/es",
+    "build:es": "BABEL_ENV=jsnext babel src --out-dir dist/es",
     "build:cjs": "babel src --out-dir dist/commonjs",
     "build:umd": "rollup -c rollup.config.js --format umd && rollup -c rollup.config.js --format umd --uglify",
     "build:amd": "rollup -c rollup.config.js --format amd && rollup -c rollup.config.js --format umd --uglify",
