@@ -1,3 +1,6 @@
+### 1.2.2
+- fixes bower json - bower publish only
+
 ### 1.2.0
 - change build to rollup
 
