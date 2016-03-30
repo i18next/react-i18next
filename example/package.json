@@ -22,7 +22,7 @@
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
     "react-i18next": "file:../",
-    "i18next": "2.3.1",
+    "i18next": "2.4.0",
     "i18next-browser-languagedetector": "0.2.0",
     "i18next-xhr-backend": "0.5.0"
   }
