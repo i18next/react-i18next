@@ -136,3 +136,5 @@ match({...matchArguments}, (error, redirectLocation, renderProps) => {
    })
 });
 ```
+
+Full [sample/boilerplate](https://github.com/simpleblack/react-redux-universal-hot-example) for universal rendering.

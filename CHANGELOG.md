@@ -1,3 +1,6 @@
+### 1.3.0
+- Support for universal apps / server-side rendering [PR 52](https://github.com/i18next/react-i18next/pull/52)
+
 ### 1.2.2
 - fixes bower json - bower publish only
 
