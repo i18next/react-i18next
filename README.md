@@ -114,3 +114,25 @@ function TranslatableView(props) {
     </div>
   )
 }
+```
+
+### Universal Rendering
+
+__loadNamespaces__: Function that will pre-load all namespaces used by your components.  Works well with `react-router` `match` function
+
+__props__:
+
+- components: Components that need to have namespaces loaded.
+- i18n: the i18n instance to load translations into
+
+```javascript
+import { I18nextProvider, loadNamespaces } from 'react-i18next';
+import { match } from 'react-router';
+
+match({...matchArguments}, (error, redirectLocation, renderProps) => {
+   loadNamespaces({ ...renderProps, i18n: i18nInstance })
+   .then(()=>{
+		// All i18n namespaces required to render this route are loaded   
+   })
+});
+```

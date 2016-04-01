@@ -73,6 +73,8 @@ function translate(namespaces) {
 
     Translate.displayName = 'Translate[' + getDisplayName(WrappedComponent) + ']';
 
+    Translate.namespaces = namespaces;
+
     return Translate;
   };
 }
