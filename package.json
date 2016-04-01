@@ -33,7 +33,7 @@
     "babel-register": "6.5.2",
     "eslint": "2.5.3",
     "eslint-config-airbnb": "6.0.2",
-    "i18next": "2.3.0",
+    "i18next": "2.4.0",
     "mkdirp": "0.5.1",
     "rimraf": "2.5.2",
     "rollup": "0.25.7",
