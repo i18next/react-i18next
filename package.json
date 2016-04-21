@@ -40,7 +40,7 @@
     "rollup-plugin-babel": "2.4.0",
     "rollup-plugin-npm": "1.4.0",
     "rollup-plugin-uglify": "0.2.0",
-    "yargs": "4.3.2"
+    "yargs": "4.4.0"
   },
   "scripts": {
     "clean": "rimraf dist && mkdirp dist",
