@@ -31,7 +31,7 @@
     "babel-preset-es2015-rollup": "1.1.1",
     "babel-preset-stage-0": "6.5.0",
     "babel-register": "6.5.2",
-    "eslint": "2.5.3",
+    "eslint": "2.6.0",
     "eslint-config-airbnb": "6.0.2",
     "i18next": "2.4.0",
     "mkdirp": "0.5.1",
