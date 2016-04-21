@@ -49,7 +49,7 @@ ReactDOM.render(
 __translate(namespaces)__: higher-order component to wrap a translatable component.
 
 - All given namespaces will be loaded.
-- props.t will default to first namespace in array of given namespaces (providing a string as namespace will convert automatically to array)
+- props.t will default to first namespace in array of given namespaces (providing a string as namespace will convert automatically to array, providing no namespaces will default to `defaultNS`)
 - used nested inside I18nextProvider (context.i18n)
 
 
