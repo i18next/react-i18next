@@ -23,7 +23,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "babel-cli": "6.6.5",
+    "babel-cli": "6.7.5",
     "babel-core": "6.7.7",
     "babel-eslint": "6.0.2",
     "babel-preset-es2015-native-modules": "^6.6.0",
