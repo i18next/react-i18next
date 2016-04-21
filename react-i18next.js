@@ -133,6 +133,7 @@
 	        var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Translate).call(this, props, context));
 
 	        i18n = context.i18n;
+	        namespaces = namespaces || i18n.options.defaultNS;
 
 	        _this.state = {
 	          i18nLoadedAt: null

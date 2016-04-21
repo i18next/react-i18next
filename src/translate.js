@@ -12,6 +12,7 @@ function translate(namespaces) {
         constructor(props, context) {
           super(props, context);
           i18n = context.i18n;
+          namespaces = namespaces || i18n.options.defaultNS;
 
           this.state = {
             i18nLoadedAt: null
