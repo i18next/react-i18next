@@ -132,8 +132,27 @@ import { match } from 'react-router';
 match({...matchArguments}, (error, redirectLocation, renderProps) => {
    loadNamespaces({ ...renderProps, i18n: i18nInstance })
    .then(()=>{
-		// All i18n namespaces required to render this route are loaded   
+      // All i18n namespaces required to render this route are loaded   
    })
+});
+```
+When using [i18next-express-middleware](https://github.com/i18next/i18next-express-middleware) and its language detector, you must manually change the language of your `i18next` instance before providing it to the `I18nextProvider` in order for the detection to have an effect:
+
+```javascript
+import { I18nextProvider } from 'react-i18next';
+import i18n from './i18next'; // your own initialized i18next instance
+import App from './app';
+
+app.use((req, res) => {
+   const i18nInstance = i18n.cloneInstance();
+   i18nInstance.changeLanguage(req.language); // req.language holds the language detected by the middleware
+   const component = (
+      <I18nextProvider i18n={i18nInstance}>
+         <App />
+      </I18nextProvider>
+   );
+   
+   // render as desired now ...
 });
 ```
 
