@@ -136,7 +136,7 @@ match({...matchArguments}, (error, redirectLocation, renderProps) => {
    })
 });
 ```
-When using [i18next-express-middleware](https://github.com/i18next/i18next-express-middleware) and its language detector, you must manually change the language of your `i18next` instance before providing it to the `I18nextProvider` in order for the detection to have an effect:
+When using [i18next-express-middleware](https://github.com/i18next/i18next-express-middleware), you can use `req.i18n` as the `i18next` instance for `I18nextProvider`:
 
 ```javascript
 import { I18nextProvider } from 'react-i18next';
@@ -144,10 +144,8 @@ import i18n from './i18next'; // your own initialized i18next instance
 import App from './app';
 
 app.use((req, res) => {
-   const i18nInstance = i18n.cloneInstance();
-   i18nInstance.changeLanguage(req.language); // req.language holds the language detected by the middleware
    const component = (
-      <I18nextProvider i18n={i18nInstance}>
+      <I18nextProvider i18n={req.i18n}>
          <App />
       </I18nextProvider>
    );
