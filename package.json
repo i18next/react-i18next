@@ -34,10 +34,12 @@
     "eslint": "2.8.0",
     "eslint-config-airbnb": "7.0.0",
     "i18next": "2.5.1",
+    "invariant": "2.2.1",
     "mkdirp": "0.5.1",
     "rimraf": "2.5.2",
     "rollup": "0.25.8",
     "rollup-plugin-babel": "2.4.0",
+    "rollup-plugin-commonjs": "2.2.1",
     "rollup-plugin-npm": "1.4.0",
     "rollup-plugin-uglify": "0.2.0",
     "yargs": "4.6.0"
