@@ -46,11 +46,12 @@ ReactDOM.render(
 
 ### Translate HOC
 
-__translate(namespaces)__: higher-order component to wrap a translatable component.
+__translate(namespaces, options)__: higher-order component to wrap a translatable component.
 
 - All given namespaces will be loaded.
 - props.t will default to first namespace in array of given namespaces (providing a string as namespace will convert automatically to array, providing no namespaces will default to `defaultNS`)
 - used nested inside I18nextProvider (context.i18n)
+- passing `{ withRef: true }` in options will make the wrapped component instance available via `getWrappedInstance()` method
 
 
 ```javascript

@@ -4,7 +4,9 @@ function getDisplayName(component) {
   return component.displayName || component.name || 'Component';
 }
 
-function translate(namespaces) {
+export default function translate(namespaces, options = {}) {
+  const { withRef = false } = options;
+
   return function Wrapper(WrappedComponent) {
     let t, i18n;
 
@@ -53,11 +55,29 @@ function translate(namespaces) {
           this.setState({ i18nLoadedAt: new Date() });
         }
 
+        getWrappedInstance() {
+          if (!withRef) {
+            // eslint-disable-next-line no-console
+            console.error(
+              'To access the wrapped instance, you need to specify ' +
+              '{ withRef: true } as the second argument of the translate() call.'
+            );
+          }
+
+          return this.refs.wrappedInstance;
+        }
+
         render() {
           const { i18nLoadedAt } = this.state;
+          const extraProps = { i18nLoadedAt, t };
+
+          if (withRef) {
+            extraProps.ref = 'wrappedInstance';
+          }
+          
           return React.createElement(
             WrappedComponent,
-            { ...this.props, t, i18nLoadedAt }
+            { ...this.props, ...extraProps }
           );
         }
     }
@@ -79,5 +99,3 @@ function translate(namespaces) {
     return Translate;
   };
 }
-
-export default translate;
