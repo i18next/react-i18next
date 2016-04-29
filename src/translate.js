@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import invariant from 'invariant'
 
 function getDisplayName(component) {
   return component.displayName || component.name || 'Component';
@@ -57,10 +56,13 @@ export default function translate(namespaces, options = {}) {
         }
 
         getWrappedInstance() {
-          invariant(withRef,
-            `To access the wrapped instance, you need to specify ` +
-            `{ withRef: true } as the second argument of the translate() call.`
-          );
+          if (!withRef) {
+            // eslint-disable-next-line no-console
+            console.error(
+              'To access the wrapped instance, you need to specify ' +
+              '{ withRef: true } as the second argument of the translate() call.'
+            );
+          }
 
           return this.refs.wrappedInstance;
         }
