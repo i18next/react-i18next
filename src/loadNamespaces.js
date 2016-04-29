@@ -1,5 +1,3 @@
-import i18n from 'i18next';
-
 // Borrowed from https://github.com/Rezonans/redux-async-connect/blob/master/modules/ReduxAsyncConnect.js#L16
 function eachComponents(components, iterator) {
   for (let i = 0, l = components.length; i < l; i++) { // eslint-disable-line id-length
@@ -17,10 +15,10 @@ function filterAndFlattenComponents(components) {
   const flattened = [];
   eachComponents(components, (Component) => {
     if (Component && Component.namespaces) {
-      
+
       Component.namespaces.forEach((namespace)=>{
         if (flattened.indexOf(namespace) === -1) {
-         flattened.push(namespace); 
+         flattened.push(namespace);
         }
       });
     }
@@ -30,7 +28,7 @@ function filterAndFlattenComponents(components) {
 
 export default function loadNamespaces({ components, i18n }) {
   const allNamespaces = filterAndFlattenComponents(components);
-  
+
   return new Promise((resolve)=>{
     i18n.loadNamespaces(allNamespaces, resolve);
   });

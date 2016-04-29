@@ -1,3 +1,6 @@
+### 1.4.0
+- adds getWrappedInstance() to translate wrapper
+
 ### 1.3.0
 - Support for universal apps / server-side rendering [PR 52](https://github.com/i18next/react-i18next/pull/52)
 
