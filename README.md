@@ -51,7 +51,7 @@ __translate(namespaces, options)__: higher-order component to wrap a translatabl
 - All given namespaces will be loaded.
 - props.t will default to first namespace in array of given namespaces (providing a string as namespace will convert automatically to array, providing no namespaces will default to `defaultNS`)
 - used nested inside I18nextProvider (context.i18n)
-- passing `{ withRef: true }` in options will make the wrapped component instance available via `getWrappedInstance()` method
+- passing `{ withRef: true }` to options store a ref to the wrapped component instance making it available via `getWrappedInstance()` method
 
 
 ```javascript
@@ -71,6 +71,54 @@ function TranslatableView(props) {
 
 export default translate(['defaultNamespace', 'anotherNamespace'])(TranslatableView);
 
+```
+
+__getWrappedInstance()__: allows you to access to the component instance, wrapped into `translate()`. 
+Only available if you pass `{ withRef: true }` to the `translate()` options.
+
+```javascript
+import React, { Component } from 'react';
+import { translate } from 'react-i18next';
+
+class TranslatableView extends Component {
+  
+  foo() {
+    // do something important
+  }
+  
+  render() {
+    const { t } = this.props;
+    
+    return (
+      <div>
+        <h1>{t('keyFromDefault')}</h1>
+      </div>
+    )
+  }
+}
+
+export default translate(['defaultNamespace', 'anotherNamespace'], { withRef: true })(TranslatableView);
+```
+
+```javascript
+import React, { Component } from 'react';
+import ./TranslatableView;
+
+class App extends Component {
+
+  handleClick() {
+    this.refs.translatedView.foo();
+  }
+
+  render() {
+    return (
+      <div>
+        <TranslatableView ref="translatedView" />
+        <button onClick={() => this.handleClick()}>Click</button>
+      </div>
+    )
+  }
+}
 ```
 
 ### Interpolate Component
