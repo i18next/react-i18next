@@ -1,3 +1,6 @@
+### 1.4.1
+- change global name
+
 ### 1.4.0
 - adds getWrappedInstance() to translate wrapper
 

@@ -26,7 +26,7 @@ export default {
     babel(babelOptions),
     npm({ jsnext: true })
   ].concat(compress ? uglify() : []),
-  moduleName: 'react-i18next',
-  moduleId: 'react-i18next',
+  moduleName: 'reactI18next',
+  moduleId: 'reactI18next',
   dest
 };

@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react')) :
-  typeof define === 'function' && define.amd ? define('react-i18next', ['exports', 'react'], factory) :
-  (factory((global.react-i18next = global.react-i18next || {}),global.React));
+  typeof define === 'function' && define.amd ? define('reactI18next', ['exports', 'react'], factory) :
+  (factory((global.reactI18next = global.reactI18next || {}),global.React));
 }(this, function (exports,React) { 'use strict';
 
   var React__default = 'default' in React ? React['default'] : React;
@@ -256,7 +256,7 @@
         var tOpts = babelHelpers.extends({}, this.props.options, { interpolation: { prefix: '#$?', suffix: '?$#' } });
         var format = this.t(this.props.i18nKey, tOpts);
 
-        if (!format || typeof format !== 'string') return React__default.createElement('noscript', null);;
+        if (!format || typeof format !== 'string') return React__default.createElement('noscript', null);
 
         var children = [];
 
