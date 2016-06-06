@@ -1,3 +1,6 @@
+### 1.4.2
+- possible fix for HRM issues
+
 ### 1.4.1
 - change global name
 

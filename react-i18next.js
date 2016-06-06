@@ -126,8 +126,7 @@
 
 
     return function Wrapper(WrappedComponent) {
-      var t = void 0,
-          i18n = void 0;
+      var i18n = void 0;
 
       var Translate = function (_Component) {
         babelHelpers.inherits(Translate, _Component);
@@ -149,14 +148,14 @@
         babelHelpers.createClass(Translate, [{
           key: 'getChildContext',
           value: function getChildContext() {
-            return { t: t };
+            return { t: this.t };
           }
         }, {
           key: 'componentWillMount',
           value: function componentWillMount() {
             this.mounted = true;
             i18n.loadNamespaces(namespaces);
-            t = i18n.getFixedT(null, namespaces);
+            this.t = i18n.getFixedT(null, namespaces);
           }
         }, {
           key: 'componentDidMount',
@@ -202,7 +201,7 @@
           value: function render() {
             var i18nLoadedAt = this.state.i18nLoadedAt;
 
-            var extraProps = { i18nLoadedAt: i18nLoadedAt, t: t };
+            var extraProps = { i18nLoadedAt: i18nLoadedAt, t: this.t };
 
             if (withRef) {
               extraProps.ref = 'wrappedInstance';
