@@ -8,7 +8,7 @@ export default function translate(namespaces, options = {}) {
   const { withRef = false } = options;
 
   return function Wrapper(WrappedComponent) {
-    let t, i18n;
+    let i18n;
 
     class Translate extends Component {
         constructor(props, context) {
@@ -22,13 +22,13 @@ export default function translate(namespaces, options = {}) {
         }
 
         getChildContext() {
-          return { t: t };
+          return { t: this.t };
         }
 
         componentWillMount() {
           this.mounted = true;
           i18n.loadNamespaces(namespaces);
-          t = i18n.getFixedT(null, namespaces);
+          this.t = i18n.getFixedT(null, namespaces);
         }
 
         componentDidMount() {
@@ -69,12 +69,12 @@ export default function translate(namespaces, options = {}) {
 
         render() {
           const { i18nLoadedAt } = this.state;
-          const extraProps = { i18nLoadedAt, t };
+          const extraProps = { i18nLoadedAt, t: this.t };
 
           if (withRef) {
             extraProps.ref = 'wrappedInstance';
           }
-          
+
           return React.createElement(
             WrappedComponent,
             { ...this.props, ...extraProps }
