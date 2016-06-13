@@ -1,3 +1,6 @@
+### 1.5.0
+- adds wait option, which delays initial rendering until translations are loaded
+
 ### 1.4.2
 - possible fix for HRM issues
 

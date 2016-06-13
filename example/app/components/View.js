@@ -4,7 +4,7 @@ import AnotherComponent from './AnotherComponent';
 import YetAnotherComponent from './YetAnotherComponent';
 
 
-@translate(['view', 'nav'])
+@translate(['view', 'nav'], { wait: true })
 class TranslatableView extends React.Component {
   render() {
     const { t } = this.props;

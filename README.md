@@ -73,7 +73,30 @@ export default translate(['defaultNamespace', 'anotherNamespace'])(TranslatableV
 
 ```
 
-__getWrappedInstance()__: allows you to access to the component instance, wrapped into `translate()`. 
+You can set options.wait to true if you want to delay rendering until translation files are loaded:
+
+```javascript
+import React from 'react';
+import { translate } from 'react-i18next';
+
+function TranslatableView(props) {
+  const { t } = props;
+
+  return (
+    <div>
+      <h1>{t('keyFromDefault')}</h1>
+      <p>{t('anotherNamespace:key.from.another.namespace', { /* options t options */ })}</p>
+    </div>
+  )
+}
+
+export default translate(['defaultNamespace', 'anotherNamespace'], { wait: true })(TranslatableView);
+
+```
+
+
+
+__getWrappedInstance()__: allows you to access to the component instance, wrapped into `translate()`.
 Only available if you pass `{ withRef: true }` to the `translate()` options.
 
 ```javascript
@@ -81,14 +104,14 @@ import React, { Component } from 'react';
 import { translate } from 'react-i18next';
 
 class TranslatableView extends Component {
-  
+
   foo() {
     // do something important
   }
-  
+
   render() {
     const { t } = this.props;
-    
+
     return (
       <div>
         <h1>{t('keyFromDefault')}</h1>
@@ -198,7 +221,7 @@ app.use((req, res) => {
          <App />
       </I18nextProvider>
    );
-   
+
    // render as desired now ...
 });
 ```

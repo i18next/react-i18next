@@ -123,6 +123,8 @@
     var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
     var _options$withRef = options.withRef;
     var withRef = _options$withRef === undefined ? false : _options$withRef;
+    var _options$wait = options.wait;
+    var wait = _options$wait === undefined ? false : _options$wait;
 
 
     return function Wrapper(WrappedComponent) {
@@ -140,8 +142,11 @@
           namespaces = namespaces || i18n.options.defaultNS;
 
           _this.state = {
-            i18nLoadedAt: null
+            i18nLoadedAt: null,
+            ready: false
           };
+
+          _this.onI18nChanged = _this.onI18nChanged.bind(_this);
           return _this;
         }
 
@@ -153,21 +158,17 @@
         }, {
           key: 'componentWillMount',
           value: function componentWillMount() {
+            var _this2 = this;
+
             this.mounted = true;
-            i18n.loadNamespaces(namespaces);
+            i18n.loadNamespaces(namespaces, function () {
+              _this2.setState({ ready: true });
+            });
             this.t = i18n.getFixedT(null, namespaces);
           }
         }, {
           key: 'componentDidMount',
           value: function componentDidMount() {
-            var _this2 = this;
-
-            this.onI18nChanged = function () {
-              if (!_this2.mounted) return;
-
-              _this2.setState({ i18nLoadedAt: new Date() });
-            };
-
             i18n.on('languageChanged loaded', this.onI18nChanged);
           }
         }, {
@@ -180,8 +181,8 @@
             }
           }
         }, {
-          key: 'onI18nChange',
-          value: function onI18nChange() {
+          key: 'onI18nChanged',
+          value: function onI18nChanged() {
             if (!this.mounted) return;
 
             this.setState({ i18nLoadedAt: new Date() });
@@ -199,13 +200,17 @@
         }, {
           key: 'render',
           value: function render() {
-            var i18nLoadedAt = this.state.i18nLoadedAt;
+            var _state = this.state;
+            var i18nLoadedAt = _state.i18nLoadedAt;
+            var ready = _state.ready;
 
             var extraProps = { i18nLoadedAt: i18nLoadedAt, t: this.t };
 
             if (withRef) {
               extraProps.ref = 'wrappedInstance';
             }
+
+            if (!ready && wait) return null;
 
             return React__default.createElement(WrappedComponent, babelHelpers.extends({}, this.props, extraProps));
           }

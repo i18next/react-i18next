@@ -5,81 +5,82 @@ function getDisplayName(component) {
 }
 
 export default function translate(namespaces, options = {}) {
-  const { withRef = false } = options;
+  const { withRef = false, wait = false } = options;
 
   return function Wrapper(WrappedComponent) {
     let i18n;
 
     class Translate extends Component {
-        constructor(props, context) {
-          super(props, context);
-          i18n = context.i18n;
-          namespaces = namespaces || i18n.options.defaultNS;
+      constructor(props, context) {
+        super(props, context);
+        i18n = context.i18n;
+        namespaces = namespaces || i18n.options.defaultNS;
 
-          this.state = {
-            i18nLoadedAt: null
-          };
+        this.state = {
+          i18nLoadedAt: null,
+          ready: false
+        };
+
+        this.onI18nChanged = this.onI18nChanged.bind(this);
+      }
+
+      getChildContext() {
+        return { t: this.t };
+      }
+
+      componentWillMount() {
+        this.mounted = true;
+        i18n.loadNamespaces(namespaces, () => {
+          this.setState({ ready: true });
+        });
+        this.t = i18n.getFixedT(null, namespaces);
+      }
+
+      componentDidMount() {
+        i18n.on('languageChanged loaded', this.onI18nChanged);
+      }
+
+      componentWillUnmount() {
+        this.mounted = false;
+        if (this.onI18nChanged) {
+          i18n.off('languageChanged', this.onI18nChanged);
+          i18n.off('loaded', this.onI18nChanged);
         }
+      }
 
-        getChildContext() {
-          return { t: this.t };
-        }
+      onI18nChanged() {
+        if (!this.mounted) return;
 
-        componentWillMount() {
-          this.mounted = true;
-          i18n.loadNamespaces(namespaces);
-          this.t = i18n.getFixedT(null, namespaces);
-        }
+        this.setState({ i18nLoadedAt: new Date() });
+      }
 
-        componentDidMount() {
-          this.onI18nChanged = () => {
-            if (!this.mounted) return;
-
-            this.setState({ i18nLoadedAt: new Date() });
-          };
-
-          i18n.on('languageChanged loaded', this.onI18nChanged);
-        }
-
-        componentWillUnmount() {
-          this.mounted = false;
-          if (this.onI18nChanged) {
-            i18n.off('languageChanged', this.onI18nChanged);
-            i18n.off('loaded', this.onI18nChanged);
-          }
-        }
-
-        onI18nChange() {
-          if (!this.mounted) return;
-
-          this.setState({ i18nLoadedAt: new Date() });
-        }
-
-        getWrappedInstance() {
-          if (!withRef) {
-            // eslint-disable-next-line no-console
-            console.error(
-              'To access the wrapped instance, you need to specify ' +
-              '{ withRef: true } as the second argument of the translate() call.'
-            );
-          }
-
-          return this.refs.wrappedInstance;
-        }
-
-        render() {
-          const { i18nLoadedAt } = this.state;
-          const extraProps = { i18nLoadedAt, t: this.t };
-
-          if (withRef) {
-            extraProps.ref = 'wrappedInstance';
-          }
-
-          return React.createElement(
-            WrappedComponent,
-            { ...this.props, ...extraProps }
+      getWrappedInstance() {
+        if (!withRef) {
+          // eslint-disable-next-line no-console
+          console.error(
+            'To access the wrapped instance, you need to specify ' +
+            '{ withRef: true } as the second argument of the translate() call.'
           );
         }
+
+        return this.refs.wrappedInstance;
+      }
+
+      render() {
+        const { i18nLoadedAt, ready } = this.state;
+        const extraProps = { i18nLoadedAt, t: this.t };
+
+        if (withRef) {
+          extraProps.ref = 'wrappedInstance';
+        }
+
+        if (!ready && wait) return null;
+
+        return React.createElement(
+          WrappedComponent,
+          { ...this.props, ...extraProps }
+        );
+      }
     }
 
     Translate.WrappedComponent = WrappedComponent;

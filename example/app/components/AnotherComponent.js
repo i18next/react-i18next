@@ -5,4 +5,4 @@ function Component({t}) {
   return <p>{t('content.text', { /* options t options */ })}</p>
 }
 
-export default translate('view')(Component);
+export default translate('view', { wait: true })(Component);
