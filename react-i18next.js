@@ -156,17 +156,17 @@
         }, {
           key: 'componentWillMount',
           value: function componentWillMount() {
+            this.t = this.i18n.getFixedT(null, namespaces);
+          }
+        }, {
+          key: 'componentDidMount',
+          value: function componentDidMount() {
             var _this2 = this;
 
             this.mounted = true;
             this.i18n.loadNamespaces(namespaces, function () {
               _this2.setState({ ready: true });
             });
-            this.t = this.i18n.getFixedT(null, namespaces);
-          }
-        }, {
-          key: 'componentDidMount',
-          value: function componentDidMount() {
             this.i18n.on('languageChanged loaded', this.onI18nChanged);
           }
         }, {

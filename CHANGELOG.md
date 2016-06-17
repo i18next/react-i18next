@@ -1,3 +1,6 @@
+### 1.5.2
+- move ns loading to did mount
+
 ### 1.5.1
 - possible fix for HRM issues
 

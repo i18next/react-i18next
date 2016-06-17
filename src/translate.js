@@ -28,14 +28,14 @@ export default function translate(namespaces, options = {}) {
       }
 
       componentWillMount() {
-        this.mounted = true;
-        this.i18n.loadNamespaces(namespaces, () => {
-          this.setState({ ready: true });
-        });
         this.t = this.i18n.getFixedT(null, namespaces);
       }
 
       componentDidMount() {
+        this.mounted = true;
+        this.i18n.loadNamespaces(namespaces, () => {
+          this.setState({ ready: true });
+        });
         this.i18n.on('languageChanged loaded', this.onI18nChanged);
       }
 
