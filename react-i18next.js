@@ -128,8 +128,6 @@
 
 
     return function Wrapper(WrappedComponent) {
-      var i18n = void 0;
-
       var Translate = function (_Component) {
         babelHelpers.inherits(Translate, _Component);
 
@@ -138,8 +136,8 @@
 
           var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Translate).call(this, props, context));
 
-          i18n = context.i18n;
-          namespaces = namespaces || i18n.options.defaultNS;
+          _this.i18n = context.i18n;
+          namespaces = namespaces || _this.i18n.options.defaultNS;
 
           _this.state = {
             i18nLoadedAt: null,
@@ -161,23 +159,23 @@
             var _this2 = this;
 
             this.mounted = true;
-            i18n.loadNamespaces(namespaces, function () {
+            this.i18n.loadNamespaces(namespaces, function () {
               _this2.setState({ ready: true });
             });
-            this.t = i18n.getFixedT(null, namespaces);
+            this.t = this.i18n.getFixedT(null, namespaces);
           }
         }, {
           key: 'componentDidMount',
           value: function componentDidMount() {
-            i18n.on('languageChanged loaded', this.onI18nChanged);
+            this.i18n.on('languageChanged loaded', this.onI18nChanged);
           }
         }, {
           key: 'componentWillUnmount',
           value: function componentWillUnmount() {
             this.mounted = false;
             if (this.onI18nChanged) {
-              i18n.off('languageChanged', this.onI18nChanged);
-              i18n.off('loaded', this.onI18nChanged);
+              this.i18n.off('languageChanged', this.onI18nChanged);
+              this.i18n.off('loaded', this.onI18nChanged);
             }
           }
         }, {
