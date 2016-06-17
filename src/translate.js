@@ -8,13 +8,12 @@ export default function translate(namespaces, options = {}) {
   const { withRef = false, wait = false } = options;
 
   return function Wrapper(WrappedComponent) {
-    let i18n;
 
     class Translate extends Component {
       constructor(props, context) {
         super(props, context);
-        i18n = context.i18n;
-        namespaces = namespaces || i18n.options.defaultNS;
+        this.i18n = context.i18n;
+        namespaces = namespaces || this.i18n.options.defaultNS;
 
         this.state = {
           i18nLoadedAt: null,
@@ -30,21 +29,21 @@ export default function translate(namespaces, options = {}) {
 
       componentWillMount() {
         this.mounted = true;
-        i18n.loadNamespaces(namespaces, () => {
+        this.i18n.loadNamespaces(namespaces, () => {
           this.setState({ ready: true });
         });
-        this.t = i18n.getFixedT(null, namespaces);
+        this.t = this.i18n.getFixedT(null, namespaces);
       }
 
       componentDidMount() {
-        i18n.on('languageChanged loaded', this.onI18nChanged);
+        this.i18n.on('languageChanged loaded', this.onI18nChanged);
       }
 
       componentWillUnmount() {
         this.mounted = false;
         if (this.onI18nChanged) {
-          i18n.off('languageChanged', this.onI18nChanged);
-          i18n.off('loaded', this.onI18nChanged);
+          this.i18n.off('languageChanged', this.onI18nChanged);
+          this.i18n.off('loaded', this.onI18nChanged);
         }
       }
 
