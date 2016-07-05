@@ -32,7 +32,7 @@
     "babel-preset-stage-0": "6.5.0",
     "babel-register": "6.9.0",
     "eslint": "3.0.0",
-    "eslint-config-airbnb": "7.0.0",
+    "eslint-config-airbnb": "9.0.1",
     "i18next": "3.3.1",
     "mkdirp": "0.5.1",
     "rimraf": "2.5.3",
