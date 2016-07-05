@@ -37,7 +37,7 @@
     "mkdirp": "0.5.1",
     "rimraf": "2.5.3",
     "rollup": "0.25.8",
-    "rollup-plugin-babel": "2.4.0",
+    "rollup-plugin-babel": "2.6.1",
     "rollup-plugin-npm": "1.4.0",
     "rollup-plugin-uglify": "1.0.1",
     "yargs": "4.6.0"
