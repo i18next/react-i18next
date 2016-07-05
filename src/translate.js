@@ -37,6 +37,7 @@ export default function translate(namespaces, options = {}) {
           this.setState({ ready: true });
         });
         this.i18n.on('languageChanged loaded', this.onI18nChanged);
+        this.i18n.store.on('added removed', this.onI18nChanged);
       }
 
       componentWillUnmount() {
@@ -44,6 +45,8 @@ export default function translate(namespaces, options = {}) {
         if (this.onI18nChanged) {
           this.i18n.off('languageChanged', this.onI18nChanged);
           this.i18n.off('loaded', this.onI18nChanged);
+          this.i18n.store.off('added', this.onI18nChanged);
+          this.i18n.store.off('removed', this.onI18nChanged);
         }
       }
 

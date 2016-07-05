@@ -10,6 +10,7 @@ npm-debug.log.*
 # Ignore various temporary files
 *~
 *.swp
+.idea/
 
 
 # Ignore various Node.js related directories and files
