@@ -6,20 +6,19 @@
 
   var React__default = 'default' in React ? React['default'] : React;
 
-  var babelHelpers = {};
-  babelHelpers.typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
     return typeof obj;
   } : function (obj) {
     return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
   };
 
-  babelHelpers.classCallCheck = function (instance, Constructor) {
+  var classCallCheck = function (instance, Constructor) {
     if (!(instance instanceof Constructor)) {
       throw new TypeError("Cannot call a class as a function");
     }
   };
 
-  babelHelpers.createClass = function () {
+  var createClass = function () {
     function defineProperties(target, props) {
       for (var i = 0; i < props.length; i++) {
         var descriptor = props[i];
@@ -37,7 +36,7 @@
     };
   }();
 
-  babelHelpers.extends = Object.assign || function (target) {
+  var _extends = Object.assign || function (target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
 
@@ -51,7 +50,7 @@
     return target;
   };
 
-  babelHelpers.inherits = function (subClass, superClass) {
+  var inherits = function (subClass, superClass) {
     if (typeof superClass !== "function" && superClass !== null) {
       throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
     }
@@ -67,7 +66,7 @@
     if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
   };
 
-  babelHelpers.possibleConstructorReturn = function (self, call) {
+  var possibleConstructorReturn = function (self, call) {
     if (!self) {
       throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
     }
@@ -75,7 +74,7 @@
     return call && (typeof call === "object" || typeof call === "function") ? call : self;
   };
 
-  babelHelpers.slicedToArray = function () {
+  var slicedToArray = function () {
     function sliceIterator(arr, i) {
       var _arr = [];
       var _n = true;
@@ -113,8 +112,6 @@
     };
   }();
 
-  babelHelpers;
-
   function getDisplayName(component) {
     return component.displayName || component.name || 'Component';
   }
@@ -129,12 +126,12 @@
 
     return function Wrapper(WrappedComponent) {
       var Translate = function (_Component) {
-        babelHelpers.inherits(Translate, _Component);
+        inherits(Translate, _Component);
 
         function Translate(props, context) {
-          babelHelpers.classCallCheck(this, Translate);
+          classCallCheck(this, Translate);
 
-          var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Translate).call(this, props, context));
+          var _this = possibleConstructorReturn(this, Object.getPrototypeOf(Translate).call(this, props, context));
 
           _this.i18n = context.i18n;
           namespaces = namespaces || _this.i18n.options.defaultNS;
@@ -148,7 +145,7 @@
           return _this;
         }
 
-        babelHelpers.createClass(Translate, [{
+        createClass(Translate, [{
           key: 'getChildContext',
           value: function getChildContext() {
             return { t: this.t };
@@ -213,7 +210,7 @@
 
             if (!ready && wait) return null;
 
-            return React__default.createElement(WrappedComponent, babelHelpers.extends({}, this.props, extraProps));
+            return React__default.createElement(WrappedComponent, _extends({}, this.props, extraProps));
           }
         }]);
         return Translate;
@@ -238,19 +235,19 @@
   }
 
   var Interpolate = function (_Component) {
-    babelHelpers.inherits(Interpolate, _Component);
+    inherits(Interpolate, _Component);
 
     function Interpolate(props, context) {
-      babelHelpers.classCallCheck(this, Interpolate);
+      classCallCheck(this, Interpolate);
 
-      var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Interpolate).call(this, props, context));
+      var _this = possibleConstructorReturn(this, Object.getPrototypeOf(Interpolate).call(this, props, context));
 
       _this.i18n = context.i18n;
       _this.t = context.t;
       return _this;
     }
 
-    babelHelpers.createClass(Interpolate, [{
+    createClass(Interpolate, [{
       key: 'render',
       value: function render() {
         var _this2 = this;
@@ -258,7 +255,7 @@
         var parent = this.props.parent || 'span';
         var REGEXP = this.props.regexp || this.i18n.services.interpolator.regexp;
 
-        var tOpts = babelHelpers.extends({}, this.props.options, { interpolation: { prefix: '#$?', suffix: '?$#' } });
+        var tOpts = _extends({}, this.props.options, { interpolation: { prefix: '#$?', suffix: '?$#' } });
         var format = this.t(this.props.i18nKey, tOpts);
 
         if (!format || typeof format !== 'string') return React__default.createElement('noscript', null);
@@ -291,18 +288,18 @@
   };
 
   var I18nextProvider = function (_Component) {
-    babelHelpers.inherits(I18nextProvider, _Component);
+    inherits(I18nextProvider, _Component);
 
     function I18nextProvider(props, context) {
-      babelHelpers.classCallCheck(this, I18nextProvider);
+      classCallCheck(this, I18nextProvider);
 
-      var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(I18nextProvider).call(this, props, context));
+      var _this = possibleConstructorReturn(this, Object.getPrototypeOf(I18nextProvider).call(this, props, context));
 
       _this.i18n = props.i18n;
       return _this;
     }
 
-    babelHelpers.createClass(I18nextProvider, [{
+    createClass(I18nextProvider, [{
       key: 'getChildContext',
       value: function getChildContext() {
         return { i18n: this.i18n };
@@ -338,14 +335,14 @@
   function eachComponents(components, iterator) {
     for (var i = 0, l = components.length; i < l; i++) {
       // eslint-disable-line id-length
-      if (babelHelpers.typeof(components[i]) === 'object') {
+      if (_typeof(components[i]) === 'object') {
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
         var _iteratorError = undefined;
 
         try {
           for (var _iterator = Object.entries(components[i])[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var _step$value = babelHelpers.slicedToArray(_step.value, 2);
+            var _step$value = slicedToArray(_step.value, 2);
 
             var key = _step$value[0];
             var value = _step$value[1];
@@ -402,5 +399,7 @@
   exports.translate = translate;
   exports.Interpolate = Interpolate;
   exports.I18nextProvider = I18nextProvider;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
 
 }));
