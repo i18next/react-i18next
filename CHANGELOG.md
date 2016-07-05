@@ -1,3 +1,6 @@
+### 1.6.0
+- Hoist non react statics [PR 150](https://github.com/i18next/react-i18next/pull/150
+
 ### 1.5.3
 - Handle i18next added and removed resource events [PR 150](https://github.com/i18next/react-i18next/pull/150
 

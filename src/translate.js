@@ -96,7 +96,7 @@ export default function translate(namespaces, options = {}) {
       t: PropTypes.func.isRequired
     };
 
-    Translate.displayName = 'Translate[' + getDisplayName(WrappedComponent) + ']';
+    Translate.displayName = 'Translate(' + getDisplayName(WrappedComponent) + ')';
 
     Translate.namespaces = namespaces;
 

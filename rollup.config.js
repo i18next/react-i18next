@@ -1,5 +1,6 @@
 import babel from 'rollup-plugin-babel';
 import uglify from 'rollup-plugin-uglify';
+import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import { argv } from 'yargs';
 
@@ -24,7 +25,8 @@ export default {
   external: ['react'],
   plugins: [
     babel(babelOptions),
-    nodeResolve({ jsnext: true })
+    nodeResolve({ jsnext: true }),
+    commonjs()
   ].concat(compress ? uglify() : []),
   moduleName: 'reactI18next',
   moduleId: 'reactI18next',
