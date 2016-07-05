@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import hoistStatics from 'hoist-non-react-statics';
 
 function getDisplayName(component) {
   return component.displayName || component.name || 'Component';
@@ -99,6 +100,6 @@ export default function translate(namespaces, options = {}) {
 
     Translate.namespaces = namespaces;
 
-    return Translate;
+    return hoistStatics(Translate, WrappedComponent);
   };
 }

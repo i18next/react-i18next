@@ -21,7 +21,9 @@
     "type": "git",
     "url": "https://github.com/i18next/react-i18next.git"
   },
-  "dependencies": {},
+  "dependencies": {
+    "hoist-non-react-statics": "^1.2.0"
+  },
   "devDependencies": {
     "babel-cli": "6.10.1",
     "babel-core": "6.10.4",
