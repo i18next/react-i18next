@@ -36,7 +36,7 @@
     "i18next": "2.5.1",
     "mkdirp": "0.5.1",
     "rimraf": "2.5.3",
-    "rollup": "0.25.8",
+    "rollup": "0.32.4",
     "rollup-plugin-babel": "2.6.1",
     "rollup-plugin-npm": "1.4.0",
     "rollup-plugin-uglify": "1.0.1",
