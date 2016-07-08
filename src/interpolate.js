@@ -27,6 +27,7 @@ class Interpolate extends Component {
         child = match;
       } else {
         child = this.props[match];
+        if (!this.props[match]) this.i18n.services.logger.warn('interpolator: missed to pass in variable ' + match + ' for interpolating ' + format);
       }
 
       memo.push(child);
