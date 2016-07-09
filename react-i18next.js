@@ -329,6 +329,7 @@
 	          child = match;
 	        } else {
 	          child = _this2.props[match];
+	          if (!_this2.props[match]) _this2.i18n.services.logger.warn('interpolator: missed to pass in variable ' + match + ' for interpolating ' + format);
 	        }
 
 	        memo.push(child);

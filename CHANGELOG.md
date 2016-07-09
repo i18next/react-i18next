@@ -1,3 +1,6 @@
+### 1.6.1
+- Added conditional warning on unmatched variable during interpolation [PR 160](https://github.com/i18next/react-i18next/pull/160
+
 ### 1.6.0
 - Hoist non react statics [PR 150](https://github.com/i18next/react-i18next/pull/150
 
