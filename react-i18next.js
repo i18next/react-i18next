@@ -336,7 +336,7 @@
 	        return memo;
 	      }, children);
 
-	      return React__default.createElement.apply(this, [parent, this.props].concat(children));
+	      return React__default.createElement.apply(this, [parent, null].concat(children));
 	    }
 	  }]);
 	  return Interpolate;

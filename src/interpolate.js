@@ -34,7 +34,7 @@ class Interpolate extends Component {
       return memo;
     }, children);
 
-    return React.createElement.apply(this, [parent, this.props].concat(children));
+    return React.createElement.apply(this, [parent, null].concat(children));
   }
 }
 

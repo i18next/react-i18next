@@ -1,3 +1,6 @@
+### 1.6.2
+- update for react 15.2, eliminates Unknown Prop Warning
+
 ### 1.6.1
 - Added conditional warning on unmatched variable during interpolation [PR 160](https://github.com/i18next/react-i18next/pull/160
 
