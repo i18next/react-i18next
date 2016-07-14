@@ -38,7 +38,7 @@
     "eslint-plugin-import": "1.10.2",
     "eslint-plugin-jsx-a11y": "1.5.5",
     "eslint-plugin-react": "5.2.2",
-    "i18next": "3.3.1",
+    "i18next": "3.4.1",
     "mkdirp": "0.5.1",
     "rimraf": "2.5.3",
     "rollup": "0.33.2",
