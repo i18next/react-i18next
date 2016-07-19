@@ -1,3 +1,6 @@
+### 1.6.3
+- only trigger loaded namespaces if mounted
+
 ### 1.6.2
 - update for react 15.2, eliminates Unknown Prop Warning
 

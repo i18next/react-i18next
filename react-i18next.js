@@ -221,7 +221,7 @@
 
 	          this.mounted = true;
 	          this.i18n.loadNamespaces(namespaces, function () {
-	            _this2.setState({ ready: true });
+	            if (_this2.mounted) _this2.setState({ ready: true });
 	          });
 	          this.i18n.on('languageChanged loaded', this.onI18nChanged);
 	          this.i18n.store.on('added removed', this.onI18nChanged);
