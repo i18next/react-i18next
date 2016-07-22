@@ -43,7 +43,7 @@
     "rimraf": "2.5.3",
     "rollup": "0.33.2",
     "rollup-plugin-babel": "2.6.1",
-    "rollup-plugin-commonjs": "3.1.0",
+    "rollup-plugin-commonjs": "3.3.1",
     "rollup-plugin-node-resolve": "1.7.1",
     "rollup-plugin-uglify": "1.0.1",
     "yargs": "4.7.1"
