@@ -32,7 +32,7 @@
     "babel-preset-es2015-native-modules": "6.6.0",
     "babel-preset-es2015-rollup": "1.1.1",
     "babel-preset-stage-0": "6.5.0",
-    "babel-register": "6.9.0",
+    "babel-register": "6.11.5",
     "eslint": "3.0.1",
     "eslint-config-airbnb": "9.0.1",
     "eslint-plugin-import": "1.10.2",
