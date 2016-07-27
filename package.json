@@ -28,6 +28,7 @@
     "babel-cli": "6.10.1",
     "babel-core": "6.10.4",
     "babel-eslint": "6.1.2",
+    "babel-jest": "^14.0.0",
     "babel-preset-es2015": "6.9.0",
     "babel-preset-es2015-native-modules": "6.6.0",
     "babel-preset-es2015-rollup": "1.1.1",
@@ -44,8 +45,6 @@
     "jest-cli": "13.2.3",
     "mkdirp": "0.5.1",
     "react": "15.2.1",
-    "react-addons-test-utils": "^15.2.1",
-    "react-dom": "^15.2.1",
     "rimraf": "2.5.3",
     "rollup": "0.33.2",
     "rollup-plugin-babel": "2.6.1",
@@ -65,25 +64,15 @@
     "build": "npm run clean && npm run build:cjs && npm run build:es && npm run build:umd && npm run copy",
     "preversion": "npm run build && git push",
     "postversion": "git push && git push --tags",
-    "test": "BABEL_ENV=development jest"
+    "test": "BABEL_ENV=development jest --no-cache",
+    "test:watch": "BABEL_ENV=development jest --no-cache --watch",
+    "test:coverage": "BABEL_ENV=development jest --no-cache --coverage"
   },
   "author": "Jan Mühlemann <jan.muehlemann@gmail.com> (https://github.com/jamuhl)",
   "license": "MIT",
   "jest": {
     "unmockedModulePathPatterns": [
-      "react",
-      "fbjs",
-      "enzyme",
-      "cheerio",
-      "htmlparser2",
-      "lodash",
-      "domhandler",
-      "object.assign",
-      "define-properties",
-      "function-bind",
-      "object-keys",
-      "object.values",
-      "es-abstract"
+      "react"
     ]
   }
 }

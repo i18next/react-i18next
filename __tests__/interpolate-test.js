@@ -1,9 +1,9 @@
 jest.unmock('../src/translate');
 
-//import translate from '../src/translate';
+import Interpolate from '../src/interpolate';
 
-describe('translate', () => {
-  it('should return a wrapped component', () => {
+describe('interpolate', () => {
+  it('should get i18n and t from context', () => {
     expect(true).toBe(true);
   });
 });
