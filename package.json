@@ -66,7 +66,8 @@
     "postversion": "git push && git push --tags",
     "test": "BABEL_ENV=development jest --no-cache",
     "test:watch": "BABEL_ENV=development jest --no-cache --watch",
-    "test:coverage": "BABEL_ENV=development jest --no-cache --coverage"
+    "test:coverage": "BABEL_ENV=development jest --no-cache --coverage",
+    "test:lint": "./node_modules/.bin/eslint ./src"
   },
   "author": "Jan Mühlemann <jan.muehlemann@gmail.com> (https://github.com/jamuhl)",
   "license": "MIT",
