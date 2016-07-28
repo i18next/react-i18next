@@ -46,7 +46,7 @@
     "mkdirp": "0.5.1",
     "react": "15.2.1",
     "rimraf": "2.5.3",
-    "rollup": "0.33.2",
+    "rollup": "0.34.0",
     "rollup-plugin-babel": "2.6.1",
     "rollup-plugin-commonjs": "3.1.0",
     "rollup-plugin-node-resolve": "1.7.1",
