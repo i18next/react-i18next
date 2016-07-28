@@ -51,7 +51,7 @@
     "rollup-plugin-commonjs": "3.1.0",
     "rollup-plugin-node-resolve": "1.7.1",
     "rollup-plugin-uglify": "1.0.1",
-    "yargs": "4.7.1"
+    "yargs": "4.8.0"
   },
   "scripts": {
     "clean": "rimraf dist && mkdirp dist",
