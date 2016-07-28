@@ -25,7 +25,7 @@
     "hoist-non-react-statics": "1.2.0"
   },
   "devDependencies": {
-    "babel-cli": "6.10.1",
+    "babel-cli": "6.11.4",
     "babel-core": "6.10.4",
     "babel-eslint": "6.1.2",
     "babel-jest": "^14.0.0",
