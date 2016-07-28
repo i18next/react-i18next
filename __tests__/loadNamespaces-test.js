@@ -8,9 +8,6 @@ describe('translate', () => {
     expect(typeof promise.then).toBe('function');
   });
   it('should preload all namespaces', (done) => {
-    const rezolve = (resolve, reject) => {
-      resolve({data: true});
-    };
     const i18n = {
       loadNamespaces(namespaces, resolve) {
         expect(Array.isArray(namespaces));
