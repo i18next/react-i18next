@@ -1,4 +1,4 @@
-import React, { Component, PropTypes, Children } from 'react';
+import { Component, PropTypes, Children } from 'react';
 
 class I18nextProvider extends Component {
   constructor(props, context) {
@@ -12,7 +12,7 @@ class I18nextProvider extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.i18n !== nextProps.i18n) {
-      console.error('[react-i18next][I18nextProvider]does not support changing the i18n object.');
+      throw new Error('[react-i18next][I18nextProvider]does not support changing the i18n object.');
     }
   }
 
