@@ -12,6 +12,11 @@ class Interpolate extends Component {
     const parent = this.props.parent || 'span';
     const REGEXP = this.props.regexp || this.i18n.services.interpolator.regexp;
 
+    // Set to true if you want to use raw HTML in translation values
+    // See https://github.com/i18next/react-i18next/issues/189
+    const useDangerouslySetInnerHTML = this.props.useDangerouslySetInnerHTML || false;
+    const dangerouslySetInnerHTMLPartElement = this.props.dangerouslySetInnerHTMLPartElement || 'span';
+
     let tOpts = {...{}, ...this.props.options, ...{interpolation: { prefix: '#$?', suffix: '?$#'}}}
     let format = this.t(this.props.i18nKey, tOpts);
 
@@ -24,7 +29,11 @@ class Interpolate extends Component {
 
       if (index % 2 === 0) {
         if (match.length === 0)  return memo;
-        child = match;
+        if (useDangerouslySetInnerHTML) {
+          child = React.createElement(dangerouslySetInnerHTMLPartElement, {dangerouslySetInnerHTML: {__html: match}});
+        } else {
+          child = match;
+        }
       } else {
         child = this.props[match];
         if (!this.props[match]) this.i18n.services.logger.warn('interpolator: missed to pass in variable ' + match + ' for interpolating ' + format);
