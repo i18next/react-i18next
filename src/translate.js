@@ -6,7 +6,7 @@ function getDisplayName(component) {
 }
 
 export default function translate(namespaces, options = {}) {
-  const { withRef = false, wait = false } = options;
+  const { withRef = false, wait = false, translateFuncName = 't' } = options;
 
   return function Wrapper(WrappedComponent) {
 
@@ -25,11 +25,11 @@ export default function translate(namespaces, options = {}) {
       }
 
       getChildContext() {
-        return { t: this.t };
+        return { [translateFuncName]: this[translateFuncName] };
       }
 
       componentWillMount() {
-        this.t = this.i18n.getFixedT(null, namespaces);
+        this[translateFuncName] = this.i18n.getFixedT(null, namespaces);
       }
 
       componentDidMount() {
@@ -71,7 +71,7 @@ export default function translate(namespaces, options = {}) {
 
       render() {
         const { i18nLoadedAt, ready } = this.state;
-        const extraProps = { i18nLoadedAt, t: this.t };
+        const extraProps = { i18nLoadedAt, [translateFuncName]: this[translateFuncName] };
 
         if (withRef) {
           extraProps.ref = 'wrappedInstance';
@@ -93,7 +93,7 @@ export default function translate(namespaces, options = {}) {
     };
 
     Translate.childContextTypes = {
-      t: PropTypes.func.isRequired
+      [translateFuncName]: PropTypes.func.isRequired
     };
 
     Translate.displayName = 'Translate(' + getDisplayName(WrappedComponent) + ')';

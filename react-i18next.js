@@ -95,6 +95,21 @@
 	  };
 	}();
 
+	var defineProperty = function (obj, key, value) {
+	  if (key in obj) {
+	    Object.defineProperty(obj, key, {
+	      value: value,
+	      enumerable: true,
+	      configurable: true,
+	      writable: true
+	    });
+	  } else {
+	    obj[key] = value;
+	  }
+
+	  return obj;
+	};
+
 	var _extends = Object.assign || function (target) {
 	  for (var i = 1; i < arguments.length; i++) {
 	    var source = arguments[i];
@@ -181,6 +196,8 @@
 	  var withRef = _options$withRef === undefined ? false : _options$withRef;
 	  var _options$wait = options.wait;
 	  var wait = _options$wait === undefined ? false : _options$wait;
+	  var _options$translateFun = options.translateFuncName;
+	  var translateFuncName = _options$translateFun === undefined ? 't' : _options$translateFun;
 
 
 	  return function Wrapper(WrappedComponent) {
@@ -207,12 +224,12 @@
 	      createClass(Translate, [{
 	        key: 'getChildContext',
 	        value: function getChildContext() {
-	          return { t: this.t };
+	          return defineProperty({}, translateFuncName, this[translateFuncName]);
 	        }
 	      }, {
 	        key: 'componentWillMount',
 	        value: function componentWillMount() {
-	          this.t = this.i18n.getFixedT(null, namespaces);
+	          this[translateFuncName] = this.i18n.getFixedT(null, namespaces);
 	        }
 	      }, {
 	        key: 'componentDidMount',
@@ -261,7 +278,7 @@
 	          var i18nLoadedAt = _state.i18nLoadedAt;
 	          var ready = _state.ready;
 
-	          var extraProps = { i18nLoadedAt: i18nLoadedAt, t: this.t };
+	          var extraProps = defineProperty({ i18nLoadedAt: i18nLoadedAt }, translateFuncName, this[translateFuncName]);
 
 	          if (withRef) {
 	            extraProps.ref = 'wrappedInstance';
@@ -281,9 +298,7 @@
 	      i18n: React.PropTypes.object.isRequired
 	    };
 
-	    Translate.childContextTypes = {
-	      t: React.PropTypes.func.isRequired
-	    };
+	    Translate.childContextTypes = defineProperty({}, translateFuncName, React.PropTypes.func.isRequired);
 
 	    Translate.displayName = 'Translate(' + getDisplayName(WrappedComponent) + ')';
 
@@ -368,7 +383,7 @@
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(nextProps) {
 	      if (this.props.i18n !== nextProps.i18n) {
-	        console.error('[react-i18next][I18nextProvider]does not support changing the i18n object.');
+	        throw new Error('[react-i18next][I18nextProvider]does not support changing the i18n object.');
 	      }
 	    }
 	  }, {
