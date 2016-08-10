@@ -156,13 +156,15 @@ __props__:
 - i18nKey: the key to lookup
 - options: [options](http://i18next.com/docs/options/#t-options) to use for translation (exclude interpolation variables!)
 - parent: optional component to wrap translation into (default 'span')
+- useDangerouslySetInnerHTML: allows use of raw html tags in translation values
+- dangerouslySetInnerHTMLPartElement: optional component to wrap parts of translation values into (default 'span'), used with `useDangerouslySetInnerHTML={true}` only
 - ...props: values to interpolate into found translation (eg. `my value with {{replaceMe}} interpolation`)
 
 
 
 ```json
   {
-    "interpolateSample": "you can interpolate {{value}} or {{component}} via interpolate component!"
+    "interpolateSample": "you <strong>can</strong> interpolate {{value}} or {{component}} via interpolate component!"
   }
 ```
 
@@ -181,7 +183,16 @@ function TranslatableView(props) {
       {/*
         =>
         <span>
-          you can interpolate "some string" or <strong>a interpolated component</strong> via interpolate component!
+          you &lt;strong&gt;can&lt;/strong&gt; interpolate "some string" or <strong>a interpolated component</strong> via interpolate component!
+        </span>
+      */}
+
+
+      <Interpolate i18nKey='ns:interpolateSample' useDangerouslySetInnerHTML={true} value='"some string"' component={interpolateComponent} />
+      {/*
+        =>
+        <span>
+          you <strong>can</strong> interpolate "some string" or <strong>a interpolated component</strong> via interpolate component!
         </span>
       */}
     </div>
