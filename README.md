@@ -52,6 +52,7 @@ __translate(namespaces, options)__: higher-order component to wrap a translatabl
 - props.t will default to first namespace in array of given namespaces (providing a string as namespace will convert automatically to array, providing no namespaces will default to `defaultNS`)
 - used nested inside I18nextProvider (context.i18n)
 - passing `{ withRef: true }` to options store a ref to the wrapped component instance making it available via `getWrappedInstance()` method
+- passing `{ translateFuncName: 'someFunctionName' }` will change the name of the property passed to the child component for the translation function (by default, the value is `t`). This is useful if you are already using a concrete function name for extracting the translation chains from your source files
 
 
 ```javascript
