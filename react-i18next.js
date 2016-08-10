@@ -241,7 +241,7 @@
 	            if (_this2.mounted) _this2.setState({ ready: true });
 	          });
 	          this.i18n.on('languageChanged loaded', this.onI18nChanged);
-	          this.i18n.store.on('added removed', this.onI18nChanged);
+	          this.i18n.store && this.i18n.store.on('added removed', this.onI18nChanged);
 	        }
 	      }, {
 	        key: 'componentWillUnmount',
@@ -329,6 +329,11 @@
 	      var parent = this.props.parent || 'span';
 	      var REGEXP = this.props.regexp || this.i18n.services.interpolator.regexp;
 
+	      // Set to true if you want to use raw HTML in translation values
+	      // See https://github.com/i18next/react-i18next/issues/189
+	      var useDangerouslySetInnerHTML = this.props.useDangerouslySetInnerHTML || false;
+	      var dangerouslySetInnerHTMLPartElement = this.props.dangerouslySetInnerHTMLPartElement || 'span';
+
 	      var tOpts = _extends({}, this.props.options, { interpolation: { prefix: '#$?', suffix: '?$#' } });
 	      var format = this.t(this.props.i18nKey, tOpts);
 
@@ -341,7 +346,11 @@
 
 	        if (index % 2 === 0) {
 	          if (match.length === 0) return memo;
-	          child = match;
+	          if (useDangerouslySetInnerHTML) {
+	            child = React__default.createElement(dangerouslySetInnerHTMLPartElement, { dangerouslySetInnerHTML: { __html: match } });
+	          } else {
+	            child = match;
+	          }
 	        } else {
 	          child = _this2.props[match];
 	          if (!_this2.props[match]) _this2.i18n.services.logger.warn('interpolator: missed to pass in variable ' + match + ' for interpolating ' + format);
