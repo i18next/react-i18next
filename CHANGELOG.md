@@ -1,3 +1,7 @@
+### 1.8.0
+- allows to set a className on interpolate component
+- update all dependencies and devDependencies
+
 ### 1.7.0
 - add option to change t function name to something else [PR196](https://github.com/i18next/react-i18next/pull/196)
 - Added an option of using the <Interpolate /> with a raw HTML [PR195](https://github.com/i18next/react-i18next/pull/195)

@@ -11,33 +11,33 @@ class Interpolate extends Component {
   render() {
     const parent = this.props.parent || 'span';
     const REGEXP = this.props.regexp || this.i18n.services.interpolator.regexp;
+    const className = this.props.className;
 
     // Set to true if you want to use raw HTML in translation values
     // See https://github.com/i18next/react-i18next/issues/189
     const useDangerouslySetInnerHTML = this.props.useDangerouslySetInnerHTML || false;
     const dangerouslySetInnerHTMLPartElement = this.props.dangerouslySetInnerHTMLPartElement || 'span';
 
-    let tOpts = {...{}, ...this.props.options, ...{interpolation: { prefix: '#$?', suffix: '?$#'}}}
-    let format = this.t(this.props.i18nKey, tOpts);
-    let className = this.props.className;
+    const tOpts = { ...{}, ...this.props.options, ...{ interpolation: { prefix: '#$?', suffix: '?$#' } } };
+    const format = this.t(this.props.i18nKey, tOpts);
 
     if (!format || typeof format !== 'string') return React.createElement('noscript', null);
 
-    let children = [];
+    const children = [];
 
     format.split(REGEXP).reduce((memo, match, index) => {
-      var child;
+      let child;
 
       if (index % 2 === 0) {
-        if (match.length === 0)  return memo;
+        if (match.length === 0) return memo;
         if (useDangerouslySetInnerHTML) {
-          child = React.createElement(dangerouslySetInnerHTMLPartElement, {dangerouslySetInnerHTML: {__html: match}});
+          child = React.createElement(dangerouslySetInnerHTMLPartElement, { dangerouslySetInnerHTML: { __html: match } });
         } else {
           child = match;
         }
       } else {
         child = this.props[match];
-        if (!this.props[match]) this.i18n.services.logger.warn('interpolator: missed to pass in variable ' + match + ' for interpolating ' + format);
+        if (!this.props[match]) this.i18n.services.logger.warn(`interpolator: missed to pass in variable ${match} for interpolating ${format}`);
       }
 
       memo.push(child);
@@ -47,6 +47,11 @@ class Interpolate extends Component {
     return React.createElement.apply(this, [parent, { className }].concat(children));
   }
 }
+
+Interpolate.propTypes = {
+  children: PropTypes.node,
+  className: PropTypes.string
+};
 
 Interpolate.contextTypes = {
   i18n: PropTypes.object.isRequired,
