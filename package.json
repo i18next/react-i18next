@@ -60,7 +60,7 @@
     "build:umd": "rollup -c rollup.config.js --format umd && rollup -c rollup.config.js --format umd --uglify",
     "build:amd": "rollup -c rollup.config.js --format amd && rollup -c rollup.config.js --format amd --uglify",
     "build:iife": "rollup -c rollup.config.js --format iife && rollup -c rollup.config.js --format iife --uglify",
-    "build": "npm run clean && npm run build:cjs && npm run build:es && npm run build:umd && npm run copy",
+    "build": "npm run clean && npm run build:cjs && npm run build:es && npm run build:umd && npm run build:amd && npm run copy",
     "preversion": "npm run build && git push",
     "postversion": "git push && git push --tags",
     "test": "BABEL_ENV=development jest --no-cache",
