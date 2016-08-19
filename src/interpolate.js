@@ -19,6 +19,7 @@ class Interpolate extends Component {
 
     let tOpts = {...{}, ...this.props.options, ...{interpolation: { prefix: '#$?', suffix: '?$#'}}}
     let format = this.t(this.props.i18nKey, tOpts);
+    let className = this.props.className;
 
     if (!format || typeof format !== 'string') return React.createElement('noscript', null);
 
@@ -43,7 +44,7 @@ class Interpolate extends Component {
       return memo;
     }, children);
 
-    return React.createElement.apply(this, [parent, null].concat(children));
+    return React.createElement.apply(this, [parent, { className }].concat(children));
   }
 }
 
