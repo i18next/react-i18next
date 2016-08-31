@@ -1,5 +1,5 @@
 {
   "appName": "react-i18next-example",
-  "interpolateSample": "you <strong>can</strong> interplate {{value}} or {{component}} via interpolate component!",
-  "usingDefaultNS": "example using empty tranlate() decarator, defaults to defaultNS"
+  "interpolateSample": "you <strong>can</strong> interpolate {{value}} or {{component}} via interpolate component!",
+  "usingDefaultNS": "example using empty translate() decorator, defaults to defaultNS"
 }
