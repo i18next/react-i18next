@@ -33,6 +33,7 @@
     "babel-preset-es2015-rollup": "1.2.0",
     "babel-preset-stage-0": "6.5.0",
     "babel-register": "6.11.6",
+    "coveralls": "^2.11.12",
     "enzyme": "2.4.1",
     "eslint": "3.3.1",
     "eslint-config-airbnb": "10.0.1",

@@ -3,3 +3,7 @@ node_js:
   - "6"
 script:
   - npm test
+after_success:
+  - npm run test:coverage
+  - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
+  - rm -rf ./coverage
