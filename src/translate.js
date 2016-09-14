@@ -13,7 +13,7 @@ export default function translate(namespaces, options = {}) {
     class Translate extends Component {
       constructor(props, context) {
         super(props, context);
-        this.i18n = context.i18n;
+        this.i18n = context.i18n || props.i18n;
         namespaces = namespaces || this.i18n.options.defaultNS;
 
         this.state = {
