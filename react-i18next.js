@@ -196,6 +196,10 @@
 	  var withRef = _options$withRef === undefined ? false : _options$withRef;
 	  var _options$wait = options.wait;
 	  var wait = _options$wait === undefined ? false : _options$wait;
+	  var _options$bindI18n = options.bindI18n;
+	  var bindI18n = _options$bindI18n === undefined ? 'languageChanged loaded' : _options$bindI18n;
+	  var _options$bindStore = options.bindStore;
+	  var bindStore = _options$bindStore === undefined ? 'added removed' : _options$bindStore;
 	  var _options$translateFun = options.translateFuncName;
 	  var translateFuncName = _options$translateFun === undefined ? 't' : _options$translateFun;
 
@@ -236,12 +240,17 @@
 	        value: function componentDidMount() {
 	          var _this2 = this;
 
+	          var bind = function bind() {
+	            bindI18n && _this2.i18n.on(bindI18n, _this2.onI18nChanged);
+	            bindStore && _this2.i18n.store && _this2.i18n.store.on(bindStore, _this2.onI18nChanged);
+	          };
+
 	          this.mounted = true;
 	          this.i18n.loadNamespaces(namespaces, function () {
 	            if (_this2.mounted) _this2.setState({ ready: true });
+	            if (wait && _this2.mounted) bind();
 	          });
-	          this.i18n.on('languageChanged loaded', this.onI18nChanged);
-	          this.i18n.store && this.i18n.store.on('added removed', this.onI18nChanged);
+	          if (!wait) bind();
 	        }
 	      }, {
 	        key: 'componentWillUnmount',

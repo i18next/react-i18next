@@ -54,6 +54,17 @@ __translate(namespaces, options)__: higher-order component to wrap a translatabl
 - passing `{ withRef: true }` to options store a ref to the wrapped component instance making it available via `getWrappedInstance()` method
 - passing `{ translateFuncName: 'someFunctionName' }` will change the name of the property passed to the child component for the translation function (by default, the value is `t`). This is useful if you are already using a concrete function name for extracting the translation chains from your source files
 
+options:
+
+```json
+{
+  withRef: false,         // store a ref to the wrapped component
+  translateFuncName: 't', // will change the name of translation prop default 't'
+  wait: false,            // delay rendering until translations are loaded
+  bindI18n: 'languageChanged loaded',   // which events trigger a rerender, can be set to false or string of events
+  bindStore: 'added removed'            // which events on store trigger a rerender, can be set to false or string of events
+}
+```
 
 ```javascript
 import React from 'react';

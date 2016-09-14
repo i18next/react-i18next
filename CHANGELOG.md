@@ -1,3 +1,6 @@
+### 1.8.0
+- adds options bindI18n, bindStore can be set to false or string of events to bind for triggering updates
+
 ### 1.7.0
 - add option to change t function name to something else [PR196](https://github.com/i18next/react-i18next/pull/196)
 - Added an option of using the <Interpolate /> with a raw HTML [PR195](https://github.com/i18next/react-i18next/pull/195)

@@ -6,7 +6,7 @@ function getDisplayName(component) {
 }
 
 export default function translate(namespaces, options = {}) {
-  const { withRef = false, wait = false, translateFuncName = 't' } = options;
+  const { withRef = false, wait = false, bindI18n = 'languageChanged loaded', bindStore = 'added removed', translateFuncName = 't' } = options;
 
   return function Wrapper(WrappedComponent) {
 
@@ -33,12 +33,17 @@ export default function translate(namespaces, options = {}) {
       }
 
       componentDidMount() {
+        const bind = () => {
+          bindI18n && this.i18n.on(bindI18n, this.onI18nChanged);
+          bindStore && this.i18n.store && this.i18n.store.on(bindStore, this.onI18nChanged);
+        }
+
         this.mounted = true;
         this.i18n.loadNamespaces(namespaces, () => {
           if (this.mounted) this.setState({ ready: true });
+          if (wait && this.mounted) bind();
         });
-        this.i18n.on('languageChanged loaded', this.onI18nChanged);
-        this.i18n.store && this.i18n.store.on('added removed', this.onI18nChanged);
+        if (!wait) bind();
       }
 
       componentWillUnmount() {
