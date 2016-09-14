@@ -2,6 +2,27 @@
 
 > Higher-order components and components for React when using [i18next](https://github.com/i18next/i18next).
 
+[![NPM][npm-icon] ][npm-url]
+
+[![Travis CI][travis-ci-image] ][travis-ci-url]
+[![Coverage Status](https://coveralls.io/repos/github/i18next/react-i18next/badge.svg?branch=master)](https://coveralls.io/github/i18next/react-i18next?branch=master)
+[![Quality][quality-badge] ][quality-url]
+[![dependencies][dependencies-image] ][dependencies-url]
+[![devdependencies][devdependencies-image] ][devdependencies-url]
+
+[npm-icon]: https://nodei.co/npm/react-i18next.png?downloads=true
+[npm-url]: https://npmjs.org/package/react-i18next
+[travis-ci-image]: https://travis-ci.org/i18next/react-i18next.svg?branch=master
+[travis-ci-url]: https://travis-ci.org/i18next/react-i18next
+
+[dependencies-image]: https://david-dm.org/i18next/react-i18next.png
+[dependencies-url]: https://david-dm.org/i18next/react-i18next
+[devdependencies-image]: https://david-dm.org/i18next/react-i18next/dev-status.png
+[devdependencies-url]: https://david-dm.org/i18next/react-i18next#info=devDependencies
+
+[quality-badge]: http://npm.packagequality.com/shield/react-i18next.svg
+[quality-url]: http://packagequality.com/#?package=react-i18next
+
 ### Installation
 
 Source can be loaded via [npm](https://www.npmjs.com/package/react-i18next), bower or [downloaded](https://github.com/i18next/react-i18next/blob/master/react-i18next.min.js) from this repo.
