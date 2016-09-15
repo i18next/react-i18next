@@ -217,7 +217,7 @@ function translate(namespaces) {
 
         var _this = possibleConstructorReturn(this, Object.getPrototypeOf(Translate).call(this, props, context));
 
-        _this.i18n = context.i18n;
+        _this.i18n = context.i18n || props.i18n;
         namespaces = namespaces || _this.i18n.options.defaultNS;
 
         _this.state = {

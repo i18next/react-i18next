@@ -1,3 +1,6 @@
+### 1.10.0
+- allow passing i18next instance via props to translate hoc [PR203](https://github.com/i18next/react-i18next/pull/203)
+
 ### 1.9.0
 - adds options bindI18n, bindStore can be set to false or string of events to bind for triggering updates
 
