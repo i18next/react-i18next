@@ -77,7 +77,7 @@ __translate(namespaces, options)__: higher-order component to wrap a translatabl
 
 options:
 
-```json
+```js
 {
   withRef: false,         // store a ref to the wrapped component
   translateFuncName: 't', // will change the name of translation prop default 't'
