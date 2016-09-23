@@ -14,7 +14,7 @@ describe('translate', () => {
     Elem.NOT_KNOWN_REACT_STATIC = 'IS HOISTED ?';
     const wrapped = wrap(Elem);
     expect(wrapped.WrappedComponent).toBe(Elem);
-    expect(wrapped.contextTypes.i18n).toBe(React.PropTypes.object.isRequired);
+    expect(wrapped.contextTypes.i18n).toBe(React.PropTypes.object);
     expect(wrapped.childContextTypes.t).toBe(React.PropTypes.func.isRequired);
     expect(wrapped.displayName).toBe('Translate(Elem)');
     expect(wrapped.namespaces.length).toBe(2);
