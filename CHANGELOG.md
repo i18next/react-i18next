@@ -1,3 +1,6 @@
+### 1.10.1
+- Suppresses required context type warning if passing i18n as a prop [PR205](https://github.com/i18next/react-i18next/pull/205)
+
 ### 1.10.0
 - allow passing i18next instance via props to translate hoc [PR203](https://github.com/i18next/react-i18next/pull/203)
 

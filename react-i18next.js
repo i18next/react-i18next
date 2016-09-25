@@ -308,7 +308,7 @@ function translate(namespaces) {
     Translate.WrappedComponent = WrappedComponent;
 
     Translate.contextTypes = {
-      i18n: React.PropTypes.object.isRequired
+      i18n: React.PropTypes.object
     };
 
     Translate.childContextTypes = defineProperty({}, translateFuncName, React.PropTypes.func.isRequired);
