@@ -94,7 +94,7 @@ export default function translate(namespaces, options = {}) {
     Translate.WrappedComponent = WrappedComponent;
 
     Translate.contextTypes = {
-      i18n: PropTypes.object.isRequired
+      i18n: PropTypes.object
     };
 
     Translate.childContextTypes = {
