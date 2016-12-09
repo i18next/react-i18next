@@ -1,8 +1,9 @@
-import ReactDOM from 'react-dom';
 import React from 'react';
-import App from './components/App';
+import ReactDOM from 'react-dom';
 import { I18nextProvider } from 'react-i18next'; // as we build ourself via webpack
-import i18n from './i18n';
+
+import App from './components/App'; // your entry page
+import i18n from './i18n'; // initialized i18next instance
 
 ReactDOM.render(
   <I18nextProvider i18n={ i18n }><App /></I18nextProvider>,
