@@ -1,3 +1,7 @@
+### 1.11.0
+- pass style prop to interpolate component
+- define i18next as a peerDependency
+
 ### 1.10.1
 - Suppresses required context type warning if passing i18n as a prop [PR205](https://github.com/i18next/react-i18next/pull/205)
 

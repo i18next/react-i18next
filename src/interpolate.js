@@ -11,7 +11,7 @@ class Interpolate extends Component {
   render() {
     const parent = this.props.parent || 'span';
     const REGEXP = this.props.regexp || this.i18n.services.interpolator.regexp;
-    const className = this.props.className;
+    const { className, style } = this.props;
 
     // Set to true if you want to use raw HTML in translation values
     // See https://github.com/i18next/react-i18next/issues/189
@@ -44,7 +44,7 @@ class Interpolate extends Component {
       return memo;
     }, children);
 
-    return React.createElement.apply(this, [parent, { className }].concat(children));
+    return React.createElement.apply(this, [parent, { className, style }].concat(children));
   }
 }
 
