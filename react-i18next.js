@@ -341,10 +341,13 @@ var Interpolate = function (_Component) {
 
       var parent = this.props.parent || 'span';
       var REGEXP = this.props.regexp || this.i18n.services.interpolator.regexp;
-      var className = this.props.className;
+      var _props = this.props;
+      var className = _props.className;
+      var style = _props.style;
 
       // Set to true if you want to use raw HTML in translation values
       // See https://github.com/i18next/react-i18next/issues/189
+
       var useDangerouslySetInnerHTML = this.props.useDangerouslySetInnerHTML || false;
       var dangerouslySetInnerHTMLPartElement = this.props.dangerouslySetInnerHTMLPartElement || 'span';
 
@@ -374,7 +377,7 @@ var Interpolate = function (_Component) {
         return memo;
       }, children);
 
-      return React__default.createElement.apply(this, [parent, { className: className }].concat(children));
+      return React__default.createElement.apply(this, [parent, { className: className, style: style }].concat(children));
     }
   }]);
   return Interpolate;
