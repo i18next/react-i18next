@@ -1,6 +1,6 @@
 {
   "name": "react-i18next",
-  "version": "1.10.1",
+  "version": "1.11.0",
   "description": "React integration for i18next",
   "main": "dist/commonjs/index.js",
   "jsnext:main": "dist/es/index.js",
