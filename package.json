@@ -1,7 +1,7 @@
 {
   "name": "react-i18next",
   "version": "1.11.0",
-  "description": "React integration for i18next",
+  "description": "Internationalization for react done right. Using the i18next i18n ecosystem.",
   "main": "dist/commonjs/index.js",
   "jsnext:main": "dist/es/index.js",
   "keywords": [
