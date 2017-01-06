@@ -40,8 +40,10 @@ export default function translate(namespaces, options = {}) {
 
         this.mounted = true;
         this.i18n.loadNamespaces(namespaces, () => {
-          if (this.mounted) this.setState({ ready: true });
-          if (wait && this.mounted) bind();
+          this.i18n.changeLanguage(this.i18n.options.lng, () => {
+            if (this.mounted) this.setState({ ready: true });
+            if (wait && this.mounted) bind();
+          })
         });
         if (!wait) bind();
       }
