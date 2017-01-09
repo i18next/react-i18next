@@ -40,8 +40,18 @@ export default function translate(namespaces, options = {}) {
 
         this.mounted = true;
         this.i18n.loadNamespaces(namespaces, () => {
-          if (this.mounted) this.setState({ ready: true });
-          if (wait && this.mounted) bind();
+          const ready = () => {
+            if (this.mounted) this.setState({ ready: true });
+            if (wait && this.mounted) bind();
+          }
+
+          if (this.i18n.isInitialized) return ready();
+
+          const initialized = () => {
+            this.i18n.off('initialized', initialized);
+            ready();
+          }
+          this.i18n.on('initialized', initialized)
         });
         if (!wait) bind();
       }
@@ -49,10 +59,14 @@ export default function translate(namespaces, options = {}) {
       componentWillUnmount() {
         this.mounted = false;
         if (this.onI18nChanged) {
-          this.i18n.off('languageChanged', this.onI18nChanged);
-          this.i18n.off('loaded', this.onI18nChanged);
-          this.i18n.store.off('added', this.onI18nChanged);
-          this.i18n.store.off('removed', this.onI18nChanged);
+          if (bindI18n) {
+            const p = bindI18n.split(' ');
+            p.forEach(f => this.i18n.off(f, this.onI18nChanged));
+          }
+          if (bindStore) {
+            const p = bindStore.split(' ');
+            p.forEach(f => this.i18n.store.off(f, this.onI18nChanged));
+          }
         }
       }
 

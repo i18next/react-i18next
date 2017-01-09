@@ -1,3 +1,7 @@
+### 2.0.0
+- translate hoc wait option asserts now that i18next is initialized before rendering (waits for lng detection)
+- [BREAKING] needs i18next >= 4.2.0
+
 ### 1.11.0
 - pass style prop to interpolate component
 - define i18next as a peerDependency

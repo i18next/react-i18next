@@ -251,20 +251,40 @@ function translate(namespaces) {
 
           this.mounted = true;
           this.i18n.loadNamespaces(namespaces, function () {
-            if (_this2.mounted) _this2.setState({ ready: true });
-            if (wait && _this2.mounted) bind();
+            var ready = function ready() {
+              if (_this2.mounted) _this2.setState({ ready: true });
+              if (wait && _this2.mounted) bind();
+            };
+
+            if (_this2.i18n.isInitialized) return ready();
+
+            var initialized = function initialized() {
+              _this2.i18n.off('initialized', initialized);
+              ready();
+            };
+            _this2.i18n.on('initialized', initialized);
           });
           if (!wait) bind();
         }
       }, {
         key: 'componentWillUnmount',
         value: function componentWillUnmount() {
+          var _this3 = this;
+
           this.mounted = false;
           if (this.onI18nChanged) {
-            this.i18n.off('languageChanged', this.onI18nChanged);
-            this.i18n.off('loaded', this.onI18nChanged);
-            this.i18n.store.off('added', this.onI18nChanged);
-            this.i18n.store.off('removed', this.onI18nChanged);
+            if (bindI18n) {
+              var p = bindI18n.split(' ');
+              p.forEach(function (f) {
+                return _this3.i18n.off(f, _this3.onI18nChanged);
+              });
+            }
+            if (bindStore) {
+              var _p = bindStore.split(' ');
+              _p.forEach(function (f) {
+                return _this3.i18n.store.off(f, _this3.onI18nChanged);
+              });
+            }
           }
         }
       }, {
