@@ -48,7 +48,10 @@ export default function translate(namespaces, options = {}) {
           if (this.i18n.isInitialized) return ready();
 
           const initialized = () => {
-            this.i18n.off('initialized', initialized);
+            // due to emitter removing issue in i18next we need to delay remove
+            setTimeout(() => {
+              this.i18n.off('initialized', initialized);
+            }, 1000);
             ready();
           }
           this.i18n.on('initialized', initialized)

@@ -259,7 +259,10 @@ function translate(namespaces) {
             if (_this2.i18n.isInitialized) return ready();
 
             var initialized = function initialized() {
-              _this2.i18n.off('initialized', initialized);
+              // due to emitter removing issue in i18next we need to delay remove
+              setTimeout(function () {
+                _this2.i18n.off('initialized', initialized);
+              }, 1000);
               ready();
             };
             _this2.i18n.on('initialized', initialized);

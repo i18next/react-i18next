@@ -54,7 +54,7 @@
     "yargs": "5.0.0"
   },
   "peerDependencies": {
-    "i18next": ">= 4.2.0"
+    "i18next": ">= 6.0.1"
   },
   "scripts": {
     "clean": "rimraf dist && mkdirp dist",
