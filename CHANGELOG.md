@@ -1,3 +1,6 @@
+### 2.1.0
+- tanslate hoc: expose the i18n instance via props
+
 ### 2.0.0
 - translate hoc wait option asserts now that i18next is initialized before rendering (waits for lng detection)
 - [BREAKING] needs i18next >= 4.2.0

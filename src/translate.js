@@ -93,7 +93,7 @@ export default function translate(namespaces, options = {}) {
 
       render() {
         const { i18nLoadedAt, ready } = this.state;
-        const extraProps = { i18nLoadedAt, [translateFuncName]: this[translateFuncName] };
+        const extraProps = { i18nLoadedAt, [translateFuncName]: this[translateFuncName], i18n: this.i18n };
 
         if (withRef) {
           extraProps.ref = 'wrappedInstance';

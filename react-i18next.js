@@ -310,11 +310,13 @@ function translate(namespaces) {
       }, {
         key: 'render',
         value: function render() {
+          var _extraProps;
+
           var _state = this.state;
           var i18nLoadedAt = _state.i18nLoadedAt;
           var ready = _state.ready;
 
-          var extraProps = defineProperty({ i18nLoadedAt: i18nLoadedAt }, translateFuncName, this[translateFuncName]);
+          var extraProps = (_extraProps = { i18nLoadedAt: i18nLoadedAt }, defineProperty(_extraProps, translateFuncName, this[translateFuncName]), defineProperty(_extraProps, 'i18n', this.i18n), _extraProps);
 
           if (withRef) {
             extraProps.ref = 'wrappedInstance';
