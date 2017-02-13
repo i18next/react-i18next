@@ -65,6 +65,8 @@ ReactDOM.render(
 );
 ```
 
+You can savely set escapeValue to false in interpolation options as react take care of escaping, see the [sample](https://github.com/i18next/react-i18next/blob/master/example/app/i18n.js#L19).
+
 ### Translate HOC
 
 __translate(namespaces, options)__: higher-order component to wrap a translatable component.
@@ -231,6 +233,8 @@ function TranslatableView(props) {
   )
 }
 ```
+
+You can use formatting, see the [sample](https://github.com/i18next/react-i18next/blob/master/example/app/i18n.js#L20).
 
 ### Universal Rendering
 

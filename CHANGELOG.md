@@ -1,3 +1,6 @@
+### 2.2.0
+- support formatting inside interpolate component
+
 ### 2.1.0
 - tanslate hoc: expose the i18n instance via props
 

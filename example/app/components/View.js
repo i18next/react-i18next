@@ -36,8 +36,8 @@ class TranslatableView extends React.Component {
           show && <AnotherComponent />
         }
         <YetAnotherComponent />
-        <Interpolate parent='p' i18nKey='common:interpolateSample' value='"some value in props"' component={interpolateComponent} />
-        <Interpolate parent='p' i18nKey='common:interpolateSample' useDangerouslySetInnerHTML={true} value='"some value in props"' component={interpolateComponent} />
+        <Interpolate parent='p' i18nKey='common:interpolateSample' value='"some value in props"' component={interpolateComponent} up='something to uppercase' />
+        <Interpolate parent='p' i18nKey='common:interpolateSample' useDangerouslySetInnerHTML={true} value='"some value in props"' component={interpolateComponent} up='something to uppercase' />
         <a href='https://github.com/i18next/react-i18next' target='_blank'>{t('nav:link1')}</a>
       </div>
     )

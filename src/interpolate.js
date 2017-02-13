@@ -25,6 +25,20 @@ class Interpolate extends Component {
 
     const children = [];
 
+    const handleFormat = (key, props) => {
+      if (key.indexOf(this.i18n.options.interpolation.formatSeparator) < 0) {
+        if (!props[key]) this.i18n.services.logger.warn(`interpolator: missed to pass in variable ${key} for interpolating ${format}`);
+        return props[key];
+      }
+
+      const p = key.split(this.i18n.options.interpolation.formatSeparator);
+      const k = p.shift().trim();
+      const f = p.join(this.i18n.options.interpolation.formatSeparator).trim();
+
+      if (!props[k]) this.i18n.services.logger.warn(`interpolator: missed to pass in variable ${k} for interpolating ${format}`);
+      return this.i18n.options.interpolation.format(props[k], f, this.i18n.language);
+    };
+
     format.split(REGEXP).reduce((memo, match, index) => {
       let child;
 
@@ -36,8 +50,7 @@ class Interpolate extends Component {
           child = match;
         }
       } else {
-        child = this.props[match];
-        if (!this.props[match]) this.i18n.services.logger.warn(`interpolator: missed to pass in variable ${match} for interpolating ${format}`);
+        child = handleFormat(match, this.props);
       }
 
       memo.push(child);

@@ -383,6 +383,20 @@ var Interpolate = function (_Component) {
 
       var children = [];
 
+      var handleFormat = function handleFormat(key, props) {
+        if (key.indexOf(_this2.i18n.options.interpolation.formatSeparator) < 0) {
+          if (!props[key]) _this2.i18n.services.logger.warn('interpolator: missed to pass in variable ' + key + ' for interpolating ' + format);
+          return props[key];
+        }
+
+        var p = key.split(_this2.i18n.options.interpolation.formatSeparator);
+        var k = p.shift().trim();
+        var f = p.join(_this2.i18n.options.interpolation.formatSeparator).trim();
+
+        if (!props[k]) _this2.i18n.services.logger.warn('interpolator: missed to pass in variable ' + k + ' for interpolating ' + format);
+        return _this2.i18n.options.interpolation.format(props[k], f, _this2.i18n.language);
+      };
+
       format.split(REGEXP).reduce(function (memo, match, index) {
         var child = void 0;
 
@@ -394,8 +408,7 @@ var Interpolate = function (_Component) {
             child = match;
           }
         } else {
-          child = _this2.props[match];
-          if (!_this2.props[match]) _this2.i18n.services.logger.warn('interpolator: missed to pass in variable ' + match + ' for interpolating ' + format);
+          child = handleFormat(match, _this2.props);
         }
 
         memo.push(child);

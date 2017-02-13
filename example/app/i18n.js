@@ -16,7 +16,12 @@ i18n
     debug: true,
 
     interpolation: {
-      escapeValue: false // not needed for react!!
+      escapeValue: false, // not needed for react!!
+      formatSeparator: ',',
+      format: function(value, format, lng) {
+        if (format === 'uppercase') return value.toUpperCase();
+        return value;
+      }
     }
   });
 
