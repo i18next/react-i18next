@@ -65,7 +65,7 @@ ReactDOM.render(
 );
 ```
 
-You can savely set escapeValue to false in interpolation options as react take care of escaping, see the [sample](https://github.com/i18next/react-i18next/blob/master/example/app/i18n.js#L19).
+You can safely set escapeValue to false in interpolation options as react take care of escaping, see the [sample](https://github.com/i18next/react-i18next/blob/master/example/app/i18n.js#L19).
 
 ### Translate HOC
 
