@@ -10,21 +10,22 @@
     "build:prod": "NODE_ENV=production webpack"
   },
   "devDependencies": {
-    "babel-core": "6.10.4",
-    "babel-loader": "6.2.4",
+    "babel-core": "6.23.1",
+    "babel-loader": "6.3.2",
     "webpack": "1.13.1",
-    "babel-preset-es2015": "6.9.0",
-    "babel-preset-react": "6.11.1",
-    "babel-preset-stage-0": "6.5.0",
+    "babel-preset-es2015": "6.22.0",
+    "babel-preset-react": "6.23.0",
+    "babel-preset-stage-0": "6.22.0",
     "babel-plugin-react-transform": "2.0.2",
     "babel-plugin-transform-decorators-legacy": "1.3.4"
   },
   "dependencies": {
-    "react": "15.2.0",
-    "react-dom": "15.2.0",
-    "react-i18next": "file:../",
-    "i18next": "5.0.0",
+    "i18next": "7.0.1",
     "i18next-browser-languagedetector": "1.0.1",
-    "i18next-xhr-backend": "1.3.0"
+    "i18next-localstorage-cache": "1.0.0",
+    "i18next-xhr-backend": "1.3.0",
+    "react": "15.4.2",
+    "react-dom": "15.4.2",
+    "react-i18next": "file:../"
   }
 }
