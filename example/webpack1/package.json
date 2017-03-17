@@ -1,0 +1,31 @@
+{
+"name": "react-i18next-examples",
+"version": "0.1.0",
+"description": "A mix of playground code and examples",
+"main": "index.js",
+"scripts": {
+"start": "webpack-dev-server",
+"test": "echo \"Error: no test specified\" && exit 1",
+"build": "webpack",
+"build:prod": "NODE_ENV=production webpack"
+},
+"devDependencies": {
+"babel-core": "6.23.1",
+"babel-loader": "6.3.2",
+"webpack": "1.13.1",
+"babel-preset-es2015": "6.22.0",
+"babel-preset-react": "6.23.0",
+"babel-preset-stage-0": "6.22.0",
+"babel-plugin-react-transform": "2.0.2",
+"babel-plugin-transform-decorators-legacy": "1.3.4"
+},
+"dependencies": {
+"i18next": "7.0.1",
+"i18next-browser-languagedetector": "1.0.1",
+"i18next-localstorage-cache": "1.0.0",
+"i18next-xhr-backend": "1.3.0",
+"react": "15.4.2",
+"react-dom": "15.4.2",
+"react-i18next": "file:../"
+}
+}
