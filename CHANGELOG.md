@@ -1,3 +1,6 @@
+### 2.2.1
+- fixes validation for missing prop in interpolate component
+
 ### 2.2.0
 - support formatting inside interpolate component
 
