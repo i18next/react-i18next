@@ -68,7 +68,7 @@ export default function translate(namespaces, options = {}) {
           }
           if (bindStore) {
             const p = bindStore.split(' ');
-            p.forEach(f => this.i18n.store.off(f, this.onI18nChanged));
+            p.forEach(f => this.i18n.store && this.i18n.store.off(f, this.onI18nChanged));
           }
         }
       }

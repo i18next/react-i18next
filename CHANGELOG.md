@@ -1,4 +1,4 @@
-### 2.2.2
+### 2.2.3
 - try not access store if undefined for hmr
 
 ### 2.2.1

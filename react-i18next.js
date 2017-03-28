@@ -285,7 +285,7 @@ function translate(namespaces) {
             if (bindStore) {
               var _p = bindStore.split(' ');
               _p.forEach(function (f) {
-                return _this3.i18n.store.off(f, _this3.onI18nChanged);
+                return _this3.i18n.store && _this3.i18n.store.off(f, _this3.onI18nChanged);
               });
             }
           }
