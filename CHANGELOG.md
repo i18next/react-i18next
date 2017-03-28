@@ -1,3 +1,6 @@
+### 2.2.2
+- try not access store if undefined for hmr
+
 ### 2.2.1
 - fixes validation for missing prop in interpolate component
 
