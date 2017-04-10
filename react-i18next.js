@@ -1,8 +1,8 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react')) :
-	typeof define === 'function' && define.amd ? define('reactI18next', ['exports', 'react'], factory) :
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react'), require('prop-types')) :
+	typeof define === 'function' && define.amd ? define('reactI18next', ['exports', 'react', 'prop-types'], factory) :
 	(factory((global.reactI18next = global.reactI18next || {}),global.React));
-}(this, (function (exports,React) { 'use strict';
+}(this, (function (exports,React,PropTypes) { 'use strict';
 
 var React__default = 'default' in React ? React['default'] : React;
 
@@ -333,10 +333,10 @@ function translate(namespaces) {
     Translate.WrappedComponent = WrappedComponent;
 
     Translate.contextTypes = {
-      i18n: React.PropTypes.object
+      i18n: PropTypes.object
     };
 
-    Translate.childContextTypes = defineProperty({}, translateFuncName, React.PropTypes.func.isRequired);
+    Translate.childContextTypes = defineProperty({}, translateFuncName, PropTypes.func.isRequired);
 
     Translate.displayName = 'Translate(' + getDisplayName(WrappedComponent) + ')';
 
@@ -422,13 +422,13 @@ var Interpolate = function (_Component) {
 }(React.Component);
 
 Interpolate.propTypes = {
-  children: React.PropTypes.node,
-  className: React.PropTypes.string
+  children: PropTypes.node,
+  className: PropTypes.string
 };
 
 Interpolate.contextTypes = {
-  i18n: React.PropTypes.object.isRequired,
-  t: React.PropTypes.func.isRequired
+  i18n: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired
 };
 
 var I18nextProvider = function (_Component) {
@@ -467,12 +467,12 @@ var I18nextProvider = function (_Component) {
 }(React.Component);
 
 I18nextProvider.propTypes = {
-  i18n: React.PropTypes.object.isRequired,
-  children: React.PropTypes.element.isRequired
+  i18n: PropTypes.object.isRequired,
+  children: PropTypes.element.isRequired
 };
 
 I18nextProvider.childContextTypes = {
-  i18n: React.PropTypes.object.isRequired
+  i18n: PropTypes.object.isRequired
 };
 
 // Borrowed from https://github.com/Rezonans/redux-async-connect/blob/master/modules/ReduxAsyncConnect.js#L16
