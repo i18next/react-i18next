@@ -280,7 +280,7 @@ Full [sample/boilerplate](https://github.com/simpleblack/react-redux-universal-h
 
 For Typescript users, if you are running into issues, such as `Uncaught TypeError: Cannot read property 'off' of undefined`, it's possible that you have not exported your own initialized i18next instance correctly. Try the following:
 
-```
+```typescript
 import * as i18n from 'i18next'
 import * as XHR from 'i18next-xhr-backend'
 import * as LanguageDetector from 'i18next-browser-languagedetector'
