@@ -3,7 +3,7 @@ node_js:
   - "6"
 script:
   - npm test
-before_script:
+before_install:
   - "npm install peerDependency"
 after_success:
   - npm run test:coverage
