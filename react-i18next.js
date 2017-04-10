@@ -1,26 +1,16 @@
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react'), require('prop-types')) :
 	typeof define === 'function' && define.amd ? define('reactI18next', ['exports', 'react', 'prop-types'], factory) :
-	(factory((global.reactI18next = global.reactI18next || {}),global.React));
+	(factory((global.reactI18next = global.reactI18next || {}),global.React,global.PropTypes));
 }(this, (function (exports,React,PropTypes) { 'use strict';
 
 var React__default = 'default' in React ? React['default'] : React;
+PropTypes = 'default' in PropTypes ? PropTypes['default'] : PropTypes;
 
-function interopDefault(ex) {
-	return ex && typeof ex === 'object' && 'default' in ex ? ex['default'] : ex;
-}
-
-function createCommonjsModule(fn, module) {
-	return module = { exports: {} }, fn(module, module.exports), module.exports;
-}
-
-var index = createCommonjsModule(function (module) {
 /**
  * Copyright 2015, Yahoo! Inc.
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
-'use strict';
-
 var REACT_STATICS = {
     childContextTypes: true,
     contextTypes: true,
@@ -43,7 +33,7 @@ var KNOWN_STATICS = {
 
 var isGetOwnPropertySymbolsAvailable = typeof Object.getOwnPropertySymbols === 'function';
 
-module.exports = function hoistNonReactStatics(targetComponent, sourceComponent, customStatics) {
+var index = function hoistNonReactStatics(targetComponent, sourceComponent, customStatics) {
     if (typeof sourceComponent !== 'string') { // don't hoist over string (html) components
         var keys = Object.getOwnPropertyNames(sourceComponent);
 
@@ -65,15 +55,22 @@ module.exports = function hoistNonReactStatics(targetComponent, sourceComponent,
 
     return targetComponent;
 };
-});
-
-var hoistStatics = interopDefault(index);
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
 } : function (obj) {
-  return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
 };
+
+
+
+
+
+
+
+
+
+
 
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -98,6 +95,10 @@ var createClass = function () {
     return Constructor;
   };
 }();
+
+
+
+
 
 var defineProperty = function (obj, key, value) {
   if (key in obj) {
@@ -128,6 +129,8 @@ var _extends = Object.assign || function (target) {
   return target;
 };
 
+
+
 var inherits = function (subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
     throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
@@ -144,6 +147,16 @@ var inherits = function (subClass, superClass) {
   if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 };
 
+
+
+
+
+
+
+
+
+
+
 var possibleConstructorReturn = function (self, call) {
   if (!self) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -151,6 +164,10 @@ var possibleConstructorReturn = function (self, call) {
 
   return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
+
+
+
+
 
 var slicedToArray = function () {
   function sliceIterator(arr, i) {
@@ -195,17 +212,17 @@ function getDisplayName(component) {
 }
 
 function translate(namespaces) {
-  var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-  var _options$withRef = options.withRef;
-  var withRef = _options$withRef === undefined ? false : _options$withRef;
-  var _options$wait = options.wait;
-  var wait = _options$wait === undefined ? false : _options$wait;
-  var _options$bindI18n = options.bindI18n;
-  var bindI18n = _options$bindI18n === undefined ? 'languageChanged loaded' : _options$bindI18n;
-  var _options$bindStore = options.bindStore;
-  var bindStore = _options$bindStore === undefined ? 'added removed' : _options$bindStore;
-  var _options$translateFun = options.translateFuncName;
-  var translateFuncName = _options$translateFun === undefined ? 't' : _options$translateFun;
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var _options$withRef = options.withRef,
+      withRef = _options$withRef === undefined ? false : _options$withRef,
+      _options$wait = options.wait,
+      wait = _options$wait === undefined ? false : _options$wait,
+      _options$bindI18n = options.bindI18n,
+      bindI18n = _options$bindI18n === undefined ? 'languageChanged loaded' : _options$bindI18n,
+      _options$bindStore = options.bindStore,
+      bindStore = _options$bindStore === undefined ? 'added removed' : _options$bindStore,
+      _options$translateFun = options.translateFuncName,
+      translateFuncName = _options$translateFun === undefined ? 't' : _options$translateFun;
 
 
   return function Wrapper(WrappedComponent) {
@@ -215,7 +232,7 @@ function translate(namespaces) {
       function Translate(props, context) {
         classCallCheck(this, Translate);
 
-        var _this = possibleConstructorReturn(this, Object.getPrototypeOf(Translate).call(this, props, context));
+        var _this = possibleConstructorReturn(this, (Translate.__proto__ || Object.getPrototypeOf(Translate)).call(this, props, context));
 
         _this.i18n = context.i18n || props.i18n;
         namespaces = namespaces || _this.i18n.options.defaultNS;
@@ -312,9 +329,9 @@ function translate(namespaces) {
         value: function render() {
           var _extraProps;
 
-          var _state = this.state;
-          var i18nLoadedAt = _state.i18nLoadedAt;
-          var ready = _state.ready;
+          var _state = this.state,
+              i18nLoadedAt = _state.i18nLoadedAt,
+              ready = _state.ready;
 
           var extraProps = (_extraProps = { i18nLoadedAt: i18nLoadedAt }, defineProperty(_extraProps, translateFuncName, this[translateFuncName]), defineProperty(_extraProps, 'i18n', this.i18n), _extraProps);
 
@@ -342,7 +359,7 @@ function translate(namespaces) {
 
     Translate.namespaces = namespaces;
 
-    return hoistStatics(Translate, WrappedComponent);
+    return index(Translate, WrappedComponent);
   };
 }
 
@@ -352,7 +369,7 @@ var Interpolate = function (_Component) {
   function Interpolate(props, context) {
     classCallCheck(this, Interpolate);
 
-    var _this = possibleConstructorReturn(this, Object.getPrototypeOf(Interpolate).call(this, props, context));
+    var _this = possibleConstructorReturn(this, (Interpolate.__proto__ || Object.getPrototypeOf(Interpolate)).call(this, props, context));
 
     _this.i18n = context.i18n;
     _this.t = context.t;
@@ -366,9 +383,9 @@ var Interpolate = function (_Component) {
 
       var parent = this.props.parent || 'span';
       var REGEXP = this.props.regexp || this.i18n.services.interpolator.regexp;
-      var _props = this.props;
-      var className = _props.className;
-      var style = _props.style;
+      var _props = this.props,
+          className = _props.className,
+          style = _props.style;
 
       // Set to true if you want to use raw HTML in translation values
       // See https://github.com/i18next/react-i18next/issues/189
@@ -437,7 +454,7 @@ var I18nextProvider = function (_Component) {
   function I18nextProvider(props, context) {
     classCallCheck(this, I18nextProvider);
 
-    var _this = possibleConstructorReturn(this, Object.getPrototypeOf(I18nextProvider).call(this, props, context));
+    var _this = possibleConstructorReturn(this, (I18nextProvider.__proto__ || Object.getPrototypeOf(I18nextProvider)).call(this, props, context));
 
     _this.i18n = props.i18n;
     return _this;
@@ -486,10 +503,9 @@ function eachComponents(components, iterator) {
 
       try {
         for (var _iterator = Object.entries(components[i])[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var _step$value = slicedToArray(_step.value, 2);
-
-          var key = _step$value[0];
-          var value = _step$value[1];
+          var _step$value = slicedToArray(_step.value, 2),
+              key = _step$value[0],
+              value = _step$value[1];
 
           iterator(value, i, key);
         }
@@ -515,10 +531,10 @@ function eachComponents(components, iterator) {
 
 function filterAndFlattenComponents(components) {
   var flattened = [];
-  eachComponents(components, function (Component) {
-    if (Component && Component.namespaces) {
+  eachComponents(components, function (Component$$1) {
+    if (Component$$1 && Component$$1.namespaces) {
 
-      Component.namespaces.forEach(function (namespace) {
+      Component$$1.namespaces.forEach(function (namespace) {
         if (flattened.indexOf(namespace) === -1) {
           flattened.push(namespace);
         }
@@ -529,8 +545,8 @@ function filterAndFlattenComponents(components) {
 }
 
 function loadNamespaces(_ref) {
-  var components = _ref.components;
-  var i18n = _ref.i18n;
+  var components = _ref.components,
+      i18n = _ref.i18n;
 
   var allNamespaces = filterAndFlattenComponents(components);
 

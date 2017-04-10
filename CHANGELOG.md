@@ -1,3 +1,9 @@
+### 3.0.0
+- [BREAKING] assert you install prop-types as a peerDependency based on changes in react >= 15.5.x
+- update react to 15.5.x use prop-types module to remove react warnings [PR248](https://github.com/i18next/react-i18next/pull/248)
+- update all dependencies
+- move react, prop-types to peerDependencies
+
 ### 2.2.3
 - try not access store if undefined for hmr
 

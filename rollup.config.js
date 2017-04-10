@@ -22,7 +22,7 @@ const dest = {
 export default {
   entry: 'src/index.js',
   format,
-  external: ['react'],
+  external: ['react', 'prop-types'],
   plugins: [
     babel(babelOptions),
     nodeResolve({ jsnext: true }),
