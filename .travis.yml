@@ -4,7 +4,7 @@ node_js:
 script:
   - npm test
 before_install:
-  - "npm install peerDependency"
+  - "npm install react prop-types"
 after_success:
   - npm run test:coverage
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
