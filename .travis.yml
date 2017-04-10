@@ -4,8 +4,8 @@ node_js:
 script:
   - npm test
 before_script:
-- npm install react
-- npm install prop-types
+  - npm install react
+  - npm install prop-types
 after_success:
   - npm run test:coverage
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
