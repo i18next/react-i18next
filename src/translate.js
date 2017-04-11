@@ -7,7 +7,8 @@ function getDisplayName(component) {
 }
 
 export default function translate(namespaces, options = {}) {
-  const { withRef = false, wait = false, bindI18n = 'languageChanged loaded', bindStore = 'added removed', translateFuncName = 't' } = options;
+  const { withRef = false, bindI18n = 'languageChanged loaded', bindStore = 'added removed', translateFuncName = 't' } = options;
+  let { wait = false } = options;
 
   return function Wrapper(WrappedComponent) {
 
@@ -16,6 +17,8 @@ export default function translate(namespaces, options = {}) {
         super(props, context);
         this.i18n = context.i18n || props.i18n;
         namespaces = namespaces || this.i18n.options.defaultNS;
+
+        if (!wait && this.i18n.options.wait) wait = this.i18n.options.wait;
 
         this.state = {
           i18nLoadedAt: null,

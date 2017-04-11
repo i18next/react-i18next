@@ -83,7 +83,7 @@ options:
 {
   withRef: false,         // store a ref to the wrapped component
   translateFuncName: 't', // will change the name of translation prop default 't'
-  wait: false,            // delay rendering until translations are loaded
+  wait: false,            // delay rendering until translations are loaded - wait can be set globally on i18next init too
   bindI18n: 'languageChanged loaded',   // which events trigger a rerender, can be set to false or string of events
   bindStore: 'added removed'            // which events on store trigger a rerender, can be set to false or string of events
 }
@@ -108,7 +108,7 @@ export default translate(['defaultNamespace', 'anotherNamespace'])(TranslatableV
 
 ```
 
-You can set options.wait to true if you want to delay rendering until translation files are loaded:
+You can set options.wait to true per options in hoc or globally on i18next.init if you want to delay rendering until translation files are loaded:
 
 ```javascript
 import React from 'react';

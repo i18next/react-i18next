@@ -36,7 +36,7 @@ class Interpolate extends Component {
       const k = p.shift().trim();
       const f = p.join(this.i18n.options.interpolation.formatSeparator).trim();
 
-      if (props[key] === undefined) this.i18n.services.logger.warn(`interpolator: missed to pass in variable ${k} for interpolating ${format}`);
+      if (props[k] === undefined) this.i18n.services.logger.warn(`interpolator: missed to pass in variable ${k} for interpolating ${format}`);
       return this.i18n.options.interpolation.format(props[k], f, this.i18n.language);
     };
 

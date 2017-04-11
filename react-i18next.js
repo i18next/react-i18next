@@ -215,14 +215,14 @@ function translate(namespaces) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   var _options$withRef = options.withRef,
       withRef = _options$withRef === undefined ? false : _options$withRef,
-      _options$wait = options.wait,
-      wait = _options$wait === undefined ? false : _options$wait,
       _options$bindI18n = options.bindI18n,
       bindI18n = _options$bindI18n === undefined ? 'languageChanged loaded' : _options$bindI18n,
       _options$bindStore = options.bindStore,
       bindStore = _options$bindStore === undefined ? 'added removed' : _options$bindStore,
       _options$translateFun = options.translateFuncName,
       translateFuncName = _options$translateFun === undefined ? 't' : _options$translateFun;
+  var _options$wait = options.wait,
+      wait = _options$wait === undefined ? false : _options$wait;
 
 
   return function Wrapper(WrappedComponent) {
@@ -236,6 +236,8 @@ function translate(namespaces) {
 
         _this.i18n = context.i18n || props.i18n;
         namespaces = namespaces || _this.i18n.options.defaultNS;
+
+        if (!wait && _this.i18n.options.wait) wait = _this.i18n.options.wait;
 
         _this.state = {
           i18nLoadedAt: null,
@@ -410,7 +412,7 @@ var Interpolate = function (_Component) {
         var k = p.shift().trim();
         var f = p.join(_this2.i18n.options.interpolation.formatSeparator).trim();
 
-        if (props[key] === undefined) _this2.i18n.services.logger.warn('interpolator: missed to pass in variable ' + k + ' for interpolating ' + format);
+        if (props[k] === undefined) _this2.i18n.services.logger.warn('interpolator: missed to pass in variable ' + k + ' for interpolating ' + format);
         return _this2.i18n.options.interpolation.format(props[k], f, _this2.i18n.language);
       };
 

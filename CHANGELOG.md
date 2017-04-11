@@ -1,3 +1,7 @@
+### 3.1.0
+- fixes wrong warning of missing prop on interpolate with format
+- the wait flag on translate hoc can now be set globally on i18next options `i18next.init({ wait: true })`
+
 ### 3.0.0
 - [BREAKING] assert you install prop-types as a peerDependency based on changes in react >= 15.5.x
 - update react to 15.5.x use prop-types module to remove react warnings [PR248](https://github.com/i18next/react-i18next/pull/248)
