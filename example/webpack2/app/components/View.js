@@ -20,7 +20,7 @@ class TranslatableView extends React.Component {
     }, 3000);
   }
 
-  render() {console.warn('render')
+  render() {
     const { t } = this.props;
     const { show } = this.state;
 
