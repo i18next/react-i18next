@@ -46,6 +46,16 @@ $ bower install react-i18next
 - react >= __0.14.0__
 - i18next >= __2.0.0__
 
+--------------
+**NEWS: localization as a service - locize.com**
+
+Needing a translation management? Want to edit your translations with an InContext Editor? Use the orginal provided to you by the maintainers of i18next!
+
+![locize](http://i18next.com/img/locize_recap_medium_low.gif)
+
+With using [locize](http://locize.com/) you directly support the future of i18next and react-i18next.
+
+--------------
 
 ## Documentation
 
