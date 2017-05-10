@@ -1,3 +1,6 @@
+### 3.1.1
+- fixes issue in fixing t function - pass only first namespace not an array of namespaces
+
 ### 3.1.0
 - fixes wrong warning of missing prop on interpolate with format
 - the wait flag on translate hoc can now be set globally on i18next options `i18next.init({ wait: true })`

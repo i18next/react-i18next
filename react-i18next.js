@@ -236,6 +236,7 @@ function translate(namespaces) {
 
         _this.i18n = context.i18n || props.i18n;
         namespaces = namespaces || _this.i18n.options.defaultNS;
+        if (typeof namespaces === 'string') namespaces = [namespaces];
 
         if (!wait && _this.i18n.options.wait) wait = _this.i18n.options.wait;
 
@@ -256,7 +257,7 @@ function translate(namespaces) {
       }, {
         key: 'componentWillMount',
         value: function componentWillMount() {
-          this[translateFuncName] = this.i18n.getFixedT(null, namespaces);
+          this[translateFuncName] = this.i18n.getFixedT(null, namespaces[0]);
         }
       }, {
         key: 'componentDidMount',
