@@ -34,7 +34,7 @@ export default function translate(namespaces, options = {}) {
       }
 
       componentWillMount() {
-        this[translateFuncName] = this.i18n.getFixedT(null, namespaces[0]);
+        this[translateFuncName] = this.i18n.getFixedT(null, namespaces);
       }
 
       componentDidMount() {

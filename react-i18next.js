@@ -257,7 +257,7 @@ function translate(namespaces) {
       }, {
         key: 'componentWillMount',
         value: function componentWillMount() {
-          this[translateFuncName] = this.i18n.getFixedT(null, namespaces[0]);
+          this[translateFuncName] = this.i18n.getFixedT(null, namespaces);
         }
       }, {
         key: 'componentDidMount',

@@ -1,3 +1,6 @@
+### 3.1.2
+- reverts last change
+
 ### 3.1.1
 - fixes issue in fixing t function - pass only first namespace not an array of namespaces
 
