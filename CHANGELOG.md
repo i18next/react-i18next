@@ -1,3 +1,6 @@
+### 4.0.0
+- deploys 3.1.1 as possible breaking: fixes issue in fixing t function - pass only first namespace not an array of namespaces (access other namespaces like: this.props.t('namespace:key'))
+
 ### 3.1.2
 - reverts last change
 

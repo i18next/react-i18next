@@ -117,7 +117,8 @@ function TranslatableView(props) {
 }
 
 export default translate(['defaultNamespace', 'anotherNamespace'])(TranslatableView);
-
+// short for only loading one namespace:
+// export default translate('defaultNamespace')(TranslatableView);
 ```
 
 You can set options.wait to true per options in hoc or globally on i18next.init if you want to delay rendering until translation files are loaded:
