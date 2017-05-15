@@ -16,9 +16,10 @@ ratings:
   paths:
   - "src/**/*"
 exclude_paths:
-- test/
+- __test__/
 - coverage/
 - dist/
+- example/
 - "react-i18next.js"
 - "react-i18next.min.js"
 - "rollup.config.js"
