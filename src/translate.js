@@ -27,6 +27,7 @@ export default function translate(namespaces, options = {}) {
         };
 
         this.onI18nChanged = this.onI18nChanged.bind(this);
+        this.getWrappedInstance = this.getWrappedInstance.bind(this);
       }
 
       getChildContext() {
@@ -97,7 +98,8 @@ export default function translate(namespaces, options = {}) {
           );
         }
 
-        return this.wrappedInstance;
+        /* eslint react/no-string-refs: 1 */
+        return this.refs.wrappedInstance;
       }
 
       render() {
@@ -105,7 +107,7 @@ export default function translate(namespaces, options = {}) {
         const extraProps = { i18nLoadedAt, [translateFuncName]: this[translateFuncName], i18n: this.i18n };
 
         if (withRef) {
-          extraProps.ref = (comp) => { this.wrappedInstance = comp; };
+          extraProps.ref = 'wrappedInstance';
         }
 
         if (!ready && wait) return null;

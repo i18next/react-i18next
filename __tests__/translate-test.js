@@ -24,7 +24,7 @@ describe('translate', () => {
     expect(wrapped.NOT_KNOWN_REACT_STATIC).toBe('IS HOISTED ?');
   });
   it('should do things', () => {
-    const wrap = translate(['ns1', 'ns2'], {});
+    const wrap = translate(['ns1', 'ns2'], { withRef: true });
     const Elem = React.createFactory('Elem');
     Elem.displayName = 'Elem';
     const wrapped = wrap(Elem);
@@ -42,7 +42,9 @@ describe('translate', () => {
     };
     const instance = new wrapped(props, context);
     instance.componentWillMount();
+    expect(typeof instance.getWrappedInstance).toBe('function');
     expect(typeof instance.getChildContext().t).toBe('function');
     expect(instance.getChildContext().t).toBe(t);
   });
+
 });
