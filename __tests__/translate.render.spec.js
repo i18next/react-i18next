@@ -17,12 +17,12 @@ describe('translate', () => {
   it('should render correct translation', () => {
     const HocElement = translate(['translation'], {})(TestElement);
 
-    const wrapper = mount(<HocElement i18n={i18n} />, context);
+    const wrapper = mount(<HocElement />, { context });
     // console.log(wrapper.debug());
     expect(wrapper.contains(<div>test</div>)).toBe(true);
   });
 
-  it('should call unmount', () => {
+  it('should bind / unbind', () => {
     const HocElement = translate(['translation'], {})(TestElement);
 
     const wrapper = mount(<HocElement i18n={i18n} />, context);
@@ -31,9 +31,6 @@ describe('translate', () => {
     // has bound events
     expect(i18n.observers.languageChanged.length).toBe(2)
     expect(i18n.observers.loaded.length).toBe(2)
-
-    // has correct content
-    expect(wrapper.contains(<div>test</div>)).toBe(true);
 
     // unbind after unmount
     wrapper.unmount()

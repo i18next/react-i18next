@@ -9,7 +9,8 @@ i18n
     resources: {
       en: {
         translation: {
-          key1: 'test'
+          key1: 'test',
+          interpolateKey: 'add {{insert}}'
         }
       }
     },
