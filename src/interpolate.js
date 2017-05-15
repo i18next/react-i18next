@@ -63,8 +63,11 @@ class Interpolate extends Component {
 }
 
 Interpolate.propTypes = {
-  children: PropTypes.node,
   className: PropTypes.string
+};
+
+Interpolate.defaultProps = {
+  className: ''
 };
 
 Interpolate.contextTypes = {

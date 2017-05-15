@@ -39,28 +39,32 @@ export default function translate(namespaces, options = {}) {
 
       componentDidMount() {
         const bind = () => {
-          bindI18n && this.i18n.on(bindI18n, this.onI18nChanged);
-          bindStore && this.i18n.store && this.i18n.store.on(bindStore, this.onI18nChanged);
-        }
+          if (bindI18n && this.i18n) this.i18n.on(bindI18n, this.onI18nChanged);
+          if (bindStore && this.i18n.store) this.i18n.store.on(bindStore, this.onI18nChanged);
+        };
 
         this.mounted = true;
         this.i18n.loadNamespaces(namespaces, () => {
           const ready = () => {
             if (this.mounted) this.setState({ ready: true });
             if (wait && this.mounted) bind();
-          }
+          };
 
-          if (this.i18n.isInitialized) return ready();
-
-          const initialized = () => {
-            // due to emitter removing issue in i18next we need to delay remove
-            setTimeout(() => {
-              this.i18n.off('initialized', initialized);
-            }, 1000);
+          if (this.i18n.isInitialized) {
             ready();
+          } else {
+            const initialized = () => {
+              // due to emitter removing issue in i18next we need to delay remove
+              setTimeout(() => {
+                this.i18n.off('initialized', initialized);
+              }, 1000);
+              ready();
+            };
+
+            this.i18n.on('initialized', initialized);
           }
-          this.i18n.on('initialized', initialized)
         });
+
         if (!wait) bind();
       }
 
@@ -93,7 +97,7 @@ export default function translate(namespaces, options = {}) {
           );
         }
 
-        return this.refs.wrappedInstance;
+        return this.wrappedInstance;
       }
 
       render() {
@@ -101,7 +105,7 @@ export default function translate(namespaces, options = {}) {
         const extraProps = { i18nLoadedAt, [translateFuncName]: this[translateFuncName], i18n: this.i18n };
 
         if (withRef) {
-          extraProps.ref = 'wrappedInstance';
+          extraProps.ref = (comp) => { this.wrappedInstance = comp; };
         }
 
         if (!ready && wait) return null;
@@ -123,7 +127,7 @@ export default function translate(namespaces, options = {}) {
       [translateFuncName]: PropTypes.func.isRequired
     };
 
-    Translate.displayName = 'Translate(' + getDisplayName(WrappedComponent) + ')';
+    Translate.displayName = `Translate(${getDisplayName(WrappedComponent)})`;
 
     Translate.namespaces = namespaces;
 

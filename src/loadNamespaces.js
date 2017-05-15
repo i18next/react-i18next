@@ -2,7 +2,7 @@
 function eachComponents(components, iterator) {
   for (let i = 0, l = components.length; i < l; i++) { // eslint-disable-line id-length
     if (typeof components[i] === 'object') {
-      for (let [key, value] of Object.entries(components[i])) {
+      for (const [key, value] of Object.entries(components[i])) {
         iterator(value, i, key);
       }
     } else {
@@ -16,9 +16,9 @@ function filterAndFlattenComponents(components) {
   eachComponents(components, (Component) => {
     if (Component && Component.namespaces) {
 
-      Component.namespaces.forEach((namespace)=>{
+      Component.namespaces.forEach((namespace) => {
         if (flattened.indexOf(namespace) === -1) {
-         flattened.push(namespace);
+          flattened.push(namespace);
         }
       });
     }
@@ -29,7 +29,7 @@ function filterAndFlattenComponents(components) {
 export default function loadNamespaces({ components, i18n }) {
   const allNamespaces = filterAndFlattenComponents(components);
 
-  return new Promise((resolve)=>{
+  return new Promise((resolve) => {
     i18n.loadNamespaces(allNamespaces, resolve);
   });
 }
