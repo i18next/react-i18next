@@ -14,11 +14,30 @@ describe('translate', () => {
     );
   }
 
-  it('should render three <Foo /> components', () => {
+  it('should render correct translation', () => {
     const HocElement = translate(['translation'], {})(TestElement);
 
     const wrapper = mount(<HocElement i18n={i18n} />, context);
     // console.log(wrapper.debug());
     expect(wrapper.contains(<div>test</div>)).toBe(true);
+  });
+
+  it('should call unmount', () => {
+    const HocElement = translate(['translation'], {})(TestElement);
+
+    const wrapper = mount(<HocElement i18n={i18n} />, context);
+    // console.log(wrapper.debug());
+
+    // has bound events
+    expect(i18n.observers.languageChanged.length).toBe(2)
+    expect(i18n.observers.loaded.length).toBe(2)
+
+    // has correct content
+    expect(wrapper.contains(<div>test</div>)).toBe(true);
+
+    // unbind after unmount
+    wrapper.unmount()
+    expect(i18n.observers.languageChanged.length).toBe(1)
+    expect(i18n.observers.loaded.length).toBe(1)
   });
 });

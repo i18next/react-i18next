@@ -53,6 +53,7 @@
     "rollup-plugin-commonjs": "8.0.2",
     "rollup-plugin-node-resolve": "3.0.0",
     "rollup-plugin-uglify": "1.0.1",
+    "sinon": "^2.2.0",
     "yargs": "7.0.2"
   },
   "peerDependencies": {
@@ -82,6 +83,8 @@
     "unmockedModulePathPatterns": [
       "react"
     ],
-    "testMatch": [ "**/?(*.)(spec|test).js?(x)" ]
+    "testMatch": [
+      "**/?(*.)(spec|test).js?(x)"
+    ]
   }
 }
