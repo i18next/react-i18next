@@ -5,6 +5,7 @@
 [![NPM][npm-icon] ][npm-url]
 
 [![Travis CI][travis-ci-image] ][travis-ci-url]
+[![Code Climate](https://codeclimate.com/github/codeclimate/codeclimate/badges/gpa.svg)](https://codeclimate.com/github/i18next/react-i18next)
 [![Coverage Status](https://coveralls.io/repos/github/i18next/react-i18next/badge.svg?branch=master)](https://coveralls.io/github/i18next/react-i18next?branch=master)
 [![Quality][quality-badge] ][quality-url]
 [![dependencies][dependencies-image] ][dependencies-url]

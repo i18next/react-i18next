@@ -1,0 +1,24 @@
+parser: babel-eslint
+extends: airbnb
+
+rules:
+  max-len: [0, 100]
+  no-constant-condition: 0
+  arrow-body-style: [1, "as-needed"]
+  comma-dangle: [2, "never"]
+  padded-blocks: [0, "never"]
+  no-unused-vars: [2, {vars: all, args: none}]
+  no-restricted-syntax: 1
+  no-plusplus: 0
+  no-param-reassign: 1
+  react/forbid-prop-types:
+    - 1
+  react/prop-types:
+    - 0
+    - ignore: #coming from hoc
+      - location
+      - fields
+      - handleSubmit
+
+globals:
+  expect: false
