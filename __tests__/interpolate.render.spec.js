@@ -11,7 +11,7 @@ const context = {
 describe('interpolate', () => {
   const TestElement = ({ t }) => {
     return (
-      <Interpolate parent='p' i18nKey='interpolateKey' insert={<span>something</span>} />
+      <Interpolate parent='p' i18nKey='interpolateKey' insert={<span>something</span>} up="uppercase" />
     );
   }
 
@@ -20,6 +20,6 @@ describe('interpolate', () => {
 
     const wrapper = mount(<HocElement />, { context });
     // console.log(wrapper.debug());
-    expect(wrapper.contains(<p>add <span>something</span></p>)).toBe(true);
+    expect(wrapper.contains(<p>add <span>something</span> UPPERCASE</p>)).toBe(true);
   });
 });
