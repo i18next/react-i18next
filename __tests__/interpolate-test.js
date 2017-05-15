@@ -1,4 +1,4 @@
-jest.unmock('../src/translate');
+jest.unmock('../src/interpolate');
 import React from 'react';
 import PropTypes from 'prop-types';
 import Interpolate from '../src/interpolate';
