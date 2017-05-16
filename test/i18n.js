@@ -10,7 +10,8 @@ i18n
       en: {
         translation: {
           key1: 'test',
-          interpolateKey: 'add {{insert}} {{up, uppercase}}'
+          interpolateKey: 'add {{insert}} {{up, uppercase}}',
+          interpolateKey2: '<strong>add</strong> {{insert}} {{up, uppercase}}'
         }
       }
     },
