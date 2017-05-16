@@ -19,7 +19,9 @@ export default function translate(namespaces, options = {}) {
         namespaces = namespaces || this.i18n.options.defaultNS;
         if (typeof namespaces === 'string') namespaces = [namespaces];
 
-        if (!wait && this.i18n.options.wait) wait = this.i18n.options.wait;
+        if (!wait && this.i18n.options.wait || (this.i18n.options.react && this.i18n.options.react.wait)) wait = this.i18n.options.wait || this.i18n.options.react.wait;
+
+        this.nsMode = options.nsMode || (this.i18n.options.react && this.i18n.options.react.nsMode) || 'default';
 
         this.state = {
           i18nLoadedAt: null,
@@ -35,7 +37,7 @@ export default function translate(namespaces, options = {}) {
       }
 
       componentWillMount() {
-        this[translateFuncName] = this.i18n.getFixedT(null, namespaces[0]);
+        this[translateFuncName] = this.i18n.getFixedT(null, this.nsMode === 'fallback' ? namespaces : namespaces[0]);
       }
 
       componentDidMount() {

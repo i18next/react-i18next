@@ -96,7 +96,8 @@ options:
 {
   withRef: false,         // store a ref to the wrapped component
   translateFuncName: 't', // will change the name of translation prop default 't'
-  wait: false,            // delay rendering until translations are loaded - wait can be set globally on i18next init too
+  wait: false,            // delay rendering until translations are loaded - wait can be set globally on i18next init too ( can be set on i18next.init({ react: { wait: true }};) too)
+  nsMode: 'default',      // can be set to fallback to let passed namespaces treated as fallbacks in order passed - wait can be set globally on i18next init too ( can be set on i18next.init({ react: { nsMode: 'fallback' }};) too)
   bindI18n: 'languageChanged loaded',   // which events trigger a rerender, can be set to false or string of events
   bindStore: 'added removed'            // which events on store trigger a rerender, can be set to false or string of events
 }

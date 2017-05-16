@@ -1,5 +1,7 @@
-### upcoming
+### 4.1.0
 - eslint cleanup
+- a lot more tests
+- flag nsMode: 'fallback' -> uses namespaces passed to translate hoc as fallbacks [#254](https://github.com/i18next/react-i18next/issues/254)
 
 ### 4.0.0
 - deploys 3.1.1 as possible breaking: fixes issue in fixing t function - pass only first namespace not an array of namespaces (access other namespaces like: this.props.t('namespace:key'))

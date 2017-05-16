@@ -238,7 +238,9 @@ function translate(namespaces) {
         namespaces = namespaces || _this.i18n.options.defaultNS;
         if (typeof namespaces === 'string') namespaces = [namespaces];
 
-        if (!wait && _this.i18n.options.wait) wait = _this.i18n.options.wait;
+        if (!wait && _this.i18n.options.wait || _this.i18n.options.react && _this.i18n.options.react.wait) wait = _this.i18n.options.wait || _this.i18n.options.react.wait;
+
+        _this.nsMode = options.nsMode || _this.i18n.options.react && _this.i18n.options.react.nsMode || 'default';
 
         _this.state = {
           i18nLoadedAt: null,
@@ -246,6 +248,7 @@ function translate(namespaces) {
         };
 
         _this.onI18nChanged = _this.onI18nChanged.bind(_this);
+        _this.getWrappedInstance = _this.getWrappedInstance.bind(_this);
         return _this;
       }
 
@@ -257,7 +260,7 @@ function translate(namespaces) {
       }, {
         key: 'componentWillMount',
         value: function componentWillMount() {
-          this[translateFuncName] = this.i18n.getFixedT(null, namespaces[0]);
+          this[translateFuncName] = this.i18n.getFixedT(null, this.nsMode === 'fallback' ? namespaces : namespaces[0]);
         }
       }, {
         key: 'componentDidMount',
@@ -265,8 +268,8 @@ function translate(namespaces) {
           var _this2 = this;
 
           var bind = function bind() {
-            bindI18n && _this2.i18n.on(bindI18n, _this2.onI18nChanged);
-            bindStore && _this2.i18n.store && _this2.i18n.store.on(bindStore, _this2.onI18nChanged);
+            if (bindI18n && _this2.i18n) _this2.i18n.on(bindI18n, _this2.onI18nChanged);
+            if (bindStore && _this2.i18n.store) _this2.i18n.store.on(bindStore, _this2.onI18nChanged);
           };
 
           this.mounted = true;
@@ -276,17 +279,21 @@ function translate(namespaces) {
               if (wait && _this2.mounted) bind();
             };
 
-            if (_this2.i18n.isInitialized) return ready();
-
-            var initialized = function initialized() {
-              // due to emitter removing issue in i18next we need to delay remove
-              setTimeout(function () {
-                _this2.i18n.off('initialized', initialized);
-              }, 1000);
+            if (_this2.i18n.isInitialized) {
               ready();
-            };
-            _this2.i18n.on('initialized', initialized);
+            } else {
+              var initialized = function initialized() {
+                // due to emitter removing issue in i18next we need to delay remove
+                setTimeout(function () {
+                  _this2.i18n.off('initialized', initialized);
+                }, 1000);
+                ready();
+              };
+
+              _this2.i18n.on('initialized', initialized);
+            }
           });
+
           if (!wait) bind();
         }
       }, {
@@ -325,6 +332,7 @@ function translate(namespaces) {
             console.error('To access the wrapped instance, you need to specify ' + '{ withRef: true } as the second argument of the translate() call.');
           }
 
+          /* eslint react/no-string-refs: 1 */
           return this.refs.wrappedInstance;
         }
       }, {
@@ -435,15 +443,22 @@ var Interpolate = function (_Component) {
         return memo;
       }, children);
 
-      return React__default.createElement.apply(this, [parent, { className: className, style: style }].concat(children));
+      var additionalProps = {};
+      if (className) additionalProps.className = className;
+      if (style) additionalProps.style = style;
+
+      return React__default.createElement.apply(this, [parent, additionalProps].concat(children));
     }
   }]);
   return Interpolate;
 }(React.Component);
 
 Interpolate.propTypes = {
-  children: PropTypes.node,
   className: PropTypes.string
+};
+
+Interpolate.defaultProps = {
+  className: ''
 };
 
 Interpolate.contextTypes = {
