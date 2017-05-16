@@ -20,6 +20,6 @@ describe('interpolate', () => {
 
     const wrapper = mount(<HocElement />, { context });
     // console.log(wrapper.debug());
-    expect(wrapper.contains(<p>add <span>something</span> {i18n.options.interpolation.format('uppercase', 'uppercase')}</p>)).toBe(true);
+    expect(wrapper.contains(<p>add <span>something</span> UPPERCASE</p>)).toBe(true);
   });
 });
