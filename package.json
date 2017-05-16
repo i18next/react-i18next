@@ -86,6 +86,6 @@
     "testMatch": [
       "**/?(*.)(spec|test).js?(x)"
     ],
-    "collectCoverageFrom" : ["**/src/*.{js,jsx}", "!**/node_modules/**", "!**/test/**"]
+    "collectCoverageFrom" : ["**/src/*.{js,jsx}", "!**/src/index.js" "!**/node_modules/**", "!**/test/**"]
   }
 }
