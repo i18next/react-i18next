@@ -16,7 +16,7 @@ ratings:
   paths:
   - "src/**/*"
 exclude_paths:
-- __test__/
+- test/
 - coverage/
 - dist/
 - example/
