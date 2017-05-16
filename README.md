@@ -6,7 +6,7 @@
 
 [![Travis CI][travis-ci-image] ][travis-ci-url]
 [![Code Climate](https://codeclimate.com/github/codeclimate/codeclimate/badges/gpa.svg)](https://codeclimate.com/github/i18next/react-i18next)
-[![Coverage Status](https://coveralls.io/repos/github/i18next/react-i18next/badge.svg)](https://coveralls.io/github/i18next/react-i18next)
+[![Coverage Status](https://coveralls.io/repos/github/i18next/react-i18next/badge.svg?t=1)](https://coveralls.io/github/i18next/react-i18next)
 [![Quality][quality-badge] ][quality-url]
 [![dependencies][dependencies-image] ][dependencies-url]
 [![devdependencies][devdependencies-image] ][devdependencies-url]
