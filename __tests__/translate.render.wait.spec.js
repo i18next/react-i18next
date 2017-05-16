@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow, render, mount } from 'enzyme';
 import i18n from './i18n';
-import BackendMock from './BackendMock';
+import BackendMock from './backendMock';
 import translate from '../src/translate';
 
 const newI18n = i18n.createInstance();
