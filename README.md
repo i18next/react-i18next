@@ -52,7 +52,7 @@ $ bower install react-i18next
 
 Needing a translation management? Want to edit your translations with an InContext Editor? Use the orginal provided to you by the maintainers of i18next!
 
-![locize](http://i18next.com/img/locize_recap_medium_low.gif)
+![locize](http://i18next.com/assets/img/locize_recap_big_low.gif)
 
 With using [locize](http://locize.com/) you directly support the future of i18next and react-i18next.
 
