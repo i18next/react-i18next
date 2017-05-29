@@ -1,8 +1,6 @@
 # react-i18next
 
-> Higher-order components and components for React when using [i18next](https://github.com/i18next/i18next).
-
-[![NPM][npm-icon] ][npm-url]
+> Higher-order components and components for React when using [i18next](https://www.i18next.com).
 
 [![Travis CI][travis-ci-image] ][travis-ci-url]
 [![Code Climate](https://codeclimate.com/github/codeclimate/codeclimate/badges/gpa.svg)](https://codeclimate.com/github/i18next/react-i18next)
@@ -40,7 +38,10 @@ $ bower install react-i18next
 
 ### Examples
 
-* [Example project](https://github.com/i18next/react-i18next/tree/master/example)
+* [Example webpack2](https://github.com/i18next/react-i18next/tree/master/example/webpack2)
+* [Example webpack1](https://github.com/i18next/react-i18next/tree/master/example/webpack1)
+* [Example react-native](https://github.com/i18next/react-i18next/tree/master/example/react-native-expo)
+* [Example expo.io](https://github.com/i18next/react-i18next/tree/master/example/react-native-expo)
 
 ### Requirements
 
