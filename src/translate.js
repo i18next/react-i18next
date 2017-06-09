@@ -19,9 +19,9 @@ export default function translate(namespaces, options = {}) {
         namespaces = namespaces || this.i18n.options.defaultNS;
         if (typeof namespaces === 'string') namespaces = [namespaces];
 
-        if (!wait && this.i18n.options.wait || (this.i18n.options.react && this.i18n.options.react.wait)) wait = this.i18n.options.wait || this.i18n.options.react.wait;
+        if (!wait && this.i18n.options && (this.i18n.options.wait || (this.i18n.options.react && this.i18n.options.react.wait))) wait = true;
 
-        this.nsMode = options.nsMode || (this.i18n.options.react && this.i18n.options.react.nsMode) || 'default';
+        this.nsMode = options.nsMode || (this.i18n.options && this.i18n.options.react && this.i18n.options.react.nsMode) || 'default';
 
         this.state = {
           i18nLoadedAt: null,
@@ -65,6 +65,10 @@ export default function translate(namespaces, options = {}) {
             };
 
             this.i18n.on('initialized', initialized);
+
+            // In case of race condition, that 'initialized' never comes - do immediately 
+            // check ready state + if i18n is initialized.
+            setTimeout(() => !this.state.ready && this.i18n.isInitialized && ready());
           }
         });
 
