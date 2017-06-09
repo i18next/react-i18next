@@ -1,3 +1,6 @@
+### 4.1.1
+- Fix react-i18next to work with TypeScript [PR261](https://github.com/i18next/react-i18next/pull/261)
+
 ### 4.1.0
 - eslint cleanup
 - a lot more tests
