@@ -1,6 +1,6 @@
 {
   "name": "react-i18next",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "Internationalization for react done right. Using the i18next i18n ecosystem.",
   "main": "dist/commonjs/index.js",
   "jsnext:main": "dist/es/index.js",
@@ -86,6 +86,11 @@
     "testMatch": [
       "**/?(*.)(spec|test).js?(x)"
     ],
-    "collectCoverageFrom" : ["**/src/*.{js,jsx}", "!**/src/index.js", "!**/node_modules/**", "!**/test/**"]
+    "collectCoverageFrom": [
+      "**/src/*.{js,jsx}",
+      "!**/src/index.js",
+      "!**/node_modules/**",
+      "!**/test/**"
+    ]
   }
 }
