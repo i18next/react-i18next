@@ -65,10 +65,6 @@ export default function translate(namespaces, options = {}) {
             };
 
             this.i18n.on('initialized', initialized);
-
-            // In case of race condition, that 'initialized' never comes - do immediately 
-            // check ready state + if i18n is initialized.
-            setTimeout(() => !this.state.ready && this.i18n.isInitialized && ready());
           }
         });
 
