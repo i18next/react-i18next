@@ -291,12 +291,6 @@ function translate(namespaces) {
               };
 
               _this2.i18n.on('initialized', initialized);
-
-              // In case of race condition, that 'initialized' never comes - do immediately 
-              // check ready state + if i18n is initialized.
-              setTimeout(function () {
-                return !_this2.state.ready && _this2.i18n.isInitialized && ready();
-              });
             }
           });
 

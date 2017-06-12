@@ -1,3 +1,6 @@
+### 4.1.2
+- Remove workaround to set ready if there was no initialized signal [PR263](https://github.com/i18next/react-i18next/pull/263)
+
 ### 4.1.1
 - Fix react-i18next to work with TypeScript [PR261](https://github.com/i18next/react-i18next/pull/261)
 
