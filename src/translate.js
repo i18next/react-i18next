@@ -15,6 +15,7 @@ export default function translate(namespaces, options = {}) {
     class Translate extends Component {
       constructor(props, context) {
         super(props, context);
+
         this.i18n = context.i18n || props.i18n || options.i18n;
         namespaces = namespaces || this.i18n.options.defaultNS;
         if (typeof namespaces === 'string') namespaces = [namespaces];
@@ -22,6 +23,13 @@ export default function translate(namespaces, options = {}) {
         if (!wait && this.i18n.options && (this.i18n.options.wait || (this.i18n.options.react && this.i18n.options.react.wait))) wait = true;
 
         this.nsMode = options.nsMode || (this.i18n.options && this.i18n.options.react && this.i18n.options.react.nsMode) || 'default';
+
+        // SSR: getting data from next.js or other ssr stack
+        if (props.initialI18nStore && props.initialLanguage) {
+          this.i18n.services.resourceStore.data = props.initialI18nStore;
+          this.i18n.changeLanguage(props.initialLanguage);
+          wait = false; // we got all passed down already
+        }
 
         this.state = {
           i18nLoadedAt: null,

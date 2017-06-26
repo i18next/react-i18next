@@ -1,3 +1,6 @@
+### 4.3.0
+- allow passing down initialI18nStore and initialLanguage to translate hoc to support ssr scenario better see example/nextjs
+
 ### 4.2.0
 - allow passing i18next instance in translate hoc options makes integration in nextjs easier
 

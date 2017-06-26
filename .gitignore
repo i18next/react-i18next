@@ -19,3 +19,4 @@ node_modules/**/*
 coverage/**/*
 example/build/**/*
 dist/**/*
+.next
