@@ -242,6 +242,13 @@ function translate(namespaces) {
 
         _this.nsMode = options.nsMode || _this.i18n.options && _this.i18n.options.react && _this.i18n.options.react.nsMode || 'default';
 
+        // SSR: getting data from next.js or other ssr stack
+        if (props.initialI18nStore && props.initialLanguage) {
+          _this.i18n.services.resourceStore.data = props.initialI18nStore;
+          _this.i18n.changeLanguage(props.initialLanguage);
+          wait = false; // we got all passed down already
+        }
+
         _this.state = {
           i18nLoadedAt: null,
           ready: false
