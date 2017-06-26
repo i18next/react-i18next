@@ -1,3 +1,6 @@
+### 4.2.0
+- allow passing i18next instance in translate hoc options makes integration in nextjs easier
+
 ### 4.1.2
 - Remove workaround to set ready if there was no initialized signal [PR263](https://github.com/i18next/react-i18next/pull/263)
 

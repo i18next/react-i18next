@@ -234,7 +234,7 @@ function translate(namespaces) {
 
         var _this = possibleConstructorReturn(this, (Translate.__proto__ || Object.getPrototypeOf(Translate)).call(this, props, context));
 
-        _this.i18n = context.i18n || props.i18n;
+        _this.i18n = context.i18n || props.i18n || options.i18n;
         namespaces = namespaces || _this.i18n.options.defaultNS;
         if (typeof namespaces === 'string') namespaces = [namespaces];
 
