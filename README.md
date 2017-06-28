@@ -22,6 +22,30 @@
 [quality-badge]: http://npm.packagequality.com/shield/react-i18next.svg
 [quality-url]: http://packagequality.com/#?package=react-i18next
 
+### How will my code look like?
+
+**Before:** Your react code would have looked something like:
+
+```js
+...
+<div>Just simple content</div>
+<div>
+Hello <strong title="this is your name">{name}</strong>, you have {count} unread message(s). <Link to="/msgs">Go to messages</Link>.
+</div>
+...
+```
+
+**After:** With the trans component just change it to:
+
+```js
+...
+<div>{t('simpleContent')}</div>
+<Trans i18nKey="userMessagesUnread" count={count}>
+Hello <strong title={t('nameTitle')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.
+</Trans>
+...
+```
+
 ### Documentation
 
 The documentation is published on [react.i18next.com](https://react.i18next.com)
