@@ -11,7 +11,10 @@ i18n
         translation: {
           key1: 'test',
           interpolateKey: 'add {{insert}} {{up, uppercase}}',
-          interpolateKey2: '<strong>add</strong> {{insert}} {{up, uppercase}}'
+          interpolateKey2: '<strong>add</strong> {{insert}} {{up, uppercase}}',
+          transTest1: "Go <1>there</1>.",
+          transTest2: "Hello <1><0>{{name}}</0></1>, you have <3>{{count}}</3> message. Open <5>hear</5>.",
+          transTest2_plural: "Hello <1><0>{{name}}</0></1>, you have <3>{{count}}</3> messages. Open <5>here</5>.",
         }
       }
     },
