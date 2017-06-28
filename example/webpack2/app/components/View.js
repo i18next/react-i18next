@@ -4,6 +4,12 @@ import AnotherComponent from './AnotherComponent';
 import YetAnotherComponent from './YetAnotherComponent';
 import i18n from '../i18n';
 
+import Trans from './Trans';
+
+function Link({ to, children }) {
+  return <a href={to}>{children}</a>;
+}
+
 @translate(['view', 'nav'], { wait: true })
 class TranslatableView extends React.Component {
 
@@ -27,9 +33,17 @@ class TranslatableView extends React.Component {
     let interpolateComponent = <strong>"a interpolated component"</strong>;
     const toggle = lng => i18n.changeLanguage(lng);
 
+    const count = 10;
+    const name = 'Arthur';
+
     return (
       <div>
         <h1>{t('common:appName')}</h1>
+
+        <Trans i18nKey="transTest" count={count}>
+          Hello <strong title={t('nameTitle')}>{{name, format: 'uppercase'}}</strong>, you have {{count}} message. Open <Link to="/msgs">here</Link>.
+        </Trans>
+
         <button onClick={() => toggle('de')}>{t('nav:linkDE')}</button>
         <button onClick={() => toggle('en')}>{t('nav:linkEN')}</button>
         {

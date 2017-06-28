@@ -1,0 +1,113 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+function nodesToString(mem, children, index) {
+  if (Object.prototype.toString.call(children) !== '[object Array]') children = [children];
+
+  children.forEach((child, i) => {
+    // const isElement = React.isValidElement(child);
+    // const elementKey = `${index !== 0 ? index + '-' : ''}${i}:${typeof child.type === 'function' ? child.type.name : child.type || 'var'}`;
+    const elementKey = `${i}`;
+
+    if (typeof child === 'string') {
+      mem = `${mem}${child}`;
+    } else if (child.props && child.props.children) {
+      mem = `${mem}<${elementKey}>${nodesToString('', child.props.children, i + 1)}</${elementKey}>`;
+    } else if (typeof child === 'object') {
+      const clone = { ...child };
+      const format = clone.format;
+      delete clone.format;
+
+      const keys = Object.keys(clone);
+      if (format && keys.length === 1) {
+        mem = `${mem}<${elementKey}>{{${keys[0]}, ${format}}}</${elementKey}>`;
+      } else if (keys.length === 1) {
+        mem = `${mem}<${elementKey}>{{${keys[0]}}}</${elementKey}>`;
+      }
+    }
+  });
+
+  return mem;
+}
+
+const REGEXP = new RegExp('(?:<([^>]*)>(.*?)<\\/\\1>)', 'gi');
+function renderNodes(children, targetString, i18n) {
+
+  function getChildren(nodes, str) {
+    if (Object.prototype.toString.call(nodes) !== '[object Array]') nodes = [nodes];
+
+    const toRender = str.split(REGEXP).reduce((mem, match, i) => {
+      if (match) mem.push(match);
+      return mem;
+    }, []);
+
+    return toRender.reduce((mem, part, i) => {
+      // is a tag
+      const isTag = !isNaN(part);
+      const previousIsTag = i > 0 ? !isNaN(toRender[i - 1]) : false;
+
+      // will be rendered inside child
+      if (previousIsTag) return mem;
+
+      if (isTag) {
+        const child = nodes[parseInt(part, 10)] || {};
+        const isElement = React.isValidElement(child);
+
+        if (typeof child === 'string') {
+          mem.push(child);
+        } else if (child.props && child.props.children) {
+          const inner = getChildren(child.props && child.props.children, toRender[i + 1]);
+
+          mem.push(React.cloneElement(
+            child,
+            { ...child.props, key: i },
+            inner
+          ));
+        } else if (typeof child === 'object' && !isElement) {
+          const interpolated = i18n.services.interpolator.interpolate(toRender[i + 1], child, i18n.language);
+          mem.push(interpolated);
+        }
+      }
+
+      // no element just a string
+      if (!isTag && !previousIsTag) mem.push(part);
+
+      return mem;
+    }, []);
+  }
+
+  return getChildren(children, targetString);
+}
+
+
+export default class Trans extends React.Component {
+
+  constructor(props, context) {
+    super(props, context);
+    this.i18n = context.i18n;
+    this.t = context.t;
+  }
+
+  componentDidMount() {
+
+  }
+
+  render() {
+    const { children, count } = this.props;
+
+    const defaultValue = nodesToString('', children, 0);
+    const key = this.props.i18nKey || defaultValue;
+    const translation = this.t(key, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue, count });
+
+    return React.createElement(
+      'div',
+      {},
+      renderNodes(children, translation, this.i18n)
+    );
+  }
+}
+
+Trans.contextTypes = {
+  i18n: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired
+};

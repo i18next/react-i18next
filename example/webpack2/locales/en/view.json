@@ -1,5 +1,8 @@
 {
   "content": {
     "text": "not much to see!! but if you can read this - it worked."
-  }
+  },
+  "transTest": "Hello <1><0>{{name}}</0></1>, you have <3>{{count}}</3> message. Open <5>hear</5>.",
+  "transTest_plural": "Hello <1><0>{{name}}</0></1>, you have <3>{{count}}</3> messages. Open <5>here</5>.",
+  "nameTitle": "this is your name"
 }

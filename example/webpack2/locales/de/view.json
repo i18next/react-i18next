@@ -1,5 +1,8 @@
 {
   "content": {
     "text": "DE not much to see!! but if you can read this - it worked."
-  }
+  },
+  "transTest": "<3>{{count}}</3> Nachricht für <1><0>{{name}}</0></1>. Öffne <5>hier</5>.",
+  "transTest_plural": "<3>{{count}}</3> Nachrichten für <1><0>{{name, uppercase}}</0></1>. Öffne <5>hier</5>.",
+  "nameTitle": "dies ist dein name"
 }

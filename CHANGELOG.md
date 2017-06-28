@@ -1,3 +1,6 @@
+### 4.4.0
+- introduces Trans component which enables you to translate nested components incl. interpolation by resulting in one translatable string. [learn more](https://react.i18next.com/components/trans-component.html)
+
 ### 4.3.0
 - allow passing down initialI18nStore and initialLanguage to translate hoc to support ssr scenario better see example/nextjs
 

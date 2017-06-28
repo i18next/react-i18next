@@ -473,6 +473,119 @@ Interpolate.contextTypes = {
   t: PropTypes.func.isRequired
 };
 
+function nodesToString(mem, children, index) {
+  if (Object.prototype.toString.call(children) !== '[object Array]') children = [children];
+
+  children.forEach(function (child, i) {
+    // const isElement = React.isValidElement(child);
+    // const elementKey = `${index !== 0 ? index + '-' : ''}${i}:${typeof child.type === 'function' ? child.type.name : child.type || 'var'}`;
+    var elementKey = '' + i;
+
+    if (typeof child === 'string') {
+      mem = '' + mem + child;
+    } else if (child.props && child.props.children) {
+      mem = mem + '<' + elementKey + '>' + nodesToString('', child.props.children, i + 1) + '</' + elementKey + '>';
+    } else if ((typeof child === 'undefined' ? 'undefined' : _typeof(child)) === 'object') {
+      var clone = _extends({}, child);
+      var format = clone.format;
+      delete clone.format;
+
+      var keys = Object.keys(clone);
+      if (format && keys.length === 1) {
+        mem = mem + '<' + elementKey + '>{{' + keys[0] + ', ' + format + '}}</' + elementKey + '>';
+      } else if (keys.length === 1) {
+        mem = mem + '<' + elementKey + '>{{' + keys[0] + '}}</' + elementKey + '>';
+      }
+    }
+  });
+
+  return mem;
+}
+
+var REGEXP = new RegExp('(?:<([^>]*)>(.*?)<\\/\\1>)', 'gi');
+function renderNodes(children, targetString, i18n) {
+
+  function getChildren(nodes, str) {
+    if (Object.prototype.toString.call(nodes) !== '[object Array]') nodes = [nodes];
+
+    var toRender = str.split(REGEXP).reduce(function (mem, match, i) {
+      if (match) mem.push(match);
+      return mem;
+    }, []);
+
+    return toRender.reduce(function (mem, part, i) {
+      // is a tag
+      var isTag = !isNaN(part);
+      var previousIsTag = i > 0 ? !isNaN(toRender[i - 1]) : false;
+
+      // will be rendered inside child
+      if (previousIsTag) return mem;
+
+      if (isTag) {
+        var child = nodes[parseInt(part, 10)] || {};
+        var isElement = React__default.isValidElement(child);
+
+        if (typeof child === 'string') {
+          mem.push(child);
+        } else if (child.props && child.props.children) {
+          var inner = getChildren(child.props && child.props.children, toRender[i + 1]);
+
+          mem.push(React__default.cloneElement(child, _extends({}, child.props, { key: i }), inner));
+        } else if ((typeof child === 'undefined' ? 'undefined' : _typeof(child)) === 'object' && !isElement) {
+          var interpolated = i18n.services.interpolator.interpolate(toRender[i + 1], child, i18n.language);
+          mem.push(interpolated);
+        }
+      }
+
+      // no element just a string
+      if (!isTag && !previousIsTag) mem.push(part);
+
+      return mem;
+    }, []);
+  }
+
+  return getChildren(children, targetString);
+}
+
+var Trans = function (_React$Component) {
+  inherits(Trans, _React$Component);
+
+  function Trans(props, context) {
+    classCallCheck(this, Trans);
+
+    var _this = possibleConstructorReturn(this, (Trans.__proto__ || Object.getPrototypeOf(Trans)).call(this, props, context));
+
+    _this.i18n = context.i18n;
+    _this.t = context.t;
+    return _this;
+  }
+
+  createClass(Trans, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {}
+  }, {
+    key: 'render',
+    value: function render() {
+      var _props = this.props,
+          children = _props.children,
+          count = _props.count;
+
+
+      var defaultValue = nodesToString('', children, 0);
+      var key = this.props.i18nKey || defaultValue;
+      var translation = this.t(key, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue: defaultValue, count: count });
+
+      return React__default.createElement('div', {}, renderNodes(children, translation, this.i18n));
+    }
+  }]);
+  return Trans;
+}(React__default.Component);
+
+Trans.contextTypes = {
+  i18n: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired
+};
+
 var I18nextProvider = function (_Component) {
   inherits(I18nextProvider, _Component);
 
@@ -584,6 +697,7 @@ exports.loadNamespaces = loadNamespaces;
 exports.translate = translate;
 exports.Interpolate = Interpolate;
 exports.I18nextProvider = I18nextProvider;
+exports.Trans = Trans;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
