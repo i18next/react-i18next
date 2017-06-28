@@ -26,22 +26,22 @@
 
 **Before:** Your react code would have looked something like:
 
-```js
+```html
 ...
 <div>Just simple content</div>
 <div>
-Hello <strong title="this is your name">{name}</strong>, you have {count} unread message(s). <Link to="/msgs">Go to messages</Link>.
+  Hello <strong title="this is your name">{name}</strong>, you have {count} unread message(s). <Link to="/msgs">Go to messages</Link>.
 </div>
 ...
 ```
 
 **After:** With the trans component just change it to:
 
-```js
+```html
 ...
 <div>{t('simpleContent')}</div>
 <Trans i18nKey="userMessagesUnread" count={count}>
-Hello <strong title={t('nameTitle')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.
+  Hello <strong title={t('nameTitle')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.
 </Trans>
 ...
 ```
