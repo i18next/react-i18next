@@ -1,10 +1,8 @@
 import React from 'react';
-import { translate, Interpolate } from 'react-i18next';
+import { translate, Interpolate, Trans } from 'react-i18next';
 import AnotherComponent from './AnotherComponent';
 import YetAnotherComponent from './YetAnotherComponent';
 import i18n from '../i18n';
-
-import Trans from './Trans';
 
 function Link({ to, children }) {
   return <a href={to}>{children}</a>;
