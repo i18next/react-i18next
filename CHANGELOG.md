@@ -1,3 +1,7 @@
+### 4.5.0
+- pass i18n instance to context inside translate hoc to simplify usage in nextjs
+- options.react.exposeNamespace will expose namespace on data-i18next-options for consuming in editors
+
 ### 4.4.0
 - introduces Trans component which enables you to translate nested components incl. interpolation by resulting in one translatable string. [learn more](https://react.i18next.com/components/trans-component.html)
 

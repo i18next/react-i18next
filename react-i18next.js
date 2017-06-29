@@ -226,6 +226,8 @@ function translate(namespaces) {
 
 
   return function Wrapper(WrappedComponent) {
+    var _Translate$childConte;
+
     var Translate = function (_Component) {
       inherits(Translate, _Component);
 
@@ -262,7 +264,9 @@ function translate(namespaces) {
       createClass(Translate, [{
         key: 'getChildContext',
         value: function getChildContext() {
-          return defineProperty({}, translateFuncName, this[translateFuncName]);
+          var _ref;
+
+          return _ref = {}, defineProperty(_ref, translateFuncName, this[translateFuncName]), defineProperty(_ref, 'i18n', this.i18n), _ref;
         }
       }, {
         key: 'componentWillMount',
@@ -351,7 +355,9 @@ function translate(namespaces) {
               i18nLoadedAt = _state.i18nLoadedAt,
               ready = _state.ready;
 
-          var extraProps = (_extraProps = { i18nLoadedAt: i18nLoadedAt }, defineProperty(_extraProps, translateFuncName, this[translateFuncName]), defineProperty(_extraProps, 'i18n', this.i18n), _extraProps);
+          var extraProps = (_extraProps = {
+            i18nLoadedAt: i18nLoadedAt
+          }, defineProperty(_extraProps, translateFuncName, this[translateFuncName]), defineProperty(_extraProps, 'i18n', this.i18n), _extraProps);
 
           if (withRef) {
             extraProps.ref = 'wrappedInstance';
@@ -371,7 +377,7 @@ function translate(namespaces) {
       i18n: PropTypes.object
     };
 
-    Translate.childContextTypes = defineProperty({}, translateFuncName, PropTypes.func.isRequired);
+    Translate.childContextTypes = (_Translate$childConte = {}, defineProperty(_Translate$childConte, translateFuncName, PropTypes.func.isRequired), defineProperty(_Translate$childConte, 'i18n', PropTypes.object), _Translate$childConte);
 
     Translate.displayName = 'Translate(' + getDisplayName(WrappedComponent) + ')';
 
@@ -451,6 +457,15 @@ var Interpolate = function (_Component) {
       }, children);
 
       var additionalProps = {};
+      if (this.i18n.options.react && this.i18n.options.react.exposeNamespace) {
+        var ns = typeof this.t.ns === 'string' ? this.t.ns : this.t.ns[0];
+        if (this.props.i18nKey && this.i18n.options.nsSeparator && this.props.i18nKey.indexOf(this.i18n.options.nsSeparator) > -1) {
+          var parts = this.props.i18nKey.split(this.i18n.options.nsSeparator);
+          ns = parts[0];
+        }
+        if (this.t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns: ns });
+      }
+
       if (className) additionalProps.className = className;
       if (style) additionalProps.style = style;
 
@@ -575,7 +590,17 @@ var Trans = function (_React$Component) {
       var key = this.props.i18nKey || defaultValue;
       var translation = this.t(key, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue: defaultValue, count: count });
 
-      return React__default.createElement('div', {}, renderNodes(children, translation, this.i18n));
+      var additionalProps = {};
+      if (this.i18n.options.react && this.i18n.options.react.exposeNamespace) {
+        var ns = typeof this.t.ns === 'string' ? this.t.ns : this.t.ns[0];
+        if (this.props.i18nKey && this.i18n.options.nsSeparator && this.props.i18nKey.indexOf(this.i18n.options.nsSeparator) > -1) {
+          var parts = this.props.i18nKey.split(this.i18n.options.nsSeparator);
+          ns = parts[0];
+        }
+        if (this.t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns: ns });
+      }
+
+      return React__default.createElement('div', additionalProps, renderNodes(children, translation, this.i18n));
     }
   }]);
   return Trans;

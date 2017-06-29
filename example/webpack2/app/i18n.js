@@ -10,7 +10,11 @@ i18n
   .use(LanguageDetector)
   .init({
     fallbackLng: 'en',
-    // wait: true, // globally set to wait for loaded translations in translate hoc
+
+    react: {
+      // wait: true, // globally set to wait for loaded translations in translate hoc
+      // exposeNamespace: true // exposes namespace on data-i18next-options to be used in eg. locize-editor
+    },
 
     // have a common namespace used around the full app
     ns: ['common'],

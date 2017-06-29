@@ -59,6 +59,15 @@ class Interpolate extends Component {
     }, children);
 
     const additionalProps = {};
+    if (this.i18n.options.react && this.i18n.options.react.exposeNamespace) {
+      let ns = typeof this.t.ns === 'string' ? this.t.ns : this.t.ns[0];
+      if (this.props.i18nKey && this.i18n.options.nsSeparator && this.props.i18nKey.indexOf(this.i18n.options.nsSeparator) > -1) {
+        const parts = this.props.i18nKey.split(this.i18n.options.nsSeparator);
+        ns = parts[0];
+      }
+      if (this.t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns });
+    }
+
     if (className) additionalProps.className = className;
     if (style) additionalProps.style = style;
 

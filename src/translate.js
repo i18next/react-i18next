@@ -41,7 +41,10 @@ export default function translate(namespaces, options = {}) {
       }
 
       getChildContext() {
-        return { [translateFuncName]: this[translateFuncName] };
+        return {
+          [translateFuncName]: this[translateFuncName],
+          i18n: this.i18n
+        };
       }
 
       componentWillMount() {
@@ -114,7 +117,11 @@ export default function translate(namespaces, options = {}) {
 
       render() {
         const { i18nLoadedAt, ready } = this.state;
-        const extraProps = { i18nLoadedAt, [translateFuncName]: this[translateFuncName], i18n: this.i18n };
+        const extraProps = {
+          i18nLoadedAt,
+          [translateFuncName]: this[translateFuncName],
+          i18n: this.i18n
+        };
 
         if (withRef) {
           extraProps.ref = 'wrappedInstance';
@@ -136,7 +143,8 @@ export default function translate(namespaces, options = {}) {
     };
 
     Translate.childContextTypes = {
-      [translateFuncName]: PropTypes.func.isRequired
+      [translateFuncName]: PropTypes.func.isRequired,
+      i18n: PropTypes.object
     };
 
     Translate.displayName = `Translate(${getDisplayName(WrappedComponent)})`;
