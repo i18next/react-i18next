@@ -90,7 +90,8 @@
       "**/src/*.{js,jsx}",
       "!**/src/index.js",
       "!**/node_modules/**",
-      "!**/test/**"
+      "!**/test/**",
+      "!**/example/**"
     ]
   }
 }
