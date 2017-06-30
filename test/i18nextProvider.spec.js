@@ -5,8 +5,16 @@ import  I18nextProvider from '../src/I18nextProvider' ;
 
 describe('I18nextProvider', () => {
   it('should provide i18n context', () => {
-    const i18n = {};
-    const wrapper = new I18nextProvider({ i18n });
+    const i18n = {
+      options: {},
+      services: {
+        resourceStore: {
+          data: {}
+        }
+      },
+      changeLanguage: () => {}
+    };
+    const wrapper = new I18nextProvider({ i18n, initialI18nStore: {}, initialLanguage: 'en' });
     expect(wrapper.getChildContext().i18n).toBe(i18n);
     expect(I18nextProvider.childContextTypes.i18n)
       .toBe(PropTypes.object.isRequired);

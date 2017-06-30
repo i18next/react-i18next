@@ -1,3 +1,6 @@
+### 4.6.1
+- fixes issue in changeLanguage on set via translate hoc ssr
+
 ### 4.6.0
 - allow passing initialI18nStore and initialLanguage to I18nextProvider via props to support simpler ssr
 - adds a serverside rendering sample based on razzle

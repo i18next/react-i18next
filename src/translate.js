@@ -32,7 +32,7 @@ export default function translate(namespaces, options = {}) {
           wait = false; // we got all passed down already
         }
         if (props.initialLanguage) {
-          i18n.changeLanguage(props.initialLanguage);
+          this.i18n.changeLanguage(props.initialLanguage);
         }
 
         // provider SSR: data was set in provider and ssr flag was set

@@ -28,13 +28,19 @@ describe('translate', () => {
     const Elem = React.createFactory('Elem');
     Elem.displayName = 'Elem';
     const wrapped = wrap(Elem);
-    const props = {};
+    const props = { initialI18nStore: {}, initialLanguage: 'en' };
     const t = (message) => message;
     const context = {
       i18n: {
         options: {
           defaultNS: 'defaultNS'
         },
+        services: {
+          resourceStore: {
+            data: {}
+          }
+        },
+        changeLanguage: () => {},
         getFixedT(p, ns) {
           return t;
         }
