@@ -6,6 +6,8 @@ function getDisplayName(component) {
   return component.displayName || component.name || 'Component';
 }
 
+let removedIsInitialSSR = false;
+
 export default function translate(namespaces, options = {}) {
   const { withRef = false, bindI18n = 'languageChanged loaded', bindStore = 'added removed', translateFuncName = 't' } = options;
   let { wait = false } = options;
@@ -24,11 +26,18 @@ export default function translate(namespaces, options = {}) {
 
         this.nsMode = options.nsMode || (this.i18n.options && this.i18n.options.react && this.i18n.options.react.nsMode) || 'default';
 
-        // SSR: getting data from next.js or other ssr stack
-        if (props.initialI18nStore && props.initialLanguage) {
+        // nextjs SSR: getting data from next.js or other ssr stack
+        if (props.initialI18nStore) {
           this.i18n.services.resourceStore.data = props.initialI18nStore;
-          this.i18n.changeLanguage(props.initialLanguage);
           wait = false; // we got all passed down already
+        }
+        if (props.initialLanguage) {
+          i18n.changeLanguage(props.initialLanguage);
+        }
+
+        // provider SSR: data was set in provider and ssr flag was set
+        if (this.i18n.options.isInitialSSR) {
+          wait = false;
         }
 
         this.state = {
@@ -60,7 +69,7 @@ export default function translate(namespaces, options = {}) {
         this.mounted = true;
         this.i18n.loadNamespaces(namespaces, () => {
           const ready = () => {
-            if (this.mounted) this.setState({ ready: true });
+            if (this.mounted && !this.state.ready) this.setState({ ready: true });
             if (wait && this.mounted) bind();
           };
 
@@ -128,6 +137,14 @@ export default function translate(namespaces, options = {}) {
         }
 
         if (!ready && wait) return null;
+
+        // remove ssr flag set by provider - first render was done from now on wait if set to wait
+        if (this.i18n.options.isInitialSSR && !removedIsInitialSSR) {
+          removedIsInitialSSR = true;
+          setTimeout(() => {
+            delete this.i18n.options.isInitialSSR;
+          }, 100);
+        }
 
         return React.createElement(
           WrappedComponent,

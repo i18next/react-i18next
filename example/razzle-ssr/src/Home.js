@@ -1,26 +1,23 @@
 import React, { Component } from 'react';
 import logo from './react.svg';
+import { translate, Trans } from 'react-i18next';
 import './Home.css';
 
 class Home extends Component {
   render() {
+    const { t } = this.props;
+
     return (
       <div className="Home">
         <div className="Home-header">
           <img src={logo} className="Home-logo" alt="logo" />
-          <h2>Welcome to Razzle</h2>
+          <h2>{t('Welcome to Razzle')}</h2>
         </div>
-        <p className="Home-intro">
-          To get started, edit
-          {' '}
-          <code>src/App.js</code>
-          {' '}
-          or
-          {' '}
-          <code>src/Home.js</code>
-          {' '}
-          and save to reload.
-        </p>
+        <div className="Home-intro">
+          <Trans>
+            To get started, edit <code>src/App.js</code> or <code>src/Home.js</code> and save to reload.
+          </Trans>
+        </div>
         <ul className="Home-resources">
           <li><a href="https://github.com/jaredpalmer/razzle">Docs</a></li>
           <li>
@@ -33,4 +30,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default translate('translations', { wait: process && !process.release })(Home);

@@ -1,3 +1,7 @@
+### 4.6.0
+- allow passing initialI18nStore and initialLanguage to I18nextProvider via props to support simpler ssr
+- adds a serverside rendering sample based on razzle
+
 ### 4.5.0
 - pass i18n instance to context inside translate hoc to simplify usage in nextjs
 - options.react.exposeNamespace will expose namespace on data-i18next-options for consuming in editors

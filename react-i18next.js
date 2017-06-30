@@ -211,6 +211,8 @@ function getDisplayName(component) {
   return component.displayName || component.name || 'Component';
 }
 
+var removedIsInitialSSR = false;
+
 function translate(namespaces) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   var _options$withRef = options.withRef,
@@ -244,11 +246,18 @@ function translate(namespaces) {
 
         _this.nsMode = options.nsMode || _this.i18n.options && _this.i18n.options.react && _this.i18n.options.react.nsMode || 'default';
 
-        // SSR: getting data from next.js or other ssr stack
-        if (props.initialI18nStore && props.initialLanguage) {
+        // nextjs SSR: getting data from next.js or other ssr stack
+        if (props.initialI18nStore) {
           _this.i18n.services.resourceStore.data = props.initialI18nStore;
-          _this.i18n.changeLanguage(props.initialLanguage);
           wait = false; // we got all passed down already
+        }
+        if (props.initialLanguage) {
+          i18n.changeLanguage(props.initialLanguage);
+        }
+
+        // provider SSR: data was set in provider and ssr flag was set
+        if (_this.i18n.options.isInitialSSR) {
+          wait = false;
         }
 
         _this.state = {
@@ -286,7 +295,7 @@ function translate(namespaces) {
           this.mounted = true;
           this.i18n.loadNamespaces(namespaces, function () {
             var ready = function ready() {
-              if (_this2.mounted) _this2.setState({ ready: true });
+              if (_this2.mounted && !_this2.state.ready) _this2.setState({ ready: true });
               if (wait && _this2.mounted) bind();
             };
 
@@ -349,7 +358,8 @@ function translate(namespaces) {
       }, {
         key: 'render',
         value: function render() {
-          var _extraProps;
+          var _extraProps,
+              _this4 = this;
 
           var _state = this.state,
               i18nLoadedAt = _state.i18nLoadedAt,
@@ -364,6 +374,14 @@ function translate(namespaces) {
           }
 
           if (!ready && wait) return null;
+
+          // remove ssr flag set by provider - first render was done from now on wait if set to wait
+          if (this.i18n.options.isInitialSSR && !removedIsInitialSSR) {
+            removedIsInitialSSR = true;
+            setTimeout(function () {
+              delete _this4.i18n.options.isInitialSSR;
+            }, 100);
+          }
 
           return React__default.createElement(WrappedComponent, _extends({}, this.props, extraProps));
         }
@@ -620,6 +638,13 @@ var I18nextProvider = function (_Component) {
     var _this = possibleConstructorReturn(this, (I18nextProvider.__proto__ || Object.getPrototypeOf(I18nextProvider)).call(this, props, context));
 
     _this.i18n = props.i18n;
+    if (props.initialI18nStore) {
+      _this.i18n.services.resourceStore.data = props.initialI18nStore;
+      _this.i18n.options.isInitialSSR = true; // if set will be deleted on first render in translate hoc
+    }
+    if (props.initialLanguage) {
+      _this.i18n.changeLanguage(props.initialLanguage);
+    }
     return _this;
   }
 

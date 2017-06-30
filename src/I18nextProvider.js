@@ -5,6 +5,13 @@ class I18nextProvider extends Component {
   constructor(props, context) {
     super(props, context);
     this.i18n = props.i18n;
+    if (props.initialI18nStore) {
+      this.i18n.services.resourceStore.data = props.initialI18nStore;
+      this.i18n.options.isInitialSSR = true; // if set will be deleted on first render in translate hoc
+    }
+    if (props.initialLanguage) {
+      this.i18n.changeLanguage(props.initialLanguage);
+    }
   }
 
   getChildContext() {
