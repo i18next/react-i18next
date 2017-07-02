@@ -24,6 +24,7 @@ class App extends Component {
             To get started, edit <code>src/App.js</code> and save to reload.
           </Trans>
         </div>
+        <div>{t('will be added automatically to locize.')}</div>
       </div>
     );
   }
