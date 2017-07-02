@@ -20,3 +20,4 @@ coverage/**/*
 example/build/**/*
 dist/**/*
 .next
+package-lock.json
