@@ -18,6 +18,7 @@ i18n
     defaultNS: 'translations',
 
     debug: true,
+    keySeparator: '### not used ###', // we use content as keys
 
     backend: {
       projectId: 'e365e54a-c52c-479b-8538-682635db252f',
