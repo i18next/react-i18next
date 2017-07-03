@@ -46,6 +46,11 @@
 ...
 ```
 
+
+[![video](https://raw.githubusercontent.com/i18next/react-i18next/master/example/locize-example/video_sample.png)](https://www.youtube.com/watch?v=9NOzJhgmyQE)
+
+[watch the video](https://www.youtube.com/watch?v=9NOzJhgmyQE)
+
 ### Documentation
 
 The documentation is published on [react.i18next.com](https://react.i18next.com)
