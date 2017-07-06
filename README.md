@@ -46,6 +46,7 @@
 ...
 ```
 
+Have a look at the interactive playground at [webpackbin](https://www.webpackbin.com/bins/-KoCD3kvA-4QJNaHpkxi).
 
 [![video](https://raw.githubusercontent.com/i18next/react-i18next/master/example/locize-example/video_sample.png)](https://www.youtube.com/watch?v=9NOzJhgmyQE)
 
