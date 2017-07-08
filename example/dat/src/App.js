@@ -11,7 +11,11 @@ class App extends Component {
       i18n.changeLanguage(lng);
     }
 
-    const url = window.location.origin + '?backend=locize';
+    let url = window.location.origin + '?backend=locize';
+
+    if (document.location.href.indexOf('https://') === 0 && document.location.hostname.indexOf('hashbase.io') > 0) {
+      url = window.location.origin + '?backend=xhr';
+    }
 
     return (
       <div className="App">
