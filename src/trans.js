@@ -44,7 +44,11 @@ function renderNodes(children, targetString, i18n) {
     return toRender.reduce((mem, part, i) => {
       // is a tag
       const isTag = !isNaN(part);
-      const previousIsTag = i > 0 ? !isNaN(toRender[i - 1]) : false;
+      let previousIsTag = i > 0 ? !isNaN(toRender[i - 1]) : false;
+      if (previousIsTag) {
+        const child = nodes[parseInt(toRender[i - 1], 10)] || {};
+        if (child.props && !child.props.children) previousIsTag = false;
+      }
 
       // will be rendered inside child
       if (previousIsTag) return mem;
@@ -66,6 +70,8 @@ function renderNodes(children, targetString, i18n) {
         } else if (typeof child === 'object' && !isElement) {
           const interpolated = i18n.services.interpolator.interpolate(toRender[i + 1], child, i18n.language);
           mem.push(interpolated);
+        } else {
+          mem.push(child);
         }
       }
 

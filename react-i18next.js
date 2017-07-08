@@ -550,23 +550,29 @@ function renderNodes(children, targetString, i18n) {
       // is a tag
       var isTag = !isNaN(part);
       var previousIsTag = i > 0 ? !isNaN(toRender[i - 1]) : false;
+      if (previousIsTag) {
+        var child = nodes[parseInt(toRender[i - 1], 10)] || {};
+        if (child.props && !child.props.children) previousIsTag = false;
+      }
 
       // will be rendered inside child
       if (previousIsTag) return mem;
 
       if (isTag) {
-        var child = nodes[parseInt(part, 10)] || {};
-        var isElement = React__default.isValidElement(child);
+        var _child = nodes[parseInt(part, 10)] || {};
+        var isElement = React__default.isValidElement(_child);
 
-        if (typeof child === 'string') {
-          mem.push(child);
-        } else if (child.props && child.props.children) {
-          var inner = getChildren(child.props && child.props.children, toRender[i + 1]);
+        if (typeof _child === 'string') {
+          mem.push(_child);
+        } else if (_child.props && _child.props.children) {
+          var inner = getChildren(_child.props && _child.props.children, toRender[i + 1]);
 
-          mem.push(React__default.cloneElement(child, _extends({}, child.props, { key: i }), inner));
-        } else if ((typeof child === 'undefined' ? 'undefined' : _typeof(child)) === 'object' && !isElement) {
-          var interpolated = i18n.services.interpolator.interpolate(toRender[i + 1], child, i18n.language);
+          mem.push(React__default.cloneElement(_child, _extends({}, _child.props, { key: i }), inner));
+        } else if ((typeof _child === 'undefined' ? 'undefined' : _typeof(_child)) === 'object' && !isElement) {
+          var interpolated = i18n.services.interpolator.interpolate(toRender[i + 1], _child, i18n.language);
           mem.push(interpolated);
+        } else {
+          mem.push(_child);
         }
       }
 

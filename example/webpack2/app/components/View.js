@@ -38,8 +38,13 @@ class TranslatableView extends React.Component {
       <div>
         <h1>{t('common:appName')}</h1>
 
+
         <Trans i18nKey="transTest" count={count}>
           Hello <strong title={t('nameTitle')}>{{name, format: 'uppercase'}}</strong>, you have {{count}} message. Open <Link to="/msgs">here</Link>.
+        </Trans>
+
+        <Trans i18nKey="share">
+          <input value="copyme" readOnly />
         </Trans>
 
         <button onClick={() => toggle('de')}>{t('nav:linkDE')}</button>
