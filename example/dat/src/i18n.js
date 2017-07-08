@@ -31,20 +31,14 @@ switch (whichBackend()) {
       apiKey: 'your apiKey',
       referenceLng: 'en'
     };
-    i18n
-      .use(LocizeBackend)
-      .use(LanguageDetector)
-      .init(options);
+    i18n.use(LocizeBackend);
     break;
 
   case 'xhr':
     options.backend = {
       loadPath: '/locales/{{lng}}/{{ns}}.json',
     };
-    i18n
-      .use(XHR)
-      .use(LanguageDetector)
-      .init(options);
+    i18n.use(XHR);
     break;
 
   case 'memory':
@@ -65,10 +59,12 @@ switch (whichBackend()) {
         }
       }
     };
-    i18n
-      .use(LanguageDetector)
-      .init(options);
 
 }
 
-export default i18n;
+export default () => {
+  i18n
+    .use(LanguageDetector)
+    .init(options);
+  return i18n;
+};
