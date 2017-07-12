@@ -22,9 +22,7 @@
     "url": "https://github.com/i18next/react-i18next.git"
   },
   "dependencies": {
-    "hoist-non-react-statics": "1.2.0",
-    "prop-types": "^15.5.10",
-    "react": "^15.6.1"
+    "hoist-non-react-statics": "1.2.0"
   },
   "devDependencies": {
     "babel-cli": "6.24.1",
@@ -48,7 +46,6 @@
     "jest-cli": "19.0.2",
     "mkdirp": "0.5.1",
     "react-addons-test-utils": "^15.5.1",
-    "react-dom": "^15.6.1",
     "rimraf": "2.6.1",
     "rollup": "0.41.6",
     "rollup-plugin-babel": "2.7.1",
@@ -61,6 +58,7 @@
   "peerDependencies": {
     "i18next": ">= 6.0.1",
     "react": ">= 15.0.0",
+    "react-dom": ">= 15.0.0",
     "prop-types": ">= 15.0.0"
   },
   "scripts": {

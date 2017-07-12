@@ -1,3 +1,6 @@
+### 4.6.3
+- move react, prop-types, ... to peerDependency again
+
 ### 4.6.2
 - optimize trans component output
 
