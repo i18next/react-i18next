@@ -76,6 +76,11 @@ $ bower install react-i18next
 * [Example webpack1](https://github.com/i18next/react-i18next/tree/master/example/webpack1)
 * [Example react-native](https://github.com/i18next/react-i18next/tree/master/example/react-native-expo)
 * [Example expo.io](https://github.com/i18next/react-i18next/tree/master/example/react-native-expo)
+* [Example next.js](https://github.com/i18next/react-i18next/tree/master/example/nextjs)
+* [Example razzle](https://github.com/i18next/react-i18next/tree/master/example/razzle-ssr)
+* [Example hashbase / beaker browser](https://github.com/i18next/react-i18next/tree/master/example/dat)
+* [Example storybook](https://github.com/i18next/react-i18next/tree/master/example/storybook)
+* [Example locize.com](https://github.com/i18next/react-i18next/tree/master/example/locize-example)
 
 ### Requirements
 
