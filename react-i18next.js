@@ -518,6 +518,8 @@ function nodesToString(mem, children, index) {
       mem = '' + mem + child;
     } else if (child.props && child.props.children) {
       mem = mem + '<' + elementKey + '>' + nodesToString('', child.props.children, i + 1) + '</' + elementKey + '>';
+    } else if (React__default.isValidElement(child)) {
+      mem = mem + '<' + elementKey + '></' + elementKey + '>';
     } else if ((typeof child === 'undefined' ? 'undefined' : _typeof(child)) === 'object') {
       var clone = _extends({}, child);
       var format = clone.format;

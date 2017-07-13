@@ -1,3 +1,6 @@
+### 4.6.4
+- optimize generated defaultValue for components not having children
+
 ### 4.6.3
 - move react, prop-types, ... to peerDependency again
 
