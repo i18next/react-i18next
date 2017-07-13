@@ -2,16 +2,21 @@ import React from 'react';
 import { translate } from 'react-i18next';
 import i18n from '../i18n';
 
-function myComponent({ t, initialI18nStore }) {
+import PureComponent from '../components/PureComponent';
+import ExtendedComponent from '../components/ExtendedComponent';
+
+function myPage({ t, initialI18nStore }) {
   return (
     <div>
       {t('welcome')}
       <p>{t('integrates_react-i18next')}</p>
+      <PureComponent t={t} />
+      <ExtendedComponent />
     </div>
   );
 }
 
-const Extended = translate('common', { i18n, wait: process.browser })(myComponent);
+const Extended = translate('common', { i18n, wait: process.browser })(myPage);
 
 // Passing down initial translations
 // use req.i18n instance on serverside to avoid overlapping requests set the language wrong
