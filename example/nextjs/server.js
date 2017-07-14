@@ -15,7 +15,8 @@ i18n
   .use(Backend)
   .use(i18nextMiddleware.LanguageDetector)
   .init({
-    preload: ['en', 'de'],
+    preload: ['en', 'de'], // preload all langages
+    ns: ['common', 'home', 'page2'], // need to preload all the namespaces
     backend: {
       loadPath: __dirname + '/locales/{{lng}}/{{ns}}.json',
       addPath: __dirname + '/locales/{{lng}}/{{ns}}.missing.json'
@@ -31,6 +32,9 @@ i18n
 
         // serve locales for client
         server.use('/locales', express.static(__dirname + '/locales'))
+
+        // missing keys
+        server.post('/locales/add/:lng/:ns', i18nextMiddleware.missingKeyHandler(i18n));
 
         // use next.js
         server.get('*', (req, res) => handle(req, res))

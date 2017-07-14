@@ -10,6 +10,6 @@ function MyComponennt({ t }) {
   );
 }
 
-const Extended = translate()(MyComponennt);
+const Extended = translate('common')(MyComponennt);
 
 export default Extended;

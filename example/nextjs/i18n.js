@@ -11,10 +11,7 @@ const options = {
   defaultNS: 'common',
 
   debug: true,
-
-  // cache: {
-  //   enabled: true
-  // },
+  saveMissing: true,
 
   interpolation: {
     escapeValue: false, // not needed for react!!
@@ -36,5 +33,27 @@ if (process.browser) {
 
 // initialize if not already initialized
 if (!i18n.isInitialized) i18n.init(options);
+
+// a simple helper to getInitialProps passed on loaded i18n data
+i18n.getInitialProps = (req, namespaces) => {
+  if (!namespaces) namespaces = i18n.options.defautlNS;
+  if (typeof namespaces === 'string') namespaces = [namespaces];
+
+  req.i18n.toJSON = () => null; // do not serialize i18next instance and send to client
+
+  const initialI18nStore = {};
+  req.i18n.languages.forEach((l) => {
+    initialI18nStore[l] = {};
+    namespaces.forEach((ns) => {
+      initialI18nStore[l][ns] = req.i18n.services.resourceStore.data[l][ns] || {};
+    });
+  });
+
+  return {
+    i18n: req.i18n, // use the instance on req - fixed language on request (avoid issues in race conditions with lngs of different users)
+    initialI18nStore,
+    initialLanguage: req.i18n.language
+  };
+};
 
 module.exports = i18n;

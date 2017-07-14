@@ -4,7 +4,7 @@ import React from 'react';
 export default function PureComponent({ t }) {
   return (
     <div>
-      {t('pureComponent')}
+      {t('common:pureComponent')}
     </div>
   );
 }
