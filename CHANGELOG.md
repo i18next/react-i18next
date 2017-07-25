@@ -1,3 +1,6 @@
+### 4.7.0
+- Trans component parent element configurable [PR278](https://github.com/i18next/react-i18next/pull/278)
+
 ### 4.6.4
 - optimize generated defaultValue for components not having children
 
