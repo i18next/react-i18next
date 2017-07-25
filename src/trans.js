@@ -101,7 +101,7 @@ export default class Trans extends React.Component {
   }
 
   render() {
-    const { children, count } = this.props;
+    const { children, count, parent } = this.props;
 
     const defaultValue = nodesToString('', children, 0);
     const key = this.props.i18nKey || defaultValue;
@@ -118,12 +118,22 @@ export default class Trans extends React.Component {
     }
 
     return React.createElement(
-      'div',
+      parent,
       additionalProps,
       renderNodes(children, translation, this.i18n)
     );
   }
 }
+
+Trans.propTypes = {
+  count: PropTypes.number,
+  parent: PropTypes.string,
+  i18nKey: PropTypes.string
+};
+
+Trans.defaultProps = {
+  parent: 'div',
+};
 
 Trans.contextTypes = {
   i18n: PropTypes.object.isRequired,
