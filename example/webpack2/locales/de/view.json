@@ -5,5 +5,5 @@
   "transTest": "<3>{{count}}</3> Nachricht für <1><0>{{name}}</0></1>. Öffne <5>hier</5>.",
   "transTest_plural": "<3>{{count}}</3> Nachrichten für <1><0>{{name, uppercase}}</0></1>. Öffne <5>hier</5>.",
   "nameTitle": "dies ist dein name",
-  "share": "DE Interpolated <1></1> component"
+  "share": "DE Interpolated <0></0> component"
 }

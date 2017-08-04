@@ -57,7 +57,7 @@ function renderNodes(children, targetString, i18n) {
       let previousIsTag = i > 0 ? !isNaN(toRender[i - 1]) : false;
       if (previousIsTag) {
         const child = nodes[parseInt(toRender[i - 1], 10)] || {};
-        if (!hasChildren(child)) previousIsTag = false;
+        if (React.isValidElement(child) && !hasChildren(child)) previousIsTag = false;
       }
 
       // will be rendered inside child
