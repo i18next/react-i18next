@@ -1,3 +1,7 @@
+### 4.8.0
+- make trans component work with preact and preact-compat
+- add preact example
+
 ### 4.7.0
 - Trans component parent element configurable [PR278](https://github.com/i18next/react-i18next/pull/278)
 
