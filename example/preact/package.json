@@ -1,0 +1,20 @@
+{
+  "name": "preact-i18next-example",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@just-boris/preact-scripts": "1.0.7",
+    "i18next": "8.4.3",
+    "i18next-browser-languagedetector": "2.0.0",
+    "i18next-xhr-backend": "1.4.2",
+    "preact": "8.2.1",
+    "react-i18next": "4.7.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
