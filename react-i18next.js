@@ -609,7 +609,8 @@ var Trans = function (_React$Component) {
     value: function render() {
       var _props = this.props,
           children = _props.children,
-          count = _props.count;
+          count = _props.count,
+          parent = _props.parent;
 
 
       var defaultValue = nodesToString('', children, 0);
@@ -626,11 +627,21 @@ var Trans = function (_React$Component) {
         if (this.t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns: ns });
       }
 
-      return React__default.createElement('div', additionalProps, renderNodes(children, translation, this.i18n));
+      return React__default.createElement(parent, additionalProps, renderNodes(children, translation, this.i18n));
     }
   }]);
   return Trans;
 }(React__default.Component);
+
+Trans.propTypes = {
+  count: PropTypes.number,
+  parent: PropTypes.string,
+  i18nKey: PropTypes.string
+};
+
+Trans.defaultProps = {
+  parent: 'div'
+};
 
 Trans.contextTypes = {
   i18n: PropTypes.object.isRequired,
