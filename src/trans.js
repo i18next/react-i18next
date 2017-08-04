@@ -1,6 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+function hasChildren(node) {
+  return node && (node.children || (node.props && node.props.children));
+}
+
+function getChildren(node) {
+  return node && node.children ? node.children : node.props && node.props.children;
+}
+
 function nodesToString(mem, children, index) {
   if (Object.prototype.toString.call(children) !== '[object Array]') children = [children];
 
@@ -11,8 +19,8 @@ function nodesToString(mem, children, index) {
 
     if (typeof child === 'string') {
       mem = `${mem}${child}`;
-    } else if (child.props && child.props.children) {
-      mem = `${mem}<${elementKey}>${nodesToString('', child.props.children, i + 1)}</${elementKey}>`;
+    } else if (hasChildren(child)) {
+      mem = `${mem}<${elementKey}>${nodesToString('', getChildren(child), i + 1)}</${elementKey}>`;
     } else if (React.isValidElement(child)) {
       mem = `${mem}<${elementKey}></${elementKey}>`;
     } else if (typeof child === 'object') {
@@ -35,7 +43,7 @@ function nodesToString(mem, children, index) {
 const REGEXP = new RegExp('(?:<([^>]*)>(.*?)<\\/\\1>)', 'gi');
 function renderNodes(children, targetString, i18n) {
 
-  function getChildren(nodes, str) {
+  function parseChildren(nodes, str) {
     if (Object.prototype.toString.call(nodes) !== '[object Array]') nodes = [nodes];
 
     const toRender = str.split(REGEXP).reduce((mem, match, i) => {
@@ -49,7 +57,7 @@ function renderNodes(children, targetString, i18n) {
       let previousIsTag = i > 0 ? !isNaN(toRender[i - 1]) : false;
       if (previousIsTag) {
         const child = nodes[parseInt(toRender[i - 1], 10)] || {};
-        if (child.props && !child.props.children) previousIsTag = false;
+        if (!hasChildren(child)) previousIsTag = false;
       }
 
       // will be rendered inside child
@@ -61,8 +69,8 @@ function renderNodes(children, targetString, i18n) {
 
         if (typeof child === 'string') {
           mem.push(child);
-        } else if (child.props && child.props.children) {
-          const inner = getChildren(child.props && child.props.children, toRender[i + 1]);
+        } else if (hasChildren(child)) {
+          const inner = parseChildren(getChildren(child), toRender[i + 1]);
 
           mem.push(React.cloneElement(
             child,
@@ -84,7 +92,7 @@ function renderNodes(children, targetString, i18n) {
     }, []);
   }
 
-  return getChildren(children, targetString);
+  return parseChildren(children, targetString);
 }
 
 
