@@ -2,6 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import hoistStatics from 'hoist-non-react-statics';
 
+let defaultOptions = {
+  wait: false,
+  withRef: false,
+  bindI18n: 'languageChanged loaded',
+  bindStore: 'added removed',
+  translateFuncName: 't',
+  nsMode: 'default'
+};
+
 function getDisplayName(component) {
   return component.displayName || component.name || 'Component';
 }
@@ -9,8 +18,7 @@ function getDisplayName(component) {
 let removedIsInitialSSR = false;
 
 export default function translate(namespaces, options = {}) {
-  const { withRef = false, bindI18n = 'languageChanged loaded', bindStore = 'added removed', translateFuncName = 't' } = options;
-  let { wait = false } = options;
+  const { translateFuncName = defaultOptions.translateFuncName } = options;
 
   return function Wrapper(WrappedComponent) {
 
@@ -22,14 +30,13 @@ export default function translate(namespaces, options = {}) {
         namespaces = namespaces || this.i18n.options.defaultNS;
         if (typeof namespaces === 'string') namespaces = [namespaces];
 
-        if (!wait && this.i18n.options && (this.i18n.options.wait || (this.i18n.options.react && this.i18n.options.react.wait))) wait = true;
-
-        this.nsMode = options.nsMode || (this.i18n.options && this.i18n.options.react && this.i18n.options.react.nsMode) || 'default';
+        const i18nOptions = (this.i18n && this.i18n.options.react) || {};
+        this.options = { ...defaultOptions, ...i18nOptions, ...options };
 
         // nextjs SSR: getting data from next.js or other ssr stack
         if (props.initialI18nStore) {
           this.i18n.services.resourceStore.data = props.initialI18nStore;
-          wait = false; // we got all passed down already
+          this.options.wait = false; // we got all passed down already
         }
         if (props.initialLanguage) {
           this.i18n.changeLanguage(props.initialLanguage);
@@ -37,7 +44,7 @@ export default function translate(namespaces, options = {}) {
 
         // provider SSR: data was set in provider and ssr flag was set
         if (this.i18n.options.isInitialSSR) {
-          wait = false;
+          this.options.wait = false;
         }
 
         this.state = {
@@ -57,20 +64,20 @@ export default function translate(namespaces, options = {}) {
       }
 
       componentWillMount() {
-        this[translateFuncName] = this.i18n.getFixedT(null, this.nsMode === 'fallback' ? namespaces : namespaces[0]);
+        this[translateFuncName] = this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? namespaces : namespaces[0]);
       }
 
       componentDidMount() {
         const bind = () => {
-          if (bindI18n && this.i18n) this.i18n.on(bindI18n, this.onI18nChanged);
-          if (bindStore && this.i18n.store) this.i18n.store.on(bindStore, this.onI18nChanged);
+          if (this.options.bindI18n && this.i18n) this.i18n.on(this.options.bindI18n, this.onI18nChanged);
+          if (this.options.bindStore && this.i18n.store) this.i18n.store.on(this.options.bindStore, this.onI18nChanged);
         };
 
         this.mounted = true;
         this.i18n.loadNamespaces(namespaces, () => {
           const ready = () => {
             if (this.mounted && !this.state.ready) this.setState({ ready: true });
-            if (wait && this.mounted) bind();
+            if (this.options.wait && this.mounted) bind();
           };
 
           if (this.i18n.isInitialized) {
@@ -88,18 +95,18 @@ export default function translate(namespaces, options = {}) {
           }
         });
 
-        if (!wait) bind();
+        if (!this.options.wait) bind();
       }
 
       componentWillUnmount() {
         this.mounted = false;
         if (this.onI18nChanged) {
-          if (bindI18n) {
-            const p = bindI18n.split(' ');
+          if (this.options.bindI18n) {
+            const p = this.options.bindI18n.split(' ');
             p.forEach(f => this.i18n.off(f, this.onI18nChanged));
           }
-          if (bindStore) {
-            const p = bindStore.split(' ');
+          if (this.options.bindStore) {
+            const p = this.options.bindStore.split(' ');
             p.forEach(f => this.i18n.store && this.i18n.store.off(f, this.onI18nChanged));
           }
         }
@@ -112,7 +119,7 @@ export default function translate(namespaces, options = {}) {
       }
 
       getWrappedInstance() {
-        if (!withRef) {
+        if (!this.options.withRef) {
           // eslint-disable-next-line no-console
           console.error(
             'To access the wrapped instance, you need to specify ' +
@@ -132,11 +139,11 @@ export default function translate(namespaces, options = {}) {
           i18n: this.i18n
         };
 
-        if (withRef) {
+        if (this.options.withRef) {
           extraProps.ref = 'wrappedInstance';
         }
 
-        if (!ready && wait) return null;
+        if (!ready && this.options.wait) return null;
 
         // remove ssr flag set by provider - first render was done from now on wait if set to wait
         if (this.i18n.options.isInitialSSR && !removedIsInitialSSR) {
@@ -171,3 +178,7 @@ export default function translate(namespaces, options = {}) {
     return hoistStatics(Translate, WrappedComponent);
   };
 }
+
+translate.setDefaults = function set(options) {
+  defaultOptions = { ...defaultOptions, ...options };
+};

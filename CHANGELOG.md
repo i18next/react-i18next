@@ -1,3 +1,36 @@
+### 5.0.0
+- **[BREAKING]** we no longer accept wait to be specified on i18next init options like ``{ wait: true }`` -> all overrides for the translate hoc now have to be in child `react` like `{ react: { wait: true } }`
+- you now can override all the default options for translate hoc by setting them on i18next.init (excluding `translateFuncName` as we need that upfront to define childContextTypes)
+
+```
+i18next.init({
+  // ... other options
+  react: {
+    wait: false,
+    withRef: false,
+    bindI18n: 'languageChanged loaded',
+    bindStore: 'added removed',
+    nsMode: 'default'
+  }
+});
+```
+
+- you now can override all defaults for translate hoc options (including `translateFuncName`) by using:
+
+```
+import translate from 'react-i18next';
+
+translate.setDefaults({
+  wait: false,
+  withRef: false,
+  bindI18n: 'languageChanged loaded',
+  bindStore: 'added removed',
+  nsMode: 'default',
+  translateFuncName: 't'
+});
+```
+
+
 ### 4.8.0
 - make trans component work with preact and preact-compat
 - add preact example

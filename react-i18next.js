@@ -207,6 +207,15 @@ var slicedToArray = function () {
   };
 }();
 
+var defaultOptions = {
+  wait: false,
+  withRef: false,
+  bindI18n: 'languageChanged loaded',
+  bindStore: 'added removed',
+  translateFuncName: 't',
+  nsMode: 'default'
+};
+
 function getDisplayName(component) {
   return component.displayName || component.name || 'Component';
 }
@@ -215,16 +224,8 @@ var removedIsInitialSSR = false;
 
 function translate(namespaces) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var _options$withRef = options.withRef,
-      withRef = _options$withRef === undefined ? false : _options$withRef,
-      _options$bindI18n = options.bindI18n,
-      bindI18n = _options$bindI18n === undefined ? 'languageChanged loaded' : _options$bindI18n,
-      _options$bindStore = options.bindStore,
-      bindStore = _options$bindStore === undefined ? 'added removed' : _options$bindStore,
-      _options$translateFun = options.translateFuncName,
-      translateFuncName = _options$translateFun === undefined ? 't' : _options$translateFun;
-  var _options$wait = options.wait,
-      wait = _options$wait === undefined ? false : _options$wait;
+  var _options$translateFun = options.translateFuncName,
+      translateFuncName = _options$translateFun === undefined ? defaultOptions.translateFuncName : _options$translateFun;
 
 
   return function Wrapper(WrappedComponent) {
@@ -242,14 +243,13 @@ function translate(namespaces) {
         namespaces = namespaces || _this.i18n.options.defaultNS;
         if (typeof namespaces === 'string') namespaces = [namespaces];
 
-        if (!wait && _this.i18n.options && (_this.i18n.options.wait || _this.i18n.options.react && _this.i18n.options.react.wait)) wait = true;
-
-        _this.nsMode = options.nsMode || _this.i18n.options && _this.i18n.options.react && _this.i18n.options.react.nsMode || 'default';
+        var i18nOptions = _this.i18n && _this.i18n.options.react || {};
+        _this.options = _extends({}, defaultOptions, i18nOptions, options);
 
         // nextjs SSR: getting data from next.js or other ssr stack
         if (props.initialI18nStore) {
           _this.i18n.services.resourceStore.data = props.initialI18nStore;
-          wait = false; // we got all passed down already
+          _this.options.wait = false; // we got all passed down already
         }
         if (props.initialLanguage) {
           _this.i18n.changeLanguage(props.initialLanguage);
@@ -257,7 +257,7 @@ function translate(namespaces) {
 
         // provider SSR: data was set in provider and ssr flag was set
         if (_this.i18n.options.isInitialSSR) {
-          wait = false;
+          _this.options.wait = false;
         }
 
         _this.state = {
@@ -280,7 +280,7 @@ function translate(namespaces) {
       }, {
         key: 'componentWillMount',
         value: function componentWillMount() {
-          this[translateFuncName] = this.i18n.getFixedT(null, this.nsMode === 'fallback' ? namespaces : namespaces[0]);
+          this[translateFuncName] = this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? namespaces : namespaces[0]);
         }
       }, {
         key: 'componentDidMount',
@@ -288,15 +288,15 @@ function translate(namespaces) {
           var _this2 = this;
 
           var bind = function bind() {
-            if (bindI18n && _this2.i18n) _this2.i18n.on(bindI18n, _this2.onI18nChanged);
-            if (bindStore && _this2.i18n.store) _this2.i18n.store.on(bindStore, _this2.onI18nChanged);
+            if (_this2.options.bindI18n && _this2.i18n) _this2.i18n.on(_this2.options.bindI18n, _this2.onI18nChanged);
+            if (_this2.options.bindStore && _this2.i18n.store) _this2.i18n.store.on(_this2.options.bindStore, _this2.onI18nChanged);
           };
 
           this.mounted = true;
           this.i18n.loadNamespaces(namespaces, function () {
             var ready = function ready() {
               if (_this2.mounted && !_this2.state.ready) _this2.setState({ ready: true });
-              if (wait && _this2.mounted) bind();
+              if (_this2.options.wait && _this2.mounted) bind();
             };
 
             if (_this2.i18n.isInitialized) {
@@ -314,7 +314,7 @@ function translate(namespaces) {
             }
           });
 
-          if (!wait) bind();
+          if (!this.options.wait) bind();
         }
       }, {
         key: 'componentWillUnmount',
@@ -323,14 +323,14 @@ function translate(namespaces) {
 
           this.mounted = false;
           if (this.onI18nChanged) {
-            if (bindI18n) {
-              var p = bindI18n.split(' ');
+            if (this.options.bindI18n) {
+              var p = this.options.bindI18n.split(' ');
               p.forEach(function (f) {
                 return _this3.i18n.off(f, _this3.onI18nChanged);
               });
             }
-            if (bindStore) {
-              var _p = bindStore.split(' ');
+            if (this.options.bindStore) {
+              var _p = this.options.bindStore.split(' ');
               _p.forEach(function (f) {
                 return _this3.i18n.store && _this3.i18n.store.off(f, _this3.onI18nChanged);
               });
@@ -347,7 +347,7 @@ function translate(namespaces) {
       }, {
         key: 'getWrappedInstance',
         value: function getWrappedInstance() {
-          if (!withRef) {
+          if (!this.options.withRef) {
             // eslint-disable-next-line no-console
             console.error('To access the wrapped instance, you need to specify ' + '{ withRef: true } as the second argument of the translate() call.');
           }
@@ -369,11 +369,11 @@ function translate(namespaces) {
             i18nLoadedAt: i18nLoadedAt
           }, defineProperty(_extraProps, translateFuncName, this[translateFuncName]), defineProperty(_extraProps, 'i18n', this.i18n), _extraProps);
 
-          if (withRef) {
+          if (this.options.withRef) {
             extraProps.ref = 'wrappedInstance';
           }
 
-          if (!ready && wait) return null;
+          if (!ready && this.options.wait) return null;
 
           // remove ssr flag set by provider - first render was done from now on wait if set to wait
           if (this.i18n.options.isInitialSSR && !removedIsInitialSSR) {
@@ -404,6 +404,10 @@ function translate(namespaces) {
     return index(Translate, WrappedComponent);
   };
 }
+
+translate.setDefaults = function set$$1(options) {
+  defaultOptions = _extends({}, defaultOptions, options);
+};
 
 var Interpolate = function (_Component) {
   inherits(Interpolate, _Component);

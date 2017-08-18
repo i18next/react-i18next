@@ -52,5 +52,16 @@ describe('translate', () => {
     expect(typeof instance.getChildContext().t).toBe('function');
     expect(instance.getChildContext().t).toBe(t);
   });
+  it('that we can override the defaults', () => {
+    translate.setDefaults({ translateFuncName: 'text' });
+    const wrap = translate(['ns1', 'ns2'], {});
+    const Elem = React.createFactory('Elem');
+    const wrapped = wrap(Elem);
+
+    expect(wrapped.childContextTypes.text).toBe(PropTypes.func.isRequired);
+
+    // reset
+    translate.setDefaults({ translateFuncName: 't' });
+  });
 
 });
