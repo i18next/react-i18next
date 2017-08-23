@@ -63,5 +63,29 @@ describe('translate', () => {
     // reset
     translate.setDefaults({ translateFuncName: 't' });
   });
+  it('that we can set i18n', () => {
+    const t = (message) => message;
+    const i18n = {
+      options: {
+        defaultNS: 'defaultNS'
+      },
+      services: {
+        resourceStore: {
+          data: {}
+        }
+      },
+      changeLanguage: () => {},
+      getFixedT(p, ns) {
+        return t;
+      }
+    };
+    translate.setI18n(i18n);
+    const wrap = translate(['ns1', 'ns2'], {});
+    const Elem = React.createFactory('Elem');
+    const wrapped = wrap(Elem);
+    const instance = new wrapped({}, {});
+
+    expect(instance.getChildContext().i18n).toBe(i18n);
+  });
 
 });

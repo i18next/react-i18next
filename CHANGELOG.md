@@ -1,3 +1,13 @@
+### 5.1.0
+- you now can set i18n instance on translate hoc once using setI18n:
+
+```
+import translate from 'react-i18next';
+import i18n from './i18n';
+
+translate.setI18n(i18n);
+```
+
 ### 5.0.0
 - **[BREAKING]** we no longer accept wait to be specified on i18next init options like ``{ wait: true }`` -> all overrides for the translate hoc now have to be in child `react` like `{ react: { wait: true } }`
 - you now can override all the default options for translate hoc by setting them on i18next.init (excluding `translateFuncName` as we need that upfront to define childContextTypes)

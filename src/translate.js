@@ -11,6 +11,8 @@ let defaultOptions = {
   nsMode: 'default'
 };
 
+let i18n;
+
 function getDisplayName(component) {
   return component.displayName || component.name || 'Component';
 }
@@ -26,7 +28,7 @@ export default function translate(namespaces, options = {}) {
       constructor(props, context) {
         super(props, context);
 
-        this.i18n = context.i18n || props.i18n || options.i18n;
+        this.i18n = context.i18n || props.i18n || options.i18n || i18n;
         namespaces = namespaces || this.i18n.options.defaultNS;
         if (typeof namespaces === 'string') namespaces = [namespaces];
 
@@ -179,6 +181,10 @@ export default function translate(namespaces, options = {}) {
   };
 }
 
-translate.setDefaults = function set(options) {
+translate.setDefaults = function setDefaults(options) {
   defaultOptions = { ...defaultOptions, ...options };
+};
+
+translate.setI18n = function setI18n(instance) {
+  i18n = instance;
 };

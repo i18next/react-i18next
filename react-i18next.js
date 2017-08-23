@@ -216,6 +216,8 @@ var defaultOptions = {
   nsMode: 'default'
 };
 
+var i18n = void 0;
+
 function getDisplayName(component) {
   return component.displayName || component.name || 'Component';
 }
@@ -239,7 +241,7 @@ function translate(namespaces) {
 
         var _this = possibleConstructorReturn(this, (Translate.__proto__ || Object.getPrototypeOf(Translate)).call(this, props, context));
 
-        _this.i18n = context.i18n || props.i18n || options.i18n;
+        _this.i18n = context.i18n || props.i18n || options.i18n || i18n;
         namespaces = namespaces || _this.i18n.options.defaultNS;
         if (typeof namespaces === 'string') namespaces = [namespaces];
 
@@ -405,8 +407,12 @@ function translate(namespaces) {
   };
 }
 
-translate.setDefaults = function set$$1(options) {
+translate.setDefaults = function setDefaults(options) {
   defaultOptions = _extends({}, defaultOptions, options);
+};
+
+translate.setI18n = function setI18n(instance) {
+  i18n = instance;
 };
 
 var Interpolate = function (_Component) {
