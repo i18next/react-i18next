@@ -4,6 +4,7 @@
   "description": "Internationalization for react done right. Using the i18next i18n ecosystem.",
   "main": "dist/commonjs/index.js",
   "jsnext:main": "dist/es/index.js",
+  "module": "dist/es/index.js",
   "keywords": [
     "i18next",
     "internationalization",
