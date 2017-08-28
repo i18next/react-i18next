@@ -1,3 +1,7 @@
+### 5.2.0
+- adds module export in package.json pointing to es dist files.
+
+
 ### 5.1.0
 - you now can set i18n instance on translate hoc once using setI18n:
 
