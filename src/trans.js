@@ -109,17 +109,16 @@ export default class Trans extends React.Component {
   }
 
   render() {
-    const { children, count, parent } = this.props;
+    const { children, count, parent, i18nKey, ...additionalProps } = this.props;
 
     const defaultValue = nodesToString('', children, 0);
-    const key = this.props.i18nKey || defaultValue;
+    const key = i18nKey || defaultValue;
     const translation = this.t(key, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue, count });
 
-    const additionalProps = {};
     if (this.i18n.options.react && this.i18n.options.react.exposeNamespace) {
       let ns = typeof this.t.ns === 'string' ? this.t.ns : this.t.ns[0];
-      if (this.props.i18nKey && this.i18n.options.nsSeparator && this.props.i18nKey.indexOf(this.i18n.options.nsSeparator) > -1) {
-        const parts = this.props.i18nKey.split(this.i18n.options.nsSeparator);
+      if (rops.i18nKey && this.i18n.options.nsSeparator && this.i18nKey.indexOf(this.i18n.options.nsSeparator) > -1) {
+        const parts = props.i18nKey.split(this.i18n.options.nsSeparator);
         ns = parts[0];
       }
       if (this.t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns });
