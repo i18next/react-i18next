@@ -1,3 +1,5 @@
+- Pass extra parameters to Trans parent component
+
 ### 5.2.0
 - adds module export in package.json pointing to es dist files.
 
