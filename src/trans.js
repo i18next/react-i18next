@@ -117,8 +117,8 @@ export default class Trans extends React.Component {
 
     if (this.i18n.options.react && this.i18n.options.react.exposeNamespace) {
       let ns = typeof this.t.ns === 'string' ? this.t.ns : this.t.ns[0];
-      if (rops.i18nKey && this.i18n.options.nsSeparator && this.i18nKey.indexOf(this.i18n.options.nsSeparator) > -1) {
-        const parts = props.i18nKey.split(this.i18n.options.nsSeparator);
+      if (this.props.i18nKey && this.i18n.options.nsSeparator && this.props.i18nKey.indexOf(this.i18n.options.nsSeparator) > -1) {
+        const parts = this.props.i18nKey.split(this.i18n.options.nsSeparator);
         ns = parts[0];
       }
       if (this.t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns });
