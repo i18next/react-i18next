@@ -155,7 +155,17 @@ var inherits = function (subClass, superClass) {
 
 
 
+var objectWithoutProperties = function (obj, keys) {
+  var target = {};
 
+  for (var i in obj) {
+    if (keys.indexOf(i) >= 0) continue;
+    if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
+    target[i] = obj[i];
+  }
+
+  return target;
+};
 
 var possibleConstructorReturn = function (self, call) {
   if (!self) {
@@ -628,18 +638,19 @@ var Trans = function (_React$Component) {
       var _props = this.props,
           children = _props.children,
           count = _props.count,
-          parent = _props.parent;
+          parent = _props.parent,
+          i18nKey = _props.i18nKey,
+          additionalProps = objectWithoutProperties(_props, ['children', 'count', 'parent', 'i18nKey']);
 
 
       var defaultValue = nodesToString('', children, 0);
-      var key = this.props.i18nKey || defaultValue;
+      var key = i18nKey || defaultValue;
       var translation = this.t(key, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue: defaultValue, count: count });
 
-      var additionalProps = {};
       if (this.i18n.options.react && this.i18n.options.react.exposeNamespace) {
         var ns = typeof this.t.ns === 'string' ? this.t.ns : this.t.ns[0];
-        if (this.props.i18nKey && this.i18n.options.nsSeparator && this.props.i18nKey.indexOf(this.i18n.options.nsSeparator) > -1) {
-          var parts = this.props.i18nKey.split(this.i18n.options.nsSeparator);
+        if (i18nKey && this.i18n.options.nsSeparator && i18nKey.indexOf(this.i18n.options.nsSeparator) > -1) {
+          var parts = i18nKey.split(this.i18n.options.nsSeparator);
           ns = parts[0];
         }
         if (this.t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns: ns });

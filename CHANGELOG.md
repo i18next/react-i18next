@@ -1,3 +1,4 @@
+### 5.3.0
 - Pass extra parameters to Trans parent component
 
 ### 5.2.0
