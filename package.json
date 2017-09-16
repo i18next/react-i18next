@@ -23,7 +23,11 @@
     "url": "https://github.com/i18next/react-i18next.git"
   },
   "dependencies": {
-    "hoist-non-react-statics": "1.2.0"
+    "hoist-non-react-statics": "1.2.0",
+    "html-parse-stringify2": "2.0.1",
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
   },
   "devDependencies": {
     "babel-cli": "6.24.1",
@@ -94,5 +98,6 @@
       "!**/test/**",
       "!**/example/**"
     ]
-  }
+  },
+  "lock": false
 }

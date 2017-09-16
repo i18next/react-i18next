@@ -1,3 +1,6 @@
+### 5.4.0
+- replaces regex used to parse nodes from string to an ast implementation solving [#298](https://github.com/i18next/react-i18next/issues/298)
+
 ### 5.3.0
 - Pass extra parameters to Trans parent component
 

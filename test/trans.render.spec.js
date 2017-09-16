@@ -47,6 +47,98 @@ describe('trans simple', () => {
   });
 });
 
+describe('trans testTransKey1 singular', () => {
+  const TestElement = ({ t }) => {
+    const numOfItems = 1;
+    return (
+      <Trans i18nKey='testTransKey1' count={numOfItems}>
+       {{numOfItems}} items matched.
+      </Trans>
+    );
+  }
+
+  it('should render correct content', () => {
+    const HocElement = translate(['translation'], {})(TestElement);
+
+    const wrapper = mount(<HocElement />, { context });
+    // console.log(wrapper.debug());
+    expect(wrapper.contains(
+      <div>
+        1 item matched.
+      </div>
+    )).toBe(true);
+  });
+});
+
+describe('trans testTransKey1 plural', () => {
+  const TestElement = ({ t }) => {
+    const numOfItems = 10;
+    return (
+      <Trans i18nKey='testTransKey1' count={numOfItems}>
+       {{numOfItems}} items matched.
+      </Trans>
+    );
+  }
+
+  it('should render correct content', () => {
+    const HocElement = translate(['translation'], {})(TestElement);
+
+    const wrapper = mount(<HocElement />, { context });
+    // console.log(wrapper.debug());
+    expect(wrapper.contains(
+      <div>
+        10 items matched.
+      </div>
+    )).toBe(true);
+  });
+});
+
+describe('trans testTransKey2', () => {
+  const TestElement = ({ t }) => {
+    const numOfItems = 10;
+    return (
+      <Trans i18nKey='testTransKey2' count={numOfItems}>
+        <span className='matchCount'>{{numOfItems}}</span> items matched.
+      </Trans>
+    );
+  }
+
+  it('should render correct content', () => {
+    const HocElement = translate(['translation'], {})(TestElement);
+
+    const wrapper = mount(<HocElement />, { context });
+    // console.log(wrapper.debug());
+    expect(wrapper.contains(
+      <div>
+        <span className='matchCount'>10</span> items matched.
+      </div>
+    )).toBe(true);
+  });
+});
+
+describe('trans testTransKey3', () => {
+  const TestElement = ({ t }) => {
+    const numOfItems = 10;
+    return (
+      <Trans i18nKey='testTransKey3' count={numOfItems}>
+        Result: <span className='matchCount'>{{numOfItems}}</span> items matched.
+      </Trans>
+    );
+  }
+
+  it('should render correct content', () => {
+    const HocElement = translate(['translation'], {})(TestElement);
+
+    const wrapper = mount(<HocElement />, { context });
+    // console.log(wrapper.debug());
+    expect(wrapper.contains(
+      <div>
+        Result: <span className='matchCount'>10</span> items matched.
+      </div>
+    )).toBe(true);
+  });
+});
+
 
 describe('trans complex', () => {
   const TestElement = ({ t }) => {

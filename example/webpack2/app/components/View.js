@@ -34,9 +34,21 @@ class TranslatableView extends React.Component {
     const count = 10;
     const name = 'Arthur';
 
+    const numOfItems = 11;
+
     return (
       <div>
         <h1>{t('common:appName')}</h1>
+
+        <Trans i18nKey='testTransKey1' count={numOfItems}>
+         {{numOfItems}} items matched.
+        </Trans>
+        <Trans i18nKey='testTransKey2' count={numOfItems}>
+          <span className='matchCount'>{{numOfItems}}</span> items matched.
+        </Trans>
+        <Trans i18nKey='testTransKey3' count={numOfItems}>
+          Result: <span className='matchCount'>{{numOfItems}}</span> items matched.
+        </Trans>
 
 
         <Trans i18nKey="transTest" count={count}>
@@ -46,6 +58,8 @@ class TranslatableView extends React.Component {
         <Trans i18nKey="share">
           <input value="copyme" readOnly />
         </Trans>
+
+
 
         <button onClick={() => toggle('de')}>{t('nav:linkDE')}</button>
         <button onClick={() => toggle('en')}>{t('nav:linkEN')}</button>

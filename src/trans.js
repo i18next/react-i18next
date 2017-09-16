@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import HTML from 'html-parse-stringify2';
 
 function hasChildren(node) {
   return node && (node.children || (node.props && node.props.children));
@@ -40,37 +41,25 @@ function nodesToString(mem, children, index) {
   return mem;
 }
 
-const REGEXP = new RegExp('(?:<([^>]*)>(.*?)<\\/\\1>)', 'gi');
 function renderNodes(children, targetString, i18n) {
 
-  function parseChildren(nodes, str) {
-    if (Object.prototype.toString.call(nodes) !== '[object Array]') nodes = [nodes];
+  // parse ast from string with additional wrapper tag
+  // -> avoids issues in parser removing prepending text nodes
+  const ast = HTML.parse(`<0>${targetString}</0>`);
 
-    const toRender = str.split(REGEXP).reduce((mem, match, i) => {
-      if (match) mem.push(match);
-      return mem;
-    }, []);
+  function mapAST(reactNodes, astNodes) {
+    if (Object.prototype.toString.call(reactNodes) !== '[object Array]') reactNodes = [reactNodes];
+    if (Object.prototype.toString.call(astNodes) !== '[object Array]') astNodes = [astNodes];
 
-    return toRender.reduce((mem, part, i) => {
-      // is a tag
-      const isTag = !isNaN(part);
-      let previousIsTag = i > 0 ? !isNaN(toRender[i - 1]) : false;
-      if (previousIsTag) {
-        const child = nodes[parseInt(toRender[i - 1], 10)] || {};
-        if (React.isValidElement(child) && !hasChildren(child)) previousIsTag = false;
-      }
-
-      // will be rendered inside child
-      if (previousIsTag) return mem;
-
-      if (isTag) {
-        const child = nodes[parseInt(part, 10)] || {};
+    return astNodes.reduce((mem, node, i) => {
+      if (node.type === 'tag') {
+        const child = reactNodes[parseInt(node.name, 10)] || {};
         const isElement = React.isValidElement(child);
 
         if (typeof child === 'string') {
           mem.push(child);
         } else if (hasChildren(child)) {
-          const inner = parseChildren(getChildren(child), toRender[i + 1]);
+          const inner = mapAST(getChildren(child), node.children);
 
           mem.push(React.cloneElement(
             child,
@@ -78,21 +67,23 @@ function renderNodes(children, targetString, i18n) {
             inner
           ));
         } else if (typeof child === 'object' && !isElement) {
-          const interpolated = i18n.services.interpolator.interpolate(toRender[i + 1], child, i18n.language);
+          const interpolated = i18n.services.interpolator.interpolate(node.children[0].content, child, i18n.language);
           mem.push(interpolated);
         } else {
           mem.push(child);
         }
+      } else if (node.type === 'text') {
+        mem.push(node.content);
       }
-
-      // no element just a string
-      if (!isTag && !previousIsTag) mem.push(part);
-
       return mem;
     }, []);
   }
 
-  return parseChildren(children, targetString);
+  // call mapAST with having react nodes nested into additional node like
+  // we did for the string ast from translation
+  // return the children of that extra node to get expected result
+  const result = mapAST([{ children }], ast);
+  return result[0].props.children;
 }
 
 
@@ -139,7 +130,7 @@ Trans.propTypes = {
 };
 
 Trans.defaultProps = {
-  parent: 'div',
+  parent: 'div'
 };
 
 Trans.contextTypes = {

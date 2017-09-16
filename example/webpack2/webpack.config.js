@@ -25,5 +25,10 @@ module.exports = {
       loaders: ['babel-loader'],
       include: path.join(__dirname, 'app')
     }]
+  },
+  resolve: {
+    alias: {
+      react: path.resolve(__dirname, 'node_modules/react/')
+    }
   }
 };
