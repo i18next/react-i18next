@@ -60,7 +60,7 @@ function renderNodes(children, targetString, i18n) {
           mem.push(child);
         } else if (hasChildren(child)) {
           const inner = mapAST(getChildren(child), node.children);
-
+          if (child.dummy) child.children = inner; // needed on preact!
           mem.push(React.cloneElement(
             child,
             { ...child.props, key: i },
@@ -82,8 +82,8 @@ function renderNodes(children, targetString, i18n) {
   // call mapAST with having react nodes nested into additional node like
   // we did for the string ast from translation
   // return the children of that extra node to get expected result
-  const result = mapAST([{ children }], ast);
-  return result[0].props.children;
+  const result = mapAST([{ dummy: true, children }], ast);
+  return getChildren(result[0]);
 }
 
 

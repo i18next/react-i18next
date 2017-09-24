@@ -792,7 +792,7 @@ function renderNodes(children, targetString, i18n) {
           mem.push(child);
         } else if (hasChildren(child)) {
           var inner = mapAST(getChildren(child), node.children);
-
+          if (child.dummy) child.children = inner; // needed on preact!
           mem.push(React__default.cloneElement(child, _extends({}, child.props, { key: i }), inner));
         } else if ((typeof child === 'undefined' ? 'undefined' : _typeof(child)) === 'object' && !isElement) {
           var interpolated = i18n.services.interpolator.interpolate(node.children[0].content, child, i18n.language);
@@ -810,8 +810,8 @@ function renderNodes(children, targetString, i18n) {
   // call mapAST with having react nodes nested into additional node like
   // we did for the string ast from translation
   // return the children of that extra node to get expected result
-  var result = mapAST([{ children: children }], ast);
-  return result[0].props.children;
+  var result = mapAST([{ dummy: true, children: children }], ast);
+  return getChildren(result[0]);
 }
 
 var Trans = function (_React$Component) {

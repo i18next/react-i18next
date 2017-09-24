@@ -1,3 +1,6 @@
+### 5.4.1
+- fixes AST implementation for preact
+
 ### 5.4.0
 - replaces regex used to parse nodes from string to an ast implementation solving [#298](https://github.com/i18next/react-i18next/issues/298)
 
