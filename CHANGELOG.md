@@ -1,3 +1,8 @@
+### 6.0.0
+- **[BREAKING]** removes options to set translateFuncName in translate hoc (was not supported in Trans and Interpolate component anyway)
+- setting i18n instance and defaults can now be done by i18next.use(reactI18nextModule) making I18nextProvider obsolete
+- As an alternative to the translate hoc you now can use the I18n component supporting a render props (for details about render props https://www.youtube.com/watch?v=BcVAq3YFiuc)
+
 ### 5.4.1
 - fixes AST implementation for preact
 

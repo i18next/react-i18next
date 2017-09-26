@@ -1,0 +1,20 @@
+{
+  "name": "react_renderprops",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^15.6.2",
+    "react-dom": "^15.6.2",
+    "react-scripts": "1.0.13",
+    "i18next": "8.4.3",
+    "i18next-browser-languagedetector": "2.0.0",
+    "i18next-xhr-backend": "1.4.2",
+    "react-i18next": "6.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

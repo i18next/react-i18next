@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-class Interpolate extends Component {
+class Interpolate extends PureComponent {
 
   constructor(props, context) {
     super(props, context);
-    this.i18n = context.i18n;
-    this.t = context.t;
+    this.i18n = props.i18n || context.i18n;
+    this.t = props.t || context.t;
   }
 
   render() {

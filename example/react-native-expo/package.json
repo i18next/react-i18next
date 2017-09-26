@@ -22,7 +22,7 @@
     "expo": "16.0.0",
     "i18next": "8.2.1",
     "react": "16.0.0-alpha.6",
-    "react-i18next": "4.0.0",
+    "react-i18next": "6.0.0",
     "react-native": "0.43.4",
     "react-navigation": "1.0.0-beta.9"
   }

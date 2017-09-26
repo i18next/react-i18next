@@ -16,7 +16,6 @@ describe('translate', () => {
     const wrapped = wrap(Elem);
     expect(wrapped.WrappedComponent).toBe(Elem);
     expect(wrapped.contextTypes.i18n).toBe(PropTypes.object);
-    expect(wrapped.childContextTypes.t).toBe(PropTypes.func.isRequired);
     expect(wrapped.displayName).toBe('Translate(Elem)');
     expect(wrapped.namespaces.length).toBe(2);
     expect(wrapped.namespaces[0]).toBe('ns1');
@@ -47,21 +46,8 @@ describe('translate', () => {
       }
     };
     const instance = new wrapped(props, context);
-    instance.componentWillMount();
+
     expect(typeof instance.getWrappedInstance).toBe('function');
-    expect(typeof instance.getChildContext().t).toBe('function');
-    expect(instance.getChildContext().t).toBe(t);
-  });
-  it('that we can override the defaults', () => {
-    translate.setDefaults({ translateFuncName: 'text' });
-    const wrap = translate(['ns1', 'ns2'], {});
-    const Elem = React.createFactory('Elem');
-    const wrapped = wrap(Elem);
-
-    expect(wrapped.childContextTypes.text).toBe(PropTypes.func.isRequired);
-
-    // reset
-    translate.setDefaults({ translateFuncName: 't' });
   });
   it('that we can set i18n', () => {
     const t = (message) => message;
@@ -85,7 +71,7 @@ describe('translate', () => {
     const wrapped = wrap(Elem);
     const instance = new wrapped({}, {});
 
-    expect(instance.getChildContext().i18n).toBe(i18n);
+    expect(instance.i18n).toBe(i18n);
   });
 
 });

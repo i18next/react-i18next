@@ -1,7 +1,7 @@
-import { Component, Children } from 'react';
+import { PureComponent, Children } from 'react';
 import PropTypes from 'prop-types';
 
-class I18nextProvider extends Component {
+class I18nextProvider extends PureComponent {
   constructor(props, context) {
     super(props, context);
     this.i18n = props.i18n;

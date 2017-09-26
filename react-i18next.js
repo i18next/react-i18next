@@ -100,20 +100,7 @@ var createClass = function () {
 
 
 
-var defineProperty = function (obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
 
-  return obj;
-};
 
 var _extends = Object.assign || function (target) {
   for (var i = 1; i < arguments.length; i++) {
@@ -228,135 +215,209 @@ var defaultOptions = {
 
 var i18n = void 0;
 
+function setDefaults(options) {
+  defaultOptions = _extends({}, defaultOptions, options);
+}
+
+function getDefaults() {
+  return defaultOptions;
+}
+
+function setI18n(instance) {
+  i18n = instance;
+}
+
+function getI18n() {
+  return i18n;
+}
+
+var reactI18nextModule = {
+  type: '3rdParty',
+
+  init: function init(instance) {
+    setDefaults(instance.options.react);
+    setI18n(instance);
+  }
+};
+
+var removedIsInitialSSR = false;
+
+var I18n = function (_PureComponent) {
+  inherits(I18n, _PureComponent);
+
+  function I18n(props, context) {
+    classCallCheck(this, I18n);
+
+    var _this = possibleConstructorReturn(this, (I18n.__proto__ || Object.getPrototypeOf(I18n)).call(this, props, context));
+
+    _this.i18n = context.i18n || props.i18n || getI18n();
+    _this.namespaces = _this.props.ns || _this.i18n.options.defaultNS;
+    if (typeof _this.namespaces === 'string') _this.namespaces = [_this.namespaces];
+
+    var i18nOptions = _this.i18n && _this.i18n.options.react || {};
+    _this.options = _extends({}, getDefaults(), i18nOptions, props);
+
+    // nextjs SSR: getting data from next.js or other ssr stack
+    if (props.initialI18nStore) {
+      _this.i18n.services.resourceStore.data = props.initialI18nStore;
+      _this.options.wait = false; // we got all passed down already
+    }
+    if (props.initialLanguage) {
+      _this.i18n.changeLanguage(props.initialLanguage);
+    }
+
+    // provider SSR: data was set in provider and ssr flag was set
+    if (_this.i18n.options.isInitialSSR) {
+      _this.options.wait = false;
+    }
+
+    _this.state = {
+      i18nLoadedAt: null,
+      ready: false
+    };
+
+    _this.onI18nChanged = _this.onI18nChanged.bind(_this);
+    return _this;
+  }
+
+  createClass(I18n, [{
+    key: 'getChildContext',
+    value: function getChildContext() {
+      return {
+        t: this.t,
+        i18n: this.i18n
+      };
+    }
+  }, {
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      this.t = this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? this.namespaces : this.namespaces[0]);
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      var bind = function bind() {
+        if (_this2.options.bindI18n && _this2.i18n) _this2.i18n.on(_this2.options.bindI18n, _this2.onI18nChanged);
+        if (_this2.options.bindStore && _this2.i18n.store) _this2.i18n.store.on(_this2.options.bindStore, _this2.onI18nChanged);
+      };
+
+      this.mounted = true;
+      this.i18n.loadNamespaces(this.namespaces, function () {
+        var ready = function ready() {
+          if (_this2.mounted && !_this2.state.ready) _this2.setState({ ready: true });
+          if (_this2.options.wait && _this2.mounted) bind();
+        };
+
+        if (_this2.i18n.isInitialized) {
+          ready();
+        } else {
+          var initialized = function initialized() {
+            // due to emitter removing issue in i18next we need to delay remove
+            setTimeout(function () {
+              _this2.i18n.off('initialized', initialized);
+            }, 1000);
+            ready();
+          };
+
+          _this2.i18n.on('initialized', initialized);
+        }
+      });
+
+      if (!this.options.wait) bind();
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      var _this3 = this;
+
+      this.mounted = false;
+      if (this.onI18nChanged) {
+        if (this.options.bindI18n) {
+          var p = this.options.bindI18n.split(' ');
+          p.forEach(function (f) {
+            return _this3.i18n.off(f, _this3.onI18nChanged);
+          });
+        }
+        if (this.options.bindStore) {
+          var _p = this.options.bindStore.split(' ');
+          _p.forEach(function (f) {
+            return _this3.i18n.store && _this3.i18n.store.off(f, _this3.onI18nChanged);
+          });
+        }
+      }
+    }
+  }, {
+    key: 'onI18nChanged',
+    value: function onI18nChanged() {
+      if (!this.mounted) return;
+
+      this.setState({ i18nLoadedAt: new Date() });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this4 = this;
+
+      var children = this.props.children;
+      var ready = this.state.ready;
+
+
+      if (!ready && this.options.wait) return null;
+
+      // remove ssr flag set by provider - first render was done from now on wait if set to wait
+      if (this.i18n.options.isInitialSSR && !removedIsInitialSSR) {
+        removedIsInitialSSR = true;
+        setTimeout(function () {
+          delete _this4.i18n.options.isInitialSSR;
+        }, 100);
+      }
+
+      return children(this.t, { i18n: this.i18n, t: this.t });
+    }
+  }]);
+  return I18n;
+}(React.PureComponent);
+
+I18n.contextTypes = {
+  i18n: PropTypes.object
+};
+
+I18n.childContextTypes = {
+  t: PropTypes.func.isRequired,
+  i18n: PropTypes.object
+};
+
 function getDisplayName(component) {
   return component.displayName || component.name || 'Component';
 }
 
-var removedIsInitialSSR = false;
-
 function translate(namespaces) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var _options$translateFun = options.translateFuncName,
-      translateFuncName = _options$translateFun === undefined ? defaultOptions.translateFuncName : _options$translateFun;
 
 
   return function Wrapper(WrappedComponent) {
-    var _Translate$childConte;
-
-    var Translate = function (_Component) {
-      inherits(Translate, _Component);
+    var Translate = function (_PureComponent) {
+      inherits(Translate, _PureComponent);
 
       function Translate(props, context) {
         classCallCheck(this, Translate);
 
         var _this = possibleConstructorReturn(this, (Translate.__proto__ || Object.getPrototypeOf(Translate)).call(this, props, context));
 
-        _this.i18n = context.i18n || props.i18n || options.i18n || i18n;
+        _this.i18n = context.i18n || props.i18n || options.i18n || getI18n();
         namespaces = namespaces || _this.i18n.options.defaultNS;
         if (typeof namespaces === 'string') namespaces = [namespaces];
 
         var i18nOptions = _this.i18n && _this.i18n.options.react || {};
-        _this.options = _extends({}, defaultOptions, i18nOptions, options);
+        _this.options = _extends({}, getDefaults(), i18nOptions, options);
 
-        // nextjs SSR: getting data from next.js or other ssr stack
-        if (props.initialI18nStore) {
-          _this.i18n.services.resourceStore.data = props.initialI18nStore;
-          _this.options.wait = false; // we got all passed down already
-        }
-        if (props.initialLanguage) {
-          _this.i18n.changeLanguage(props.initialLanguage);
-        }
-
-        // provider SSR: data was set in provider and ssr flag was set
-        if (_this.i18n.options.isInitialSSR) {
-          _this.options.wait = false;
-        }
-
-        _this.state = {
-          i18nLoadedAt: null,
-          ready: false
-        };
-
-        _this.onI18nChanged = _this.onI18nChanged.bind(_this);
         _this.getWrappedInstance = _this.getWrappedInstance.bind(_this);
         return _this;
       }
 
       createClass(Translate, [{
-        key: 'getChildContext',
-        value: function getChildContext() {
-          var _ref;
-
-          return _ref = {}, defineProperty(_ref, translateFuncName, this[translateFuncName]), defineProperty(_ref, 'i18n', this.i18n), _ref;
-        }
-      }, {
-        key: 'componentWillMount',
-        value: function componentWillMount() {
-          this[translateFuncName] = this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? namespaces : namespaces[0]);
-        }
-      }, {
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-          var _this2 = this;
-
-          var bind = function bind() {
-            if (_this2.options.bindI18n && _this2.i18n) _this2.i18n.on(_this2.options.bindI18n, _this2.onI18nChanged);
-            if (_this2.options.bindStore && _this2.i18n.store) _this2.i18n.store.on(_this2.options.bindStore, _this2.onI18nChanged);
-          };
-
-          this.mounted = true;
-          this.i18n.loadNamespaces(namespaces, function () {
-            var ready = function ready() {
-              if (_this2.mounted && !_this2.state.ready) _this2.setState({ ready: true });
-              if (_this2.options.wait && _this2.mounted) bind();
-            };
-
-            if (_this2.i18n.isInitialized) {
-              ready();
-            } else {
-              var initialized = function initialized() {
-                // due to emitter removing issue in i18next we need to delay remove
-                setTimeout(function () {
-                  _this2.i18n.off('initialized', initialized);
-                }, 1000);
-                ready();
-              };
-
-              _this2.i18n.on('initialized', initialized);
-            }
-          });
-
-          if (!this.options.wait) bind();
-        }
-      }, {
-        key: 'componentWillUnmount',
-        value: function componentWillUnmount() {
-          var _this3 = this;
-
-          this.mounted = false;
-          if (this.onI18nChanged) {
-            if (this.options.bindI18n) {
-              var p = this.options.bindI18n.split(' ');
-              p.forEach(function (f) {
-                return _this3.i18n.off(f, _this3.onI18nChanged);
-              });
-            }
-            if (this.options.bindStore) {
-              var _p = this.options.bindStore.split(' ');
-              _p.forEach(function (f) {
-                return _this3.i18n.store && _this3.i18n.store.off(f, _this3.onI18nChanged);
-              });
-            }
-          }
-        }
-      }, {
-        key: 'onI18nChanged',
-        value: function onI18nChanged() {
-          if (!this.mounted) return;
-
-          this.setState({ i18nLoadedAt: new Date() });
-        }
-      }, {
         key: 'getWrappedInstance',
         value: function getWrappedInstance() {
           if (!this.options.withRef) {
@@ -365,49 +426,34 @@ function translate(namespaces) {
           }
 
           /* eslint react/no-string-refs: 1 */
-          return this.refs.wrappedInstance;
+          return this.wrappedInstance;
         }
       }, {
         key: 'render',
         value: function render() {
-          var _extraProps,
-              _this4 = this;
+          var _this2 = this;
 
-          var _state = this.state,
-              i18nLoadedAt = _state.i18nLoadedAt,
-              ready = _state.ready;
-
-          var extraProps = (_extraProps = {
-            i18nLoadedAt: i18nLoadedAt
-          }, defineProperty(_extraProps, translateFuncName, this[translateFuncName]), defineProperty(_extraProps, 'i18n', this.i18n), _extraProps);
+          var extraProps = {};
 
           if (this.options.withRef) {
-            extraProps.ref = 'wrappedInstance';
+            extraProps.ref = function (c) {
+              _this2.wrappedInstance = c;
+            };
           }
 
-          if (!ready && this.options.wait) return null;
-
-          // remove ssr flag set by provider - first render was done from now on wait if set to wait
-          if (this.i18n.options.isInitialSSR && !removedIsInitialSSR) {
-            removedIsInitialSSR = true;
-            setTimeout(function () {
-              delete _this4.i18n.options.isInitialSSR;
-            }, 100);
-          }
-
-          return React__default.createElement(WrappedComponent, _extends({}, this.props, extraProps));
+          return React__default.createElement(I18n, _extends({ ns: namespaces }, this.options, this.props, { i18n: this.i18n }), function (t, context) {
+            return React__default.createElement(WrappedComponent, _extends({}, _this2.props, extraProps, context));
+          });
         }
       }]);
       return Translate;
-    }(React.Component);
+    }(React.PureComponent);
 
     Translate.WrappedComponent = WrappedComponent;
 
     Translate.contextTypes = {
       i18n: PropTypes.object
     };
-
-    Translate.childContextTypes = (_Translate$childConte = {}, defineProperty(_Translate$childConte, translateFuncName, PropTypes.func.isRequired), defineProperty(_Translate$childConte, 'i18n', PropTypes.object), _Translate$childConte);
 
     Translate.displayName = 'Translate(' + getDisplayName(WrappedComponent) + ')';
 
@@ -417,24 +463,20 @@ function translate(namespaces) {
   };
 }
 
-translate.setDefaults = function setDefaults(options) {
-  defaultOptions = _extends({}, defaultOptions, options);
-};
+translate.setDefaults = setDefaults;
 
-translate.setI18n = function setI18n(instance) {
-  i18n = instance;
-};
+translate.setI18n = setI18n;
 
-var Interpolate = function (_Component) {
-  inherits(Interpolate, _Component);
+var Interpolate = function (_PureComponent) {
+  inherits(Interpolate, _PureComponent);
 
   function Interpolate(props, context) {
     classCallCheck(this, Interpolate);
 
     var _this = possibleConstructorReturn(this, (Interpolate.__proto__ || Object.getPrototypeOf(Interpolate)).call(this, props, context));
 
-    _this.i18n = context.i18n;
-    _this.t = context.t;
+    _this.i18n = props.i18n || context.i18n;
+    _this.t = props.t || context.t;
     return _this;
   }
 
@@ -511,7 +553,7 @@ var Interpolate = function (_Component) {
     }
   }]);
   return Interpolate;
-}(React.Component);
+}(React.PureComponent);
 
 Interpolate.propTypes = {
   className: PropTypes.string
@@ -814,23 +856,20 @@ function renderNodes(children, targetString, i18n) {
   return getChildren(result[0]);
 }
 
-var Trans = function (_React$Component) {
-  inherits(Trans, _React$Component);
+var Trans = function (_React$PureComponent) {
+  inherits(Trans, _React$PureComponent);
 
   function Trans(props, context) {
     classCallCheck(this, Trans);
 
     var _this = possibleConstructorReturn(this, (Trans.__proto__ || Object.getPrototypeOf(Trans)).call(this, props, context));
 
-    _this.i18n = context.i18n;
-    _this.t = context.t;
+    _this.i18n = props.i18n || context.i18n;
+    _this.t = props.t || context.t;
     return _this;
   }
 
   createClass(Trans, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {}
-  }, {
     key: 'render',
     value: function render() {
       var _props = this.props,
@@ -858,7 +897,7 @@ var Trans = function (_React$Component) {
     }
   }]);
   return Trans;
-}(React__default.Component);
+}(React__default.PureComponent);
 
 Trans.propTypes = {
   count: PropTypes.number,
@@ -875,8 +914,8 @@ Trans.contextTypes = {
   t: PropTypes.func.isRequired
 };
 
-var I18nextProvider = function (_Component) {
-  inherits(I18nextProvider, _Component);
+var I18nextProvider = function (_PureComponent) {
+  inherits(I18nextProvider, _PureComponent);
 
   function I18nextProvider(props, context) {
     classCallCheck(this, I18nextProvider);
@@ -915,7 +954,7 @@ var I18nextProvider = function (_Component) {
     }
   }]);
   return I18nextProvider;
-}(React.Component);
+}(React.PureComponent);
 
 I18nextProvider.propTypes = {
   i18n: PropTypes.object.isRequired,
@@ -965,10 +1004,10 @@ function eachComponents(components, iterator) {
 
 function filterAndFlattenComponents(components) {
   var flattened = [];
-  eachComponents(components, function (Component$$1) {
-    if (Component$$1 && Component$$1.namespaces) {
+  eachComponents(components, function (Component) {
+    if (Component && Component.namespaces) {
 
-      Component$$1.namespaces.forEach(function (namespace) {
+      Component.namespaces.forEach(function (namespace) {
         if (flattened.indexOf(namespace) === -1) {
           flattened.push(namespace);
         }
@@ -989,11 +1028,17 @@ function loadNamespaces(_ref) {
   });
 }
 
-exports.loadNamespaces = loadNamespaces;
 exports.translate = translate;
+exports.I18n = I18n;
 exports.Interpolate = Interpolate;
-exports.I18nextProvider = I18nextProvider;
 exports.Trans = Trans;
+exports.I18nextProvider = I18nextProvider;
+exports.loadNamespaces = loadNamespaces;
+exports.reactI18nextModule = reactI18nextModule;
+exports.setDefaults = setDefaults;
+exports.getDefaults = getDefaults;
+exports.setI18n = setI18n;
+exports.getI18n = getI18n;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

@@ -1,13 +1,7 @@
-import translate from './translate';
-import Interpolate from './interpolate';
-import Trans from './trans';
-import I18nextProvider from './I18nextProvider';
-import loadNamespaces from './loadNamespaces';
-
-export {
-  loadNamespaces,
-  translate,
-  Interpolate,
-  I18nextProvider,
-  Trans
-};
+export { default as translate } from './translate';
+export { default as I18n } from './I18n';
+export { default as Interpolate } from './Interpolate';
+export { default as Trans } from './Trans';
+export { default as I18nextProvider } from './I18nextProvider';
+export { default as loadNamespaces } from './loadNamespaces';
+export { reactI18nextModule, setDefaults, getDefaults, setI18n, getI18n } from './context';
