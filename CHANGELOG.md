@@ -1,3 +1,6 @@
+### 6.0.1
+- remove react from dependencies - not sure how that came into the package.json
+
 ### 6.0.0
 - **[BREAKING]** removes options to set translateFuncName in translate hoc (was not supported in Trans and Interpolate component anyway)
 - setting i18n instance and defaults can now be done by i18next.use(reactI18nextModule) making I18nextProvider obsolete
