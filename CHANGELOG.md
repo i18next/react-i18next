@@ -1,3 +1,6 @@
+### 6.0.2
+- rebuild needed cause of uppercasing for components name was not reflected in last build
+
 ### 6.0.1
 - remove react from dependencies - not sure how that came into the package.json
 
