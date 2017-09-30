@@ -32,4 +32,4 @@ export const reactI18nextModule = {
     setDefaults(instance.options.react);
     setI18n(instance);
   }
-}
+};
