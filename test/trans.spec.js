@@ -1,7 +1,7 @@
 jest.unmock('../src/Trans');
 import React from 'react';
 import PropTypes from 'prop-types';
-import Trans from '../src/trans';
+import Trans from '../src/Trans';
 
 describe('trans', () => {
   it('should have some stuff', () => {
