@@ -1,7 +1,7 @@
 jest.unmock('../src/interpolate');
 import React from 'react';
 import PropTypes from 'prop-types';
-import Interpolate from '../src/interpolate';
+import Interpolate from '../src/Interpolate';
 
 describe('interpolate', () => {
   it('should have some stuff', () => {

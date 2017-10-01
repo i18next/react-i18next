@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow, render, mount } from 'enzyme';
 import i18n from './i18n';
 import translate from '../src/translate';
-import Interpolate from '../src/interpolate';
+import Interpolate from '../src/Interpolate';
 
 const context = {
   i18n

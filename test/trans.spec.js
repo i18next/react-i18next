@@ -1,4 +1,4 @@
-jest.unmock('../src/trans');
+jest.unmock('../src/Trans');
 import React from 'react';
 import PropTypes from 'prop-types';
 import Trans from '../src/trans';
