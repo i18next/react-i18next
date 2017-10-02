@@ -35,6 +35,7 @@ export default class I18n extends PureComponent {
     };
 
     this.onI18nChanged = this.onI18nChanged.bind(this);
+    this.getI18nTranslate = this.getI18nTranslate.bind(this);
   }
 
   getChildContext() {
@@ -45,7 +46,7 @@ export default class I18n extends PureComponent {
   }
 
   componentWillMount() {
-    this.t = this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? this.namespaces : this.namespaces[0]);
+    this.t = this.getI18nTranslate();
   }
 
   componentDidMount() {
@@ -96,7 +97,13 @@ export default class I18n extends PureComponent {
   onI18nChanged() {
     if (!this.mounted) return;
 
-    this.setState({ i18nLoadedAt: new Date() });
+    this.setState({ i18nLoadedAt: new Date() }, () => {
+      this.t = this.getI18nTranslate();
+    });
+  }
+
+  getI18nTranslate() {
+    return this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? this.namespaces : this.namespaces[0]);
   }
 
   render() {
