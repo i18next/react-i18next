@@ -1,0 +1,25 @@
+engines:
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - ruby
+      - javascript:
+          mass_threshold: 58
+      - python
+      - php
+  eslint:
+    enabled: true
+  fixme:
+    enabled: true
+ratings:
+  paths:
+  - "src/**/*"
+exclude_paths:
+- test/
+- coverage/
+- dist/
+- example/
+- "react-i18next.js"
+- "react-i18next.min.js"
+- "rollup.config.js"

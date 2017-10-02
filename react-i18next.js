@@ -1,406 +1,1045 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react')) :
-  typeof define === 'function' && define.amd ? define('reactI18next', ['exports', 'react'], factory) :
-  (factory((global.reactI18next = global.reactI18next || {}),global.React));
-}(this, function (exports,React) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react'), require('prop-types')) :
+	typeof define === 'function' && define.amd ? define('reactI18next', ['exports', 'react', 'prop-types'], factory) :
+	(factory((global.reactI18next = global.reactI18next || {}),global.React,global.PropTypes));
+}(this, (function (exports,React,PropTypes) { 'use strict';
 
-  var React__default = 'default' in React ? React['default'] : React;
+var React__default = 'default' in React ? React['default'] : React;
+PropTypes = 'default' in PropTypes ? PropTypes['default'] : PropTypes;
 
-  var babelHelpers = {};
-  babelHelpers.typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-    return typeof obj;
-  } : function (obj) {
-    return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
-  };
+/**
+ * Copyright 2015, Yahoo! Inc.
+ * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
+ */
+var REACT_STATICS = {
+    childContextTypes: true,
+    contextTypes: true,
+    defaultProps: true,
+    displayName: true,
+    getDefaultProps: true,
+    mixins: true,
+    propTypes: true,
+    type: true
+};
 
-  babelHelpers.classCallCheck = function (instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  };
+var KNOWN_STATICS = {
+    name: true,
+    length: true,
+    prototype: true,
+    caller: true,
+    arguments: true,
+    arity: true
+};
 
-  babelHelpers.createClass = function () {
-    function defineProperties(target, props) {
-      for (var i = 0; i < props.length; i++) {
-        var descriptor = props[i];
-        descriptor.enumerable = descriptor.enumerable || false;
-        descriptor.configurable = true;
-        if ("value" in descriptor) descriptor.writable = true;
-        Object.defineProperty(target, descriptor.key, descriptor);
-      }
-    }
+var isGetOwnPropertySymbolsAvailable = typeof Object.getOwnPropertySymbols === 'function';
 
-    return function (Constructor, protoProps, staticProps) {
-      if (protoProps) defineProperties(Constructor.prototype, protoProps);
-      if (staticProps) defineProperties(Constructor, staticProps);
-      return Constructor;
-    };
-  }();
+var index = function hoistNonReactStatics(targetComponent, sourceComponent, customStatics) {
+    if (typeof sourceComponent !== 'string') { // don't hoist over string (html) components
+        var keys = Object.getOwnPropertyNames(sourceComponent);
 
-  babelHelpers.extends = Object.assign || function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
+        /* istanbul ignore else */
+        if (isGetOwnPropertySymbolsAvailable) {
+            keys = keys.concat(Object.getOwnPropertySymbols(sourceComponent));
         }
-      }
-    }
 
-    return target;
-  };
+        for (var i = 0; i < keys.length; ++i) {
+            if (!REACT_STATICS[keys[i]] && !KNOWN_STATICS[keys[i]] && (!customStatics || !customStatics[keys[i]])) {
+                try {
+                    targetComponent[keys[i]] = sourceComponent[keys[i]];
+                } catch (error) {
 
-  babelHelpers.inherits = function (subClass, superClass) {
-    if (typeof superClass !== "function" && superClass !== null) {
-      throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
-    }
-
-    subClass.prototype = Object.create(superClass && superClass.prototype, {
-      constructor: {
-        value: subClass,
-        enumerable: false,
-        writable: true,
-        configurable: true
-      }
-    });
-    if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-  };
-
-  babelHelpers.possibleConstructorReturn = function (self, call) {
-    if (!self) {
-      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-    }
-
-    return call && (typeof call === "object" || typeof call === "function") ? call : self;
-  };
-
-  babelHelpers.slicedToArray = function () {
-    function sliceIterator(arr, i) {
-      var _arr = [];
-      var _n = true;
-      var _d = false;
-      var _e = undefined;
-
-      try {
-        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-          _arr.push(_s.value);
-
-          if (i && _arr.length === i) break;
+                }
+            }
         }
-      } catch (err) {
-        _d = true;
-        _e = err;
-      } finally {
-        try {
-          if (!_n && _i["return"]) _i["return"]();
-        } finally {
-          if (_d) throw _e;
-        }
-      }
-
-      return _arr;
     }
 
-    return function (arr, i) {
-      if (Array.isArray(arr)) {
-        return arr;
-      } else if (Symbol.iterator in Object(arr)) {
-        return sliceIterator(arr, i);
-      } else {
-        throw new TypeError("Invalid attempt to destructure non-iterable instance");
-      }
-    };
-  }();
+    return targetComponent;
+};
 
-  babelHelpers;
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
 
-  function getDisplayName(component) {
-    return component.displayName || component.name || 'Component';
+
+
+
+
+
+
+
+
+
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
   }
 
-  function translate(namespaces) {
-    var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-    var _options$withRef = options.withRef;
-    var withRef = _options$withRef === undefined ? false : _options$withRef;
-    var _options$wait = options.wait;
-    var wait = _options$wait === undefined ? false : _options$wait;
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
 
 
-    return function Wrapper(WrappedComponent) {
-      var Translate = function (_Component) {
-        babelHelpers.inherits(Translate, _Component);
 
-        function Translate(props, context) {
-          babelHelpers.classCallCheck(this, Translate);
 
-          var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Translate).call(this, props, context));
 
-          _this.i18n = context.i18n;
-          namespaces = namespaces || _this.i18n.options.defaultNS;
 
-          _this.state = {
-            i18nLoadedAt: null,
-            ready: false
+
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+
+
+var inherits = function (subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+};
+
+
+
+
+
+
+
+
+
+var objectWithoutProperties = function (obj, keys) {
+  var target = {};
+
+  for (var i in obj) {
+    if (keys.indexOf(i) >= 0) continue;
+    if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
+    target[i] = obj[i];
+  }
+
+  return target;
+};
+
+var possibleConstructorReturn = function (self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return call && (typeof call === "object" || typeof call === "function") ? call : self;
+};
+
+
+
+
+
+var slicedToArray = function () {
+  function sliceIterator(arr, i) {
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _e = undefined;
+
+    try {
+      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+        _arr.push(_s.value);
+
+        if (i && _arr.length === i) break;
+      }
+    } catch (err) {
+      _d = true;
+      _e = err;
+    } finally {
+      try {
+        if (!_n && _i["return"]) _i["return"]();
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+
+    return _arr;
+  }
+
+  return function (arr, i) {
+    if (Array.isArray(arr)) {
+      return arr;
+    } else if (Symbol.iterator in Object(arr)) {
+      return sliceIterator(arr, i);
+    } else {
+      throw new TypeError("Invalid attempt to destructure non-iterable instance");
+    }
+  };
+}();
+
+var defaultOptions = {
+  wait: false,
+  withRef: false,
+  bindI18n: 'languageChanged loaded',
+  bindStore: 'added removed',
+  translateFuncName: 't',
+  nsMode: 'default'
+};
+
+var i18n = void 0;
+
+function setDefaults(options) {
+  defaultOptions = _extends({}, defaultOptions, options);
+}
+
+function getDefaults() {
+  return defaultOptions;
+}
+
+function setI18n(instance) {
+  i18n = instance;
+}
+
+function getI18n() {
+  return i18n;
+}
+
+var reactI18nextModule = {
+  type: '3rdParty',
+
+  init: function init(instance) {
+    setDefaults(instance.options.react);
+    setI18n(instance);
+  }
+};
+
+var removedIsInitialSSR = false;
+
+var I18n = function (_PureComponent) {
+  inherits(I18n, _PureComponent);
+
+  function I18n(props, context) {
+    classCallCheck(this, I18n);
+
+    var _this = possibleConstructorReturn(this, (I18n.__proto__ || Object.getPrototypeOf(I18n)).call(this, props, context));
+
+    _this.i18n = context.i18n || props.i18n || getI18n();
+    _this.namespaces = _this.props.ns || _this.i18n.options.defaultNS;
+    if (typeof _this.namespaces === 'string') _this.namespaces = [_this.namespaces];
+
+    var i18nOptions = _this.i18n && _this.i18n.options.react || {};
+    _this.options = _extends({}, getDefaults(), i18nOptions, props);
+
+    // nextjs SSR: getting data from next.js or other ssr stack
+    if (props.initialI18nStore) {
+      _this.i18n.services.resourceStore.data = props.initialI18nStore;
+      _this.options.wait = false; // we got all passed down already
+    }
+    if (props.initialLanguage) {
+      _this.i18n.changeLanguage(props.initialLanguage);
+    }
+
+    // provider SSR: data was set in provider and ssr flag was set
+    if (_this.i18n.options.isInitialSSR) {
+      _this.options.wait = false;
+    }
+
+    _this.state = {
+      i18nLoadedAt: null,
+      ready: false
+    };
+
+    _this.onI18nChanged = _this.onI18nChanged.bind(_this);
+    return _this;
+  }
+
+  createClass(I18n, [{
+    key: 'getChildContext',
+    value: function getChildContext() {
+      return {
+        t: this.t,
+        i18n: this.i18n
+      };
+    }
+  }, {
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      this.t = this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? this.namespaces : this.namespaces[0]);
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      var bind = function bind() {
+        if (_this2.options.bindI18n && _this2.i18n) _this2.i18n.on(_this2.options.bindI18n, _this2.onI18nChanged);
+        if (_this2.options.bindStore && _this2.i18n.store) _this2.i18n.store.on(_this2.options.bindStore, _this2.onI18nChanged);
+      };
+
+      this.mounted = true;
+      this.i18n.loadNamespaces(this.namespaces, function () {
+        var ready = function ready() {
+          if (_this2.mounted && !_this2.state.ready) _this2.setState({ ready: true });
+          if (_this2.options.wait && _this2.mounted) bind();
+        };
+
+        if (_this2.i18n.isInitialized) {
+          ready();
+        } else {
+          var initialized = function initialized() {
+            // due to emitter removing issue in i18next we need to delay remove
+            setTimeout(function () {
+              _this2.i18n.off('initialized', initialized);
+            }, 1000);
+            ready();
           };
 
-          _this.onI18nChanged = _this.onI18nChanged.bind(_this);
-          return _this;
+          _this2.i18n.on('initialized', initialized);
         }
+      });
 
-        babelHelpers.createClass(Translate, [{
-          key: 'getChildContext',
-          value: function getChildContext() {
-            return { t: this.t };
+      if (!this.options.wait) bind();
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      var _this3 = this;
+
+      this.mounted = false;
+      if (this.onI18nChanged) {
+        if (this.options.bindI18n) {
+          var p = this.options.bindI18n.split(' ');
+          p.forEach(function (f) {
+            return _this3.i18n.off(f, _this3.onI18nChanged);
+          });
+        }
+        if (this.options.bindStore) {
+          var _p = this.options.bindStore.split(' ');
+          _p.forEach(function (f) {
+            return _this3.i18n.store && _this3.i18n.store.off(f, _this3.onI18nChanged);
+          });
+        }
+      }
+    }
+  }, {
+    key: 'onI18nChanged',
+    value: function onI18nChanged() {
+      if (!this.mounted) return;
+
+      this.setState({ i18nLoadedAt: new Date() });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this4 = this;
+
+      var children = this.props.children;
+      var ready = this.state.ready;
+
+
+      if (!ready && this.options.wait) return null;
+
+      // remove ssr flag set by provider - first render was done from now on wait if set to wait
+      if (this.i18n.options.isInitialSSR && !removedIsInitialSSR) {
+        removedIsInitialSSR = true;
+        setTimeout(function () {
+          delete _this4.i18n.options.isInitialSSR;
+        }, 100);
+      }
+
+      return children(this.t, { i18n: this.i18n, t: this.t });
+    }
+  }]);
+  return I18n;
+}(React.PureComponent);
+
+I18n.contextTypes = {
+  i18n: PropTypes.object
+};
+
+I18n.childContextTypes = {
+  t: PropTypes.func.isRequired,
+  i18n: PropTypes.object
+};
+
+function getDisplayName(component) {
+  return component.displayName || component.name || 'Component';
+}
+
+function translate(namespaces) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+
+  return function Wrapper(WrappedComponent) {
+    var Translate = function (_PureComponent) {
+      inherits(Translate, _PureComponent);
+
+      function Translate(props, context) {
+        classCallCheck(this, Translate);
+
+        var _this = possibleConstructorReturn(this, (Translate.__proto__ || Object.getPrototypeOf(Translate)).call(this, props, context));
+
+        _this.i18n = context.i18n || props.i18n || options.i18n || getI18n();
+        namespaces = namespaces || _this.i18n.options.defaultNS;
+        if (typeof namespaces === 'string') namespaces = [namespaces];
+
+        var i18nOptions = _this.i18n && _this.i18n.options.react || {};
+        _this.options = _extends({}, getDefaults(), i18nOptions, options);
+
+        _this.getWrappedInstance = _this.getWrappedInstance.bind(_this);
+        return _this;
+      }
+
+      createClass(Translate, [{
+        key: 'getWrappedInstance',
+        value: function getWrappedInstance() {
+          if (!this.options.withRef) {
+            // eslint-disable-next-line no-console
+            console.error('To access the wrapped instance, you need to specify ' + '{ withRef: true } as the second argument of the translate() call.');
           }
-        }, {
-          key: 'componentWillMount',
-          value: function componentWillMount() {
-            this.t = this.i18n.getFixedT(null, namespaces);
+
+          /* eslint react/no-string-refs: 1 */
+          return this.wrappedInstance;
+        }
+      }, {
+        key: 'render',
+        value: function render() {
+          var _this2 = this;
+
+          var extraProps = {};
+
+          if (this.options.withRef) {
+            extraProps.ref = function (c) {
+              _this2.wrappedInstance = c;
+            };
           }
-        }, {
-          key: 'componentDidMount',
-          value: function componentDidMount() {
-            var _this2 = this;
 
-            this.mounted = true;
-            this.i18n.loadNamespaces(namespaces, function () {
-              _this2.setState({ ready: true });
-            });
-            this.i18n.on('languageChanged loaded', this.onI18nChanged);
-            this.i18n.store.on('added removed', this.onI18nChanged);
-          }
-        }, {
-          key: 'componentWillUnmount',
-          value: function componentWillUnmount() {
-            this.mounted = false;
-            if (this.onI18nChanged) {
-              this.i18n.off('languageChanged', this.onI18nChanged);
-              this.i18n.off('loaded', this.onI18nChanged);
-              this.i18n.store.off('added', this.onI18nChanged);
-              this.i18n.store.off('removed', this.onI18nChanged);
-            }
-          }
-        }, {
-          key: 'onI18nChanged',
-          value: function onI18nChanged() {
-            if (!this.mounted) return;
-
-            this.setState({ i18nLoadedAt: new Date() });
-          }
-        }, {
-          key: 'getWrappedInstance',
-          value: function getWrappedInstance() {
-            if (!withRef) {
-              // eslint-disable-next-line no-console
-              console.error('To access the wrapped instance, you need to specify ' + '{ withRef: true } as the second argument of the translate() call.');
-            }
-
-            return this.refs.wrappedInstance;
-          }
-        }, {
-          key: 'render',
-          value: function render() {
-            var _state = this.state;
-            var i18nLoadedAt = _state.i18nLoadedAt;
-            var ready = _state.ready;
-
-            var extraProps = { i18nLoadedAt: i18nLoadedAt, t: this.t };
-
-            if (withRef) {
-              extraProps.ref = 'wrappedInstance';
-            }
-
-            if (!ready && wait) return null;
-
-            return React__default.createElement(WrappedComponent, babelHelpers.extends({}, this.props, extraProps));
-          }
-        }]);
-        return Translate;
-      }(React.Component);
-
-      Translate.WrappedComponent = WrappedComponent;
-
-      Translate.contextTypes = {
-        i18n: React.PropTypes.object.isRequired
-      };
-
-      Translate.childContextTypes = {
-        t: React.PropTypes.func.isRequired
-      };
-
-      Translate.displayName = 'Translate[' + getDisplayName(WrappedComponent) + ']';
-
-      Translate.namespaces = namespaces;
-
+          return React__default.createElement(I18n, _extends({ ns: namespaces }, this.options, this.props, { i18n: this.i18n }), function (t, context) {
+            return React__default.createElement(WrappedComponent, _extends({}, _this2.props, extraProps, context));
+          });
+        }
+      }]);
       return Translate;
+    }(React.PureComponent);
+
+    Translate.WrappedComponent = WrappedComponent;
+
+    Translate.contextTypes = {
+      i18n: PropTypes.object
     };
+
+    Translate.displayName = 'Translate(' + getDisplayName(WrappedComponent) + ')';
+
+    Translate.namespaces = namespaces;
+
+    return index(Translate, WrappedComponent);
+  };
+}
+
+translate.setDefaults = setDefaults;
+
+translate.setI18n = setI18n;
+
+var Interpolate = function (_PureComponent) {
+  inherits(Interpolate, _PureComponent);
+
+  function Interpolate(props, context) {
+    classCallCheck(this, Interpolate);
+
+    var _this = possibleConstructorReturn(this, (Interpolate.__proto__ || Object.getPrototypeOf(Interpolate)).call(this, props, context));
+
+    _this.i18n = props.i18n || context.i18n;
+    _this.t = props.t || context.t;
+    return _this;
   }
 
-  var Interpolate = function (_Component) {
-    babelHelpers.inherits(Interpolate, _Component);
+  createClass(Interpolate, [{
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
 
-    function Interpolate(props, context) {
-      babelHelpers.classCallCheck(this, Interpolate);
+      var parent = this.props.parent || 'span';
+      var REGEXP = this.props.regexp || this.i18n.services.interpolator.regexp;
+      var _props = this.props,
+          className = _props.className,
+          style = _props.style;
 
-      var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Interpolate).call(this, props, context));
+      // Set to true if you want to use raw HTML in translation values
+      // See https://github.com/i18next/react-i18next/issues/189
 
-      _this.i18n = context.i18n;
-      _this.t = context.t;
-      return _this;
-    }
+      var useDangerouslySetInnerHTML = this.props.useDangerouslySetInnerHTML || false;
+      var dangerouslySetInnerHTMLPartElement = this.props.dangerouslySetInnerHTMLPartElement || 'span';
 
-    babelHelpers.createClass(Interpolate, [{
-      key: 'render',
-      value: function render() {
-        var _this2 = this;
+      var tOpts = _extends({}, this.props.options, { interpolation: { prefix: '#$?', suffix: '?$#' } });
+      var format = this.t(this.props.i18nKey, tOpts);
 
-        var parent = this.props.parent || 'span';
-        var REGEXP = this.props.regexp || this.i18n.services.interpolator.regexp;
+      if (!format || typeof format !== 'string') return React__default.createElement('noscript', null);
 
-        var tOpts = babelHelpers.extends({}, this.props.options, { interpolation: { prefix: '#$?', suffix: '?$#' } });
-        var format = this.t(this.props.i18nKey, tOpts);
+      var children = [];
 
-        if (!format || typeof format !== 'string') return React__default.createElement('noscript', null);
+      var handleFormat = function handleFormat(key, props) {
+        if (key.indexOf(_this2.i18n.options.interpolation.formatSeparator) < 0) {
+          if (props[key] === undefined) _this2.i18n.services.logger.warn('interpolator: missed to pass in variable ' + key + ' for interpolating ' + format);
+          return props[key];
+        }
 
-        var children = [];
+        var p = key.split(_this2.i18n.options.interpolation.formatSeparator);
+        var k = p.shift().trim();
+        var f = p.join(_this2.i18n.options.interpolation.formatSeparator).trim();
 
-        format.split(REGEXP).reduce(function (memo, match, index) {
-          var child;
+        if (props[k] === undefined) _this2.i18n.services.logger.warn('interpolator: missed to pass in variable ' + k + ' for interpolating ' + format);
+        return _this2.i18n.options.interpolation.format(props[k], f, _this2.i18n.language);
+      };
 
-          if (index % 2 === 0) {
-            if (match.length === 0) return memo;
-            child = match;
+      format.split(REGEXP).reduce(function (memo, match, index) {
+        var child = void 0;
+
+        if (index % 2 === 0) {
+          if (match.length === 0) return memo;
+          if (useDangerouslySetInnerHTML) {
+            child = React__default.createElement(dangerouslySetInnerHTMLPartElement, { dangerouslySetInnerHTML: { __html: match } });
           } else {
-            child = _this2.props[match];
+            child = match;
           }
-
-          memo.push(child);
-          return memo;
-        }, children);
-
-        return React__default.createElement.apply(this, [parent, this.props].concat(children));
-      }
-    }]);
-    return Interpolate;
-  }(React.Component);
-
-  Interpolate.contextTypes = {
-    i18n: React.PropTypes.object.isRequired,
-    t: React.PropTypes.func.isRequired
-  };
-
-  var I18nextProvider = function (_Component) {
-    babelHelpers.inherits(I18nextProvider, _Component);
-
-    function I18nextProvider(props, context) {
-      babelHelpers.classCallCheck(this, I18nextProvider);
-
-      var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(I18nextProvider).call(this, props, context));
-
-      _this.i18n = props.i18n;
-      return _this;
-    }
-
-    babelHelpers.createClass(I18nextProvider, [{
-      key: 'getChildContext',
-      value: function getChildContext() {
-        return { i18n: this.i18n };
-      }
-    }, {
-      key: 'componentWillReceiveProps',
-      value: function componentWillReceiveProps(nextProps) {
-        if (this.props.i18n !== nextProps.i18n) {
-          console.error('[react-i18next][I18nextProvider]does not support changing the i18n object.');
+        } else {
+          child = handleFormat(match, _this2.props);
         }
-      }
-    }, {
-      key: 'render',
-      value: function render() {
-        var children = this.props.children;
 
-        return React.Children.only(children);
-      }
-    }]);
-    return I18nextProvider;
-  }(React.Component);
+        memo.push(child);
+        return memo;
+      }, children);
 
-  I18nextProvider.propTypes = {
-    i18n: React.PropTypes.object.isRequired,
-    children: React.PropTypes.element.isRequired
-  };
-
-  I18nextProvider.childContextTypes = {
-    i18n: React.PropTypes.object.isRequired
-  };
-
-  // Borrowed from https://github.com/Rezonans/redux-async-connect/blob/master/modules/ReduxAsyncConnect.js#L16
-  function eachComponents(components, iterator) {
-    for (var i = 0, l = components.length; i < l; i++) {
-      // eslint-disable-line id-length
-      if (babelHelpers.typeof(components[i]) === 'object') {
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-          for (var _iterator = Object.entries(components[i])[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var _step$value = babelHelpers.slicedToArray(_step.value, 2);
-
-            var key = _step$value[0];
-            var value = _step$value[1];
-
-            iterator(value, i, key);
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
+      var additionalProps = {};
+      if (this.i18n.options.react && this.i18n.options.react.exposeNamespace) {
+        var ns = typeof this.t.ns === 'string' ? this.t.ns : this.t.ns[0];
+        if (this.props.i18nKey && this.i18n.options.nsSeparator && this.props.i18nKey.indexOf(this.i18n.options.nsSeparator) > -1) {
+          var parts = this.props.i18nKey.split(this.i18n.options.nsSeparator);
+          ns = parts[0];
         }
-      } else {
-        iterator(components[i], i);
+        if (this.t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns: ns });
       }
+
+      if (className) additionalProps.className = className;
+      if (style) additionalProps.style = style;
+
+      return React__default.createElement.apply(this, [parent, additionalProps].concat(children));
     }
-  }
+  }]);
+  return Interpolate;
+}(React.PureComponent);
 
-  function filterAndFlattenComponents(components) {
-    var flattened = [];
-    eachComponents(components, function (Component) {
-      if (Component && Component.namespaces) {
+Interpolate.propTypes = {
+  className: PropTypes.string
+};
 
-        Component.namespaces.forEach(function (namespace) {
-          if (flattened.indexOf(namespace) === -1) {
-            flattened.push(namespace);
-          }
+Interpolate.defaultProps = {
+  className: ''
+};
+
+Interpolate.contextTypes = {
+  i18n: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired
+};
+
+/**
+ * This file automatically generated from `pre-publish.js`.
+ * Do not manually edit.
+ */
+
+var index$2 = {
+  "area": true,
+  "base": true,
+  "br": true,
+  "col": true,
+  "embed": true,
+  "hr": true,
+  "img": true,
+  "input": true,
+  "keygen": true,
+  "link": true,
+  "menuitem": true,
+  "meta": true,
+  "param": true,
+  "source": true,
+  "track": true,
+  "wbr": true
+};
+
+var attrRE = /([\w-]+)|=|(['"])([.\s\S]*?)\2/g;
+
+
+var parseTag = function (tag) {
+    var i = 0;
+    var key;
+    var expectingValueAfterEquals = true;
+    var res = {
+        type: 'tag',
+        name: '',
+        voidElement: false,
+        attrs: {},
+        children: []
+    };
+
+    tag.replace(attrRE, function (match) {
+        if (match === '=') {
+            expectingValueAfterEquals = true;
+            i++;
+            return;
+        }
+
+        if (!expectingValueAfterEquals) {
+            if (key) {
+                res.attrs[key] = key; // boolean attribute
+            }
+            key=match;
+        } else {
+            if (i === 0) {
+                if (index$2[match] || tag.charAt(tag.length - 2) === '/') {
+                    res.voidElement = true;
+                }
+                res.name = match;
+            } else {
+                res.attrs[key] = match.replace(/^['"]|['"]$/g, '');
+                key=undefined;
+            }
+        }
+        i++;
+        expectingValueAfterEquals = false;
+    });
+
+    return res;
+};
+
+/*jshint -W030 */
+var tagRE = /(?:<!--[\S\s]*?-->|<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>)/g;
+
+// re-used obj for quick lookups of components
+var empty = Object.create ? Object.create(null) : {};
+// common logic for pushing a child node onto a list
+function pushTextNode(list, html, level, start, ignoreWhitespace) {
+    // calculate correct end of the content slice in case there's
+    // no tag after the text node.
+    var end = html.indexOf('<', start);
+    var content = html.slice(start, end === -1 ? undefined : end);
+    // if a node is nothing but whitespace, collapse it as the spec states:
+    // https://www.w3.org/TR/html4/struct/text.html#h-9.1
+    if (/^\s*$/.test(content)) {
+        content = ' ';
+    }
+    // don't add whitespace-only text nodes if they would be trailing text nodes
+    // or if they would be leading whitespace-only text nodes:
+    //  * end > -1 indicates this is not a trailing text node
+    //  * leading node is when level is -1 and list has length 0
+    if ((!ignoreWhitespace && end > -1 && level + list.length >= 0) || content !== ' ') {
+        list.push({
+            type: 'text',
+            content: content
         });
+    }
+}
+
+var parse = function parse(html, options) {
+    options || (options = {});
+    options.components || (options.components = empty);
+    var result = [];
+    var current;
+    var level = -1;
+    var arr = [];
+    var byTag = {};
+    var inComponent = false;
+
+    html.replace(tagRE, function (tag, index) {
+        if (inComponent) {
+            if (tag !== ('</' + current.name + '>')) {
+                return;
+            } else {
+                inComponent = false;
+            }
+        }
+
+        var isOpen = tag.charAt(1) !== '/';
+        var isComment = tag.indexOf('<!--') === 0;
+        var start = index + tag.length;
+        var nextChar = html.charAt(start);
+        var parent;
+
+        if (isOpen && !isComment) {
+            level++;
+
+            current = parseTag(tag);
+            if (current.type === 'tag' && options.components[current.name]) {
+                current.type = 'component';
+                inComponent = true;
+            }
+
+            if (!current.voidElement && !inComponent && nextChar && nextChar !== '<') {
+                pushTextNode(current.children, html, level, start, options.ignoreWhitespace);
+            }
+
+            byTag[current.tagName] = current;
+
+            // if we're at root, push new base node
+            if (level === 0) {
+                result.push(current);
+            }
+
+            parent = arr[level - 1];
+
+            if (parent) {
+                parent.children.push(current);
+            }
+
+            arr[level] = current;
+        }
+
+        if (isComment || !isOpen || current.voidElement) {
+            if (!isComment) {
+                level--;
+            }
+            if (!inComponent && nextChar !== '<' && nextChar) {
+                // trailing text node
+                // if we're at the root, push a base text node. otherwise add as
+                // a child to the current node.
+                parent = level === -1 ? result : arr[level].children;
+                pushTextNode(parent, html, level, start, options.ignoreWhitespace);
+            }
+        }
+    });
+
+    // If the "html" passed isn't actually html, add it as a text node.
+    if (!result.length && html.length) {
+        pushTextNode(result, html, 0, 0, options.ignoreWhitespace);
+    }
+
+    return result;
+};
+
+function attrString(attrs) {
+    var buff = [];
+    for (var key in attrs) {
+        buff.push(key + '="' + attrs[key] + '"');
+    }
+    if (!buff.length) {
+        return '';
+    }
+    return ' ' + buff.join(' ');
+}
+
+function stringify(buff, doc) {
+    switch (doc.type) {
+    case 'text':
+        return buff + doc.content;
+    case 'tag':
+        buff += '<' + doc.name + (doc.attrs ? attrString(doc.attrs) : '') + (doc.voidElement ? '/>' : '>');
+        if (doc.voidElement) {
+            return buff;
+        }
+        return buff + doc.children.reduce(stringify, '') + '</' + doc.name + '>';
+    }
+}
+
+var stringify_1 = function (doc) {
+    return doc.reduce(function (token, rootEl) {
+        return token + stringify('', rootEl);
+    }, '');
+};
+
+var index$1 = {
+    parse: parse,
+    stringify: stringify_1
+};
+
+function hasChildren(node) {
+  return node && (node.children || node.props && node.props.children);
+}
+
+function getChildren(node) {
+  return node && node.children ? node.children : node.props && node.props.children;
+}
+
+function nodesToString(mem, children, index) {
+  if (Object.prototype.toString.call(children) !== '[object Array]') children = [children];
+
+  children.forEach(function (child, i) {
+    // const isElement = React.isValidElement(child);
+    // const elementKey = `${index !== 0 ? index + '-' : ''}${i}:${typeof child.type === 'function' ? child.type.name : child.type || 'var'}`;
+    var elementKey = '' + i;
+
+    if (typeof child === 'string') {
+      mem = '' + mem + child;
+    } else if (hasChildren(child)) {
+      mem = mem + '<' + elementKey + '>' + nodesToString('', getChildren(child), i + 1) + '</' + elementKey + '>';
+    } else if (React__default.isValidElement(child)) {
+      mem = mem + '<' + elementKey + '></' + elementKey + '>';
+    } else if ((typeof child === 'undefined' ? 'undefined' : _typeof(child)) === 'object') {
+      var clone = _extends({}, child);
+      var format = clone.format;
+      delete clone.format;
+
+      var keys = Object.keys(clone);
+      if (format && keys.length === 1) {
+        mem = mem + '<' + elementKey + '>{{' + keys[0] + ', ' + format + '}}</' + elementKey + '>';
+      } else if (keys.length === 1) {
+        mem = mem + '<' + elementKey + '>{{' + keys[0] + '}}</' + elementKey + '>';
       }
-    });
-    return flattened;
+    }
+  });
+
+  return mem;
+}
+
+function renderNodes(children, targetString, i18n) {
+
+  // parse ast from string with additional wrapper tag
+  // -> avoids issues in parser removing prepending text nodes
+  var ast = index$1.parse('<0>' + targetString + '</0>');
+
+  function mapAST(reactNodes, astNodes) {
+    if (Object.prototype.toString.call(reactNodes) !== '[object Array]') reactNodes = [reactNodes];
+    if (Object.prototype.toString.call(astNodes) !== '[object Array]') astNodes = [astNodes];
+
+    return astNodes.reduce(function (mem, node, i) {
+      if (node.type === 'tag') {
+        var child = reactNodes[parseInt(node.name, 10)] || {};
+        var isElement = React__default.isValidElement(child);
+
+        if (typeof child === 'string') {
+          mem.push(child);
+        } else if (hasChildren(child)) {
+          var inner = mapAST(getChildren(child), node.children);
+          if (child.dummy) child.children = inner; // needed on preact!
+          mem.push(React__default.cloneElement(child, _extends({}, child.props, { key: i }), inner));
+        } else if ((typeof child === 'undefined' ? 'undefined' : _typeof(child)) === 'object' && !isElement) {
+          var interpolated = i18n.services.interpolator.interpolate(node.children[0].content, child, i18n.language);
+          mem.push(interpolated);
+        } else {
+          mem.push(child);
+        }
+      } else if (node.type === 'text') {
+        mem.push(node.content);
+      }
+      return mem;
+    }, []);
   }
 
-  function loadNamespaces(_ref) {
-    var components = _ref.components;
-    var i18n = _ref.i18n;
+  // call mapAST with having react nodes nested into additional node like
+  // we did for the string ast from translation
+  // return the children of that extra node to get expected result
+  var result = mapAST([{ dummy: true, children: children }], ast);
+  return getChildren(result[0]);
+}
 
-    var allNamespaces = filterAndFlattenComponents(components);
+var Trans = function (_React$PureComponent) {
+  inherits(Trans, _React$PureComponent);
 
-    return new Promise(function (resolve) {
-      i18n.loadNamespaces(allNamespaces, resolve);
-    });
+  function Trans(props, context) {
+    classCallCheck(this, Trans);
+
+    var _this = possibleConstructorReturn(this, (Trans.__proto__ || Object.getPrototypeOf(Trans)).call(this, props, context));
+
+    _this.i18n = props.i18n || context.i18n;
+    _this.t = props.t || context.t;
+    return _this;
   }
 
-  exports.loadNamespaces = loadNamespaces;
-  exports.translate = translate;
-  exports.Interpolate = Interpolate;
-  exports.I18nextProvider = I18nextProvider;
+  createClass(Trans, [{
+    key: 'render',
+    value: function render() {
+      var _props = this.props,
+          children = _props.children,
+          count = _props.count,
+          parent = _props.parent,
+          i18nKey = _props.i18nKey,
+          additionalProps = objectWithoutProperties(_props, ['children', 'count', 'parent', 'i18nKey']);
 
-}));
+
+      var defaultValue = nodesToString('', children, 0);
+      var key = i18nKey || defaultValue;
+      var translation = this.t(key, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue: defaultValue, count: count });
+
+      if (this.i18n.options.react && this.i18n.options.react.exposeNamespace) {
+        var ns = typeof this.t.ns === 'string' ? this.t.ns : this.t.ns[0];
+        if (i18nKey && this.i18n.options.nsSeparator && i18nKey.indexOf(this.i18n.options.nsSeparator) > -1) {
+          var parts = i18nKey.split(this.i18n.options.nsSeparator);
+          ns = parts[0];
+        }
+        if (this.t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns: ns });
+      }
+
+      return React__default.createElement(parent, additionalProps, renderNodes(children, translation, this.i18n));
+    }
+  }]);
+  return Trans;
+}(React__default.PureComponent);
+
+Trans.propTypes = {
+  count: PropTypes.number,
+  parent: PropTypes.string,
+  i18nKey: PropTypes.string
+};
+
+Trans.defaultProps = {
+  parent: 'div'
+};
+
+Trans.contextTypes = {
+  i18n: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired
+};
+
+var I18nextProvider = function (_PureComponent) {
+  inherits(I18nextProvider, _PureComponent);
+
+  function I18nextProvider(props, context) {
+    classCallCheck(this, I18nextProvider);
+
+    var _this = possibleConstructorReturn(this, (I18nextProvider.__proto__ || Object.getPrototypeOf(I18nextProvider)).call(this, props, context));
+
+    _this.i18n = props.i18n;
+    if (props.initialI18nStore) {
+      _this.i18n.services.resourceStore.data = props.initialI18nStore;
+      _this.i18n.options.isInitialSSR = true; // if set will be deleted on first render in translate hoc
+    }
+    if (props.initialLanguage) {
+      _this.i18n.changeLanguage(props.initialLanguage);
+    }
+    return _this;
+  }
+
+  createClass(I18nextProvider, [{
+    key: 'getChildContext',
+    value: function getChildContext() {
+      return { i18n: this.i18n };
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      if (this.props.i18n !== nextProps.i18n) {
+        throw new Error('[react-i18next][I18nextProvider]does not support changing the i18n object.');
+      }
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var children = this.props.children;
+
+      return React.Children.only(children);
+    }
+  }]);
+  return I18nextProvider;
+}(React.PureComponent);
+
+I18nextProvider.propTypes = {
+  i18n: PropTypes.object.isRequired,
+  children: PropTypes.element.isRequired
+};
+
+I18nextProvider.childContextTypes = {
+  i18n: PropTypes.object.isRequired
+};
+
+// Borrowed from https://github.com/Rezonans/redux-async-connect/blob/master/modules/ReduxAsyncConnect.js#L16
+function eachComponents(components, iterator) {
+  for (var i = 0, l = components.length; i < l; i++) {
+    // eslint-disable-line id-length
+    if (_typeof(components[i]) === 'object') {
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = Object.entries(components[i])[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var _step$value = slicedToArray(_step.value, 2),
+              key = _step$value[0],
+              value = _step$value[1];
+
+          iterator(value, i, key);
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+    } else {
+      iterator(components[i], i);
+    }
+  }
+}
+
+function filterAndFlattenComponents(components) {
+  var flattened = [];
+  eachComponents(components, function (Component) {
+    if (Component && Component.namespaces) {
+
+      Component.namespaces.forEach(function (namespace) {
+        if (flattened.indexOf(namespace) === -1) {
+          flattened.push(namespace);
+        }
+      });
+    }
+  });
+  return flattened;
+}
+
+function loadNamespaces(_ref) {
+  var components = _ref.components,
+      i18n = _ref.i18n;
+
+  var allNamespaces = filterAndFlattenComponents(components);
+
+  return new Promise(function (resolve) {
+    i18n.loadNamespaces(allNamespaces, resolve);
+  });
+}
+
+exports.translate = translate;
+exports.I18n = I18n;
+exports.Interpolate = Interpolate;
+exports.Trans = Trans;
+exports.I18nextProvider = I18nextProvider;
+exports.loadNamespaces = loadNamespaces;
+exports.reactI18nextModule = reactI18nextModule;
+exports.setDefaults = setDefaults;
+exports.getDefaults = getDefaults;
+exports.setI18n = setI18n;
+exports.getI18n = getI18n;
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+})));

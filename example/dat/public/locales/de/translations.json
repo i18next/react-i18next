@@ -1,0 +1,5 @@
+{
+  "To get started, edit <1>src/App.js</1> and save to reload.": "Starte in dem du, <1>src/App.js</1> editierst und speicherst.",
+  "Welcome to React": "Willkommen bei React und react-i18next",
+  "advice": "Versuche den query Parameter \"backend\" auf memory, xhr oder locize zu setzen zBsp. {{url}}"
+}

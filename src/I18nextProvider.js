@@ -1,9 +1,17 @@
-import React, { Component, PropTypes, Children } from 'react';
+import { PureComponent, Children } from 'react';
+import PropTypes from 'prop-types';
 
-class I18nextProvider extends Component {
+class I18nextProvider extends PureComponent {
   constructor(props, context) {
     super(props, context);
     this.i18n = props.i18n;
+    if (props.initialI18nStore) {
+      this.i18n.services.resourceStore.data = props.initialI18nStore;
+      this.i18n.options.isInitialSSR = true; // if set will be deleted on first render in translate hoc
+    }
+    if (props.initialLanguage) {
+      this.i18n.changeLanguage(props.initialLanguage);
+    }
   }
 
   getChildContext() {
@@ -12,7 +20,7 @@ class I18nextProvider extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.i18n !== nextProps.i18n) {
-      console.error('[react-i18next][I18nextProvider]does not support changing the i18n object.');
+      throw new Error('[react-i18next][I18nextProvider]does not support changing the i18n object.');
     }
   }
 
