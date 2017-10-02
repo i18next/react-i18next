@@ -12,7 +12,7 @@ export default function translate(namespaces, options = {}) {
 
   return function Wrapper(WrappedComponent) {
 
-    class Translate extends PureComponent {
+    class Translate extends Component {
       constructor(props, context) {
         super(props, context);
 

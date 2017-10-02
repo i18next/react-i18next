@@ -533,8 +533,8 @@ function translate(namespaces) {
 
 
   return function Wrapper(WrappedComponent) {
-    var Translate = function (_PureComponent) {
-      inherits(Translate, _PureComponent);
+    var Translate = function (_Component) {
+      inherits(Translate, _Component);
 
       function Translate(props, context) {
         classCallCheck(this, Translate);
@@ -582,7 +582,7 @@ function translate(namespaces) {
         }
       }]);
       return Translate;
-    }(PureComponent);
+    }(React.Component);
 
     Translate.WrappedComponent = WrappedComponent;
 
