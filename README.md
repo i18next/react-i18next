@@ -72,8 +72,10 @@ $ bower install react-i18next
 
 ### Examples
 
-* [Example webpack2](https://github.com/i18next/react-i18next/tree/master/example/webpack2)
-* [Example webpack1](https://github.com/i18next/react-i18next/tree/master/example/webpack1)
+* [Example react with render props](https://github.com/i18next/react-i18next/tree/master/example/react_renderProps)
+* [Example react with hoc](https://github.com/i18next/react-i18next/tree/master/example/react_withHOC)
+* [Example preact with render props](https://github.com/i18next/react-i18next/tree/master/example/preact_renderProps)
+* [Example preact with hoc](https://github.com/i18next/react-i18next/tree/master/example/preact_withHOC)
 * [Example react-native](https://github.com/i18next/react-i18next/tree/master/example/react-native-expo)
 * [Example expo.io](https://github.com/i18next/react-i18next/tree/master/example/react-native-expo)
 * [Example next.js](https://github.com/i18next/react-i18next/tree/master/example/nextjs)
