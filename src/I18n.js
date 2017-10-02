@@ -1,10 +1,10 @@
-import { PureComponent } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getDefaults, getI18n } from './context';
 
 let removedIsInitialSSR = false;
 
-export default class I18n extends PureComponent {
+export default class I18n extends Component {
   constructor(props, context) {
     super(props, context);
 
@@ -97,9 +97,8 @@ export default class I18n extends PureComponent {
   onI18nChanged() {
     if (!this.mounted) return;
 
-    this.setState({ i18nLoadedAt: new Date() }, () => {
-      this.t = this.getI18nTranslate();
-    });
+    this.t = this.getI18nTranslate();
+    this.setState({ i18nLoadedAt: new Date() });
   }
 
   getI18nTranslate() {

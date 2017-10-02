@@ -1,16 +1,18 @@
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react'), require('prop-types')) :
-	typeof define === 'function' && define.amd ? define('reactI18next', ['exports', 'react', 'prop-types'], factory) :
-	(factory((global.reactI18next = global.reactI18next || {}),global.React,global.PropTypes));
+	typeof define === 'function' && define.amd ? define(['exports', 'react', 'prop-types'], factory) :
+	(factory((global.reactI18next = {}),global.React,global.PropTypes));
 }(this, (function (exports,React,PropTypes) { 'use strict';
 
 var React__default = 'default' in React ? React['default'] : React;
-PropTypes = 'default' in PropTypes ? PropTypes['default'] : PropTypes;
+PropTypes = PropTypes && PropTypes.hasOwnProperty('default') ? PropTypes['default'] : PropTypes;
 
 /**
  * Copyright 2015, Yahoo! Inc.
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
+'use strict';
+
 var REACT_STATICS = {
     childContextTypes: true,
     contextTypes: true,
@@ -23,34 +25,49 @@ var REACT_STATICS = {
 };
 
 var KNOWN_STATICS = {
-    name: true,
-    length: true,
-    prototype: true,
-    caller: true,
-    arguments: true,
-    arity: true
+  name: true,
+  length: true,
+  prototype: true,
+  caller: true,
+  callee: true,
+  arguments: true,
+  arity: true
 };
 
-var isGetOwnPropertySymbolsAvailable = typeof Object.getOwnPropertySymbols === 'function';
+var defineProperty = Object.defineProperty;
+var getOwnPropertyNames = Object.getOwnPropertyNames;
+var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+var getPrototypeOf = Object.getPrototypeOf;
+var objectPrototype = getPrototypeOf && getPrototypeOf(Object);
 
-var index = function hoistNonReactStatics(targetComponent, sourceComponent, customStatics) {
+var hoistNonReactStatics = function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
     if (typeof sourceComponent !== 'string') { // don't hoist over string (html) components
-        var keys = Object.getOwnPropertyNames(sourceComponent);
 
-        /* istanbul ignore else */
-        if (isGetOwnPropertySymbolsAvailable) {
-            keys = keys.concat(Object.getOwnPropertySymbols(sourceComponent));
+        if (objectPrototype) {
+            var inheritedComponent = getPrototypeOf(sourceComponent);
+            if (inheritedComponent && inheritedComponent !== objectPrototype) {
+                hoistNonReactStatics(targetComponent, inheritedComponent, blacklist);
+            }
+        }
+
+        var keys = getOwnPropertyNames(sourceComponent);
+
+        if (getOwnPropertySymbols) {
+            keys = keys.concat(getOwnPropertySymbols(sourceComponent));
         }
 
         for (var i = 0; i < keys.length; ++i) {
-            if (!REACT_STATICS[keys[i]] && !KNOWN_STATICS[keys[i]] && (!customStatics || !customStatics[keys[i]])) {
-                try {
-                    targetComponent[keys[i]] = sourceComponent[keys[i]];
-                } catch (error) {
-
-                }
+            var key = keys[i];
+            if (!REACT_STATICS[key] && !KNOWN_STATICS[key] && (!blacklist || !blacklist[key])) {
+                var descriptor = getOwnPropertyDescriptor(sourceComponent, key);
+                try { // Avoid failures from read-only properties
+                    defineProperty(targetComponent, key, descriptor);
+                } catch (e) {}
             }
         }
+
+        return targetComponent;
     }
 
     return targetComponent;
@@ -66,7 +83,118 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 
 
+var asyncGenerator = function () {
+  function AwaitValue(value) {
+    this.value = value;
+  }
 
+  function AsyncGenerator(gen) {
+    var front, back;
+
+    function send(key, arg) {
+      return new Promise(function (resolve, reject) {
+        var request = {
+          key: key,
+          arg: arg,
+          resolve: resolve,
+          reject: reject,
+          next: null
+        };
+
+        if (back) {
+          back = back.next = request;
+        } else {
+          front = back = request;
+          resume(key, arg);
+        }
+      });
+    }
+
+    function resume(key, arg) {
+      try {
+        var result = gen[key](arg);
+        var value = result.value;
+
+        if (value instanceof AwaitValue) {
+          Promise.resolve(value.value).then(function (arg) {
+            resume("next", arg);
+          }, function (arg) {
+            resume("throw", arg);
+          });
+        } else {
+          settle(result.done ? "return" : "normal", result.value);
+        }
+      } catch (err) {
+        settle("throw", err);
+      }
+    }
+
+    function settle(type, value) {
+      switch (type) {
+        case "return":
+          front.resolve({
+            value: value,
+            done: true
+          });
+          break;
+
+        case "throw":
+          front.reject(value);
+          break;
+
+        default:
+          front.resolve({
+            value: value,
+            done: false
+          });
+          break;
+      }
+
+      front = front.next;
+
+      if (front) {
+        resume(front.key, front.arg);
+      } else {
+        back = null;
+      }
+    }
+
+    this._invoke = send;
+
+    if (typeof gen.return !== "function") {
+      this.return = undefined;
+    }
+  }
+
+  if (typeof Symbol === "function" && Symbol.asyncIterator) {
+    AsyncGenerator.prototype[Symbol.asyncIterator] = function () {
+      return this;
+    };
+  }
+
+  AsyncGenerator.prototype.next = function (arg) {
+    return this._invoke("next", arg);
+  };
+
+  AsyncGenerator.prototype.throw = function (arg) {
+    return this._invoke("throw", arg);
+  };
+
+  AsyncGenerator.prototype.return = function (arg) {
+    return this._invoke("return", arg);
+  };
+
+  return {
+    wrap: function (fn) {
+      return function () {
+        return new AsyncGenerator(fn.apply(this, arguments));
+      };
+    },
+    await: function (value) {
+      return new AwaitValue(value);
+    }
+  };
+}();
 
 
 
@@ -242,8 +370,8 @@ var reactI18nextModule = {
 
 var removedIsInitialSSR = false;
 
-var I18n = function (_PureComponent) {
-  inherits(I18n, _PureComponent);
+var I18n = function (_Component) {
+  inherits(I18n, _Component);
 
   function I18n(props, context) {
     classCallCheck(this, I18n);
@@ -277,6 +405,7 @@ var I18n = function (_PureComponent) {
     };
 
     _this.onI18nChanged = _this.onI18nChanged.bind(_this);
+    _this.getI18nTranslate = _this.getI18nTranslate.bind(_this);
     return _this;
   }
 
@@ -291,7 +420,7 @@ var I18n = function (_PureComponent) {
   }, {
     key: 'componentWillMount',
     value: function componentWillMount() {
-      this.t = this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? this.namespaces : this.namespaces[0]);
+      this.t = this.getI18nTranslate();
     }
   }, {
     key: 'componentDidMount',
@@ -353,7 +482,13 @@ var I18n = function (_PureComponent) {
     value: function onI18nChanged() {
       if (!this.mounted) return;
 
+      this.t = this.getI18nTranslate();
       this.setState({ i18nLoadedAt: new Date() });
+    }
+  }, {
+    key: 'getI18nTranslate',
+    value: function getI18nTranslate() {
+      return this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? this.namespaces : this.namespaces[0]);
     }
   }, {
     key: 'render',
@@ -378,7 +513,7 @@ var I18n = function (_PureComponent) {
     }
   }]);
   return I18n;
-}(React.PureComponent);
+}(React.Component);
 
 I18n.contextTypes = {
   i18n: PropTypes.object
@@ -447,7 +582,7 @@ function translate(namespaces) {
         }
       }]);
       return Translate;
-    }(React.PureComponent);
+    }(PureComponent);
 
     Translate.WrappedComponent = WrappedComponent;
 
@@ -459,7 +594,7 @@ function translate(namespaces) {
 
     Translate.namespaces = namespaces;
 
-    return index(Translate, WrappedComponent);
+    return hoistNonReactStatics(Translate, WrappedComponent);
   };
 }
 
@@ -573,7 +708,7 @@ Interpolate.contextTypes = {
  * Do not manually edit.
  */
 
-var index$2 = {
+var voidElements = {
   "area": true,
   "base": true,
   "br": true,
@@ -621,7 +756,7 @@ var parseTag = function (tag) {
             key=match;
         } else {
             if (i === 0) {
-                if (index$2[match] || tag.charAt(tag.length - 2) === '/') {
+                if (voidElements[match] || tag.charAt(tag.length - 2) === '/') {
                     res.voidElement = true;
                 }
                 res.name = match;
@@ -672,7 +807,6 @@ var parse = function parse(html, options) {
     var current;
     var level = -1;
     var arr = [];
-    var byTag = {};
     var inComponent = false;
 
     html.replace(tagRE, function (tag, index) {
@@ -703,9 +837,6 @@ var parse = function parse(html, options) {
                 pushTextNode(current.children, html, level, start, options.ignoreWhitespace);
             }
 
-            byTag[current.tagName] = current;
-
-            // if we're at root, push new base node
             if (level === 0) {
                 result.push(current);
             }
@@ -771,7 +902,7 @@ var stringify_1 = function (doc) {
     }, '');
 };
 
-var index$1 = {
+var htmlParseStringify2 = {
     parse: parse,
     stringify: stringify_1
 };
@@ -819,7 +950,7 @@ function renderNodes(children, targetString, i18n) {
 
   // parse ast from string with additional wrapper tag
   // -> avoids issues in parser removing prepending text nodes
-  var ast = index$1.parse('<0>' + targetString + '</0>');
+  var ast = htmlParseStringify2.parse('<0>' + targetString + '</0>');
 
   function mapAST(reactNodes, astNodes) {
     if (Object.prototype.toString.call(reactNodes) !== '[object Array]') reactNodes = [reactNodes];
@@ -914,8 +1045,8 @@ Trans.contextTypes = {
   t: PropTypes.func.isRequired
 };
 
-var I18nextProvider = function (_PureComponent) {
-  inherits(I18nextProvider, _PureComponent);
+var I18nextProvider = function (_Component) {
+  inherits(I18nextProvider, _Component);
 
   function I18nextProvider(props, context) {
     classCallCheck(this, I18nextProvider);
@@ -954,7 +1085,7 @@ var I18nextProvider = function (_PureComponent) {
     }
   }]);
   return I18nextProvider;
-}(React.PureComponent);
+}(React.Component);
 
 I18nextProvider.propTypes = {
   i18n: PropTypes.object.isRequired,
@@ -1004,10 +1135,10 @@ function eachComponents(components, iterator) {
 
 function filterAndFlattenComponents(components) {
   var flattened = [];
-  eachComponents(components, function (Component) {
-    if (Component && Component.namespaces) {
+  eachComponents(components, function (Component$$1) {
+    if (Component$$1 && Component$$1.namespaces) {
 
-      Component.namespaces.forEach(function (namespace) {
+      Component$$1.namespaces.forEach(function (namespace) {
         if (flattened.indexOf(namespace) === -1) {
           flattened.push(namespace);
         }

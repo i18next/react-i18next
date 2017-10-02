@@ -1,3 +1,7 @@
+### 6.0.3
+- stop using PureComponent and use Component again...seems we get an issue with react-router v4 if using PureComponents
+- recreate t function on i18next updates so PureComponents relying on t get an update triggered
+
 ### 6.0.2
 - rebuild needed cause of uppercasing for components name was not reflected in last build
 
