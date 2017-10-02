@@ -1,3 +1,6 @@
+### 6.0.4
+- fixes translate hoc build
+
 ### 6.0.3
 - stop using PureComponent and use Component again...seems we get an issue with react-router v4 if using PureComponents
 - recreate t function on i18next updates so PureComponents relying on t get an update triggered
