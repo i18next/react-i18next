@@ -89,32 +89,27 @@ function renderNodes(children, targetString, i18n) {
 
 export default class Trans extends React.PureComponent {
 
-  constructor(props, context) {
-    super(props, context);
-    this.i18n = props.i18n || context.i18n;
-    this.t = props.t || context.t;
-  }
-
   render() {
-    const { children, count, parent, i18nKey, ...additionalProps } = this.props;
+    const contextAndProps = { i18n: this.context.i18n, t: this.context.t, ...this.props };
+    const { children, count, parent, i18nKey, i18n, t, ...additionalProps } = contextAndProps;
 
     const defaultValue = nodesToString('', children, 0);
     const key = i18nKey || defaultValue;
-    const translation = this.t(key, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue, count });
+    const translation = t(key, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue, count });
 
-    if (this.i18n.options.react && this.i18n.options.react.exposeNamespace) {
-      let ns = typeof this.t.ns === 'string' ? this.t.ns : this.t.ns[0];
-      if (i18nKey && this.i18n.options.nsSeparator && i18nKey.indexOf(this.i18n.options.nsSeparator) > -1) {
-        const parts = i18nKey.split(this.i18n.options.nsSeparator);
+    if (i18n.options.react && i18n.options.react.exposeNamespace) {
+      let ns = typeof t.ns === 'string' ? t.ns : t.ns[0];
+      if (i18nKey && i18n.options.nsSeparator && i18nKey.indexOf(i18n.options.nsSeparator) > -1) {
+        const parts = i18nKey.split(i18n.options.nsSeparator);
         ns = parts[0];
       }
-      if (this.t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns });
+      if (t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns });
     }
 
     return React.createElement(
       parent,
       additionalProps,
-      renderNodes(children, translation, this.i18n)
+      renderNodes(children, translation, i18n)
     );
   }
 }
@@ -122,7 +117,9 @@ export default class Trans extends React.PureComponent {
 Trans.propTypes = {
   count: PropTypes.number,
   parent: PropTypes.string,
-  i18nKey: PropTypes.string
+  i18nKey: PropTypes.string,
+  i18n: PropTypes.object,
+  t: PropTypes.func
 };
 
 Trans.defaultProps = {
