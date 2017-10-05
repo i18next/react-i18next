@@ -990,41 +990,38 @@ function renderNodes(children, targetString, i18n) {
 var Trans = function (_React$PureComponent) {
   inherits(Trans, _React$PureComponent);
 
-  function Trans(props, context) {
+  function Trans() {
     classCallCheck(this, Trans);
-
-    var _this = possibleConstructorReturn(this, (Trans.__proto__ || Object.getPrototypeOf(Trans)).call(this, props, context));
-
-    _this.i18n = props.i18n || context.i18n;
-    _this.t = props.t || context.t;
-    return _this;
+    return possibleConstructorReturn(this, (Trans.__proto__ || Object.getPrototypeOf(Trans)).apply(this, arguments));
   }
 
   createClass(Trans, [{
     key: 'render',
     value: function render() {
-      var _props = this.props,
-          children = _props.children,
-          count = _props.count,
-          parent = _props.parent,
-          i18nKey = _props.i18nKey,
-          additionalProps = objectWithoutProperties(_props, ['children', 'count', 'parent', 'i18nKey']);
+      var contextAndProps = _extends({ i18n: this.context.i18n, t: this.context.t }, this.props);
+      var children = contextAndProps.children,
+          count = contextAndProps.count,
+          parent = contextAndProps.parent,
+          i18nKey = contextAndProps.i18nKey,
+          i18n = contextAndProps.i18n,
+          t = contextAndProps.t,
+          additionalProps = objectWithoutProperties(contextAndProps, ['children', 'count', 'parent', 'i18nKey', 'i18n', 't']);
 
 
       var defaultValue = nodesToString('', children, 0);
       var key = i18nKey || defaultValue;
-      var translation = this.t(key, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue: defaultValue, count: count });
+      var translation = t(key, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue: defaultValue, count: count });
 
-      if (this.i18n.options.react && this.i18n.options.react.exposeNamespace) {
-        var ns = typeof this.t.ns === 'string' ? this.t.ns : this.t.ns[0];
-        if (i18nKey && this.i18n.options.nsSeparator && i18nKey.indexOf(this.i18n.options.nsSeparator) > -1) {
-          var parts = i18nKey.split(this.i18n.options.nsSeparator);
+      if (i18n.options.react && i18n.options.react.exposeNamespace) {
+        var ns = typeof t.ns === 'string' ? t.ns : t.ns[0];
+        if (i18nKey && i18n.options.nsSeparator && i18nKey.indexOf(i18n.options.nsSeparator) > -1) {
+          var parts = i18nKey.split(i18n.options.nsSeparator);
           ns = parts[0];
         }
-        if (this.t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns: ns });
+        if (t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns: ns });
       }
 
-      return React__default.createElement(parent, additionalProps, renderNodes(children, translation, this.i18n));
+      return React__default.createElement(parent, additionalProps, renderNodes(children, translation, i18n));
     }
   }]);
   return Trans;
@@ -1033,7 +1030,9 @@ var Trans = function (_React$PureComponent) {
 Trans.propTypes = {
   count: PropTypes.number,
   parent: PropTypes.string,
-  i18nKey: PropTypes.string
+  i18nKey: PropTypes.string,
+  i18n: PropTypes.object,
+  t: PropTypes.func
 };
 
 Trans.defaultProps = {
@@ -1094,6 +1093,16 @@ I18nextProvider.propTypes = {
 
 I18nextProvider.childContextTypes = {
   i18n: PropTypes.object.isRequired
+};
+
+// shim object entries
+if (!Object.entries) Object.entries = function (obj) {
+  var ownProps = Object.keys(obj),
+      i = ownProps.length,
+      resArray = new Array(i); // preallocate the Array
+  while (i--) {
+    resArray[i] = [ownProps[i], obj[ownProps[i]]];
+  }return resArray;
 };
 
 // Borrowed from https://github.com/Rezonans/redux-async-connect/blob/master/modules/ReduxAsyncConnect.js#L16
