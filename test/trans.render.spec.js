@@ -163,3 +163,39 @@ describe('trans complex', () => {
     )).toBe(true);
   });
 });
+
+describe('trans with t as prop', () => {
+  const TestElement = ({ t, cb }) => {
+    const customT = (...args) => {
+      if (cb) cb();
+      return t(...args);
+    };
+    return (
+      <Trans i18nKey="transTest1" t={customT}>
+        Open <Link to="/msgs">here</Link>.
+      </Trans>
+    );
+  };
+
+  it('should use props t', () => {
+    let usedCustomT = false;
+    const cb = () => { usedCustomT = true; };
+
+    const HocElement = translate(['translation'], {})(TestElement);
+
+    mount(<HocElement cb={cb} />, { context });
+    expect(usedCustomT).toBe(true);
+  });
+
+  it('should not pass t to HTML element', () => {
+    const HocElement = translate(['translation'], {})(TestElement);
+
+    const wrapper = mount(<HocElement />, { context });
+    expect(wrapper.contains(
+      <div>
+        Go <Link to="/msgs">there</Link>.
+      </div>
+    )).toBe(true);
+  });
+
+});
