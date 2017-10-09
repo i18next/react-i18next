@@ -87,7 +87,7 @@ function renderNodes(children, targetString, i18n) {
 }
 
 
-export default class Trans extends React.PureComponent {
+export default class Trans extends React.Component {
 
   render() {
     const contextAndProps = { i18n: this.context.i18n, t: this.context.t, ...this.props };

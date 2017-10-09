@@ -987,8 +987,8 @@ function renderNodes(children, targetString, i18n) {
   return getChildren(result[0]);
 }
 
-var Trans = function (_React$PureComponent) {
-  inherits(Trans, _React$PureComponent);
+var Trans = function (_React$Component) {
+  inherits(Trans, _React$Component);
 
   function Trans() {
     classCallCheck(this, Trans);
@@ -1025,7 +1025,7 @@ var Trans = function (_React$PureComponent) {
     }
   }]);
   return Trans;
-}(React__default.PureComponent);
+}(React__default.Component);
 
 Trans.propTypes = {
   count: PropTypes.number,
