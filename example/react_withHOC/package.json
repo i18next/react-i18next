@@ -9,7 +9,7 @@
     "i18next": "9.0.1",
     "i18next-browser-languagedetector": "2.0.0",
     "i18next-xhr-backend": "1.4.3",
-    "react-i18next": "6.0.3"
+    "react-i18next": "6.0.6"
   },
   "scripts": {
     "start": "react-scripts start",
