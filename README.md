@@ -96,6 +96,6 @@ Needing a translation management? Want to edit your translations with an InConte
 
 ![locize](https://www.i18next.com/assets/img/locize_recap_big_low.gif)
 
-With using [locize](http://locize.com/) you directly support the future of i18next and react-i18next.
+With using [locize](http://locize.com/?utm_source=react_i18next_readme) you directly support the future of i18next and react-i18next.
 
 --------------
