@@ -29,9 +29,12 @@ export default class I18n extends Component {
       this.options.wait = false;
     }
 
+    const { language } = this.i18n;
+    const ready = !!language && this.namespaces.every(ns => this.i18n.hasResourceBundle(language, ns));
+
     this.state = {
       i18nLoadedAt: null,
-      ready: false
+      ready
     };
 
     this.onI18nChanged = this.onI18nChanged.bind(this);
