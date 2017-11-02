@@ -8,7 +8,7 @@ const context = { i18n };
 describe.only('I18n', () => {
   it('should render correct content', () => {
     const wrapper = mount(
-      <I18n i18n={i18n} ns="translation">{t => <span>{t('key1')}</span>}</I18n>,
+      <I18n ns="translation">{t => <span>{t('key1')}</span>}</I18n>,
       { context }
     );
 
@@ -19,7 +19,7 @@ describe.only('I18n', () => {
     const Comp = () => (
       <div>
         Values:
-        <I18n i18n={i18n} ns="translation">
+        <I18n ns="translation">
           {t => (
             <div>
               <span>{t('key1')}</span>
