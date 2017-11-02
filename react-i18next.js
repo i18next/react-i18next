@@ -399,9 +399,14 @@ var I18n = function (_Component) {
       _this.options.wait = false;
     }
 
+    var language = _this.i18n.languages && _this.i18n.languages[0];
+    var ready = !!language && _this.namespaces.every(function (ns) {
+      return _this.i18n.hasResourceBundle(language, ns);
+    });
+
     _this.state = {
       i18nLoadedAt: null,
-      ready: false
+      ready: ready
     };
 
     _this.onI18nChanged = _this.onI18nChanged.bind(_this);

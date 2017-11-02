@@ -1,5 +1,8 @@
+### 6.1.0
+- pre-check namespaces to avoid unnecessary initial `null` render [PR336](https://github.com/i18next/react-i18next/pull/336)
+
 ### 6.0.6
--remove PureComponent from Trans
+- remove PureComponent from Trans
 
 ### 6.0.5
 - fixes support passing i18n and t to Trans as props [PR315](https://github.com/i18next/react-i18next/pull/315)
