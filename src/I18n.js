@@ -29,7 +29,7 @@ export default class I18n extends Component {
       this.options.wait = false;
     }
 
-    const { language } = this.i18n;
+    const language = this.i18n.languages && this.i18n.languages[0];
     const ready = !!language && this.namespaces.every(ns => this.i18n.hasResourceBundle(language, ns));
 
     this.state = {

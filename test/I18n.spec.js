@@ -3,6 +3,7 @@ import I18n from '../src/I18n';
 
 const i18n = {
   language: 'en',
+  languages: ['en'],
   options: {
     defaultNS: 'defaultNS'
   },
