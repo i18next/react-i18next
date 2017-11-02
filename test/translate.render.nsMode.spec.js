@@ -29,7 +29,7 @@ const context = {
   i18n: newI18n
 };
 
-describe.only('translate wait', () => {
+describe('translate wait', () => {
   const TestElement = ({ t }) => {
     return (
       <div>{t('key2')}</div>
