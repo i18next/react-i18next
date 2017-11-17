@@ -94,8 +94,9 @@ export default class Trans extends React.Component {
     const { children, count, parent, i18nKey, i18n, t, ...additionalProps } = contextAndProps;
 
     const defaultValue = nodesToString('', children, 0);
-    const key = i18nKey || defaultValue;
-    const translation = t(key, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue, count });
+    const hashTransKey = i18n.options.react && i18n.options.react.hashTransKey;
+    const key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
+    const translation = key ? t(key, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue, count }) : defaultValue;
 
     if (i18n.options.react && i18n.options.react.exposeNamespace) {
       let ns = typeof t.ns === 'string' ? t.ns : t.ns[0];

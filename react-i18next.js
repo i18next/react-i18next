@@ -1014,8 +1014,9 @@ var Trans = function (_React$Component) {
 
 
       var defaultValue = nodesToString('', children, 0);
-      var key = i18nKey || defaultValue;
-      var translation = t(key, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue: defaultValue, count: count });
+      var hashTransKey = i18n.options.react && i18n.options.react.hashTransKey;
+      var key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
+      var translation = key ? t(key, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue: defaultValue, count: count }) : defaultValue;
 
       if (i18n.options.react && i18n.options.react.exposeNamespace) {
         var ns = typeof t.ns === 'string' ? t.ns : t.ns[0];

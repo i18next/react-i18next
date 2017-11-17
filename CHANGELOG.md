@@ -1,3 +1,6 @@
+### 6.2.0
+- adds hashTransKey function for custom key generation in case of not passing a key to Trans component and not like having the source value as key
+
 ### 6.1.0
 - pre-check namespaces to avoid unnecessary initial `null` render [PR336](https://github.com/i18next/react-i18next/pull/336)
 
