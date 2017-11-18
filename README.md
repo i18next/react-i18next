@@ -50,6 +50,13 @@ The documentation is published on [react.i18next.com](https://react.i18next.com)
 
 Head over to the **interactive playground** at [webpackbin](https://www.webpackbin.com/bins/-KoCD3kvA-4QJNaHpkxi).
 
+### Why i18next?
+
+- **Simpicity:** no need to change your webpack configuration or adding additional babel transpilers, just use create-react-app and go
+- **Production awareness** we know there are more needs for production than just doing i18n on the clientside. So we offer wider support on [serverside](https://www.i18next.com/supported-frameworks.html) too (nodejs, php, ruby, .net, ...). **Learn once - translate everywhere.
+
+[!ecossystem](https://www.i18next.com/assets/img/i18next-ecosystem.jpg)
+
 ### Localization workflow
 
 Want to learn more about how seamless your internationalization and translation process can be?
