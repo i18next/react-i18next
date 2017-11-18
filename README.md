@@ -21,6 +21,7 @@
 
 [quality-badge]: http://npm.packagequality.com/shield/react-i18next.svg
 [quality-url]: http://packagequality.com/#?package=react-i18next
+[![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Get%20over%20170%20free%20react-i18next%20based%20on%20the%20i18next%20internationalization%20ecosystem%204&url=https://github.com/i18next/react-i18next&via=jamuhl&hashtags=i18n,reactjs,js,dev)
 
 ### How will my code look like?
 
