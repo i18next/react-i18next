@@ -50,6 +50,13 @@ The documentation is published on [react.i18next.com](https://react.i18next.com)
 
 Head over to the **interactive playground** at [webpackbin](https://www.webpackbin.com/bins/-KoCD3kvA-4QJNaHpkxi).
 
+### 📖 What others say
+
+- [I18n with React and i18next](https://alligator.io/react/i18n-with-react-and-i18next) Alligator.io via Danny Hurlburt
+- [Building i18n with Gatsby](https://www.gatsbyjs.org/blog/2017-10-17-building-i18n-with-gatsby/) gatsby.ort via Samuel Goudie
+- [Get your react.js application translated with style](https://medium.com/@jamuhl/get-your-react-js-application-translated-with-style-4ad090aefc2c) via Jan Mühlemann
+- you're welcome to share your story...
+
 ### Why i18next?
 
 - **Simplicity:** no need to change your webpack configuration or adding additional babel transpilers, just use create-react-app and go
