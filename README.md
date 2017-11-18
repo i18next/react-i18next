@@ -55,7 +55,7 @@ Head over to the **interactive playground** at [webpackbin](https://www.webpackb
 - **Simpicity:** no need to change your webpack configuration or adding additional babel transpilers, just use create-react-app and go
 - **Production awareness** we know there are more needs for production than just doing i18n on the clientside. So we offer wider support on [serverside](https://www.i18next.com/supported-frameworks.html) too (nodejs, php, ruby, .net, ...). **Learn once - translate everywhere.
 
-<img src="https://www.i18next.com/assets/img/i18next-ecosystem.jpg" alt="i18next ecossystem" width="450">
+<img src="https://www.i18next.com/assets/img/i18next-ecosystem.jpg" alt="i18next ecossystem" width="400">
 
 ### Localization workflow
 
