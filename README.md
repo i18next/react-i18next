@@ -20,6 +20,10 @@
 [quality-badge]: http://npm.packagequality.com/shield/react-i18next.svg
 [quality-url]: http://packagequality.com/#?package=react-i18next
 
+### Documentation
+
+The documentation is published on [react.i18next.com](https://react.i18next.com)
+
 ### How will my code look like?
 
 **Before:** Your react code would have looked something like:
@@ -44,15 +48,15 @@
 ...
 ```
 
-Have a look at the interactive playground at [webpackbin](https://www.webpackbin.com/bins/-KoCD3kvA-4QJNaHpkxi).
+Head over to the **interactive playground** at [webpackbin](https://www.webpackbin.com/bins/-KoCD3kvA-4QJNaHpkxi).
+
+### Localization workflow
+
+Want to learn more about how seamless your internationalization and translation process can be?
 
 [![video](https://raw.githubusercontent.com/i18next/react-i18next/master/example/locize-example/video_sample.png)](https://www.youtube.com/watch?v=9NOzJhgmyQE)
 
 [watch the video](https://www.youtube.com/watch?v=9NOzJhgmyQE)
-
-### Documentation
-
-The documentation is published on [react.i18next.com](https://react.i18next.com)
 
 ### Installation
 
@@ -88,7 +92,7 @@ $ bower install react-i18next
 - i18next >= __2.0.0__
 
 --------------
-**NEWS: localization as a service - locize.com**
+**localization as a service - locize.com**
 
 Needing a translation management? Want to edit your translations with an InContext Editor? Use the orginal provided to you by the maintainers of i18next!
 
