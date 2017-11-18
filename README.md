@@ -1,4 +1,4 @@
-# react-i18next [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Awesome%20react-i18next%20for%20react.js%20based%20on%20i18next%20internationalization%20ecosystem%204&url=https://github.com/i18next/react-i18next&via=jamuhl&hashtags=i18n,reactjs,js,dev)
+# react-i18next [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Awesome%20react-i18next%20for%20react.js%20based%20on%20i18next%20internationalization%20ecosystem%20&url=https://github.com/i18next/react-i18next&via=jamuhl&hashtags=i18n,reactjs,js,dev)
 
 [![Travis CI][travis-ci-image] ][travis-ci-url]
 [![Code Climate](https://codeclimate.com/github/codeclimate/codeclimate/badges/gpa.svg)](https://codeclimate.com/github/i18next/react-i18next)
