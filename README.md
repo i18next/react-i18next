@@ -52,9 +52,10 @@ Head over to the **interactive playground** at [webpackbin](https://www.webpackb
 
 ### 📖 What others say
 
-- [I18n with React and i18next](https://alligator.io/react/i18n-with-react-and-i18next) Alligator.io via Danny Hurlburt
-- [Building i18n with Gatsby](https://www.gatsbyjs.org/blog/2017-10-17-building-i18n-with-gatsby/) gatsby.ort via Samuel Goudie
-- [Get your react.js application translated with style](https://medium.com/@jamuhl/get-your-react-js-application-translated-with-style-4ad090aefc2c) via Jan Mühlemann
+- [I18n with React and i18next](https://alligator.io/react/i18n-with-react-and-i18next) via Alligator.io by Danny Hurlburt
+- [Building i18n with Gatsby](https://www.gatsbyjs.org/blog/2017-10-17-building-i18n-with-gatsby/) via gatsby.ort by Samuel Goudie
+- [Get your react.js application translated with style](https://medium.com/@jamuhl/get-your-react-js-application-translated-with-style-4ad090aefc2c) by Jan Mühlemann
+- [Translate your expo.io / react-native mobile application](https://medium.com/@jamuhl/translate-your-expo-io-react-native-mobile-application-aa220b2362d2) by Jan Mühlemann
 - you're welcome to share your story...
 
 ### Why i18next?
