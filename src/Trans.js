@@ -98,6 +98,8 @@ export default class Trans extends React.Component {
     const contextAndProps = { i18n: this.context.i18n, t: this.context.t, ...this.props };
     const { children, count, parent, i18nKey, i18n, t, ...additionalProps } = contextAndProps;
 
+    const useAsParent = parent !== undefined ? parent : i18n.options.react.defaultTransParent;
+
     const defaultValue = nodesToString('', children, 0);
     const hashTransKey = i18n.options.react && i18n.options.react.hashTransKey;
     const key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
@@ -112,8 +114,10 @@ export default class Trans extends React.Component {
       if (t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns });
     }
 
+    if (!useAsParent) return children;
+
     return React.createElement(
-      parent,
+      useAsParent,
       additionalProps,
       renderNodes(children, translation, i18n)
     );
@@ -122,15 +126,15 @@ export default class Trans extends React.Component {
 
 Trans.propTypes = {
   count: PropTypes.number,
-  parent: PropTypes.string,
+  parent: PropTypes.node,
   i18nKey: PropTypes.string,
   i18n: PropTypes.object,
   t: PropTypes.func
 };
 
-Trans.defaultProps = {
-  parent: 'div'
-};
+// Trans.defaultProps = {
+//   parent: 'div'
+// };
 
 Trans.contextTypes = {
   i18n: PropTypes.object.isRequired,

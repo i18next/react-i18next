@@ -1,3 +1,12 @@
+### 7.0.0
+- **[BREAKING]** As with react 16 you can return multiple elements from render - based on that we do not need to return a wrapper any longer from Trans component.
+
+Starting with v7.0.0 Trans component per default won't add a parent div around content passed as children. It will just return it's children.
+
+You still got the option to set a parent if you prefer content being wrapped.
+
+If you prefer wrapping for all your Trans components (or for backwards compatibility) you can set option `react.defaultTransParent` to an element on i18next init.
+
 ### 6.2.0
 - adds hashTransKey function for custom key generation in case of not passing a key to Trans component and not like having the source value as key
 

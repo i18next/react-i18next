@@ -944,7 +944,12 @@ function nodesToString(mem, children, index) {
         mem = mem + '<' + elementKey + '>{{' + keys[0] + ', ' + format + '}}</' + elementKey + '>';
       } else if (keys.length === 1) {
         mem = mem + '<' + elementKey + '>{{' + keys[0] + '}}</' + elementKey + '>';
+      } else if (console && console.warn) {
+        // not a valid interpolation object (can only contain one value plus format)
+        console.warn('react-i18next: the passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.', child);
       }
+    } else if (console && console.warn) {
+      console.warn('react-i18next: the passed in value is invalid - seems you passed in a variable like {number} - please pass in variables for interpolation as full objects like {{number}}.', child);
     }
   });
 
@@ -1013,6 +1018,8 @@ var Trans = function (_React$Component) {
           additionalProps = objectWithoutProperties(contextAndProps, ['children', 'count', 'parent', 'i18nKey', 'i18n', 't']);
 
 
+      var useAsParent = parent !== undefined ? parent : i18n.options.react.defaultTransParent;
+
       var defaultValue = nodesToString('', children, 0);
       var hashTransKey = i18n.options.react && i18n.options.react.hashTransKey;
       var key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
@@ -1027,7 +1034,9 @@ var Trans = function (_React$Component) {
         if (t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns: ns });
       }
 
-      return React__default.createElement(parent, additionalProps, renderNodes(children, translation, i18n));
+      if (!useAsParent) return children;
+
+      return React__default.createElement(useAsParent, additionalProps, renderNodes(children, translation, i18n));
     }
   }]);
   return Trans;
@@ -1035,15 +1044,15 @@ var Trans = function (_React$Component) {
 
 Trans.propTypes = {
   count: PropTypes.number,
-  parent: PropTypes.string,
+  parent: PropTypes.node,
   i18nKey: PropTypes.string,
   i18n: PropTypes.object,
   t: PropTypes.func
 };
 
-Trans.defaultProps = {
-  parent: 'div'
-};
+// Trans.defaultProps = {
+//   parent: 'div'
+// };
 
 Trans.contextTypes = {
   i18n: PropTypes.object.isRequired,

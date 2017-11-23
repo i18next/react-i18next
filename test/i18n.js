@@ -32,6 +32,10 @@ i18n
         if (format === 'uppercase') return value.toUpperCase();
         return value;
       }
+    },
+
+    react: {
+      defaultTransParent: 'div'
     }
   });
 

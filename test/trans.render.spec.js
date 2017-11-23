@@ -35,6 +35,30 @@ describe('trans simple', () => {
     )).toBe(true);
   });
 
+  describe('trans simple - setting back default behaviour of no parent', () => {
+    // we set in ./i18n react.defaultTransParent so all tests run backwards compatible
+    // and this tests new default bahaviour of just returning children
+    const TestElement = ({ t, parent }) => {
+      const count = 10;
+      const name = "Jan";
+      return (
+        <Trans i18nKey="transTest1" parent={false}>
+          <span>Open <Link to="/msgs">here</Link>.</span>
+        </Trans>
+      );
+    }
+
+    it('should render correct content', () => {
+      const HocElement = translate(['translation'], {})(TestElement);
+
+      const wrapper = mount(<HocElement />, { context });
+      console.log(wrapper.debug());
+      expect(wrapper.contains(
+        <span>Open <Link to="/msgs">here</Link>.</span>
+      )).toBe(true);
+    });
+  });
+
   it('can use a different parent element', () => {
     const HocElement = translate(['translation'], {})(TestElement);
 
