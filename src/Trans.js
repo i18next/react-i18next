@@ -34,7 +34,12 @@ function nodesToString(mem, children, index) {
         mem = `${mem}<${elementKey}>{{${keys[0]}, ${format}}}</${elementKey}>`;
       } else if (keys.length === 1) {
         mem = `${mem}<${elementKey}>{{${keys[0]}}}</${elementKey}>`;
+      } else if (console && console.warn) {
+        // not a valid interpolation object (can only contain one value plus format)
+        console.warn(`react-i18next: the passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.`, child)
       }
+    } else if (console && console.warn) {
+      console.warn(`react-i18next: the passed in value is invalid - seems you passed in a variable like {number} - please pass in variables for interpolation as full objects like {{number}}.`, child)
     }
   });
 
