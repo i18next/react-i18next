@@ -42,7 +42,7 @@ describe('trans simple', () => {
       const count = 10;
       const name = "Jan";
       return (
-        <Trans i18nKey="transTest1" parent={false}>
+        <Trans i18nKey="transTest1_noParent" parent={false}>
           <span>Open <Link to="/msgs">here</Link>.</span>
         </Trans>
       );
@@ -54,7 +54,7 @@ describe('trans simple', () => {
       const wrapper = mount(<HocElement />, { context });
       // console.log(wrapper.debug());
       expect(wrapper.contains(
-        <span>Open <Link to="/msgs">here</Link>.</span>
+        <span>Go <Link to="/msgs">there</Link>.</span>
       )).toBe(true);
     });
   });

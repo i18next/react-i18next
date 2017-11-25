@@ -1035,7 +1035,7 @@ var Trans = function (_React$Component) {
         if (t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns: ns });
       }
 
-      if (!useAsParent) return children;
+      if (!useAsParent) return renderNodes(children, translation, i18n);
 
       return React__default.createElement(useAsParent, additionalProps, renderNodes(children, translation, i18n));
     }

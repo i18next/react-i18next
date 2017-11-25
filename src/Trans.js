@@ -115,7 +115,7 @@ export default class Trans extends React.Component {
       if (t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns });
     }
 
-    if (!useAsParent) return children;
+    if (!useAsParent) return renderNodes(children, translation, i18n);
 
     return React.createElement(
       useAsParent,

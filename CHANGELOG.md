@@ -1,3 +1,6 @@
+### 7.0.2
+- fixes rendering in Trans component in case of no parent
+
 ### 7.0.1
 - working Trans component without the need of setting options.react
 
