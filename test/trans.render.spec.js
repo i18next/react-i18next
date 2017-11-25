@@ -52,7 +52,7 @@ describe('trans simple', () => {
       const HocElement = translate(['translation'], {})(TestElement);
 
       const wrapper = mount(<HocElement />, { context });
-      console.log(wrapper.debug());
+      // console.log(wrapper.debug());
       expect(wrapper.contains(
         <span>Open <Link to="/msgs">here</Link>.</span>
       )).toBe(true);

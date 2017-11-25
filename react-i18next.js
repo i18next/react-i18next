@@ -1018,14 +1018,15 @@ var Trans = function (_React$Component) {
           additionalProps = objectWithoutProperties(contextAndProps, ['children', 'count', 'parent', 'i18nKey', 'i18n', 't']);
 
 
-      var useAsParent = parent !== undefined ? parent : i18n.options.react.defaultTransParent;
+      var reactI18nextOptions = i18n.options && i18n.options.react || {};
+      var useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
 
       var defaultValue = nodesToString('', children, 0);
-      var hashTransKey = i18n.options.react && i18n.options.react.hashTransKey;
+      var hashTransKey = reactI18nextOptions.hashTransKey;
       var key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
       var translation = key ? t(key, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue: defaultValue, count: count }) : defaultValue;
 
-      if (i18n.options.react && i18n.options.react.exposeNamespace) {
+      if (reactI18nextOptions.exposeNamespace) {
         var ns = typeof t.ns === 'string' ? t.ns : t.ns[0];
         if (i18nKey && i18n.options.nsSeparator && i18nKey.indexOf(i18n.options.nsSeparator) > -1) {
           var parts = i18nKey.split(i18n.options.nsSeparator);

@@ -98,14 +98,15 @@ export default class Trans extends React.Component {
     const contextAndProps = { i18n: this.context.i18n, t: this.context.t, ...this.props };
     const { children, count, parent, i18nKey, i18n, t, ...additionalProps } = contextAndProps;
 
-    const useAsParent = parent !== undefined ? parent : i18n.options.react.defaultTransParent;
+    const reactI18nextOptions = (i18n.options && i18n.options.react) || {};
+    const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
 
     const defaultValue = nodesToString('', children, 0);
-    const hashTransKey = i18n.options.react && i18n.options.react.hashTransKey;
+    const hashTransKey = reactI18nextOptions.hashTransKey;
     const key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
     const translation = key ? t(key, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue, count }) : defaultValue;
 
-    if (i18n.options.react && i18n.options.react.exposeNamespace) {
+    if (reactI18nextOptions.exposeNamespace) {
       let ns = typeof t.ns === 'string' ? t.ns : t.ns[0];
       if (i18nKey && i18n.options.nsSeparator && i18nKey.indexOf(i18n.options.nsSeparator) > -1) {
         const parts = i18nKey.split(i18n.options.nsSeparator);

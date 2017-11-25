@@ -1,3 +1,6 @@
+### 7.0.1
+- working Trans component without the need of setting options.react
+
 ### 7.0.0
 - **[BREAKING]** As with react 16 you can return multiple elements from render - based on that we do not need to return a wrapper any longer from Trans component.
 
