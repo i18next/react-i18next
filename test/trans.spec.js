@@ -7,8 +7,6 @@ describe('trans', () => {
   it('should have some stuff', () => {
     expect(Trans.contextTypes.i18n)
       .toBe(PropTypes.object.isRequired);
-    expect(Trans.contextTypes.t)
-      .toBe(PropTypes.func.isRequired);
     expect(Trans.propTypes.i18n)
       .toBe(PropTypes.object);
     expect(Trans.propTypes.t)
