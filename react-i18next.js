@@ -1014,9 +1014,10 @@ var Trans = function (_React$Component) {
           parent = contextAndProps.parent,
           i18nKey = contextAndProps.i18nKey,
           i18n = contextAndProps.i18n,
-          t = contextAndProps.t,
+          tFromContextAndProps = contextAndProps.t,
           additionalProps = objectWithoutProperties(contextAndProps, ['children', 'count', 'parent', 'i18nKey', 'i18n', 't']);
 
+      var t = tFromContextAndProps || i18n.t.bind(i18n);
 
       var reactI18nextOptions = i18n.options && i18n.options.react || {};
       var useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
@@ -1056,8 +1057,7 @@ Trans.propTypes = {
 // };
 
 Trans.contextTypes = {
-  i18n: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired
+  i18n: PropTypes.object.isRequired
 };
 
 var I18nextProvider = function (_Component) {

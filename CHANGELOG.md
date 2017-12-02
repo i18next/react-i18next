@@ -1,3 +1,6 @@
+### 7.1.0
+- optional take i18n.t in Trans component if non t function passed in via props or context
+
 ### 7.0.2
 - fixes rendering in Trans component in case of no parent
 
