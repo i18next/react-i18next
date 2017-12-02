@@ -3,6 +3,7 @@ import { shallow, render, mount } from 'enzyme';
 import i18n from './i18n';
 import translate from '../src/translate';
 import Trans from '../src/Trans';
+import PropTypes from "prop-types";
 
 const context = {
   i18n
@@ -67,6 +68,16 @@ describe('trans simple', () => {
       <span>
         Go <Link to="/msgs">there</Link>.
       </span>
+    )).toBe(true);
+  });
+
+  it('uses the i18n.t function if t is not in the context nor specified using props', () => {
+    const wrapper = mount(<TestElement />, { context, childContextTypes: { i18n: PropTypes.object.isRequired } });
+
+    expect(wrapper.contains((
+      <div>
+        Go <Link to="/msgs">there</Link>.
+      </div>)
     )).toBe(true);
   });
 });

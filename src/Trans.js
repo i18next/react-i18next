@@ -96,7 +96,8 @@ export default class Trans extends React.Component {
 
   render() {
     const contextAndProps = { i18n: this.context.i18n, t: this.context.t, ...this.props };
-    const { children, count, parent, i18nKey, i18n, t, ...additionalProps } = contextAndProps;
+    const { children, count, parent, i18nKey, i18n, t: tFromContextAndProps, ...additionalProps } = contextAndProps;
+    const t = tFromContextAndProps || i18n.t.bind(i18n);
 
     const reactI18nextOptions = (i18n.options && i18n.options.react) || {};
     const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
@@ -138,6 +139,5 @@ Trans.propTypes = {
 // };
 
 Trans.contextTypes = {
-  i18n: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired
+  i18n: PropTypes.object.isRequired
 };
