@@ -1,3 +1,6 @@
+### 7.1.1
+- bring back Trans component t fc from context
+
 ### 7.1.0
 - optional take i18n.t in Trans component if non t function passed in via props or context
 

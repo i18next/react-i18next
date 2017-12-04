@@ -1057,7 +1057,8 @@ Trans.propTypes = {
 // };
 
 Trans.contextTypes = {
-  i18n: PropTypes.object.isRequired
+  i18n: PropTypes.object.isRequired,
+  t: PropTypes.func
 };
 
 var I18nextProvider = function (_Component) {
