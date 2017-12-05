@@ -27,7 +27,7 @@ export default function translate(namespaces, options = {}) {
         this.getWrappedInstance = this.getWrappedInstance.bind(this);
       }
 
-      shouldComponentUpdate(nextProps){
+      shouldComponentUpdate(nextProps) {
         if (!this.options.usePureComponent) {
           return true;
         }
