@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import hoistStatics from 'hoist-non-react-statics';
-import { shallowEqual } from './shallowEqual';
+import shallowEqual from './shallowEqual';
 import { getDefaults, setDefaults, getI18n, setI18n } from './context';
 import I18n from './I18n';
 
