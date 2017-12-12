@@ -47,6 +47,7 @@ function nodesToString(mem, children, index) {
 }
 
 function renderNodes(children, targetString, i18n) {
+  if (targetString === "") return [];
 
   // parse ast from string with additional wrapper tag
   // -> avoids issues in parser removing prepending text nodes
