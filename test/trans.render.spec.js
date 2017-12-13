@@ -234,3 +234,14 @@ describe('trans with t as prop', () => {
   });
 
 });
+
+describe('trans with empty content', () => {
+  const TestElement = ({ t, cb }) => {
+    return <Trans>{""}</Trans>;
+  };
+  it('should render an empty string', () => {
+    const HocElement = translate(['translation'], {})(TestElement);
+    const wrapper = mount(<HocElement />, { context });
+    expect(wrapper.contains(<div></div>)).toBe(true);
+  });
+});
