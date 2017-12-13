@@ -4,7 +4,8 @@ let defaultOptions = {
   bindI18n: 'languageChanged loaded',
   bindStore: 'added removed',
   translateFuncName: 't',
-  nsMode: 'default'
+  nsMode: 'default',
+  usePureComponent: false
 };
 
 let i18n;

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import hoistStatics from 'hoist-non-react-statics';
+import shallowEqual from './shallowEqual';
 import { getDefaults, setDefaults, getI18n, setI18n } from './context';
 import I18n from './I18n';
 
@@ -24,6 +25,14 @@ export default function translate(namespaces, options = {}) {
         this.options = { ...getDefaults(), ...i18nOptions, ...options };
 
         this.getWrappedInstance = this.getWrappedInstance.bind(this);
+      }
+
+      shouldComponentUpdate(nextProps) {
+        if (!this.options.usePureComponent) {
+          return true;
+        }
+
+        return !shallowEqual(this.props, nextProps);
       }
 
       getWrappedInstance() {
