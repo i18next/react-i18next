@@ -95,6 +95,7 @@
     "collectCoverageFrom": [
       "**/src/*.{js,jsx}",
       "!**/src/index.js",
+      "!**/src/shallowEqual.js",
       "!**/node_modules/**",
       "!**/test/**",
       "!**/example/**"
