@@ -1,3 +1,7 @@
+### 7.2.0
+- Add usePureComponent option [PR357](https://github.com/i18next/react-i18next/pull/357)
+- Render empty string on empty string as Trans child [PR364](https://github.com/i18next/react-i18next/pull/364)
+
 ### 7.1.1
 - fixes: bring back Trans component t fc from context
 
