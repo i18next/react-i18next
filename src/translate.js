@@ -9,7 +9,7 @@ function getDisplayName(component) {
   return component.displayName || component.name || 'Component';
 }
 
-export default function translate(namespaces, options = {}) {
+export default function translate(namespaceArg, options = {}) {
 
   return function Wrapper(WrappedComponent) {
 
@@ -18,8 +18,12 @@ export default function translate(namespaces, options = {}) {
         super(props, context);
 
         this.i18n = context.i18n || props.i18n || options.i18n || getI18n();
-        namespaces = namespaces || this.i18n.options.defaultNS;
-        if (typeof namespaces === 'string') namespaces = [namespaces];
+        this.namespaces = typeof namespaceArg === 'function' ? (
+          namespaceArg(props)
+        ) : (
+          namespaceArg || this.i18n.options.defaultNS
+        );
+        if (typeof this.namespaces === 'string') this.namespaces = [this.namespaces];
 
         const i18nOptions = (this.i18n && this.i18n.options.react) || {};
         this.options = { ...getDefaults(), ...i18nOptions, ...options };
@@ -58,7 +62,7 @@ export default function translate(namespaces, options = {}) {
 
         return React.createElement(
           I18n,
-          { ns: namespaces, ...this.options, ...this.props, ...{ i18n: this.i18n } },
+          { ns: this.namespaces, ...this.options, ...this.props, ...{ i18n: this.i18n } },
           (t, context) => React.createElement(
             WrappedComponent,
             { ...this.props, ...extraProps, ...context }
@@ -75,7 +79,7 @@ export default function translate(namespaces, options = {}) {
 
     Translate.displayName = `Translate(${getDisplayName(WrappedComponent)})`;
 
-    Translate.namespaces = namespaces;
+    Translate.namespaces = namespaceArg;
 
     return hoistStatics(Translate, WrappedComponent);
   };
