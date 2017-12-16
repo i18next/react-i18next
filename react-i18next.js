@@ -596,7 +596,7 @@ function getDisplayName(component) {
   return component.displayName || component.name || 'Component';
 }
 
-function translate(namespaces) {
+function translate(namespaceArg) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
 
@@ -610,8 +610,8 @@ function translate(namespaces) {
         var _this = possibleConstructorReturn(this, (Translate.__proto__ || Object.getPrototypeOf(Translate)).call(this, props, context));
 
         _this.i18n = context.i18n || props.i18n || options.i18n || getI18n();
-        namespaces = namespaces || _this.i18n.options.defaultNS;
-        if (typeof namespaces === 'string') namespaces = [namespaces];
+        _this.namespaces = typeof namespaceArg === 'function' ? namespaceArg(props) : namespaceArg || _this.i18n.options.defaultNS;
+        if (typeof _this.namespaces === 'string') _this.namespaces = [_this.namespaces];
 
         var i18nOptions = _this.i18n && _this.i18n.options.react || {};
         _this.options = _extends({}, getDefaults(), i18nOptions, options);
@@ -653,7 +653,7 @@ function translate(namespaces) {
             };
           }
 
-          return React__default.createElement(I18n, _extends({ ns: namespaces }, this.options, this.props, { i18n: this.i18n }), function (t, context) {
+          return React__default.createElement(I18n, _extends({ ns: this.namespaces }, this.options, this.props, { i18n: this.i18n }), function (t, context) {
             return React__default.createElement(WrappedComponent, _extends({}, _this2.props, extraProps, context));
           });
         }
@@ -669,7 +669,7 @@ function translate(namespaces) {
 
     Translate.displayName = 'Translate(' + getDisplayName(WrappedComponent) + ')';
 
-    Translate.namespaces = namespaces;
+    Translate.namespaces = namespaceArg;
 
     return hoistNonReactStatics(Translate, WrappedComponent);
   };

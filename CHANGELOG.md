@@ -1,3 +1,6 @@
+### 7.3.0
+- Allow translate HOC to take a function for getting namespaces [372](https://github.com/i18next/react-i18next/pull/372)
+
 ### 7.2.0
 - Add usePureComponent option [PR357](https://github.com/i18next/react-i18next/pull/357)
 - Render empty string on empty string as Trans child [PR364](https://github.com/i18next/react-i18next/pull/364)
