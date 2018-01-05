@@ -1,5 +1,5 @@
 import React from 'react';
-import { translate } from 'react-i18next';
+import { translate, Trans } from 'react-i18next';
 import { StyleSheet, Text, View, Button } from 'react-native';
 
 
@@ -16,6 +16,15 @@ export default class Home extends React.Component {
       <View style={styles.container}>
         <Text>{t('introduction')}</Text>
         <Text>{t('common:currentLanguage', { lng: i18n.language })}</Text>
+        <Trans i18nKey="common:infoText">
+          <Text style={styles.bold}>
+            <Text style={styles.bold}>One </Text>
+            <Text style={styles.light}>Two </Text>
+            <Text style={styles.bold}>Three </Text>
+            <Text style={styles.light}>Four </Text>
+            <Text style={styles.bold}>Five </Text>
+          </Text>
+       </Trans>
       </View>
     );
   }
@@ -28,4 +37,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  bold: {
+    fontWeight: 'bold'
+  },
+  light: {
+    fontWeight: 'normal'
+  }
 });

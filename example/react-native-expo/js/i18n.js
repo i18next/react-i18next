@@ -34,7 +34,8 @@ i18n
             toggleToGerman: 'Deutsch',
             toggleToEnglish: 'English',
             goToPage2: 'Open page 2'
-          }
+          },
+          infoText: "<0><0>Eins </O><1>Zwei </1><2>Drei </2><3>Vier </3><4>Fünf</4></O>"
         }
       },
       de: {
