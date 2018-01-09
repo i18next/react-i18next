@@ -1,3 +1,6 @@
+### 7.3.1
+- remove react-dom from peer dependencies as module is used in react-native too
+
 ### 7.3.0
 - Allow translate HOC to take a function for getting namespaces [372](https://github.com/i18next/react-i18next/pull/372)
 
