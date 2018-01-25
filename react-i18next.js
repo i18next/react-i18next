@@ -679,8 +679,8 @@ translate.setDefaults = setDefaults;
 
 translate.setI18n = setI18n;
 
-var Interpolate = function (_PureComponent) {
-  inherits(Interpolate, _PureComponent);
+var Interpolate = function (_Component) {
+  inherits(Interpolate, _Component);
 
   function Interpolate(props, context) {
     classCallCheck(this, Interpolate);
@@ -765,7 +765,7 @@ var Interpolate = function (_PureComponent) {
     }
   }]);
   return Interpolate;
-}(React.PureComponent);
+}(React.Component);
 
 Interpolate.propTypes = {
   className: PropTypes.string

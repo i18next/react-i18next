@@ -1,3 +1,6 @@
+### 7.3.2
+- replace Interpolate PureComponent with Component to assert it gets rerendered on lng change
+
 ### 7.3.1
 - remove react-dom from peer dependencies as module is used in react-native too
 

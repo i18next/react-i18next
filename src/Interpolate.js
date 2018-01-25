@@ -1,7 +1,7 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class Interpolate extends PureComponent {
+class Interpolate extends Component {
 
   constructor(props, context) {
     super(props, context);
