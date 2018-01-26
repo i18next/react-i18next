@@ -21,7 +21,7 @@ export default function translate(namespaceArg, options = {}) {
         this.namespaces = typeof namespaceArg === 'function' ? (
           namespaceArg(props)
         ) : (
-          namespaceArg || this.i18n.options.defaultNS
+          namespaceArg || (this.i18n.options && this.i18n.options.defaultNS)
         );
         if (typeof this.namespaces === 'string') this.namespaces = [this.namespaces];
 

@@ -1,3 +1,6 @@
+### 7.3.4
+- more save access to options in general
+
 ### 7.3.3
 - more save access to options.react
 

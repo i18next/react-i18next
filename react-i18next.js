@@ -442,7 +442,7 @@ var I18n = function (_Component) {
     var _this = possibleConstructorReturn(this, (I18n.__proto__ || Object.getPrototypeOf(I18n)).call(this, props, context));
 
     _this.i18n = context.i18n || props.i18n || getI18n();
-    _this.namespaces = _this.props.ns || _this.i18n.options.defaultNS;
+    _this.namespaces = _this.props.ns || _this.i18n.options && _this.i18n.options.defaultNS;
     if (typeof _this.namespaces === 'string') _this.namespaces = [_this.namespaces];
 
     var i18nOptions = _this.i18n && _this.i18n.options && _this.i18n.options.react || {};
@@ -458,7 +458,7 @@ var I18n = function (_Component) {
     }
 
     // provider SSR: data was set in provider and ssr flag was set
-    if (_this.i18n.options.isInitialSSR) {
+    if (_this.i18n.options && _this.i18n.options.isInitialSSR) {
       _this.options.wait = false;
     }
 
@@ -570,7 +570,7 @@ var I18n = function (_Component) {
       if (!ready && this.options.wait) return null;
 
       // remove ssr flag set by provider - first render was done from now on wait if set to wait
-      if (this.i18n.options.isInitialSSR && !removedIsInitialSSR) {
+      if (this.i18n.options && this.i18n.options.isInitialSSR && !removedIsInitialSSR) {
         removedIsInitialSSR = true;
         setTimeout(function () {
           delete _this4.i18n.options.isInitialSSR;
@@ -610,7 +610,7 @@ function translate(namespaceArg) {
         var _this = possibleConstructorReturn(this, (Translate.__proto__ || Object.getPrototypeOf(Translate)).call(this, props, context));
 
         _this.i18n = context.i18n || props.i18n || options.i18n || getI18n();
-        _this.namespaces = typeof namespaceArg === 'function' ? namespaceArg(props) : namespaceArg || _this.i18n.options.defaultNS;
+        _this.namespaces = typeof namespaceArg === 'function' ? namespaceArg(props) : namespaceArg || _this.i18n.options && _this.i18n.options.defaultNS;
         if (typeof _this.namespaces === 'string') _this.namespaces = [_this.namespaces];
 
         var i18nOptions = _this.i18n && _this.i18n.options && _this.i18n.options.react || {};
@@ -1102,7 +1102,7 @@ var Trans = function (_React$Component) {
 
       if (reactI18nextOptions.exposeNamespace) {
         var ns = typeof t.ns === 'string' ? t.ns : t.ns[0];
-        if (i18nKey && i18n.options.nsSeparator && i18nKey.indexOf(i18n.options.nsSeparator) > -1) {
+        if (i18nKey && i18n.options && i18n.options.nsSeparator && i18nKey.indexOf(i18n.options.nsSeparator) > -1) {
           var parts = i18nKey.split(i18n.options.nsSeparator);
           ns = parts[0];
         }

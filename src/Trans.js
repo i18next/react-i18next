@@ -110,7 +110,7 @@ export default class Trans extends React.Component {
 
     if (reactI18nextOptions.exposeNamespace) {
       let ns = typeof t.ns === 'string' ? t.ns : t.ns[0];
-      if (i18nKey && i18n.options.nsSeparator && i18nKey.indexOf(i18n.options.nsSeparator) > -1) {
+      if (i18nKey && i18n.options && i18n.options.nsSeparator && i18nKey.indexOf(i18n.options.nsSeparator) > -1) {
         const parts = i18nKey.split(i18n.options.nsSeparator);
         ns = parts[0];
       }

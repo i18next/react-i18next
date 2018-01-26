@@ -9,7 +9,7 @@ export default class I18n extends Component {
     super(props, context);
 
     this.i18n = context.i18n || props.i18n || getI18n();
-    this.namespaces = this.props.ns || this.i18n.options.defaultNS;
+    this.namespaces = this.props.ns || (this.i18n.options && this.i18n.options.defaultNS);
     if (typeof this.namespaces === 'string') this.namespaces = [this.namespaces];
 
     const i18nOptions = (this.i18n && this.i18n.options && this.i18n.options.react) || {};
@@ -25,7 +25,7 @@ export default class I18n extends Component {
     }
 
     // provider SSR: data was set in provider and ssr flag was set
-    if (this.i18n.options.isInitialSSR) {
+    if (this.i18n.options && this.i18n.options.isInitialSSR) {
       this.options.wait = false;
     }
 
@@ -115,7 +115,7 @@ export default class I18n extends Component {
     if (!ready && this.options.wait) return null;
 
     // remove ssr flag set by provider - first render was done from now on wait if set to wait
-    if (this.i18n.options.isInitialSSR && !removedIsInitialSSR) {
+    if (this.i18n.options && this.i18n.options.isInitialSSR && !removedIsInitialSSR) {
       removedIsInitialSSR = true;
       setTimeout(() => {
         delete this.i18n.options.isInitialSSR;
