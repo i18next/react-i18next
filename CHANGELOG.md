@@ -1,3 +1,6 @@
+### 7.3.3
+- more save access to options.react
+
 ### 7.3.2
 - replace Interpolate PureComponent with Component to assert it gets rerendered on lng change
 

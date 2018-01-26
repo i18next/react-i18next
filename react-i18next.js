@@ -445,7 +445,7 @@ var I18n = function (_Component) {
     _this.namespaces = _this.props.ns || _this.i18n.options.defaultNS;
     if (typeof _this.namespaces === 'string') _this.namespaces = [_this.namespaces];
 
-    var i18nOptions = _this.i18n && _this.i18n.options.react || {};
+    var i18nOptions = _this.i18n && _this.i18n.options && _this.i18n.options.react || {};
     _this.options = _extends({}, getDefaults(), i18nOptions, props);
 
     // nextjs SSR: getting data from next.js or other ssr stack
@@ -613,7 +613,7 @@ function translate(namespaceArg) {
         _this.namespaces = typeof namespaceArg === 'function' ? namespaceArg(props) : namespaceArg || _this.i18n.options.defaultNS;
         if (typeof _this.namespaces === 'string') _this.namespaces = [_this.namespaces];
 
-        var i18nOptions = _this.i18n && _this.i18n.options.react || {};
+        var i18nOptions = _this.i18n && _this.i18n.options && _this.i18n.options.react || {};
         _this.options = _extends({}, getDefaults(), i18nOptions, options);
 
         _this.getWrappedInstance = _this.getWrappedInstance.bind(_this);

@@ -25,7 +25,7 @@ export default function translate(namespaceArg, options = {}) {
         );
         if (typeof this.namespaces === 'string') this.namespaces = [this.namespaces];
 
-        const i18nOptions = (this.i18n && this.i18n.options.react) || {};
+        const i18nOptions = (this.i18n && this.i18n.options && this.i18n.options.react) || {};
         this.options = { ...getDefaults(), ...i18nOptions, ...options };
 
         this.getWrappedInstance = this.getWrappedInstance.bind(this);

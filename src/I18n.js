@@ -12,7 +12,7 @@ export default class I18n extends Component {
     this.namespaces = this.props.ns || this.i18n.options.defaultNS;
     if (typeof this.namespaces === 'string') this.namespaces = [this.namespaces];
 
-    const i18nOptions = (this.i18n && this.i18n.options.react) || {};
+    const i18nOptions = (this.i18n && this.i18n.options && this.i18n.options.react) || {};
     this.options = { ...getDefaults(), ...i18nOptions, ...props };
 
     // nextjs SSR: getting data from next.js or other ssr stack
