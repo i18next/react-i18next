@@ -441,7 +441,7 @@ var I18n = function (_Component) {
 
     var _this = possibleConstructorReturn(this, (I18n.__proto__ || Object.getPrototypeOf(I18n)).call(this, props, context));
 
-    _this.i18n = context.i18n || props.i18n || getI18n();
+    _this.i18n = props.i18n || context.i18n || getI18n();
     _this.namespaces = _this.props.ns || _this.i18n.options && _this.i18n.options.defaultNS;
     if (typeof _this.namespaces === 'string') _this.namespaces = [_this.namespaces];
 

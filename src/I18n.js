@@ -8,7 +8,7 @@ export default class I18n extends Component {
   constructor(props, context) {
     super(props, context);
 
-    this.i18n = context.i18n || props.i18n || getI18n();
+    this.i18n = props.i18n || context.i18n || getI18n();
     this.namespaces = this.props.ns || (this.i18n.options && this.i18n.options.defaultNS);
     if (typeof this.namespaces === 'string') this.namespaces = [this.namespaces];
 

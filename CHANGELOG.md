@@ -1,3 +1,6 @@
+### 7.3.5
+- reorder selection of i18n in I18n render prop
+
 ### 7.3.4
 - more save access to options in general
 
