@@ -609,7 +609,7 @@ function translate(namespaceArg) {
 
         var _this = possibleConstructorReturn(this, (Translate.__proto__ || Object.getPrototypeOf(Translate)).call(this, props, context));
 
-        _this.i18n = context.i18n || props.i18n || options.i18n || getI18n();
+        _this.i18n = props.i18n || options.i18n || context.i18n || getI18n();
         _this.namespaces = typeof namespaceArg === 'function' ? namespaceArg(props) : namespaceArg || _this.i18n.options && _this.i18n.options.defaultNS;
         if (typeof _this.namespaces === 'string') _this.namespaces = [_this.namespaces];
 

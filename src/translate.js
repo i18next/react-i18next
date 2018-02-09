@@ -17,7 +17,7 @@ export default function translate(namespaceArg, options = {}) {
       constructor(props, context) {
         super(props, context);
 
-        this.i18n = context.i18n || props.i18n || options.i18n || getI18n();
+        this.i18n = props.i18n || options.i18n || context.i18n || getI18n();
         this.namespaces = typeof namespaceArg === 'function' ? (
           namespaceArg(props)
         ) : (
