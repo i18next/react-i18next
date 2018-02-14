@@ -9,7 +9,7 @@
     "i18next-xhr-backend": "1.4.2",
     "preact": "8.2.1",
     "preact-compat": "3.16.0",
-    "react-i18next": "6.0.6"
+    "react-i18next": "7.3.6"
   },
   "devDependencies": {},
   "scripts": {

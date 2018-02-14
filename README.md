@@ -104,7 +104,7 @@ $ bower install react-i18next
 
 ### Requirements
 
-- react >= __0.14.0__
+- react >= __0.14.0__ (in case of < v16 or preact you will need to define parent in [Trans component](https://react.i18next.com/components/trans-component.html#props) or globally in [i18next.react options](https://react.i18next.com/components/trans-component.html#additional-options-on-i18nextinit))
 - i18next >= __2.0.0__
 
 --------------

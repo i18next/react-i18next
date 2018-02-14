@@ -21,6 +21,7 @@ i18n
     },
 
     react: {
+      defaultTransParent: 'div', // needed for preact
       wait: true
     }
   });
