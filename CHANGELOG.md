@@ -1,3 +1,7 @@
+### 7.4.0
+- enables setting prop `ns` on Trans component to override namespace passed by render prop or hoc
+- allows trans component with no children just returning the string getting from translations
+
 ### 7.3.6
 - reorder selection of i18n in I18n render prop
 

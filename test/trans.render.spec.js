@@ -82,6 +82,28 @@ describe('trans simple', () => {
   });
 });
 
+describe('trans simple using ns prop', () => {
+  const TestElement = ({ t, parent }) => {
+    return (
+      <Trans i18nKey="transTest1" ns="other" parent={parent}>
+        Open <Link to="/msgs">here</Link>.
+      </Trans>
+    );
+  }
+
+  it('should render correct content', () => {
+    const HocElement = translate(['translation'], {})(TestElement);
+
+    const wrapper = mount(<HocElement />, { context });
+    // console.log(wrapper.debug());
+    expect(wrapper.contains(
+      <div>
+        Another go <Link to="/msgs">there</Link>.
+      </div>
+    )).toBe(true);
+  });
+});
+
 describe('trans testTransKey1 singular', () => {
   const TestElement = ({ t }) => {
     const numOfItems = 1;
@@ -243,5 +265,16 @@ describe('trans with empty content', () => {
     const HocElement = translate(['translation'], {})(TestElement);
     const wrapper = mount(<HocElement />, { context });
     expect(wrapper.contains(<div></div>)).toBe(true);
+  });
+});
+
+describe('trans with only content from translation file - no children', () => {
+  const TestElement = ({ t, cb }) => {
+    return <Trans i18nKey="key1"></Trans>;
+  };
+  it('should render translated string', () => {
+    const HocElement = translate(['translation'], {})(TestElement);
+    const wrapper = mount(<HocElement />, { context });
+    expect(wrapper.contains(<div>test</div>)).toBe(true);
   });
 });

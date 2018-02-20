@@ -993,6 +993,7 @@ function getChildren(node) {
 }
 
 function nodesToString(mem, children, index) {
+  if (!children) return '';
   if (Object.prototype.toString.call(children) !== '[object Array]') children = [children];
 
   children.forEach(function (child, i) {
@@ -1030,6 +1031,7 @@ function nodesToString(mem, children, index) {
 
 function renderNodes(children, targetString, i18n) {
   if (targetString === "") return [];
+  if (!children) return [targetString];
 
   // parse ast from string with additional wrapper tag
   // -> avoids issues in parser removing prepending text nodes
@@ -1086,9 +1088,10 @@ var Trans = function (_React$Component) {
           count = contextAndProps.count,
           parent = contextAndProps.parent,
           i18nKey = contextAndProps.i18nKey,
+          namespace = contextAndProps.ns,
           i18n = contextAndProps.i18n,
           tFromContextAndProps = contextAndProps.t,
-          additionalProps = objectWithoutProperties(contextAndProps, ['children', 'count', 'parent', 'i18nKey', 'i18n', 't']);
+          additionalProps = objectWithoutProperties(contextAndProps, ['children', 'count', 'parent', 'i18nKey', 'ns', 'i18n', 't']);
 
       var t = tFromContextAndProps || i18n.t.bind(i18n);
 
@@ -1098,7 +1101,7 @@ var Trans = function (_React$Component) {
       var defaultValue = nodesToString('', children, 0);
       var hashTransKey = reactI18nextOptions.hashTransKey;
       var key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
-      var translation = key ? t(key, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue: defaultValue, count: count }) : defaultValue;
+      var translation = key ? t(key, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue: defaultValue, count: count, ns: namespace }) : defaultValue;
 
       if (reactI18nextOptions.exposeNamespace) {
         var ns = typeof t.ns === 'string' ? t.ns : t.ns[0];
