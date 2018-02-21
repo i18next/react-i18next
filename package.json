@@ -23,7 +23,7 @@
     "url": "https://github.com/i18next/react-i18next.git"
   },
   "dependencies": {
-    "hoist-non-react-statics": "2.3.1",
+    "hoist-non-react-statics": "^2.3.1",
     "html-parse-stringify2": "2.0.1",
     "prop-types": "^15.6.0"
   },
