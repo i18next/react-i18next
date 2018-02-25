@@ -1,3 +1,7 @@
+[![video](https://raw.githubusercontent.com/i18next/react-i18next/master/example/nextjs-locize/video_sample.png)](https://youtu.be/kw-GEQbgmSc)
+
+[watch the video](https://youtu.be/kw-GEQbgmSc)
+
 # Getting started
 
 Build with [next.js](https://github.com/zeit/next.js/).
