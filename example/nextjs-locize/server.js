@@ -6,23 +6,23 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const i18nextMiddleware = require('i18next-express-middleware');
-const fsBackend = require('i18next-node-fs-backend');
+const locizeBackend = require('i18next-node-locize-backend');
 const i18n = require('./i18n');
+const locizeOptions = require('./locizeOptions.json');
+
+locizeOptions.reloadInterval = dev ? 5 * 1000 : 60 * 60 * 1000;
 
 // init i18next with serverside settings
 // using i18next-express-middleware
 i18n
-  .use(fsBackend)
+  .use(locizeBackend)
   .use(i18nextMiddleware.LanguageDetector)
   .init({
     fallbackLng: 'en',
     preload: ['en', 'de'], // preload all langages
     ns: ['common', 'home', 'page2'], // need to preload all the namespaces
     saveMissing: true,
-    backend: {
-      loadPath: __dirname + '/locales/{{lng}}/{{ns}}.json',
-      addPath: __dirname + '/locales/{{lng}}/{{ns}}.missing.json'
-    }
+    backend: locizeOptions
   }, (err) => {
     if (err) return console.error(err);
 
@@ -32,12 +32,6 @@ i18n
 
       // enable middleware for i18next
       server.use(i18nextMiddleware.handle(i18n));
-
-      // serve locales for client
-      server.use('/locales', express.static(__dirname + '/locales'))
-
-      // missing keys
-      server.post('/locales/add/:lng/:ns', i18nextMiddleware.missingKeyHandler(i18n));
 
       // use next.js
       server.get('*', (req, res) => handle(req, res))

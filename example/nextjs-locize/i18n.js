@@ -1,6 +1,7 @@
 const i18n = require('i18next');
-const XHR = require('i18next-xhr-backend');
+const locizeBackend = require('i18next-locize-backend').default; // same as: import locizeBackend from 'i18next-locize-backend';
 const LanguageDetector = require('i18next-browser-languagedetector');
+const locizeOptions = require('./locizeOptions.json');
 
 const options = {
   fallbackLng: 'en',
@@ -20,13 +21,14 @@ const options = {
       if (format === 'uppercase') return value.toUpperCase();
       return value;
     }
-  }
+  },
+  backend: locizeOptions
 };
 
 // for browser use xhr backend to load translations and browser lng detector
 if (process.browser) {
   i18n
-    .use(XHR)
+    .use(locizeBackend)
     .use(LanguageDetector);
 }
 

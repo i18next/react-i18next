@@ -14,6 +14,8 @@ function Home({ t, initialI18nStore }) {
       <PureComponent t={t} />
       <ExtendedComponent />
       <Link href="/page2"><a>{t('link.gotoPage2')}</a></Link>
+      <br />
+      <Link href="www.locize.com"><a>{t('link.gotoLocize')}</a></Link>
     </div>
   );
 }
