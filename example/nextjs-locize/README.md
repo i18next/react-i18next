@@ -2,7 +2,7 @@
 
 [watch the video](https://youtu.be/kw-GEQbgmSc)
 
-![relevant changes](https://github.com/i18next/react-i18next/commit/b5cd5c07f73d52d306fae4833203d9adc7edd839)
+[relevant changes](https://github.com/i18next/react-i18next/commit/b5cd5c07f73d52d306fae4833203d9adc7edd839)
 
 # Getting started
 
