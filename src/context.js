@@ -1,5 +1,6 @@
 let defaultOptions = {
   wait: false,
+  renderNullWhileWaiting: true,
   withRef: false,
   bindI18n: 'languageChanged loaded',
   bindStore: 'added removed',

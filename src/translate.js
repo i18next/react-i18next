@@ -63,9 +63,14 @@ export default function translate(namespaceArg, options = {}) {
         return React.createElement(
           I18n,
           { ns: this.namespaces, ...this.options, ...this.props, ...{ i18n: this.i18n } },
-          (t, context) => React.createElement(
+          (t, { ready, ...context }) => React.createElement(
             WrappedComponent,
-            { ...this.props, ...extraProps, ...context }
+            {
+              ...this.props,
+              ...extraProps,
+              ...context,
+              ...(ready === undefined ? {} : { tReady: ready })
+            }
           )
         );
       }
