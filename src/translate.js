@@ -66,10 +66,10 @@ export default function translate(namespaceArg, options = {}) {
           (t, { ready, ...context }) => React.createElement(
             WrappedComponent,
             {
+              tReady: ready,
               ...this.props,
               ...extraProps,
-              ...context,
-              ...(ready === undefined ? {} : { tReady: ready })
+              ...context
             }
           )
         );

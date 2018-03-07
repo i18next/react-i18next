@@ -112,7 +112,7 @@ export default class I18n extends Component {
     const { children } = this.props;
     const { ready } = this.state;
 
-    if (!ready && this.options.wait && this.options.renderNullWhileWaiting) return null;
+    if (!ready && this.options.wait) return null;
 
     // remove ssr flag set by provider - first render was done from now on wait if set to wait
     if (this.i18n.options && this.i18n.options.isInitialSSR && !removedIsInitialSSR) {
@@ -122,12 +122,11 @@ export default class I18n extends Component {
       }, 100);
     }
 
-    const ctx = {
+    return children(this.t, {
       i18n: this.i18n,
       t: this.t,
-      ...(this.options.wait && !this.options.renderNullWhileWaiting) ? { ready } : {}
-    };
-    return children(this.t, ctx);
+      ready
+    });
   }
 }
 

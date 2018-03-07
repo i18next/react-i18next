@@ -24,7 +24,7 @@ const context = {
 describe('translate wait', () => {
   const TestElement = ({ t, tReady }) => {
     return (
-      <div>{tReady === false ? 'loading' : t('key1')}</div>
+      <div>{t('key1')}</div>
     );
   }
 
@@ -53,21 +53,6 @@ describe('translate wait', () => {
     const wrapper = mount(<HocElement />, { context });
     // console.log(wrapper.debug());
     expect(wrapper.contains(<div>test</div>)).toBe(false);
-
-    backend.flush();
-    wrapper.update();
-
-    setTimeout(() => {
-      expect(wrapper.contains(<div>test</div>)).toBe(true);
-    }, 50);
-  });
-
-  it('should not wait for correct translation', () => {
-    const HocElement = translate(['common'], { wait: true, renderNullWhileWaiting: false })(TestElement);
-
-    const wrapper = mount(<HocElement />, { context });
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<div>loading</div>)).toBe(true);
 
     backend.flush();
     wrapper.update();
