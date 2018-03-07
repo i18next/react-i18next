@@ -22,7 +22,7 @@ const context = {
 };
 
 describe('translate wait', () => {
-  const TestElement = ({ t, tReady }) => {
+  const TestElement = ({ t }) => {
     return (
       <div>{t('key1')}</div>
     );
