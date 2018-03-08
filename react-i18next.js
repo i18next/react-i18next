@@ -551,7 +551,7 @@ var I18n = function (_Component) {
       if (!this.mounted) return;
 
       this.t = this.getI18nTranslate();
-      this.setState({ i18nLoadedAt: new Date() });
+      this.setState({ i18nLoadedAt: new Date() }); // rerender
     }
   }, {
     key: 'getI18nTranslate',
@@ -577,7 +577,11 @@ var I18n = function (_Component) {
         }, 100);
       }
 
-      return children(this.t, { i18n: this.i18n, t: this.t });
+      return children(this.t, {
+        i18n: this.i18n,
+        t: this.t,
+        ready: ready
+      });
     }
   }]);
   return I18n;
@@ -653,8 +657,12 @@ function translate(namespaceArg) {
             };
           }
 
-          return React__default.createElement(I18n, _extends({ ns: this.namespaces }, this.options, this.props, { i18n: this.i18n }), function (t, context) {
-            return React__default.createElement(WrappedComponent, _extends({}, _this2.props, extraProps, context));
+          return React__default.createElement(I18n, _extends({ ns: this.namespaces }, this.options, this.props, { i18n: this.i18n }), function (t, _ref) {
+            var ready = _ref.ready,
+                context = objectWithoutProperties(_ref, ['ready']);
+            return React__default.createElement(WrappedComponent, _extends({
+              tReady: ready
+            }, _this2.props, extraProps, context));
           });
         }
       }]);

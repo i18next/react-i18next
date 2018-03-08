@@ -32,7 +32,10 @@ export default class I18n extends Component {
     const language = this.i18n.languages && this.i18n.languages[0];
     const ready = !!language && this.namespaces.every(ns => this.i18n.hasResourceBundle(language, ns));
 
-    this.state = { ready };
+    this.state = {
+      i18nLoadedAt: null,
+      ready
+    };
 
     this.onI18nChanged = this.onI18nChanged.bind(this);
     this.getI18nTranslate = this.getI18nTranslate.bind(this);
@@ -98,6 +101,7 @@ export default class I18n extends Component {
     if (!this.mounted) return;
 
     this.t = this.getI18nTranslate();
+    this.setState({ i18nLoadedAt: new Date() }); // rerender
   }
 
   getI18nTranslate() {

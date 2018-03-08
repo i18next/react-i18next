@@ -1,3 +1,7 @@
+### 7.5.0
+- passes down tReady from translate hoc for cases you prefer showing a placeholder instead of default return null in case of wait: true and not yet loaded translations [PR400](https://github.com/i18next/react-i18next/pull/400)
+- I18n render prop calls with ready as third param
+
 ### 7.4.0
 - enables setting prop `ns` on Trans component to override namespace passed by render prop or hoc
 - allows trans component with no children just returning the string getting from translations
