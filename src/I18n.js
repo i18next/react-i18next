@@ -37,6 +37,8 @@ export default class I18n extends Component {
       ready
     };
 
+    this.t = this.getI18nTranslate();
+
     this.onI18nChanged = this.onI18nChanged.bind(this);
     this.getI18nTranslate = this.getI18nTranslate.bind(this);
   }
@@ -46,10 +48,6 @@ export default class I18n extends Component {
       t: this.t,
       i18n: this.i18n
     };
-  }
-
-  componentWillMount() {
-    this.t = this.getI18nTranslate();
   }
 
   componentDidMount() {
