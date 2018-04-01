@@ -38,8 +38,9 @@
     "babel-preset-stage-0": "6.24.1",
     "babel-register": "6.26.0",
     "coveralls": "^3.0.0",
-    "enzyme": "3.1.0",
-    "enzyme-adapter-react-16": "^1.0.3",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "enzyme-adapter-react-helper": "^1.2.3",
     "eslint": "4.10.0",
     "eslint-config-airbnb": "16.1.0",
     "eslint-plugin-import": "2.8.0",
@@ -52,7 +53,6 @@
     "raf": "^3.4.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "react-test-renderer": "^16.0.0",
     "rimraf": "2.6.2",
     "rollup": "0.50.0",
     "rollup-plugin-babel": "3.0.2",
@@ -64,7 +64,7 @@
   },
   "peerDependencies": {
     "i18next": ">= 6.0.1",
-    "react": ">= 15.0.0"
+    "react": "^0.14.0 ||^15.0.0 || ^16.0.0"
   },
   "scripts": {
     "clean": "rimraf dist && mkdirp dist",
@@ -77,6 +77,7 @@
     "build": "npm run clean && npm run build:cjs && npm run build:es && npm run build:umd && npm run build:amd && npm run copy",
     "preversion": "npm run build && git push",
     "postversion": "git push && git push --tags",
+    "pretest": "enzyme-adapter-react-install 16",
     "test": "BABEL_ENV=development jest --no-cache",
     "test:watch": "BABEL_ENV=development jest --no-cache --watch",
     "test:coverage": "BABEL_ENV=development jest --no-cache --coverage",

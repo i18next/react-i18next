@@ -1,6 +1,10 @@
 language: node_js
 node_js:
   - "8"
+env:
+  - REACT=0.14
+  - REACT=15
+  - REACT=16
 script:
   - npm test
 after_success:
