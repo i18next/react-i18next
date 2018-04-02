@@ -1,5 +1,6 @@
 import React from 'react';
 import { shallow, render, mount } from 'enzyme';
+import ifReact from 'enzyme-adapter-react-helper/build/ifReact';
 import i18n from './i18n';
 import translate from '../src/translate';
 import Trans from '../src/Trans';
@@ -36,7 +37,7 @@ describe('trans simple', () => {
     )).toBe(true);
   });
 
-  describe('trans simple - setting back default behaviour of no parent', () => {
+  ifReact('>= 16', describe, describe.skip)('trans simple - setting back default behaviour of no parent', () => {
     // we set in ./i18n react.defaultTransParent so all tests run backwards compatible
     // and this tests new default bahaviour of just returning children
     const TestElement = ({ t, parent }) => {
