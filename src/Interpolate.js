@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import get from 'lodash/get';
 
 class Interpolate extends Component {
 
@@ -12,6 +13,7 @@ class Interpolate extends Component {
   render() {
     const parent = this.props.parent || 'span';
     const REGEXP = this.props.regexp || this.i18n.services.interpolator.regexp;
+    const regexpUnescape = this.i18n.services.interpolator.regexpUnescape;
     const { className, style } = this.props;
 
     // Set to true if you want to use raw HTML in translation values
@@ -20,7 +22,7 @@ class Interpolate extends Component {
     const dangerouslySetInnerHTMLPartElement = this.props.dangerouslySetInnerHTMLPartElement || 'span';
 
     const tOpts = { ...{}, ...this.props.options, ...{ interpolation: { prefix: '#$?', suffix: '?$#' } } };
-    const format = this.t(this.props.i18nKey, tOpts);
+    let format = this.t(this.props.i18nKey, tOpts);
 
     if (!format || typeof format !== 'string') return React.createElement('noscript', null);
 
@@ -28,8 +30,8 @@ class Interpolate extends Component {
 
     const handleFormat = (key, props) => {
       if (key.indexOf(this.i18n.options.interpolation.formatSeparator) < 0) {
-        if (props[key] === undefined) this.i18n.services.logger.warn(`interpolator: missed to pass in variable ${key} for interpolating ${format}`);
-        return props[key];
+        if (get(props, key) === undefined) this.i18n.services.logger.warn(`interpolator: missed to pass in variable ${key} for interpolating ${format}`);
+        return get(props, key);
       }
 
       const p = key.split(this.i18n.options.interpolation.formatSeparator);
@@ -39,6 +41,13 @@ class Interpolate extends Component {
       if (props[k] === undefined) this.i18n.services.logger.warn(`interpolator: missed to pass in variable ${k} for interpolating ${format}`);
       return this.i18n.options.interpolation.format(props[k], f, this.i18n.language);
     };
+    let match;
+    let value;
+    while (match = regexpUnescape.exec(format)) {
+      value = handleFormat(match[1].trim(), this.props);
+      format = format.replace(match[0], value);
+      regexpUnescape.lastIndex = 0;
+    }
 
     format.split(REGEXP).reduce((memo, match, index) => {
       let child;
