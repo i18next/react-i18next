@@ -48,7 +48,7 @@ The documentation is published on [react.i18next.com](https://react.i18next.com)
 ...
 ```
 
-Head over to the **interactive playground** at [webpackbin](https://www.webpackbin.com/bins/-KoCD3kvA-4QJNaHpkxi).
+Head over to the **interactive playground** at [codesandbox](https://codesandbox.io/s/8n252n822).
 
 ### 📖 What others say
 
