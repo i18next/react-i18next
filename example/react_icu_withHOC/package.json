@@ -1,0 +1,21 @@
+{
+  "name": "react_withhoc",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "i18next": "11.2.2",
+    "i18next-browser-languagedetector": "2.1.0",
+    "i18next-icu": "0.1.0",
+    "i18next-xhr-backend": "1.5.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-i18next": "7.6.0",
+    "react-scripts": "1.0.14"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

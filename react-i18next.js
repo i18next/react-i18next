@@ -472,6 +472,8 @@ var I18n = function (_Component) {
       ready: ready
     };
 
+    _this.t = _this.getI18nTranslate();
+
     _this.onI18nChanged = _this.onI18nChanged.bind(_this);
     _this.getI18nTranslate = _this.getI18nTranslate.bind(_this);
     return _this;
@@ -484,11 +486,6 @@ var I18n = function (_Component) {
         t: this.t,
         i18n: this.i18n
       };
-    }
-  }, {
-    key: 'componentWillMount',
-    value: function componentWillMount() {
-      this.t = this.getI18nTranslate();
     }
   }, {
     key: 'componentDidMount',
@@ -1096,10 +1093,11 @@ var Trans = function (_React$Component) {
           count = contextAndProps.count,
           parent = contextAndProps.parent,
           i18nKey = contextAndProps.i18nKey,
+          tOptions = contextAndProps.tOptions,
           namespace = contextAndProps.ns,
           i18n = contextAndProps.i18n,
           tFromContextAndProps = contextAndProps.t,
-          additionalProps = objectWithoutProperties(contextAndProps, ['children', 'count', 'parent', 'i18nKey', 'ns', 'i18n', 't']);
+          additionalProps = objectWithoutProperties(contextAndProps, ['children', 'count', 'parent', 'i18nKey', 'tOptions', 'ns', 'i18n', 't']);
 
       var t = tFromContextAndProps || i18n.t.bind(i18n);
 
@@ -1109,7 +1107,7 @@ var Trans = function (_React$Component) {
       var defaultValue = nodesToString('', children, 0);
       var hashTransKey = reactI18nextOptions.hashTransKey;
       var key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
-      var translation = key ? t(key, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue: defaultValue, count: count, ns: namespace }) : defaultValue;
+      var translation = key ? t(key, _extends({}, tOptions, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue: defaultValue, count: count, ns: namespace })) : defaultValue;
 
       if (reactI18nextOptions.exposeNamespace) {
         var ns = typeof t.ns === 'string' ? t.ns : t.ns[0];

@@ -1,4 +1,5 @@
-### upcoming
+### 7.6.0
+- adds tOptions to Trans component to support ICU
 - removes componentWillMount lifecycle method from I18n.js render props as it will get deprecated on react 16.3 [404](https://github.com/i18next/react-i18next/issues/404)
 
 ### 7.5.1
