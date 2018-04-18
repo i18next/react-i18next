@@ -64,7 +64,7 @@ Head over to the **interactive playground** at [codesandbox](https://codesandbox
 - **Production ready** we know there are more needs for production than just doing i18n on the clientside. So we offer wider support on [serverside](https://www.i18next.com/supported-frameworks.html) too (nodejs, php, ruby, .net, ...). **Learn once - translate everywhere**.
 - **Beyond i18n** comes with [locize](https://locize.com) bridging the gap between developement and translations - covering the whole translation process.
 
-<img src="https://www.i18next.com/assets/img/i18next-ecosystem.jpg" alt="i18next ecossystem" width="400">
+<img src="https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-L9iS6Wm2hynS5H9Gj7j%2F-L9iS7LlT2W7wFtJH-2n%2F-L9iSBP9U65-bHJBRSDv%2Fi18next-ecosystem.jpg?generation=1523345318122913&alt=media" alt="i18next ecossystem" width="400">
 
 ### Localization workflow
 
