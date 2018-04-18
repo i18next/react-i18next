@@ -2,10 +2,14 @@ import i18n from 'i18next';
 import Backend from 'i18next-xhr-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { reactI18nextModule } from 'react-i18next';
+
 import ICU from 'i18next-icu'
+import de from 'i18next-icu/locale-data/de';
 
 i18n
-  .use(ICU)
+  .use(new ICU({
+    localeData: de // you also can pass in array of localeData
+  }))
   .use(Backend)
   .use(LanguageDetector)
   .use(reactI18nextModule)
