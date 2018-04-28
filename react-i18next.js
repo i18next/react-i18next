@@ -1128,7 +1128,7 @@ var Trans = function (_React$Component) {
 
 Trans.propTypes = {
   count: PropTypes.number,
-  parent: PropTypes.node,
+  parent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
   i18nKey: PropTypes.string,
   i18n: PropTypes.object,
   t: PropTypes.func

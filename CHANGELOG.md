@@ -1,3 +1,6 @@
+### 7.6.1
+- Allow to pass a function as parent for <Trans /> component [PR424](https://github.com/i18next/react-i18next/pull/424)
+
 ### 7.6.0
 - adds tOptions to Trans component to support ICU
 - removes componentWillMount lifecycle method from I18n.js render props as it will get deprecated on react 16.3 [404](https://github.com/i18next/react-i18next/issues/404)
