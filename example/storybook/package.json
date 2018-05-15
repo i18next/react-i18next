@@ -21,6 +21,6 @@
     "build-storybook": "build-storybook"
   },
   "devDependencies": {
-    "@kadira/storybook": "^2.21.0"
+    "@storybook/react": "^3.4.4"
   }
 }
