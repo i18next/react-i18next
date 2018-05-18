@@ -101,6 +101,7 @@ $ bower install react-i18next
 * [Example hashbase / beaker browser](https://github.com/i18next/react-i18next/tree/master/example/dat)
 * [Example storybook](https://github.com/i18next/react-i18next/tree/master/example/storybook)
 * [Example locize.com](https://github.com/i18next/react-i18next/tree/master/example/locize-example)
+* [Example test with jest](https://github.com/i18next/react-i18next/tree/master/example/test-jest)
 
 ### Requirements
 
