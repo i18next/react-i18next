@@ -3,8 +3,7 @@ import { translate, Trans } from 'react-i18next';
 import { StyleSheet, Text, View, Button } from 'react-native';
 
 
-@translate(['page2', 'common'], { wait: true })
-export default class Home extends React.Component {
+export class Page2 extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => ({
     title: screenProps.t('page2:title')
   });
@@ -29,6 +28,8 @@ export default class Home extends React.Component {
     );
   }
 }
+
+export default translate(['page2', 'common'], { wait: true })(Page2);
 
 const styles = StyleSheet.create({
   container: {

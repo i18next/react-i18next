@@ -4,8 +4,7 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 
 // using the translation hoc to provie t function in props using home as default namespace
 // https://github.com/i18next/react-i18next#translate-hoc
-@translate(['home', 'common'], { wait: true })
-export default class Home extends React.Component {
+export class Home extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => ({
     title: screenProps.t('home:title')
   });
@@ -34,6 +33,8 @@ export default class Home extends React.Component {
     );
   }
 }
+
+export default translate(['home', 'common'], { wait: true })(Home);
 
 const styles = StyleSheet.create({
   container: {
