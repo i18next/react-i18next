@@ -279,3 +279,16 @@ describe('trans with only content from translation file - no children', () => {
     expect(wrapper.contains(<div>test</div>)).toBe(true);
   });
 });
+
+
+describe('trans using no children but props - icu case', () => {
+  const TestElement = ({ t, cb }) => {
+    return <Trans defaults="hello <0>{{what}}</0>" values={{ what: 'world'}} components={[<strong>univers</strong>]}></Trans>;
+  };
+  it('should render translated string', () => {
+    const HocElement = translate(['translation'], {})(TestElement);
+    const wrapper = mount(<HocElement />, { context });
+    // console.log(wrapper.debug());
+    expect(wrapper.contains(<div>hello <strong>world</strong></div>)).toBe(true);
+  });
+});

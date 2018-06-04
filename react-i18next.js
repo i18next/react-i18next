@@ -1094,20 +1094,24 @@ var Trans = function (_React$Component) {
           parent = contextAndProps.parent,
           i18nKey = contextAndProps.i18nKey,
           tOptions = contextAndProps.tOptions,
+          values = contextAndProps.values,
+          defaults$$1 = contextAndProps.defaults,
+          components = contextAndProps.components,
           namespace = contextAndProps.ns,
           i18n = contextAndProps.i18n,
           tFromContextAndProps = contextAndProps.t,
-          additionalProps = objectWithoutProperties(contextAndProps, ['children', 'count', 'parent', 'i18nKey', 'tOptions', 'ns', 'i18n', 't']);
+          additionalProps = objectWithoutProperties(contextAndProps, ['children', 'count', 'parent', 'i18nKey', 'tOptions', 'values', 'defaults', 'components', 'ns', 'i18n', 't']);
 
       var t = tFromContextAndProps || i18n.t.bind(i18n);
 
       var reactI18nextOptions = i18n.options && i18n.options.react || {};
       var useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
 
-      var defaultValue = nodesToString('', children, 0);
+      var defaultValue = defaults$$1 || nodesToString('', children, 0);
       var hashTransKey = reactI18nextOptions.hashTransKey;
       var key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
-      var translation = key ? t(key, _extends({}, tOptions, { interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue: defaultValue, count: count, ns: namespace })) : defaultValue;
+      var interpolationOverride = values ? {} : { interpolation: { prefix: '#$?', suffix: '?$#' } };
+      var translation = key ? t(key, _extends({}, tOptions, values, interpolationOverride, { defaultValue: defaultValue, count: count, ns: namespace })) : defaultValue;
 
       if (reactI18nextOptions.exposeNamespace) {
         var ns = typeof t.ns === 'string' ? t.ns : t.ns[0];
@@ -1118,9 +1122,9 @@ var Trans = function (_React$Component) {
         if (t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns: ns });
       }
 
-      if (!useAsParent) return renderNodes(children, translation, i18n);
+      if (!useAsParent) return renderNodes(components || children, translation, i18n);
 
-      return React__default.createElement(useAsParent, additionalProps, renderNodes(children, translation, i18n));
+      return React__default.createElement(useAsParent, additionalProps, renderNodes(components || children, translation, i18n));
     }
   }]);
   return Trans;

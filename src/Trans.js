@@ -99,16 +99,17 @@ export default class Trans extends React.Component {
 
   render() {
     const contextAndProps = { i18n: this.context.i18n, t: this.context.t, ...this.props };
-    const { children, count, parent, i18nKey, tOptions, ns: namespace, i18n, t: tFromContextAndProps, ...additionalProps } = contextAndProps;
+    const { children, count, parent, i18nKey, tOptions, values, defaults, components, ns: namespace, i18n, t: tFromContextAndProps, ...additionalProps } = contextAndProps;
     const t = tFromContextAndProps || i18n.t.bind(i18n);
 
     const reactI18nextOptions = (i18n.options && i18n.options.react) || {};
     const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
 
-    const defaultValue = nodesToString('', children, 0);
+    const defaultValue = defaults || nodesToString('', children, 0);
     const hashTransKey = reactI18nextOptions.hashTransKey;
     const key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
-    const translation = key ? t(key, { ...tOptions, ...{ interpolation: { prefix: '#$?', suffix: '?$#' }, defaultValue, count, ns: namespace } }) : defaultValue;
+    const interpolationOverride = values ? {} : { interpolation: { prefix: '#$?', suffix: '?$#' } };
+    const translation = key ? t(key, { ...tOptions, ...values, ...interpolationOverride, defaultValue, count, ns: namespace }) : defaultValue;
 
     if (reactI18nextOptions.exposeNamespace) {
       let ns = typeof t.ns === 'string' ? t.ns : t.ns[0];
@@ -119,12 +120,12 @@ export default class Trans extends React.Component {
       if (t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns });
     }
 
-    if (!useAsParent) return renderNodes(children, translation, i18n);
+    if (!useAsParent) return renderNodes(components || children, translation, i18n);
 
     return React.createElement(
       useAsParent,
       additionalProps,
-      renderNodes(children, translation, i18n)
+      renderNodes(components || children, translation, i18n)
     );
   }
 }

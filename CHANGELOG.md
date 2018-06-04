@@ -1,3 +1,6 @@
+### 7.7.0
+- Allow Trans component to be used with props only for icu use case (next step babel makro) [439](https://github.com/i18next/react-i18next/issues/439)
+
 ### 7.6.1
 - Allow to pass a function as parent for <Trans /> component [PR424](https://github.com/i18next/react-i18next/pull/424)
 
