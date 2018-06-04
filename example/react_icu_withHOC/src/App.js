@@ -26,9 +26,11 @@ class App extends Component {
         </div>
         <div>{t('description.part2')}</div>
         <hr />
-        <Trans i18nKey="icu_and_trans" tOptions={{ numPersons: 1000 }}>
-          We have <strong>0 persons</strong> invited.
-        </Trans>
+        <Trans
+          i18nKey="icu_and_trans"
+          defaults="We have <strong>0 persons</strong> invited."
+          values={{ numPersons: 1000 }}
+        />
         <div>{t('icu', { numPersons: 500 })}</div>
       </div>
     );
