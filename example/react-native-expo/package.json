@@ -24,6 +24,6 @@
     "react-native": "0.55.4",
     "i18next": "11.3.2",
     "react-i18next": "7.6.1",
-    "react-navigation": "2.0.2"
+    "react-navigation": "2.0.4"
   }
 }
