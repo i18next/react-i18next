@@ -1,8 +1,4 @@
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react'), require('prop-types')) :
-	typeof define === 'function' && define.amd ? define(['exports', 'react', 'prop-types'], factory) :
-	(factory((global.reactI18next = {}),global.React,global.PropTypes));
-}(this, (function (exports,React,PropTypes) { 'use strict';
+define(['exports', 'react', 'prop-types'], function (exports, React, PropTypes) { 'use strict';
 
 var React__default = 'default' in React ? React['default'] : React;
 PropTypes = PropTypes && PropTypes.hasOwnProperty('default') ? PropTypes['default'] : PropTypes;
@@ -1288,4 +1284,4 @@ exports.getI18n = getI18n;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+});

@@ -69,7 +69,7 @@
   "scripts": {
     "clean": "rimraf dist && mkdirp dist",
     "copy": "cp ./dist/umd/react-i18next.min.js ./react-i18next.min.js && cp ./dist/umd/react-i18next.js ./react-i18next.js",
-    "build:es": "BABEL_ENV=jsnext babel src --out-dir dist/es",
+    "build:es": "SET BABEL_ENV=jsnext&& babel src --out-dir dist/es",
     "build:cjs": "babel src --out-dir dist/commonjs",
     "build:umd": "rollup -c rollup.config.js --format umd && rollup -c rollup.config.js --format umd --uglify",
     "build:amd": "rollup -c rollup.config.js --format amd && rollup -c rollup.config.js --format amd --uglify",
