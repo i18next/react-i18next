@@ -105,7 +105,7 @@ export default class Trans extends React.Component {
     const reactI18nextOptions = (i18n.options && i18n.options.react) || {};
     const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
 
-    const defaultValue = defaults || nodesToString('', children, 0);
+    const defaultValue = defaults || nodesToString('', children, 0) || undefined;
     const hashTransKey = reactI18nextOptions.hashTransKey;
     const key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
     const interpolationOverride = values ? {} : { interpolation: { prefix: '#$?', suffix: '?$#' } };

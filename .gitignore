@@ -18,6 +18,5 @@ node_modules
 node_modules/**/*
 coverage/**/*
 example/build/**/*
-dist/**/*
 .next
 package-lock.json
