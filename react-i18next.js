@@ -401,7 +401,8 @@ var defaultOptions = {
   bindStore: 'added removed',
   translateFuncName: 't',
   nsMode: 'default',
-  usePureComponent: false
+  usePureComponent: false,
+  omitBoundRerender: true
 };
 
 var i18n = void 0;
@@ -546,6 +547,7 @@ var I18n = function (_Component) {
     key: 'onI18nChanged',
     value: function onI18nChanged() {
       if (!this.mounted) return;
+      if (!this.state.ready && this.options.omitBoundRerender) return;
 
       this.t = this.getI18nTranslate();
       this.setState({ i18nLoadedAt: new Date() }); // rerender

@@ -5,7 +5,8 @@ let defaultOptions = {
   bindStore: 'added removed',
   translateFuncName: 't',
   nsMode: 'default',
-  usePureComponent: false
+  usePureComponent: false,
+  omitBoundRerender: true
 };
 
 let i18n;

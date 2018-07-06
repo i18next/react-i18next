@@ -97,6 +97,7 @@ export default class I18n extends Component {
 
   onI18nChanged() {
     if (!this.mounted) return;
+    if (!this.state.ready && this.options.omitBoundRerender) return;
 
     this.t = this.getI18nTranslate();
     this.setState({ i18nLoadedAt: new Date() }); // rerender

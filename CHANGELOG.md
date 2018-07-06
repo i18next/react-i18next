@@ -1,3 +1,6 @@
+### 7.8.0
+- avoid rerenders triggered by bound i18next events while I18n or translate hoc are not ready yet (omitBoundRerender: true --- is default) [456](https://github.com/i18next/react-i18next/issues/456)
+
 ### 7.7.0
 - Allow Trans component to be used with props only for icu use case (next step babel makro) [439](https://github.com/i18next/react-i18next/issues/439)
 
