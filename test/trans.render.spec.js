@@ -292,3 +292,15 @@ describe('trans using no children but props - icu case', () => {
     expect(wrapper.contains(<div>hello <strong>world</strong></div>)).toBe(true);
   });
 });
+
+describe('trans using no children but props - nested case', () => {
+  const TestElement = ({ t, cb }) => {
+    return <Trans defaults="<0>hello <1></1> {{what}}</0>" values={{ what: 'world'}} components={[<span>placeholder<br/></span>]}></Trans>;
+  };
+  it('should render translated string', () => {
+    const HocElement = translate(['translation'], {})(TestElement);
+    const wrapper = mount(<HocElement />, { context });
+    // console.log(wrapper.debug());
+    expect(wrapper.contains(<span>hello <br/> world</span>)).toBe(true);
+  });
+});
