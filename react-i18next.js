@@ -1145,7 +1145,7 @@ Trans.propTypes = {
 // };
 
 Trans.contextTypes = {
-  i18n: PropTypes.object.isRequired,
+  i18n: PropTypes.object,
   t: PropTypes.func
 };
 

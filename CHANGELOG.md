@@ -1,3 +1,6 @@
+### 7.8.1
+- i18n in context is optional as it can be passed via props too [474](https://github.com/i18next/react-i18next/pull/474)
+
 ### 7.8.0
 - avoid rerenders triggered by bound i18next events while I18n or translate hoc are not ready yet (omitBoundRerender: true --- is default) [456](https://github.com/i18next/react-i18next/issues/456)
 
