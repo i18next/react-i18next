@@ -6,7 +6,7 @@ import Trans from '../src/Trans';
 describe('trans', () => {
   it('should have some stuff', () => {
     expect(Trans.contextTypes.i18n)
-      .toBe(PropTypes.object.isRequired);
+      .toBe(PropTypes.object);
     expect(Trans.propTypes.i18n)
       .toBe(PropTypes.object);
     expect(Trans.propTypes.t)
