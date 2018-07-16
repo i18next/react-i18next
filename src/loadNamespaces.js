@@ -1,6 +1,5 @@
-// shim object entries
-if (!Object.entries)
-  Object.entries = function( obj ){
+const objectEntries = Object.entries ||
+  function( obj ){
     var ownProps = Object.keys( obj ),
         i = ownProps.length,
         resArray = new Array(i); // preallocate the Array
@@ -14,7 +13,7 @@ if (!Object.entries)
 function eachComponents(components, iterator) {
   for (let i = 0, l = components.length; i < l; i++) { // eslint-disable-line id-length
     if (typeof components[i] === 'object') {
-      for (const [key, value] of Object.entries(components[i])) {
+      for (const [key, value] of objectEntries(components[i])) {
         iterator(value, i, key);
       }
     } else {
