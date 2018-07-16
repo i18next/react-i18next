@@ -1,3 +1,6 @@
+### upcoming
+- Don't polyfill Object.entries globally [476](https://github.com/i18next/react-i18next/pull/476)
+
 ### 7.8.1
 - i18n in context is optional as it can be passed via props too [474](https://github.com/i18next/react-i18next/pull/474)
 
