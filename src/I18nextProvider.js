@@ -45,4 +45,8 @@ I18nextProvider.childContextTypes = {
   defaultNS: PropTypes.string
 };
 
+I18nextProvider.defaultProps = {
+  defaultNS: undefined
+};
+
 export default I18nextProvider;
