@@ -613,7 +613,7 @@ function translate(namespaceArg) {
         var _this = possibleConstructorReturn(this, (Translate.__proto__ || Object.getPrototypeOf(Translate)).call(this, props, context));
 
         _this.i18n = props.i18n || options.i18n || context.i18n || getI18n();
-        _this.namespaces = typeof namespaceArg === 'function' ? namespaceArg(props) : namespaceArg || _this.i18n.options && _this.i18n.options.defaultNS;
+        _this.namespaces = typeof namespaceArg === 'function' ? namespaceArg(props) : namespaceArg || context.defaultNS || _this.i18n.options && _this.i18n.options.defaultNS;
         if (typeof _this.namespaces === 'string') _this.namespaces = [_this.namespaces];
 
         var i18nOptions = _this.i18n && _this.i18n.options && _this.i18n.options.react || {};
@@ -671,7 +671,8 @@ function translate(namespaceArg) {
     Translate.WrappedComponent = WrappedComponent;
 
     Translate.contextTypes = {
-      i18n: PropTypes.object
+      i18n: PropTypes.object,
+      defaultNS: PropTypes.string
     };
 
     Translate.displayName = 'Translate(' + getDisplayName(WrappedComponent) + ')';
@@ -1158,6 +1159,7 @@ var I18nextProvider = function (_Component) {
     var _this = possibleConstructorReturn(this, (I18nextProvider.__proto__ || Object.getPrototypeOf(I18nextProvider)).call(this, props, context));
 
     _this.i18n = props.i18n;
+    _this.defaultNS = props.defaultNS;
     if (props.initialI18nStore) {
       _this.i18n.services.resourceStore.data = props.initialI18nStore;
       _this.i18n.options.isInitialSSR = true; // if set will be deleted on first render in translate hoc
@@ -1171,7 +1173,10 @@ var I18nextProvider = function (_Component) {
   createClass(I18nextProvider, [{
     key: 'getChildContext',
     value: function getChildContext() {
-      return { i18n: this.i18n };
+      return {
+        i18n: this.i18n,
+        defaultNS: this.defaultNS
+      };
     }
   }, {
     key: 'componentWillReceiveProps',
@@ -1193,15 +1198,20 @@ var I18nextProvider = function (_Component) {
 
 I18nextProvider.propTypes = {
   i18n: PropTypes.object.isRequired,
-  children: PropTypes.element.isRequired
+  children: PropTypes.element.isRequired,
+  defaultNS: PropTypes.string
 };
 
 I18nextProvider.childContextTypes = {
-  i18n: PropTypes.object.isRequired
+  i18n: PropTypes.object.isRequired,
+  defaultNS: PropTypes.string
 };
 
-// shim object entries
-if (!Object.entries) Object.entries = function (obj) {
+I18nextProvider.defaultProps = {
+  defaultNS: undefined
+};
+
+var objectEntries = Object.entries || function (obj) {
   var ownProps = Object.keys(obj),
       i = ownProps.length,
       resArray = new Array(i); // preallocate the Array
@@ -1220,7 +1230,7 @@ function eachComponents(components, iterator) {
       var _iteratorError = undefined;
 
       try {
-        for (var _iterator = Object.entries(components[i])[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (var _iterator = objectEntries(components[i])[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var _step$value = slicedToArray(_step.value, 2),
               key = _step$value[0],
               value = _step$value[1];
