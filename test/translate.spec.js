@@ -16,6 +16,7 @@ describe('translate', () => {
     const wrapped = wrap(Elem);
     expect(wrapped.WrappedComponent).toBe(Elem);
     expect(wrapped.contextTypes.i18n).toBe(PropTypes.object);
+    expect(wrapped.contextTypes.defaultNS).toBe(PropTypes.string);
     expect(wrapped.displayName).toBe('Translate(Elem)');
     expect(wrapped.namespaces.length).toBe(2);
     expect(wrapped.namespaces[0]).toBe('ns1');
@@ -73,5 +74,51 @@ describe('translate', () => {
 
     expect(instance.i18n).toBe(i18n);
   });
-
+  it('reads defaultNS from context if not provided as an argument', () => {
+    const context = {
+      i18n: {
+        options: {
+          defaultNS: 'i18nDefaultNS'
+        }
+      },
+      defaultNS: 'contextDefaultNS'
+    };
+    const props = { initialI18nStore: {}, initialLanguage: 'en' };
+    const Elem = React.createFactory('Elem');
+    const wrapped = translate()(Elem);
+    const instance = new wrapped(props, context);
+    expect(instance.namespaces.length).toBe(1);
+    expect(instance.namespaces[0]).toBe('contextDefaultNS');
+  });
+  it('reads namespace from argument when provided', () => {
+    const context = {
+      i18n: {
+        options: {
+          defaultNS: 'i18nDefaultNS'
+        }
+      },
+      defaultNS: 'contextDefaultNS'
+    };
+    const props = { initialI18nStore: {}, initialLanguage: 'en' };
+    const Elem = React.createFactory('Elem');
+    const wrapped = translate('namespaceFromArgument')(Elem);
+    const instance = new wrapped(props, context);
+    expect(instance.namespaces.length).toBe(1);
+    expect(instance.namespaces[0]).toBe('namespaceFromArgument');
+  });
+  it('reads namespace from i18n default if neither argument nor context have a defaultNS', () => {
+    const context = {
+      i18n: {
+        options: {
+          defaultNS: 'i18nDefaultNS'
+        }
+      }
+    };
+    const props = { initialI18nStore: {}, initialLanguage: 'en' };
+    const Elem = React.createFactory('Elem');
+    const wrapped = translate()(Elem);
+    const instance = new wrapped(props, context);
+    expect(instance.namespaces.length).toBe(1);
+    expect(instance.namespaces[0]).toBe('i18nDefaultNS');
+  });
 });

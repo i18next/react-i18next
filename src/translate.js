@@ -21,7 +21,7 @@ export default function translate(namespaceArg, options = {}) {
         this.namespaces = typeof namespaceArg === 'function' ? (
           namespaceArg(props)
         ) : (
-          namespaceArg || (this.i18n.options && this.i18n.options.defaultNS)
+          namespaceArg || context.defaultNS || (this.i18n.options && this.i18n.options.defaultNS)
         );
         if (typeof this.namespaces === 'string') this.namespaces = [this.namespaces];
 
@@ -79,7 +79,8 @@ export default function translate(namespaceArg, options = {}) {
     Translate.WrappedComponent = WrappedComponent;
 
     Translate.contextTypes = {
-      i18n: PropTypes.object
+      i18n: PropTypes.object,
+      defaultNS: PropTypes.string
     };
 
     Translate.displayName = `Translate(${getDisplayName(WrappedComponent)})`;
