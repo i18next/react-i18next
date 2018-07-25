@@ -105,6 +105,29 @@ describe('trans simple using ns prop', () => {
   });
 });
 
+describe('trans simple with custom html tag', () => {
+  const TestElement = ({ t, parent }) => {
+    return (
+      <Trans i18nKey="transTest1_customHtml" parent={parent}>
+        Open <Link to="/msgs">here</Link>.
+      </Trans>
+    );
+  }
+  
+  it('should skip custom html tags', () => {
+    const HocElement = translate(['translation'], {})(TestElement);
+
+    const wrapper = mount(<HocElement />, { context });
+    // console.log(wrapper.debug());
+    expect(wrapper.contains(
+      <div>
+        Go <Link to="/msgs">there</Link>.
+      </div>
+    )).toBe(true);
+  });
+
+})
+
 describe('trans testTransKey1 singular', () => {
   const TestElement = ({ t }) => {
     const numOfItems = 1;

@@ -75,8 +75,11 @@ function renderNodes(children, targetString, i18n) {
             inner
           ));
         } else if (typeof child === 'object' && !isElement) {
-          const interpolated = i18n.services.interpolator.interpolate(node.children[0].content, child, i18n.language);
-          mem.push(interpolated);
+          const content = node.children[0] ? node.children[0].content : null
+          if (content) {
+            const interpolated = i18n.services.interpolator.interpolate(node.children[0].content, child, i18n.language);
+            mem.push(interpolated);
+          }
         } else {
           mem.push(child);
         }
