@@ -1,3 +1,7 @@
+### 7.9.1
+
+- Skip custom html tags in Trans component translation [PR482](https://github.com/i18next/react-i18next/pull/482)
+
 ### 7.9.0
 
 - Support defaultNS from I18nextProvider props [PR478](https://github.com/i18next/react-i18next/pull/478)

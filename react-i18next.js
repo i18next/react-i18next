@@ -1061,8 +1061,11 @@ function renderNodes(children, targetString, i18n) {
           if (child.dummy) child.children = inner; // needed on preact!
           mem.push(React__default.cloneElement(child, _extends({}, child.props, { key: i }), inner));
         } else if ((typeof child === 'undefined' ? 'undefined' : _typeof(child)) === 'object' && !isElement) {
-          var interpolated = i18n.services.interpolator.interpolate(node.children[0].content, child, i18n.language);
-          mem.push(interpolated);
+          var content = node.children[0] ? node.children[0].content : null;
+          if (content) {
+            var interpolated = i18n.services.interpolator.interpolate(node.children[0].content, child, i18n.language);
+            mem.push(interpolated);
+          }
         } else {
           mem.push(child);
         }
