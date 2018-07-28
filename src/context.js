@@ -6,7 +6,7 @@ let defaultOptions = {
   translateFuncName: 't',
   nsMode: 'default',
   usePureComponent: false,
-  omitBoundRerender: true
+  omitBoundRerender: true,
 };
 
 let i18n;
@@ -33,5 +33,5 @@ export const reactI18nextModule = {
   init(instance) {
     setDefaults(instance.options.react);
     setI18n(instance);
-  }
+  },
 };
