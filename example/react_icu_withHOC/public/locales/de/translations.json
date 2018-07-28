@@ -1,9 +1,13 @@
 {
   "title": "Willkommen zu react und react-i18next",
   "description": {
-    "part1": "Um loszulegen, ändere <1>src/App(DE).js</1> speicheren und neuladen.",
-    "part2": "Ändere die Sprachen zwischen deutsch und englisch mit Hilfe der beiden Schalter."
+    "part1":
+      "Um loszulegen, ändere <1>src/App(DE).js</1> speicheren und neuladen.",
+    "part2":
+      "Ändere die Sprachen zwischen deutsch und englisch mit Hilfe der beiden Schalter."
   },
-  "icu": "{numPersons, plural, =0 {keine Person} =1 {eine Person} other {# Personen}}",
-  "icu_and_trans": "Wir haben <1>{numPersons, plural, =0 {keine Person} =1 {eine Person} other {# Personen}}</1> eingeladen."
+  "icu":
+    "{numPersons, plural, =0 {keine Person} =1 {eine Person} other {# Personen}}",
+  "icu_and_trans":
+    "Wir haben <0>{numPersons, plural, =0 {keine Person} =1 {eine Person} other {# Personen}}</0> eingeladen."
 }

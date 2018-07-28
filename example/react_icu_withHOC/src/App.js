@@ -3,6 +3,8 @@ import { translate, Trans } from 'react-i18next';
 import logo from './logo.svg';
 import './App.css';
 
+import ComponentUsingMacro from './ComponentUsingMacro';
+
 class App extends Component {
   render() {
     const { t, i18n } = this.props;
@@ -28,10 +30,12 @@ class App extends Component {
         <hr />
         <Trans
           i18nKey="icu_and_trans"
-          defaults="We have <strong>0 persons</strong> invited."
+          defaults="We have <0>0 persons</0> invited."
+          components={[<strong>dummy</strong>]}
           values={{ numPersons: 1000 }}
         />
         <div>{t('icu', { numPersons: 500 })}</div>
+        <ComponentUsingMacro />
       </div>
     );
   }

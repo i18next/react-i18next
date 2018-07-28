@@ -4,6 +4,8 @@
     "part1": "To get started, edit <1>src/App.js</1> and save to reload.",
     "part2": "Switch language between english and german using buttons above."
   },
-  "icu": "{numPersons, plural, =0 {no persons} =1 {one person} other {# persons}}",
-  "icu_and_trans": "We invited <1>{numPersons, plural, =0 {no persons} =1 {one person} other {# persons}}</1>."
+  "icu":
+    "{numPersons, plural, =0 {no persons} =1 {one person} other {# persons}}",
+  "icu_and_trans":
+    "We invited <0>{numPersons, plural, =0 {no persons} =1 {one person} other {# persons}}</0>."
 }

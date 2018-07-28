@@ -10,12 +10,28 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-i18next": "7.7.0",
-    "react-scripts": "1.0.14"
+    "react-scripts": "^2.0.0-next.47d2d941"
+  },
+  "devDependencies": {
+    "babel-plugin-macros": "^2.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "development": [
+      "last 2 chrome versions",
+      "last 2 firefox versions",
+      "last 2 edge versions"
+    ],
+    "production": [
+      ">1%",
+      "last 4 versions",
+      "Firefox ESR",
+      "not ie < 11"
+    ]
   }
 }
