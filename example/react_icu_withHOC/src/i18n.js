@@ -4,7 +4,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import { reactI18nextModule } from 'react-i18next';
 
 import ICU from 'i18next-icu'
-import de from 'i18next-icu/locale-data/de';
+import de from 'i18next-icu/locale-data/de'; // or dynamically like: https://github.com/locize/locize-react-intl-example/blob/master/src/locize/index.js#L53
 
 i18n
   .use(new ICU({
