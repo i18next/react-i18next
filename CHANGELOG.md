@@ -1,3 +1,7 @@
+### 7.10.0
+
+- Adds import { Trans, Plural, Select } from `react-i18next/icu.macro` a babel macro to allow nicer components used with ICU format (which as default would result in invalid JSX). [discussion](https://github.com/i18next/react-i18next/issues/439)
+
 ### 7.9.1
 
 - Skip custom html tags in Trans component translation [PR482](https://github.com/i18next/react-i18next/pull/482)
