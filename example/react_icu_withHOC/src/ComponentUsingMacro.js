@@ -1,8 +1,8 @@
 import React from 'react';
 import { translate } from 'react-i18next';
 
-// importing the macro components
-import { Trans, Plural, Select } from './Trans.macro';
+// importing the macro components from react-i18next
+import { Trans, Plural, Select } from 'react-i18next/icu.macro';
 
 // as we "bend" some es-lint rules we need to disable those
 // this let us write "{ trainersCount, number }" or "{ catchDate, date, short }"

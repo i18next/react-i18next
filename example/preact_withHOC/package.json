@@ -1,5 +1,5 @@
 {
-  "name": "preact-i18next-example",
+  "name": "preact-i18next-example-with-hoc",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

@@ -147,12 +147,18 @@ function transAsJSX(parentPath, { attributes, children }, babel) {
   const extracted = processTrans(children, babel);
 
   // replace the node with the new Trans
-  parentPath.replaceWith(
-    buildTransElement(extracted, cloneExistingAttributes(attributes), babel.types, false)
+  children[0].parentPath.replaceWith(
+    buildTransElement(extracted, cloneExistingAttributes(attributes), babel.types, false, true)
   );
 }
 
-function buildTransElement(extracted, finalAttributes, t, closeDefaults = false) {
+function buildTransElement(
+  extracted,
+  finalAttributes,
+  t,
+  closeDefaults = false,
+  wasElementWithChildren = false
+) {
   const nodeName = t.jSXIdentifier('Trans');
 
   // plural, select open { but do not close it while reduce
@@ -177,7 +183,10 @@ function buildTransElement(extracted, finalAttributes, t, closeDefaults = false)
     );
 
   // create selfclosing Trans component
-  return t.jSXOpeningElement(nodeName, finalAttributes, true);
+  const openElement = t.jSXOpeningElement(nodeName, finalAttributes, true);
+  if (!wasElementWithChildren) return openElement;
+
+  return t.jSXElement(openElement, null, [], true);
 }
 
 function cloneExistingAttributes(attributes) {

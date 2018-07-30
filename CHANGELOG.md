@@ -1,3 +1,7 @@
+### 7.10.1
+
+- fix small issue in icu.macro introduced on refactoring
+
 ### 7.10.0
 
 - Adds import { Trans, Plural, Select } from `react-i18next/icu.macro` a babel macro to allow nicer components used with ICU format (which as default would result in invalid JSX). [discussion](https://github.com/i18next/react-i18next/issues/439)
