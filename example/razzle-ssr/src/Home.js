@@ -11,7 +11,7 @@ class Home extends Component {
       <div className="Home">
         <div className="Home-header">
           <img src={logo} className="Home-logo" alt="logo" />
-          <h2>{t('Welcome to Razzle')}</h2>
+          <h2>{t('message.welcome')}</h2>
         </div>
         <div className="Home-intro">
           <Trans>
