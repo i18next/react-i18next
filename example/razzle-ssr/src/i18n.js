@@ -24,8 +24,9 @@ const options = {
     format: (value, format, lng) => {
       if (format === 'uppercase') return value.toUpperCase();
       return value;
-    }
-  }
+    },
+  },
+  wait: process && !process.release,
 };
 
 // for browser use xhr backend to load translations and browser lng detector
