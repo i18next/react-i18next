@@ -1,4 +1,5 @@
 {
+  "message_welcome": "WELCOME",
   "message": {
     "welcome": "Welcome to Razzle with i18n"
   },
