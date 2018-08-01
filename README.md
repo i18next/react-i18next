@@ -109,6 +109,16 @@ $ bower install react-i18next
 - i18next >= __2.0.0__
 
 --------------
+
+<h3 align="center">Gold Sponsors</h3>
+
+<p align="center">
+  <a href="https://locize.com/" target="_blank">
+    <img src="https://raw.githubusercontent.com/i18next/i18next/master/assets/locize_sponsor_240.gif" width="240px">
+  </a>
+</p>
+
+--------------
 **localization as a service - locize.com**
 
 Needing a translation management? Want to edit your translations with an InContext Editor? Use the orginal provided to you by the maintainers of i18next!
