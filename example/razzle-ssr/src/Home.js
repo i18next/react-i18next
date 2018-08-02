@@ -14,7 +14,7 @@ class Home extends Component {
           <h2>{t('message.welcome')}</h2>
         </div>
         <div className="Home-intro">
-          <Trans>
+          <Trans i18nKey="guideline">
             To get started, edit <code>src/App.js</code> or <code>src/Home.js</code> and save to
             reload.
           </Trans>

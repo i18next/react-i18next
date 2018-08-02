@@ -1,14 +1,6 @@
 {
-  "message_welcome": "WELCOME",
   "message": {
     "welcome": "Welcome to Razzle"
   },
-  "To get started, edit <1>src/App.js</1> or <3>src/Home.js</3> and save to reload.": "To get started, edit <1>src/App.js</1> or <3>src/Home.js</3> and save to reload.",
-  "To get started, edit <1>src/App": {
-    "js</1> or <3>src/Home": {
-      "js</3> and save to reload": {
-        "": "To get started, edit <1>src/App.js</1> or <3>src/Home.js</3> and save to reload."
-      }
-    }
-  }
+  "guideline": "To get started, edit <1>src/App.js</1> or <3>src/Home.js</3> and save to reload."
 }
