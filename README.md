@@ -28,7 +28,7 @@ The documentation is published on [react.i18next.com](https://react.i18next.com)
 
 **Before:** Your react code would have looked something like:
 
-```html
+```jsx
 ...
 <div>Just simple content</div>
 <div>
@@ -39,7 +39,7 @@ The documentation is published on [react.i18next.com](https://react.i18next.com)
 
 **After:** With the trans component just change it to:
 
-```html
+```jsx
 ...
 <div>{t('simpleContent')}</div>
 <Trans i18nKey="userMessagesUnread" count={count}>
