@@ -3,7 +3,6 @@ import LocizeBackend from 'i18next-locize-backend';
 import LocizeEditor from 'locize-editor';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
-
 i18n
   .use(LocizeBackend)
   .use(LocizeEditor)
@@ -19,26 +18,26 @@ i18n
 
     debug: true,
     keySeparator: '### not used ###', // we use content as keys
+    nsSeparator: '### not used ###', // we use content as keys
 
     backend: {
       projectId: 'e365e54a-c52c-479b-8538-682635db252f', // <-- replace with your projectId
       apiKey: 'your apiKey',
-      referenceLng: 'en'
+      referenceLng: 'en',
     },
 
     interpolation: {
       escapeValue: false, // not needed for react!!
       formatSeparator: ',',
-      format: function(value, format, lng) {
+      format(value, format, lng) {
         if (format === 'uppercase') return value.toUpperCase();
         return value;
-      }
+      },
     },
 
     react: {
-      wait: true
-    }
+      wait: true,
+    },
   });
-
 
 export default i18n;

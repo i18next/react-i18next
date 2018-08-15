@@ -21,6 +21,7 @@ i18n
 
     debug: true,
     keySeparator: '### not used ###', // we use content as keys
+    nsSeparator: '### not used ###', // we use content as keys
 
     backend: {
       projectId: 'e365e54a-c52c-479b-8538-682635db252f', // <-- replace with your projectId
