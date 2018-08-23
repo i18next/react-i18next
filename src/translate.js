@@ -28,6 +28,11 @@ export default function translate(namespaceArg, options = {}) {
         const i18nOptions = (this.i18n && this.i18n.options && this.i18n.options.react) || {};
         this.options = { ...getDefaults(), ...i18nOptions, ...options };
 
+        if (context.reportNS) {
+          const namespaces = Array.isArray(namespaceArg) ? namespaceArg : [namespaceArg];
+          namespaces.forEach(context.reportNS);
+        }
+
         this.getWrappedInstance = this.getWrappedInstance.bind(this);
       }
 
@@ -80,7 +85,8 @@ export default function translate(namespaceArg, options = {}) {
 
     Translate.contextTypes = {
       i18n: PropTypes.object,
-      defaultNS: PropTypes.string
+      defaultNS: PropTypes.string,
+      reportNS: PropTypes.func
     };
 
     Translate.displayName = `Translate(${getDisplayName(WrappedComponent)})`;

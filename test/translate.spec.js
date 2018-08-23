@@ -1,6 +1,7 @@
 jest.unmock('../src/translate');
 import React from 'react';
 import PropTypes from 'prop-types';
+import { shallow } from 'enzyme';
 import translate from '../src/translate';
 
 describe('translate', () => {
@@ -120,5 +121,15 @@ describe('translate', () => {
     const instance = new wrapped(props, context);
     expect(instance.namespaces.length).toBe(1);
     expect(instance.namespaces[0]).toBe('i18nDefaultNS');
+  });
+  it('should report namespaces', () => {
+    const namespaces = [];
+    const C = translate(['ns1', 'ns2'])(<div>text</div>);
+    shallow(<C />, {
+      context: {
+        reportNS: ns => namespaces.push(ns)
+      }
+    });
+    expect(namespaces).toEqual(['ns1', 'ns2']);
   });
 });

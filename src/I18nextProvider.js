@@ -13,12 +13,14 @@ class I18nextProvider extends Component {
     if (props.initialLanguage) {
       this.i18n.changeLanguage(props.initialLanguage);
     }
+    this.reportNS = props.reportNS;
   }
 
   getChildContext() {
     return {
       i18n: this.i18n,
-      defaultNS: this.defaultNS
+      defaultNS: this.defaultNS,
+      reportNS: this.reportNS
     };
   }
 
@@ -37,16 +39,19 @@ class I18nextProvider extends Component {
 I18nextProvider.propTypes = {
   i18n: PropTypes.object.isRequired,
   children: PropTypes.element.isRequired,
-  defaultNS: PropTypes.string
+  defaultNS: PropTypes.string,
+  reportNS: PropTypes.func
 };
 
 I18nextProvider.childContextTypes = {
   i18n: PropTypes.object.isRequired,
-  defaultNS: PropTypes.string
+  defaultNS: PropTypes.string,
+  reportNS: PropTypes.func
 };
 
 I18nextProvider.defaultProps = {
-  defaultNS: undefined
+  defaultNS: undefined,
+  reportNS: undefined
 };
 
 export default I18nextProvider;
