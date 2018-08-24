@@ -622,6 +622,11 @@ function translate(namespaceArg) {
         var i18nOptions = _this.i18n && _this.i18n.options && _this.i18n.options.react || {};
         _this.options = _extends({}, getDefaults(), i18nOptions, options);
 
+        if (context.reportNS) {
+          var namespaces = Array.isArray(namespaceArg) ? namespaceArg : [namespaceArg];
+          namespaces.forEach(context.reportNS);
+        }
+
         _this.getWrappedInstance = _this.getWrappedInstance.bind(_this);
         return _this;
       }
@@ -675,7 +680,8 @@ function translate(namespaceArg) {
 
     Translate.contextTypes = {
       i18n: PropTypes.object,
-      defaultNS: PropTypes.string
+      defaultNS: PropTypes.string,
+      reportNS: PropTypes.func
     };
 
     Translate.displayName = 'Translate(' + getDisplayName(WrappedComponent) + ')';
@@ -1173,6 +1179,7 @@ var I18nextProvider = function (_Component) {
     if (props.initialLanguage) {
       _this.i18n.changeLanguage(props.initialLanguage);
     }
+    _this.reportNS = props.reportNS;
     return _this;
   }
 
@@ -1181,7 +1188,8 @@ var I18nextProvider = function (_Component) {
     value: function getChildContext() {
       return {
         i18n: this.i18n,
-        defaultNS: this.defaultNS
+        defaultNS: this.defaultNS,
+        reportNS: this.reportNS
       };
     }
   }, {
@@ -1205,16 +1213,19 @@ var I18nextProvider = function (_Component) {
 I18nextProvider.propTypes = {
   i18n: PropTypes.object.isRequired,
   children: PropTypes.element.isRequired,
-  defaultNS: PropTypes.string
+  defaultNS: PropTypes.string,
+  reportNS: PropTypes.func
 };
 
 I18nextProvider.childContextTypes = {
   i18n: PropTypes.object.isRequired,
-  defaultNS: PropTypes.string
+  defaultNS: PropTypes.string,
+  reportNS: PropTypes.func
 };
 
 I18nextProvider.defaultProps = {
-  defaultNS: undefined
+  defaultNS: undefined,
+  reportNS: undefined
 };
 
 var objectEntries = Object.entries || function (obj) {
