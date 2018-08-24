@@ -1,3 +1,7 @@
+### 7.11.0
+
+- Added reportNS function to I18NextProvider to report used namespaces [500](https://github.com/i18next/react-i18next/pull/500)
+
 ### 7.10.1
 
 - fix small issue in icu.macro introduced on refactoring
