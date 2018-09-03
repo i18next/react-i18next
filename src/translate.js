@@ -29,7 +29,7 @@ export default function translate(namespaceArg, options = {}) {
         this.options = { ...getDefaults(), ...i18nOptions, ...options };
 
         if (context.reportNS) {
-          const namespaces = Array.isArray(namespaceArg) ? namespaceArg : [namespaceArg];
+          const namespaces = this.namespaces || [undefined];
           namespaces.forEach(context.reportNS);
         }
 

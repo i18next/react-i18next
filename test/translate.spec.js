@@ -122,7 +122,17 @@ describe('translate', () => {
     expect(instance.namespaces.length).toBe(1);
     expect(instance.namespaces[0]).toBe('i18nDefaultNS');
   });
-  it('should report namespaces', () => {
+  it('should report a single used namespace to an array', () => {
+    const namespaces = [];
+    const C = translate('ns1')(<div>text</div>);
+    shallow(<C />, {
+      context: {
+        reportNS: ns => namespaces.push(ns)
+      }
+    });
+    expect(namespaces).toEqual(['ns1']);
+  });
+  it('should report multiple used namespaces to an array', () => {
     const namespaces = [];
     const C = translate(['ns1', 'ns2'])(<div>text</div>);
     shallow(<C />, {
@@ -131,5 +141,38 @@ describe('translate', () => {
       }
     });
     expect(namespaces).toEqual(['ns1', 'ns2']);
+  });
+  it('should report undefined if no namespace used and no default namespace defined', () => {
+    const i18n = {
+      options: {},
+    };
+    translate.setI18n(i18n);
+
+    const namespaces = [];
+    const C = translate()(<div>text</div>);
+    shallow(<C />, {
+      context: {
+        reportNS: ns => namespaces.push(ns)
+      }
+    });
+    expect(namespaces).toEqual([undefined]);
+  });
+  it('should report default namespace if no namespace used', () => {
+    const i18n = {
+      options: {
+        defaultNS: 'defaultNS'
+      },
+    };
+    translate.setI18n(i18n);
+
+    const namespaces = [];
+    const C = translate()(<div>text</div>);
+    shallow(<C />, {
+      context: {
+        reportNS: ns => namespaces.push(ns)
+      }
+    });
+
+    expect(namespaces).toEqual(['defaultNS']);
   });
 });
