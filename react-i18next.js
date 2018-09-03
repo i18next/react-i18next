@@ -623,7 +623,7 @@ function translate(namespaceArg) {
         _this.options = _extends({}, getDefaults(), i18nOptions, options);
 
         if (context.reportNS) {
-          var namespaces = Array.isArray(namespaceArg) ? namespaceArg : [namespaceArg];
+          var namespaces = _this.namespaces || [undefined];
           namespaces.forEach(context.reportNS);
         }
 

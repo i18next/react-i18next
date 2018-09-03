@@ -1,3 +1,7 @@
+### 7.11.1
+
+- fix related to issue #504: also report default Namespace with translate() [506](https://github.com/i18next/react-i18next/pull/506)
+
 ### 7.11.0
 
 - Added reportNS function to I18NextProvider to report used namespaces [500](https://github.com/i18next/react-i18next/pull/500)
