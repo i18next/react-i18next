@@ -124,6 +124,9 @@ export default class I18n extends Component {
     return children(this.t, {
       i18n: this.i18n,
       t: this.t,
+      react_i18n: {
+        language: this.i18n.language,
+      },
       ready
     });
   }
