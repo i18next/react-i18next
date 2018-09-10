@@ -4,22 +4,22 @@ import i18n from './i18n';
 import translate from '../src/translate';
 
 const context = {
-  i18n
+  i18n,
 };
 
 describe('translate', () => {
-  const TestElement = ({ t }) => {
-    return (
-      <div>{t('key1')}</div>
-    );
-  }
+  const TestElement = ({ t, lng }) => (
+    <div>
+      {t('key1')} - {lng}
+    </div>
+  );
 
   it('should render correct translation', () => {
     const HocElement = translate(['translation'], {})(TestElement);
 
     const wrapper = mount(<HocElement />, { context });
     // console.log(wrapper.debug());
-    expect(wrapper.contains(<div>test</div>)).toBe(true);
+    expect(wrapper.contains(<div>test - en</div>)).toBe(true);
   });
 
   it('should bind / unbind', () => {
@@ -29,12 +29,12 @@ describe('translate', () => {
     // console.log(wrapper.debug());
 
     // has bound events
-    expect(i18n.observers.languageChanged.length).toBe(2)
-    expect(i18n.observers.loaded.length).toBe(2)
+    expect(i18n.observers.languageChanged.length).toBe(2);
+    expect(i18n.observers.loaded.length).toBe(2);
 
     // unbind after unmount
-    wrapper.unmount()
-    expect(i18n.observers.languageChanged.length).toBe(1)
-    expect(i18n.observers.loaded.length).toBe(1)
+    wrapper.unmount();
+    expect(i18n.observers.languageChanged.length).toBe(1);
+    expect(i18n.observers.loaded.length).toBe(1);
   });
 });

@@ -7,32 +7,31 @@
 var React__default = 'default' in React ? React['default'] : React;
 PropTypes = PropTypes && PropTypes.hasOwnProperty('default') ? PropTypes['default'] : PropTypes;
 
-'use strict';
-
 /**
  * Copyright 2015, Yahoo! Inc.
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
+'use strict';
+
 var REACT_STATICS = {
     childContextTypes: true,
     contextTypes: true,
     defaultProps: true,
     displayName: true,
     getDefaultProps: true,
-    getDerivedStateFromProps: true,
     mixins: true,
     propTypes: true,
     type: true
 };
 
 var KNOWN_STATICS = {
-    name: true,
-    length: true,
-    prototype: true,
-    caller: true,
-    callee: true,
-    arguments: true,
-    arity: true
+  name: true,
+  length: true,
+  prototype: true,
+  caller: true,
+  callee: true,
+  arguments: true,
+  arity: true
 };
 
 var defineProperty = Object.defineProperty;
@@ -42,7 +41,7 @@ var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
 var getPrototypeOf = Object.getPrototypeOf;
 var objectPrototype = getPrototypeOf && getPrototypeOf(Object);
 
-function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
+var hoistNonReactStatics = function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
     if (typeof sourceComponent !== 'string') { // don't hoist over string (html) components
 
         if (objectPrototype) {
@@ -72,9 +71,7 @@ function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
     }
 
     return targetComponent;
-}
-
-var hoistNonReactStatics_cjs = hoistNonReactStatics;
+};
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
@@ -582,6 +579,7 @@ var I18n = function (_Component) {
       return children(this.t, {
         i18n: this.i18n,
         t: this.t,
+        lng: this.i18n.language,
         ready: ready
       });
     }
@@ -688,7 +686,7 @@ function translate(namespaceArg) {
 
     Translate.namespaces = namespaceArg;
 
-    return hoistNonReactStatics_cjs(Translate, WrappedComponent);
+    return hoistNonReactStatics(Translate, WrappedComponent);
   };
 }
 

@@ -1,3 +1,7 @@
+### 7.12.0
+
+- pass down lng via props in I18n and translate HOC - for use cases like [508](https://github.com/i18next/react-i18next/issues/508)
+
 ### 7.11.1
 
 - fix related to issue #504: also report default Namespace with translate() [506](https://github.com/i18next/react-i18next/pull/506)
