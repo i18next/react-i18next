@@ -9,12 +9,25 @@
     "i18next": "11.3.2",
     "i18next-browser-languagedetector": "2.2.0",
     "i18next-xhr-backend": "1.5.1",
-    "react-i18next": "7.7.0"
+    "react-i18next": "7.12.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "development": [
+      "last 2 chrome versions",
+      "last 2 firefox versions",
+      "last 2 edge versions"
+    ],
+    "production": [
+      ">1%",
+      "last 4 versions",
+      "Firefox ESR",
+      "not ie < 11"
+    ]
   }
 }
