@@ -499,18 +499,8 @@ var I18n = function (_Component) {
   }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate(prevProps) {
-      var prevNS = prevProps.ns;
-      var nextNS = this.props.ns;
-
-
-      if (prevNS === nextNS || !nextNS) return;
-
-      var diffNS = (typeof nextNS === 'string' ? [nextNS] : nextNS).filter(function (ns) {
-        if (typeof prevNS === 'string') return prevNS !== ns;
-        return prevNS.indexOf(ns) === -1;
-      });
-
-      this.loadNamespaces(diffNS);
+      if (prevProps.ns === this.props.ns || !this.props.ns) return;
+      this.loadNamespaces(this.props.ns);
     }
   }, {
     key: 'componentWillUnmount',

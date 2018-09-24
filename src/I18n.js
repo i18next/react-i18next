@@ -55,17 +55,8 @@ export default class I18n extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { ns: prevNS } = prevProps;
-    const { ns: nextNS } = this.props;
-
-    if (prevNS === nextNS || !nextNS) return;
-
-    const diffNS = (typeof nextNS === 'string' ? [nextNS] : nextNS).filter(ns => {
-      if (typeof prevNS === 'string') return prevNS !== ns;
-      return prevNS.indexOf(ns) === -1;
-    });
-
-    this.loadNamespaces(diffNS);
+    if (prevProps.ns === this.props.ns || !this.props.ns) return;
+    this.loadNamespaces(this.props.ns);
   }
 
   componentWillUnmount() {
