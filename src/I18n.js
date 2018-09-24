@@ -9,8 +9,6 @@ export default class I18n extends Component {
     super(props, context);
 
     this.i18n = props.i18n || context.i18n || getI18n();
-    this.namespaces = props.ns || (this.i18n.options && this.i18n.options.defaultNS);
-    if (typeof this.namespaces === 'string') this.namespaces = [this.namespaces];
 
     const i18nOptions = (this.i18n && this.i18n.options && this.i18n.options.react) || {};
     this.options = { ...getDefaults(), ...i18nOptions, ...props };
@@ -30,7 +28,7 @@ export default class I18n extends Component {
     }
 
     const language = this.i18n.languages && this.i18n.languages[0];
-    const ready = !!language && this.namespaces.every(ns => this.i18n.hasResourceBundle(language, ns));
+    const ready = !!language && this.getNamespaces().every(ns => this.i18n.hasResourceBundle(language, ns));
 
     this.state = {
       i18nLoadedAt: null,
@@ -41,6 +39,7 @@ export default class I18n extends Component {
 
     this.onI18nChanged = this.onI18nChanged.bind(this);
     this.getI18nTranslate = this.getI18nTranslate.bind(this);
+    this.namespaces = this.getNamespaces.bind(this);
   }
 
   getChildContext() {
@@ -51,12 +50,12 @@ export default class I18n extends Component {
   }
 
   componentDidMount() {
-    this.loadNamespaces(this.namespaces);
+    this.loadNamespaces();
   }
 
   componentDidUpdate(prevProps) {
     // Note that dynamically loading additional namespaces after the initial mount will not block rendering – even if the `wait` option is true.
-    if (this.props.ns && prevProps.ns !== this.props.ns) this.loadNamespaces(this.props.ns);
+    if (this.props.ns && prevProps.ns !== this.props.ns) this.loadNamespaces();
   }
 
   componentWillUnmount() {
@@ -82,17 +81,22 @@ export default class I18n extends Component {
   }
 
   getI18nTranslate() {
-    return this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? this.props.ns : this.props.ns[0]);
+    return this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? this.getNamespaces() : this.getNamespaces()[0]);
   }
 
-  loadNamespaces(namespaces) {
+  getNamespaces() {
+    const ns = this.props.ns || (this.i18n.options && this.i18n.options.defaultNS);
+    return typeof ns === 'string' ? [ns] : ns;
+  }
+
+  loadNamespaces() {
     const bind = () => {
       if (this.options.bindI18n && this.i18n) this.i18n.on(this.options.bindI18n, this.onI18nChanged);
       if (this.options.bindStore && this.i18n.store) this.i18n.store.on(this.options.bindStore, this.onI18nChanged);
     };
 
     this.mounted = true;
-    this.i18n.loadNamespaces(namespaces, () => {
+    this.i18n.loadNamespaces(this.getNamespaces(), () => {
       const ready = () => {
         if (this.mounted && !this.state.ready) this.setState({ ready: true });
         if (this.options.wait && this.mounted) bind();
