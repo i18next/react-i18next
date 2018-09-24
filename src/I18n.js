@@ -55,6 +55,7 @@ export default class I18n extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    // Note that dynamically loading additional namespaces after the initial mount will not block rendering – even if the `wait` option is true.
     if (this.props.ns && prevProps.ns !== this.props.ns) this.loadNamespaces(this.props.ns);
   }
 
