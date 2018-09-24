@@ -7,31 +7,32 @@
 var React__default = 'default' in React ? React['default'] : React;
 PropTypes = PropTypes && PropTypes.hasOwnProperty('default') ? PropTypes['default'] : PropTypes;
 
+'use strict';
+
 /**
  * Copyright 2015, Yahoo! Inc.
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
-'use strict';
-
 var REACT_STATICS = {
     childContextTypes: true,
     contextTypes: true,
     defaultProps: true,
     displayName: true,
     getDefaultProps: true,
+    getDerivedStateFromProps: true,
     mixins: true,
     propTypes: true,
     type: true
 };
 
 var KNOWN_STATICS = {
-  name: true,
-  length: true,
-  prototype: true,
-  caller: true,
-  callee: true,
-  arguments: true,
-  arity: true
+    name: true,
+    length: true,
+    prototype: true,
+    caller: true,
+    callee: true,
+    arguments: true,
+    arity: true
 };
 
 var defineProperty = Object.defineProperty;
@@ -41,7 +42,7 @@ var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
 var getPrototypeOf = Object.getPrototypeOf;
 var objectPrototype = getPrototypeOf && getPrototypeOf(Object);
 
-var hoistNonReactStatics = function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
+function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
     if (typeof sourceComponent !== 'string') { // don't hoist over string (html) components
 
         if (objectPrototype) {
@@ -71,7 +72,9 @@ var hoistNonReactStatics = function hoistNonReactStatics(targetComponent, source
     }
 
     return targetComponent;
-};
+}
+
+var hoistNonReactStatics_cjs = hoistNonReactStatics;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
@@ -491,54 +494,41 @@ var I18n = function (_Component) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var _this2 = this;
+      this.loadNamespaces(this.namespaces);
+    }
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps) {
+      var prevNS = prevProps.ns;
+      var nextNS = this.props.ns;
 
-      var bind = function bind() {
-        if (_this2.options.bindI18n && _this2.i18n) _this2.i18n.on(_this2.options.bindI18n, _this2.onI18nChanged);
-        if (_this2.options.bindStore && _this2.i18n.store) _this2.i18n.store.on(_this2.options.bindStore, _this2.onI18nChanged);
-      };
 
-      this.mounted = true;
-      this.i18n.loadNamespaces(this.namespaces, function () {
-        var ready = function ready() {
-          if (_this2.mounted && !_this2.state.ready) _this2.setState({ ready: true });
-          if (_this2.options.wait && _this2.mounted) bind();
-        };
+      if (prevNS === nextNS || !nextNS) return;
 
-        if (_this2.i18n.isInitialized) {
-          ready();
-        } else {
-          var initialized = function initialized() {
-            // due to emitter removing issue in i18next we need to delay remove
-            setTimeout(function () {
-              _this2.i18n.off('initialized', initialized);
-            }, 1000);
-            ready();
-          };
-
-          _this2.i18n.on('initialized', initialized);
-        }
+      var diffNS = (typeof nextNS === 'string' ? [nextNS] : nextNS).filter(function (ns) {
+        if (typeof prevNS === 'string') return prevNS !== ns;
+        return prevNS.indexOf(ns) === -1;
       });
 
-      if (!this.options.wait) bind();
+      this.loadNamespaces(diffNS);
     }
   }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
-      var _this3 = this;
+      var _this2 = this;
 
       this.mounted = false;
       if (this.onI18nChanged) {
         if (this.options.bindI18n) {
           var p = this.options.bindI18n.split(' ');
           p.forEach(function (f) {
-            return _this3.i18n.off(f, _this3.onI18nChanged);
+            return _this2.i18n.off(f, _this2.onI18nChanged);
           });
         }
         if (this.options.bindStore) {
           var _p = this.options.bindStore.split(' ');
           _p.forEach(function (f) {
-            return _this3.i18n.store && _this3.i18n.store.off(f, _this3.onI18nChanged);
+            return _this2.i18n.store && _this2.i18n.store.off(f, _this2.onI18nChanged);
           });
         }
       }
@@ -556,6 +546,40 @@ var I18n = function (_Component) {
     key: 'getI18nTranslate',
     value: function getI18nTranslate() {
       return this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? this.namespaces : this.namespaces[0]);
+    }
+  }, {
+    key: 'loadNamespaces',
+    value: function loadNamespaces(namespaces) {
+      var _this3 = this;
+
+      var bind = function bind() {
+        if (_this3.options.bindI18n && _this3.i18n) _this3.i18n.on(_this3.options.bindI18n, _this3.onI18nChanged);
+        if (_this3.options.bindStore && _this3.i18n.store) _this3.i18n.store.on(_this3.options.bindStore, _this3.onI18nChanged);
+      };
+
+      this.mounted = true;
+      this.i18n.loadNamespaces(namespaces, function () {
+        var ready = function ready() {
+          if (_this3.mounted && !_this3.state.ready) _this3.setState({ ready: true });
+          if (_this3.options.wait && _this3.mounted) bind();
+        };
+
+        if (_this3.i18n.isInitialized) {
+          ready();
+        } else {
+          var initialized = function initialized() {
+            // due to emitter removing issue in i18next we need to delay remove
+            setTimeout(function () {
+              _this3.i18n.off('initialized', initialized);
+            }, 1000);
+            ready();
+          };
+
+          _this3.i18n.on('initialized', initialized);
+        }
+      });
+
+      if (!this.options.wait) bind();
     }
   }, {
     key: 'render',
@@ -686,7 +710,7 @@ function translate(namespaceArg) {
 
     Translate.namespaces = namespaceArg;
 
-    return hoistNonReactStatics(Translate, WrappedComponent);
+    return hoistNonReactStatics_cjs(Translate, WrappedComponent);
   };
 }
 

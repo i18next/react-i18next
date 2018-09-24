@@ -51,34 +51,21 @@ export default class I18n extends Component {
   }
 
   componentDidMount() {
-    const bind = () => {
-      if (this.options.bindI18n && this.i18n) this.i18n.on(this.options.bindI18n, this.onI18nChanged);
-      if (this.options.bindStore && this.i18n.store) this.i18n.store.on(this.options.bindStore, this.onI18nChanged);
-    };
+    this.loadNamespaces(this.namespaces);
+  }
 
-    this.mounted = true;
-    this.i18n.loadNamespaces(this.namespaces, () => {
-      const ready = () => {
-        if (this.mounted && !this.state.ready) this.setState({ ready: true });
-        if (this.options.wait && this.mounted) bind();
-      };
+  componentDidUpdate(prevProps) {
+    const { ns: prevNS } = prevProps;
+    const { ns: nextNS } = this.props;
 
-      if (this.i18n.isInitialized) {
-        ready();
-      } else {
-        const initialized = () => {
-          // due to emitter removing issue in i18next we need to delay remove
-          setTimeout(() => {
-            this.i18n.off('initialized', initialized);
-          }, 1000);
-          ready();
-        };
+    if (prevNS === nextNS || !nextNS) return;
 
-        this.i18n.on('initialized', initialized);
-      }
+    const diffNS = (typeof nextNS === 'string' ? [nextNS] : nextNS).filter(ns => {
+      if (typeof prevNS === 'string') return prevNS !== ns;
+      return prevNS.indexOf(ns) === -1;
     });
 
-    if (!this.options.wait) bind();
+    this.loadNamespaces(diffNS);
   }
 
   componentWillUnmount() {
@@ -105,6 +92,37 @@ export default class I18n extends Component {
 
   getI18nTranslate() {
     return this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? this.namespaces : this.namespaces[0]);
+  }
+
+  loadNamespaces(namespaces) {
+    const bind = () => {
+      if (this.options.bindI18n && this.i18n) this.i18n.on(this.options.bindI18n, this.onI18nChanged);
+      if (this.options.bindStore && this.i18n.store) this.i18n.store.on(this.options.bindStore, this.onI18nChanged);
+    };
+
+    this.mounted = true;
+    this.i18n.loadNamespaces(namespaces, () => {
+      const ready = () => {
+        if (this.mounted && !this.state.ready) this.setState({ ready: true });
+        if (this.options.wait && this.mounted) bind();
+      };
+
+      if (this.i18n.isInitialized) {
+        ready();
+      } else {
+        const initialized = () => {
+          // due to emitter removing issue in i18next we need to delay remove
+          setTimeout(() => {
+            this.i18n.off('initialized', initialized);
+          }, 1000);
+          ready();
+        };
+
+        this.i18n.on('initialized', initialized);
+      }
+    });
+
+    if (!this.options.wait) bind();
   }
 
   render() {
