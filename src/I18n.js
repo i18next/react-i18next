@@ -55,8 +55,7 @@ export default class I18n extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.ns === this.props.ns || !this.props.ns) return;
-    this.loadNamespaces(this.props.ns);
+    if (this.props.ns && prevProps.ns !== this.props.ns) this.loadNamespaces(this.props.ns);
   }
 
   componentWillUnmount() {
