@@ -545,7 +545,7 @@ var I18n = function (_Component) {
   }, {
     key: 'getI18nTranslate',
     value: function getI18nTranslate() {
-      return this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? this.namespaces : this.namespaces[0]);
+      return this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? this.props.ns : this.props.ns[0]);
     }
   }, {
     key: 'loadNamespaces',

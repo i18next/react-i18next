@@ -91,7 +91,7 @@ export default class I18n extends Component {
   }
 
   getI18nTranslate() {
-    return this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? this.namespaces : this.namespaces[0]);
+    return this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? this.props.ns : this.props.ns[0]);
   }
 
   loadNamespaces(namespaces) {
