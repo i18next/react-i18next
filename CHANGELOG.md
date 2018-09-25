@@ -1,3 +1,7 @@
+### 7.13.0
+
+- Load missing namespaces when updating ns prop on I18n component [523](https://github.com/i18next/react-i18next/pull/523)
+
 ### 7.12.0
 
 - pass down lng via props in I18n and translate HOC - for use cases like [508](https://github.com/i18next/react-i18next/issues/508)

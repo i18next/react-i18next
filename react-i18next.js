@@ -443,8 +443,6 @@ var I18n = function (_Component) {
     var _this = possibleConstructorReturn(this, (I18n.__proto__ || Object.getPrototypeOf(I18n)).call(this, props, context));
 
     _this.i18n = props.i18n || context.i18n || getI18n();
-    _this.namespaces = props.ns || _this.i18n.options && _this.i18n.options.defaultNS;
-    if (typeof _this.namespaces === 'string') _this.namespaces = [_this.namespaces];
 
     var i18nOptions = _this.i18n && _this.i18n.options && _this.i18n.options.react || {};
     _this.options = _extends({}, getDefaults(), i18nOptions, props);
@@ -464,7 +462,7 @@ var I18n = function (_Component) {
     }
 
     var language = _this.i18n.languages && _this.i18n.languages[0];
-    var ready = !!language && _this.namespaces.every(function (ns) {
+    var ready = !!language && _this.getNamespaces().every(function (ns) {
       return _this.i18n.hasResourceBundle(language, ns);
     });
 
@@ -477,6 +475,7 @@ var I18n = function (_Component) {
 
     _this.onI18nChanged = _this.onI18nChanged.bind(_this);
     _this.getI18nTranslate = _this.getI18nTranslate.bind(_this);
+    _this.namespaces = _this.getNamespaces.bind(_this);
     return _this;
   }
 
@@ -491,54 +490,31 @@ var I18n = function (_Component) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var _this2 = this;
-
-      var bind = function bind() {
-        if (_this2.options.bindI18n && _this2.i18n) _this2.i18n.on(_this2.options.bindI18n, _this2.onI18nChanged);
-        if (_this2.options.bindStore && _this2.i18n.store) _this2.i18n.store.on(_this2.options.bindStore, _this2.onI18nChanged);
-      };
-
-      this.mounted = true;
-      this.i18n.loadNamespaces(this.namespaces, function () {
-        var ready = function ready() {
-          if (_this2.mounted && !_this2.state.ready) _this2.setState({ ready: true });
-          if (_this2.options.wait && _this2.mounted) bind();
-        };
-
-        if (_this2.i18n.isInitialized) {
-          ready();
-        } else {
-          var initialized = function initialized() {
-            // due to emitter removing issue in i18next we need to delay remove
-            setTimeout(function () {
-              _this2.i18n.off('initialized', initialized);
-            }, 1000);
-            ready();
-          };
-
-          _this2.i18n.on('initialized', initialized);
-        }
-      });
-
-      if (!this.options.wait) bind();
+      this.loadNamespaces();
+    }
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps) {
+      // Note that dynamically loading additional namespaces after the initial mount will not block rendering – even if the `wait` option is true.
+      if (this.props.ns && prevProps.ns !== this.props.ns) this.loadNamespaces();
     }
   }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
-      var _this3 = this;
+      var _this2 = this;
 
       this.mounted = false;
       if (this.onI18nChanged) {
         if (this.options.bindI18n) {
           var p = this.options.bindI18n.split(' ');
           p.forEach(function (f) {
-            return _this3.i18n.off(f, _this3.onI18nChanged);
+            return _this2.i18n.off(f, _this2.onI18nChanged);
           });
         }
         if (this.options.bindStore) {
           var _p = this.options.bindStore.split(' ');
           _p.forEach(function (f) {
-            return _this3.i18n.store && _this3.i18n.store.off(f, _this3.onI18nChanged);
+            return _this2.i18n.store && _this2.i18n.store.off(f, _this2.onI18nChanged);
           });
         }
       }
@@ -555,7 +531,47 @@ var I18n = function (_Component) {
   }, {
     key: 'getI18nTranslate',
     value: function getI18nTranslate() {
-      return this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? this.namespaces : this.namespaces[0]);
+      return this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? this.getNamespaces() : this.getNamespaces()[0]);
+    }
+  }, {
+    key: 'getNamespaces',
+    value: function getNamespaces() {
+      var ns = this.props.ns || this.i18n.options && this.i18n.options.defaultNS;
+      return typeof ns === 'string' ? [ns] : ns;
+    }
+  }, {
+    key: 'loadNamespaces',
+    value: function loadNamespaces() {
+      var _this3 = this;
+
+      var bind = function bind() {
+        if (_this3.options.bindI18n && _this3.i18n) _this3.i18n.on(_this3.options.bindI18n, _this3.onI18nChanged);
+        if (_this3.options.bindStore && _this3.i18n.store) _this3.i18n.store.on(_this3.options.bindStore, _this3.onI18nChanged);
+      };
+
+      this.mounted = true;
+      this.i18n.loadNamespaces(this.getNamespaces(), function () {
+        var ready = function ready() {
+          if (_this3.mounted && !_this3.state.ready) _this3.setState({ ready: true });
+          if (_this3.options.wait && _this3.mounted) bind();
+        };
+
+        if (_this3.i18n.isInitialized) {
+          ready();
+        } else {
+          var initialized = function initialized() {
+            // due to emitter removing issue in i18next we need to delay remove
+            setTimeout(function () {
+              _this3.i18n.off('initialized', initialized);
+            }, 1000);
+            ready();
+          };
+
+          _this3.i18n.on('initialized', initialized);
+        }
+      });
+
+      if (!this.options.wait) bind();
     }
   }, {
     key: 'render',
