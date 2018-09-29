@@ -1,3 +1,14 @@
+### 8.0.0
+
+**Using react's new context api**
+
+should be non breaking in most cases, with following exceptions:
+
+- using preact you will have to use preact.createContext plugin (or eventual hope the provided polyfill works for preact too)
+- you used the translate.getWrappedInstance function -> you will need to use instance.getWrappedInstance().getWrappedInstance() now as the translate hoc is now wrapped in an additional I18nContext.Consumer
+
+still we prefer to increase this to a **major version** as beside the described egde cases there might be other effects we not have covered with our tests
+
 ### 7.13.0
 
 - Load missing namespaces when updating ns prop on I18n component [523](https://github.com/i18next/react-i18next/pull/523)

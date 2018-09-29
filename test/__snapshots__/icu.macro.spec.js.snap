@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`1. macros 1`] = `
+exports[`macros 1. macros: 1. macros 1`] = `
 "
 import { Trans } from '../icu.macro'
 
@@ -17,7 +17,7 @@ const x = <Trans defaults=\\"Welcome, {name}!\\" components={[]} values={{
 "
 `;
 
-exports[`2. macros 1`] = `
+exports[`macros 2. macros: 2. macros 1`] = `
 "
 import { Trans } from '../icu.macro'
 
@@ -34,7 +34,7 @@ const x = <Trans defaults=\\"Welcome, <0>{name}</0>!\\" components={[<strong>{na
 "
 `;
 
-exports[`3. macros 1`] = `
+exports[`macros 3. macros: 3. macros 1`] = `
 "
 import { Trans } from '../icu.macro'
 
@@ -51,7 +51,7 @@ const x = <Trans defaults=\\"Trainers: {trainersCount, number}\\" components={[]
 "
 `;
 
-exports[`4. macros 1`] = `
+exports[`macros 4. macros: 4. macros 1`] = `
 "
 import { Trans } from '../icu.macro'
 
@@ -68,7 +68,7 @@ const x = <Trans defaults=\\"Trainers: <0>{trainersCount, number}</0>!\\" compon
 "
 `;
 
-exports[`5. macros 1`] = `
+exports[`macros 5. macros: 5. macros 1`] = `
 "
 import { Trans } from '../icu.macro'
 
@@ -85,7 +85,7 @@ const x = <Trans defaults=\\"Caught on {catchDate, date, short}\\" components={[
 "
 `;
 
-exports[`6. macros 1`] = `
+exports[`macros 6. macros: 6. macros 1`] = `
 "
 import { Trans } from '../icu.macro'
 
@@ -102,7 +102,7 @@ const x = <Trans defaults=\\"Caught on <0>{catchDate, date, short}</0>!\\" compo
 "
 `;
 
-exports[`7. macros 1`] = `
+exports[`macros 7. macros: 7. macros 1`] = `
 "
 import { Select } from '../icu.macro'
 
@@ -124,7 +124,7 @@ const x = <Trans defaults=\\"{gender, select,  male {He avoids bugs.} female {Sh
 "
 `;
 
-exports[`8. macros 1`] = `
+exports[`macros 8. macros: 8. macros 1`] = `
 "
 import { Select } from '../icu.macro'
 
@@ -146,7 +146,7 @@ const x = <Trans defaults=\\"{gender, select,  male {<0>He</0> avoids bugs.} fem
 "
 `;
 
-exports[`9. macros 1`] = `
+exports[`macros 9. macros: 9. macros 1`] = `
 "
 import { Plural } from '../icu.macro'
 
@@ -168,7 +168,7 @@ const x = <Trans defaults=\\"{itemsCount1, plural,  =0 {There is no item.} one {
 "
 `;
 
-exports[`10. macros 1`] = `
+exports[`macros 10. macros: 10. macros 1`] = `
 "
 import { Plural } from '../icu.macro'
 

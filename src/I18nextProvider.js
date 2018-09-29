@@ -1,5 +1,6 @@
-import { Component, Children } from 'react';
+import React, { Component, Children } from 'react';
 import PropTypes from 'prop-types';
+import { I18nContext } from './context';
 
 class I18nextProvider extends Component {
   constructor(props, context) {
@@ -16,14 +17,6 @@ class I18nextProvider extends Component {
     this.reportNS = props.reportNS;
   }
 
-  getChildContext() {
-    return {
-      i18n: this.i18n,
-      defaultNS: this.defaultNS,
-      reportNS: this.reportNS
-    };
-  }
-
   componentWillReceiveProps(nextProps) {
     if (this.props.i18n !== nextProps.i18n) {
       throw new Error('[react-i18next][I18nextProvider]does not support changing the i18n object.');
@@ -32,7 +25,21 @@ class I18nextProvider extends Component {
 
   render() {
     const { children } = this.props;
-    return Children.only(children);
+    const { i18n, defaultNS, reportNS } = this;
+
+    return React.createElement(
+      I18nContext.Provider,
+      {
+        value: {
+          i18n,
+          defaultNS,
+          reportNS,
+          lng: i18n && i18n.language,
+          t: i18n && i18n.t.bind(i18n),
+        },
+      },
+      children
+    );
   }
 }
 
@@ -40,18 +47,12 @@ I18nextProvider.propTypes = {
   i18n: PropTypes.object.isRequired,
   children: PropTypes.element.isRequired,
   defaultNS: PropTypes.string,
-  reportNS: PropTypes.func
-};
-
-I18nextProvider.childContextTypes = {
-  i18n: PropTypes.object.isRequired,
-  defaultNS: PropTypes.string,
-  reportNS: PropTypes.func
+  reportNS: PropTypes.func,
 };
 
 I18nextProvider.defaultProps = {
   defaultNS: undefined,
-  reportNS: undefined
+  reportNS: undefined,
 };
 
 export default I18nextProvider;

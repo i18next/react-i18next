@@ -7,11 +7,197 @@
 var React__default = 'default' in React ? React['default'] : React;
 PropTypes = PropTypes && PropTypes.hasOwnProperty('default') ? PropTypes['default'] : PropTypes;
 
+var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+
+
+function unwrapExports (x) {
+	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+}
+
+function createCommonjsModule(fn, module) {
+	return module = { exports: {} }, fn(module, module.exports), module.exports;
+}
+
+var reactIs_production_min = createCommonjsModule(function (module, exports) {
+/** @license React v16.5.2
+ * react-is.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+'use strict';Object.defineProperty(exports,"__esModule",{value:!0});
+var b="function"===typeof Symbol&&Symbol.for,c=b?Symbol.for("react.element"):60103,d=b?Symbol.for("react.portal"):60106,e=b?Symbol.for("react.fragment"):60107,f=b?Symbol.for("react.strict_mode"):60108,g=b?Symbol.for("react.profiler"):60114,h=b?Symbol.for("react.provider"):60109,k=b?Symbol.for("react.context"):60110,l=b?Symbol.for("react.async_mode"):60111,m=b?Symbol.for("react.forward_ref"):60112,n=b?Symbol.for("react.placeholder"):60113;
+function q(a){if("object"===typeof a&&null!==a){var p=a.$$typeof;switch(p){case c:switch(a=a.type,a){case l:case e:case g:case f:return a;default:switch(a=a&&a.$$typeof,a){case k:case m:case h:return a;default:return p}}case d:return p}}}exports.typeOf=q;exports.AsyncMode=l;exports.ContextConsumer=k;exports.ContextProvider=h;exports.Element=c;exports.ForwardRef=m;exports.Fragment=e;exports.Profiler=g;exports.Portal=d;exports.StrictMode=f;
+exports.isValidElementType=function(a){return"string"===typeof a||"function"===typeof a||a===e||a===l||a===g||a===f||a===n||"object"===typeof a&&null!==a&&("function"===typeof a.then||a.$$typeof===h||a.$$typeof===k||a.$$typeof===m)};exports.isAsyncMode=function(a){return q(a)===l};exports.isContextConsumer=function(a){return q(a)===k};exports.isContextProvider=function(a){return q(a)===h};exports.isElement=function(a){return"object"===typeof a&&null!==a&&a.$$typeof===c};
+exports.isForwardRef=function(a){return q(a)===m};exports.isFragment=function(a){return q(a)===e};exports.isProfiler=function(a){return q(a)===g};exports.isPortal=function(a){return q(a)===d};exports.isStrictMode=function(a){return q(a)===f};
+});
+
+unwrapExports(reactIs_production_min);
+
+var reactIs_development = createCommonjsModule(function (module, exports) {
+/** @license React v16.5.2
+ * react-is.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+'use strict';
+
+
+
+if (process.env.NODE_ENV !== "production") {
+  (function() {
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+// The Symbol used to tag the ReactElement-like types. If there is no native Symbol
+// nor polyfill, then a plain number is used for performance.
+var hasSymbol = typeof Symbol === 'function' && Symbol.for;
+
+var REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7;
+var REACT_PORTAL_TYPE = hasSymbol ? Symbol.for('react.portal') : 0xeaca;
+var REACT_FRAGMENT_TYPE = hasSymbol ? Symbol.for('react.fragment') : 0xeacb;
+var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 0xeacc;
+var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
+var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
+var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace;
+var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
+var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
+var REACT_PLACEHOLDER_TYPE = hasSymbol ? Symbol.for('react.placeholder') : 0xead1;
+
+function isValidElementType(type) {
+  return typeof type === 'string' || typeof type === 'function' ||
+  // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
+  type === REACT_FRAGMENT_TYPE || type === REACT_ASYNC_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_PLACEHOLDER_TYPE || typeof type === 'object' && type !== null && (typeof type.then === 'function' || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE);
+}
+
+function typeOf(object) {
+  if (typeof object === 'object' && object !== null) {
+    var $$typeof = object.$$typeof;
+
+    switch ($$typeof) {
+      case REACT_ELEMENT_TYPE:
+        var type = object.type;
+
+        switch (type) {
+          case REACT_ASYNC_MODE_TYPE:
+          case REACT_FRAGMENT_TYPE:
+          case REACT_PROFILER_TYPE:
+          case REACT_STRICT_MODE_TYPE:
+            return type;
+          default:
+            var $$typeofType = type && type.$$typeof;
+
+            switch ($$typeofType) {
+              case REACT_CONTEXT_TYPE:
+              case REACT_FORWARD_REF_TYPE:
+              case REACT_PROVIDER_TYPE:
+                return $$typeofType;
+              default:
+                return $$typeof;
+            }
+        }
+      case REACT_PORTAL_TYPE:
+        return $$typeof;
+    }
+  }
+
+  return undefined;
+}
+
+var AsyncMode = REACT_ASYNC_MODE_TYPE;
+var ContextConsumer = REACT_CONTEXT_TYPE;
+var ContextProvider = REACT_PROVIDER_TYPE;
+var Element = REACT_ELEMENT_TYPE;
+var ForwardRef = REACT_FORWARD_REF_TYPE;
+var Fragment = REACT_FRAGMENT_TYPE;
+var Profiler = REACT_PROFILER_TYPE;
+var Portal = REACT_PORTAL_TYPE;
+var StrictMode = REACT_STRICT_MODE_TYPE;
+
+function isAsyncMode(object) {
+  return typeOf(object) === REACT_ASYNC_MODE_TYPE;
+}
+function isContextConsumer(object) {
+  return typeOf(object) === REACT_CONTEXT_TYPE;
+}
+function isContextProvider(object) {
+  return typeOf(object) === REACT_PROVIDER_TYPE;
+}
+function isElement(object) {
+  return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
+}
+function isForwardRef(object) {
+  return typeOf(object) === REACT_FORWARD_REF_TYPE;
+}
+function isFragment(object) {
+  return typeOf(object) === REACT_FRAGMENT_TYPE;
+}
+function isProfiler(object) {
+  return typeOf(object) === REACT_PROFILER_TYPE;
+}
+function isPortal(object) {
+  return typeOf(object) === REACT_PORTAL_TYPE;
+}
+function isStrictMode(object) {
+  return typeOf(object) === REACT_STRICT_MODE_TYPE;
+}
+
+exports.typeOf = typeOf;
+exports.AsyncMode = AsyncMode;
+exports.ContextConsumer = ContextConsumer;
+exports.ContextProvider = ContextProvider;
+exports.Element = Element;
+exports.ForwardRef = ForwardRef;
+exports.Fragment = Fragment;
+exports.Profiler = Profiler;
+exports.Portal = Portal;
+exports.StrictMode = StrictMode;
+exports.isValidElementType = isValidElementType;
+exports.isAsyncMode = isAsyncMode;
+exports.isContextConsumer = isContextConsumer;
+exports.isContextProvider = isContextProvider;
+exports.isElement = isElement;
+exports.isForwardRef = isForwardRef;
+exports.isFragment = isFragment;
+exports.isProfiler = isProfiler;
+exports.isPortal = isPortal;
+exports.isStrictMode = isStrictMode;
+  })();
+}
+});
+
+unwrapExports(reactIs_development);
+
+var reactIs = createCommonjsModule(function (module) {
+'use strict';
+
+if (process.env.NODE_ENV === 'production') {
+  module.exports = reactIs_production_min;
+} else {
+  module.exports = reactIs_development;
+}
+});
+
+'use strict';
+
+var _ReactIs$ForwardRef;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 /**
  * Copyright 2015, Yahoo! Inc.
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
-'use strict';
+
 
 var REACT_STATICS = {
     childContextTypes: true,
@@ -19,30 +205,34 @@ var REACT_STATICS = {
     defaultProps: true,
     displayName: true,
     getDefaultProps: true,
+    getDerivedStateFromProps: true,
     mixins: true,
     propTypes: true,
     type: true
 };
 
 var KNOWN_STATICS = {
-  name: true,
-  length: true,
-  prototype: true,
-  caller: true,
-  callee: true,
-  arguments: true,
-  arity: true
+    name: true,
+    length: true,
+    prototype: true,
+    caller: true,
+    callee: true,
+    arguments: true,
+    arity: true
 };
+
+var TYPE_STATICS = _defineProperty({}, reactIs.ForwardRef, (_ReactIs$ForwardRef = {}, _defineProperty(_ReactIs$ForwardRef, '$$typeof', true), _defineProperty(_ReactIs$ForwardRef, 'render', true), _ReactIs$ForwardRef));
 
 var defineProperty = Object.defineProperty;
 var getOwnPropertyNames = Object.getOwnPropertyNames;
 var getOwnPropertySymbols = Object.getOwnPropertySymbols;
 var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
 var getPrototypeOf = Object.getPrototypeOf;
-var objectPrototype = getPrototypeOf && getPrototypeOf(Object);
+var objectPrototype = Object.prototype;
 
-var hoistNonReactStatics = function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
-    if (typeof sourceComponent !== 'string') { // don't hoist over string (html) components
+function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
+    if (typeof sourceComponent !== 'string') {
+        // don't hoist over string (html) components
 
         if (objectPrototype) {
             var inheritedComponent = getPrototypeOf(sourceComponent);
@@ -57,11 +247,15 @@ var hoistNonReactStatics = function hoistNonReactStatics(targetComponent, source
             keys = keys.concat(getOwnPropertySymbols(sourceComponent));
         }
 
+        var targetStatics = TYPE_STATICS[targetComponent['$$typeof']] || REACT_STATICS;
+        var sourceStatics = TYPE_STATICS[sourceComponent['$$typeof']] || REACT_STATICS;
+
         for (var i = 0; i < keys.length; ++i) {
             var key = keys[i];
-            if (!REACT_STATICS[key] && !KNOWN_STATICS[key] && (!blacklist || !blacklist[key])) {
+            if (!KNOWN_STATICS[key] && !(blacklist && blacklist[key]) && !(sourceStatics && sourceStatics[key]) && !(targetStatics && targetStatics[key])) {
                 var descriptor = getOwnPropertyDescriptor(sourceComponent, key);
-                try { // Avoid failures from read-only properties
+                try {
+                    // Avoid failures from read-only properties
                     defineProperty(targetComponent, key, descriptor);
                 } catch (e) {}
             }
@@ -71,7 +265,9 @@ var hoistNonReactStatics = function hoistNonReactStatics(targetComponent, source
     }
 
     return targetComponent;
-};
+}
+
+var hoistNonReactStatics_cjs = hoistNonReactStatics;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
@@ -394,6 +590,337 @@ function shallowEqual(objA, objB) {
   return true;
 }
 
+// @flow
+'use strict';
+
+var key = '__global_unique_id__';
+
+var gud = function() {
+  return commonjsGlobal[key] = (commonjsGlobal[key] || 0) + 1;
+};
+
+"use strict";
+
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * 
+ */
+
+function makeEmptyFunction(arg) {
+  return function () {
+    return arg;
+  };
+}
+
+/**
+ * This function accepts and discards inputs; it has no side effects. This is
+ * primarily useful idiomatically for overridable function endpoints which
+ * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
+ */
+var emptyFunction = function emptyFunction() {};
+
+emptyFunction.thatReturns = makeEmptyFunction;
+emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
+emptyFunction.thatReturnsTrue = makeEmptyFunction(true);
+emptyFunction.thatReturnsNull = makeEmptyFunction(null);
+emptyFunction.thatReturnsThis = function () {
+  return this;
+};
+emptyFunction.thatReturnsArgument = function (arg) {
+  return arg;
+};
+
+var emptyFunction_1 = emptyFunction;
+
+/**
+ * Copyright (c) 2014-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
+'use strict';
+
+
+
+/**
+ * Similar to invariant but only logs a warning if the condition is not met.
+ * This can be used to log issues in development environments in critical
+ * paths. Removing the logging code for production environments will keep the
+ * same logic and follow the same code paths.
+ */
+
+var warning = emptyFunction_1;
+
+if (process.env.NODE_ENV !== 'production') {
+  var printWarning = function printWarning(format) {
+    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    var argIndex = 0;
+    var message = 'Warning: ' + format.replace(/%s/g, function () {
+      return args[argIndex++];
+    });
+    if (typeof console !== 'undefined') {
+      console.error(message);
+    }
+    try {
+      // --- Welcome to debugging React ---
+      // This error was thrown as a convenience so that you can use this stack
+      // to find the callsite that caused this warning to fire.
+      throw new Error(message);
+    } catch (x) {}
+  };
+
+  warning = function warning(condition, format) {
+    if (format === undefined) {
+      throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
+    }
+
+    if (format.indexOf('Failed Composite propType: ') === 0) {
+      return; // Ignore CompositeComponent proptype check.
+    }
+
+    if (!condition) {
+      for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+        args[_key2 - 2] = arguments[_key2];
+      }
+
+      printWarning.apply(undefined, [format].concat(args));
+    }
+  };
+}
+
+var warning_1 = warning;
+
+var implementation = createCommonjsModule(function (module, exports) {
+'use strict';
+
+exports.__esModule = true;
+
+
+
+var _react2 = _interopRequireDefault(React__default);
+
+
+
+var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+var _gud2 = _interopRequireDefault(gud);
+
+
+
+var _warning2 = _interopRequireDefault(warning_1);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var MAX_SIGNED_31_BIT_INT = 1073741823;
+
+// Inlined Object.is polyfill.
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+function objectIs(x, y) {
+  if (x === y) {
+    return x !== 0 || 1 / x === 1 / y;
+  } else {
+    return x !== x && y !== y;
+  }
+}
+
+function createEventEmitter(value) {
+  var handlers = [];
+  return {
+    on: function on(handler) {
+      handlers.push(handler);
+    },
+    off: function off(handler) {
+      handlers = handlers.filter(function (h) {
+        return h !== handler;
+      });
+    },
+    get: function get() {
+      return value;
+    },
+    set: function set(newValue, changedBits) {
+      value = newValue;
+      handlers.forEach(function (handler) {
+        return handler(value, changedBits);
+      });
+    }
+  };
+}
+
+function onlyChild(children) {
+  return Array.isArray(children) ? children[0] : children;
+}
+
+function createReactContext(defaultValue, calculateChangedBits) {
+  var _Provider$childContex, _Consumer$contextType;
+
+  var contextProp = '__create-react-context-' + (0, _gud2.default)() + '__';
+
+  var Provider = function (_Component) {
+    _inherits(Provider, _Component);
+
+    function Provider() {
+      var _temp, _this, _ret;
+
+      _classCallCheck(this, Provider);
+
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      return _ret = (_temp = (_this = _possibleConstructorReturn(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.emitter = createEventEmitter(_this.props.value), _temp), _possibleConstructorReturn(_this, _ret);
+    }
+
+    Provider.prototype.getChildContext = function getChildContext() {
+      var _ref;
+
+      return _ref = {}, _ref[contextProp] = this.emitter, _ref;
+    };
+
+    Provider.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+      if (this.props.value !== nextProps.value) {
+        var oldValue = this.props.value;
+        var newValue = nextProps.value;
+        var changedBits = void 0;
+
+        if (objectIs(oldValue, newValue)) {
+          changedBits = 0; // No change
+        } else {
+          changedBits = typeof calculateChangedBits === 'function' ? calculateChangedBits(oldValue, newValue) : MAX_SIGNED_31_BIT_INT;
+          if (process.env.NODE_ENV !== 'production') {
+            (0, _warning2.default)((changedBits & MAX_SIGNED_31_BIT_INT) === changedBits, 'calculateChangedBits: Expected the return value to be a ' + '31-bit integer. Instead received: %s', changedBits);
+          }
+
+          changedBits |= 0;
+
+          if (changedBits !== 0) {
+            this.emitter.set(nextProps.value, changedBits);
+          }
+        }
+      }
+    };
+
+    Provider.prototype.render = function render() {
+      return this.props.children;
+    };
+
+    return Provider;
+  }(React__default.Component);
+
+  Provider.childContextTypes = (_Provider$childContex = {}, _Provider$childContex[contextProp] = _propTypes2.default.object.isRequired, _Provider$childContex);
+
+  var Consumer = function (_Component2) {
+    _inherits(Consumer, _Component2);
+
+    function Consumer() {
+      var _temp2, _this2, _ret2;
+
+      _classCallCheck(this, Consumer);
+
+      for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
+      }
+
+      return _ret2 = (_temp2 = (_this2 = _possibleConstructorReturn(this, _Component2.call.apply(_Component2, [this].concat(args))), _this2), _this2.state = {
+        value: _this2.getValue()
+      }, _this2.onUpdate = function (newValue, changedBits) {
+        var observedBits = _this2.observedBits | 0;
+        if ((observedBits & changedBits) !== 0) {
+          _this2.setState({ value: _this2.getValue() });
+        }
+      }, _temp2), _possibleConstructorReturn(_this2, _ret2);
+    }
+
+    Consumer.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+      var observedBits = nextProps.observedBits;
+
+      this.observedBits = observedBits === undefined || observedBits === null ? MAX_SIGNED_31_BIT_INT // Subscribe to all changes by default
+      : observedBits;
+    };
+
+    Consumer.prototype.componentDidMount = function componentDidMount() {
+      if (this.context[contextProp]) {
+        this.context[contextProp].on(this.onUpdate);
+      }
+      var observedBits = this.props.observedBits;
+
+      this.observedBits = observedBits === undefined || observedBits === null ? MAX_SIGNED_31_BIT_INT // Subscribe to all changes by default
+      : observedBits;
+    };
+
+    Consumer.prototype.componentWillUnmount = function componentWillUnmount() {
+      if (this.context[contextProp]) {
+        this.context[contextProp].off(this.onUpdate);
+      }
+    };
+
+    Consumer.prototype.getValue = function getValue() {
+      if (this.context[contextProp]) {
+        return this.context[contextProp].get();
+      } else {
+        return defaultValue;
+      }
+    };
+
+    Consumer.prototype.render = function render() {
+      return onlyChild(this.props.children)(this.state.value);
+    };
+
+    return Consumer;
+  }(React__default.Component);
+
+  Consumer.contextTypes = (_Consumer$contextType = {}, _Consumer$contextType[contextProp] = _propTypes2.default.object, _Consumer$contextType);
+
+
+  return {
+    Provider: Provider,
+    Consumer: Consumer
+  };
+}
+
+exports.default = createReactContext;
+module.exports = exports['default'];
+});
+
+unwrapExports(implementation);
+
+var lib = createCommonjsModule(function (module, exports) {
+'use strict';
+
+exports.__esModule = true;
+
+
+
+var _react2 = _interopRequireDefault(React__default);
+
+
+
+var _implementation2 = _interopRequireDefault(implementation);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = _react2.default.createContext || _implementation2.default;
+module.exports = exports['default'];
+});
+
+var createReactContext = unwrapExports(lib);
+
 var defaultOptions = {
   wait: false,
   withRef: false,
@@ -431,6 +958,51 @@ var reactI18nextModule = {
     setI18n(instance);
   }
 };
+
+var I18nContext = createReactContext();
+
+// hoc for context
+function withContext() {
+  return function Wrapper(WrappedComponent) {
+    var WithContext = function (_Component) {
+      inherits(WithContext, _Component);
+
+      function WithContext(props, context) {
+        classCallCheck(this, WithContext);
+
+        var _this = possibleConstructorReturn(this, (WithContext.__proto__ || Object.getPrototypeOf(WithContext)).call(this, props, context));
+
+        _this.getWrappedInstance = _this.getWrappedInstance.bind(_this);
+        return _this;
+      }
+
+      createClass(WithContext, [{
+        key: 'getWrappedInstance',
+        value: function getWrappedInstance() {
+          return this.wrapped;
+        }
+      }, {
+        key: 'render',
+        value: function render() {
+          var _this2 = this;
+
+          var extraProps = {
+            ref: function ref(c) {
+              _this2.wrapped = c;
+            }
+          };
+
+          return React__default.createElement(I18nContext.Consumer, null, function (ctx) {
+            return React__default.createElement(WrappedComponent, _extends({}, ctx, _this2.props, extraProps));
+          });
+        }
+      }]);
+      return WithContext;
+    }(React.Component);
+
+    return WithContext;
+  };
+}
 
 var removedIsInitialSSR = false;
 
@@ -480,14 +1052,6 @@ var I18n = function (_Component) {
   }
 
   createClass(I18n, [{
-    key: 'getChildContext',
-    value: function getChildContext() {
-      return {
-        t: this.t,
-        i18n: this.i18n
-      };
-    }
-  }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
       this.loadNamespaces();
@@ -531,7 +1095,8 @@ var I18n = function (_Component) {
   }, {
     key: 'getI18nTranslate',
     value: function getI18nTranslate() {
-      return this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? this.getNamespaces() : this.getNamespaces()[0]);
+      var namespaces = this.getNamespaces();
+      return this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? namespaces : namespaces && namespaces.length ? this.getNamespaces()[0] : 'translation');
     }
   }, {
     key: 'getNamespaces',
@@ -580,6 +1145,10 @@ var I18n = function (_Component) {
 
       var children = this.props.children;
       var ready = this.state.ready;
+      var i18n = this.i18n,
+          t = this.t,
+          defaultNS = this.defaultNS,
+          reportNS = this.reportNS;
 
 
       if (!ready && this.options.wait) return null;
@@ -592,25 +1161,20 @@ var I18n = function (_Component) {
         }, 100);
       }
 
-      return children(this.t, {
+      return React__default.createElement(I18nContext.Provider, {
+        value: { i18n: i18n, t: t, defaultNS: defaultNS, reportNS: reportNS, lng: i18n && i18n.language }
+      }, children(this.t, {
         i18n: this.i18n,
         t: this.t,
         lng: this.i18n.language,
         ready: ready
-      });
+      }));
     }
   }]);
   return I18n;
 }(React.Component);
 
-I18n.contextTypes = {
-  i18n: PropTypes.object
-};
-
-I18n.childContextTypes = {
-  t: PropTypes.func.isRequired,
-  i18n: PropTypes.object
-};
+var I18n$1 = withContext()(I18n);
 
 function getDisplayName(component) {
   return component.displayName || component.name || 'Component';
@@ -618,7 +1182,6 @@ function getDisplayName(component) {
 
 function translate(namespaceArg) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
 
   return function Wrapper(WrappedComponent) {
     var Translate = function (_Component) {
@@ -630,15 +1193,15 @@ function translate(namespaceArg) {
         var _this = possibleConstructorReturn(this, (Translate.__proto__ || Object.getPrototypeOf(Translate)).call(this, props, context));
 
         _this.i18n = props.i18n || options.i18n || context.i18n || getI18n();
-        _this.namespaces = typeof namespaceArg === 'function' ? namespaceArg(props) : namespaceArg || context.defaultNS || _this.i18n.options && _this.i18n.options.defaultNS;
+        _this.namespaces = typeof namespaceArg === 'function' ? namespaceArg(props) : namespaceArg || props.defaultNS || _this.i18n.options && _this.i18n.options.defaultNS;
         if (typeof _this.namespaces === 'string') _this.namespaces = [_this.namespaces];
 
         var i18nOptions = _this.i18n && _this.i18n.options && _this.i18n.options.react || {};
         _this.options = _extends({}, getDefaults(), i18nOptions, options);
 
-        if (context.reportNS) {
+        if (props.reportNS) {
           var namespaces = _this.namespaces || [undefined];
-          namespaces.forEach(context.reportNS);
+          namespaces.forEach(props.reportNS);
         }
 
         _this.getWrappedInstance = _this.getWrappedInstance.bind(_this);
@@ -678,36 +1241,29 @@ function translate(namespaceArg) {
             };
           }
 
-          return React__default.createElement(I18n, _extends({ ns: this.namespaces }, this.options, this.props, { i18n: this.i18n }), function (t, _ref) {
+          return React__default.createElement(I18n$1, _extends({ ns: this.namespaces }, this.options, this.props, { i18n: this.i18n }), function (t, _ref) {
             var ready = _ref.ready,
-                context = objectWithoutProperties(_ref, ['ready']);
+                rest = objectWithoutProperties(_ref, ['ready']);
             return React__default.createElement(WrappedComponent, _extends({
               tReady: ready
-            }, _this2.props, extraProps, context));
+            }, _this2.props, extraProps, rest));
           });
         }
       }]);
       return Translate;
     }(React.Component);
 
-    Translate.WrappedComponent = WrappedComponent;
+    var TranslateWithContext = withContext()(Translate);
 
-    Translate.contextTypes = {
-      i18n: PropTypes.object,
-      defaultNS: PropTypes.string,
-      reportNS: PropTypes.func
-    };
+    TranslateWithContext.WrappedComponent = WrappedComponent;
+    TranslateWithContext.displayName = 'Translate(' + getDisplayName(WrappedComponent) + ')';
+    TranslateWithContext.namespaces = namespaceArg;
 
-    Translate.displayName = 'Translate(' + getDisplayName(WrappedComponent) + ')';
-
-    Translate.namespaces = namespaceArg;
-
-    return hoistNonReactStatics(Translate, WrappedComponent);
+    return hoistNonReactStatics_cjs(TranslateWithContext, WrappedComponent);
   };
 }
 
 translate.setDefaults = setDefaults;
-
 translate.setI18n = setI18n;
 
 var Interpolate = function (_Component) {
@@ -767,7 +1323,9 @@ var Interpolate = function (_Component) {
         if (index % 2 === 0) {
           if (match.length === 0) return memo;
           if (useDangerouslySetInnerHTML) {
-            child = React__default.createElement(dangerouslySetInnerHTMLPartElement, { dangerouslySetInnerHTML: { __html: match } });
+            child = React__default.createElement(dangerouslySetInnerHTMLPartElement, {
+              dangerouslySetInnerHTML: { __html: match }
+            });
           } else {
             child = match;
           }
@@ -806,10 +1364,7 @@ Interpolate.defaultProps = {
   className: ''
 };
 
-Interpolate.contextTypes = {
-  i18n: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired
-};
+var Interpolate$1 = withContext()(Interpolate);
 
 /**
  * This file automatically generated from `pre-publish.js`.
@@ -1061,7 +1616,7 @@ function nodesToString(mem, children, index) {
 }
 
 function renderNodes(children, targetString, i18n) {
-  if (targetString === "") return [];
+  if (targetString === '') return [];
   if (!children) return [targetString];
 
   // parse ast from string with additional wrapper tag
@@ -1117,19 +1672,22 @@ var Trans = function (_React$Component) {
   createClass(Trans, [{
     key: 'render',
     value: function render() {
-      var contextAndProps = _extends({ i18n: this.context.i18n, t: this.context.t }, this.props);
-      var children = contextAndProps.children,
-          count = contextAndProps.count,
-          parent = contextAndProps.parent,
-          i18nKey = contextAndProps.i18nKey,
-          tOptions = contextAndProps.tOptions,
-          values = contextAndProps.values,
-          defaults$$1 = contextAndProps.defaults,
-          components = contextAndProps.components,
-          namespace = contextAndProps.ns,
-          i18n = contextAndProps.i18n,
-          tFromContextAndProps = contextAndProps.t,
-          additionalProps = objectWithoutProperties(contextAndProps, ['children', 'count', 'parent', 'i18nKey', 'tOptions', 'values', 'defaults', 'components', 'ns', 'i18n', 't']);
+      var _props = this.props,
+          children = _props.children,
+          count = _props.count,
+          parent = _props.parent,
+          i18nKey = _props.i18nKey,
+          tOptions = _props.tOptions,
+          values = _props.values,
+          defaults$$1 = _props.defaults,
+          components = _props.components,
+          namespace = _props.ns,
+          i18n = _props.i18n,
+          tFromContextAndProps = _props.t,
+          defaultNS = _props.defaultNS,
+          reportNS = _props.reportNS,
+          lng = _props.lng,
+          additionalProps = objectWithoutProperties(_props, ['children', 'count', 'parent', 'i18nKey', 'tOptions', 'values', 'defaults', 'components', 'ns', 'i18n', 't', 'defaultNS', 'reportNS', 'lng']);
 
       var t = tFromContextAndProps || i18n.t.bind(i18n);
 
@@ -1140,7 +1698,11 @@ var Trans = function (_React$Component) {
       var hashTransKey = reactI18nextOptions.hashTransKey;
       var key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
       var interpolationOverride = values ? {} : { interpolation: { prefix: '#$?', suffix: '?$#' } };
-      var translation = key ? t(key, _extends({}, tOptions, values, interpolationOverride, { defaultValue: defaultValue, count: count, ns: namespace })) : defaultValue;
+      var translation = key ? t(key, _extends({}, tOptions, values, interpolationOverride, {
+        defaultValue: defaultValue,
+        count: count,
+        ns: namespace
+      })) : defaultValue;
 
       if (reactI18nextOptions.exposeNamespace) {
         var ns = typeof t.ns === 'string' ? t.ns : t.ns[0];
@@ -1167,14 +1729,7 @@ Trans.propTypes = {
   t: PropTypes.func
 };
 
-// Trans.defaultProps = {
-//   parent: 'div'
-// };
-
-Trans.contextTypes = {
-  i18n: PropTypes.object,
-  t: PropTypes.func
-};
+var Trans$1 = withContext()(Trans);
 
 var I18nextProvider = function (_Component) {
   inherits(I18nextProvider, _Component);
@@ -1198,15 +1753,6 @@ var I18nextProvider = function (_Component) {
   }
 
   createClass(I18nextProvider, [{
-    key: 'getChildContext',
-    value: function getChildContext() {
-      return {
-        i18n: this.i18n,
-        defaultNS: this.defaultNS,
-        reportNS: this.reportNS
-      };
-    }
-  }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
       if (this.props.i18n !== nextProps.i18n) {
@@ -1217,8 +1763,20 @@ var I18nextProvider = function (_Component) {
     key: 'render',
     value: function render() {
       var children = this.props.children;
+      var i18n = this.i18n,
+          defaultNS = this.defaultNS,
+          reportNS = this.reportNS;
 
-      return React.Children.only(children);
+
+      return React__default.createElement(I18nContext.Provider, {
+        value: {
+          i18n: i18n,
+          defaultNS: defaultNS,
+          reportNS: reportNS,
+          lng: i18n && i18n.language,
+          t: i18n && i18n.t.bind(i18n)
+        }
+      }, children);
     }
   }]);
   return I18nextProvider;
@@ -1227,12 +1785,6 @@ var I18nextProvider = function (_Component) {
 I18nextProvider.propTypes = {
   i18n: PropTypes.object.isRequired,
   children: PropTypes.element.isRequired,
-  defaultNS: PropTypes.string,
-  reportNS: PropTypes.func
-};
-
-I18nextProvider.childContextTypes = {
-  i18n: PropTypes.object.isRequired,
   defaultNS: PropTypes.string,
   reportNS: PropTypes.func
 };
@@ -1315,11 +1867,13 @@ function loadNamespaces(_ref) {
 }
 
 exports.translate = translate;
-exports.I18n = I18n;
-exports.Interpolate = Interpolate;
-exports.Trans = Trans;
+exports.I18n = I18n$1;
+exports.Interpolate = Interpolate$1;
+exports.Trans = Trans$1;
 exports.I18nextProvider = I18nextProvider;
 exports.loadNamespaces = loadNamespaces;
+exports.withContext = withContext;
+exports.I18nContext = I18nContext;
 exports.reactI18nextModule = reactI18nextModule;
 exports.setDefaults = setDefaults;
 exports.getDefaults = getDefaults;

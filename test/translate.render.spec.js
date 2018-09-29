@@ -3,10 +3,6 @@ import { shallow, render, mount } from 'enzyme';
 import i18n from './i18n';
 import translate from '../src/translate';
 
-const context = {
-  i18n,
-};
-
 describe('translate', () => {
   const TestElement = ({ t, lng }) => (
     <div>
@@ -17,7 +13,7 @@ describe('translate', () => {
   it('should render correct translation', () => {
     const HocElement = translate(['translation'], {})(TestElement);
 
-    const wrapper = mount(<HocElement />, { context });
+    const wrapper = mount(<HocElement i18n={i18n} />);
     // console.log(wrapper.debug());
     expect(wrapper.contains(<div>test - en</div>)).toBe(true);
   });
@@ -25,7 +21,7 @@ describe('translate', () => {
   it('should bind / unbind', () => {
     const HocElement = translate(['translation'], {})(TestElement);
 
-    const wrapper = mount(<HocElement i18n={i18n} />, context);
+    const wrapper = mount(<HocElement i18n={i18n} />);
     // console.log(wrapper.debug());
 
     // has bound events

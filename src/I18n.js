@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getDefaults, getI18n } from './context';
+import { I18nContext, withContext, getDefaults, getI18n } from './context';
 
 let removedIsInitialSSR = false;
 
-export default class I18n extends Component {
+export class I18n extends Component {
   constructor(props, context) {
     super(props, context);
 
@@ -28,11 +28,12 @@ export default class I18n extends Component {
     }
 
     const language = this.i18n.languages && this.i18n.languages[0];
-    const ready = !!language && this.getNamespaces().every(ns => this.i18n.hasResourceBundle(language, ns));
+    const ready =
+      !!language && this.getNamespaces().every(ns => this.i18n.hasResourceBundle(language, ns));
 
     this.state = {
       i18nLoadedAt: null,
-      ready
+      ready,
     };
 
     this.t = this.getI18nTranslate();
@@ -40,13 +41,6 @@ export default class I18n extends Component {
     this.onI18nChanged = this.onI18nChanged.bind(this);
     this.getI18nTranslate = this.getI18nTranslate.bind(this);
     this.namespaces = this.getNamespaces.bind(this);
-  }
-
-  getChildContext() {
-    return {
-      t: this.t,
-      i18n: this.i18n
-    };
   }
 
   componentDidMount() {
@@ -81,7 +75,15 @@ export default class I18n extends Component {
   }
 
   getI18nTranslate() {
-    return this.i18n.getFixedT(null, this.options.nsMode === 'fallback' ? this.getNamespaces() : this.getNamespaces()[0]);
+    const namespaces = this.getNamespaces();
+    return this.i18n.getFixedT(
+      null,
+      this.options.nsMode === 'fallback'
+        ? namespaces
+        : namespaces && namespaces.length
+          ? this.getNamespaces()[0]
+          : 'translation'
+    );
   }
 
   getNamespaces() {
@@ -91,8 +93,10 @@ export default class I18n extends Component {
 
   loadNamespaces() {
     const bind = () => {
-      if (this.options.bindI18n && this.i18n) this.i18n.on(this.options.bindI18n, this.onI18nChanged);
-      if (this.options.bindStore && this.i18n.store) this.i18n.store.on(this.options.bindStore, this.onI18nChanged);
+      if (this.options.bindI18n && this.i18n)
+        this.i18n.on(this.options.bindI18n, this.onI18nChanged);
+      if (this.options.bindStore && this.i18n.store)
+        this.i18n.store.on(this.options.bindStore, this.onI18nChanged);
     };
 
     this.mounted = true;
@@ -123,6 +127,7 @@ export default class I18n extends Component {
   render() {
     const { children } = this.props;
     const { ready } = this.state;
+    const { i18n, t, defaultNS, reportNS } = this;
 
     if (!ready && this.options.wait) return null;
 
@@ -134,20 +139,19 @@ export default class I18n extends Component {
       }, 100);
     }
 
-    return children(this.t, {
-      i18n: this.i18n,
-      t: this.t,
-      lng: this.i18n.language,
-      ready
-    });
+    return React.createElement(
+      I18nContext.Provider,
+      {
+        value: { i18n, t, defaultNS, reportNS, lng: i18n && i18n.language },
+      },
+      children(this.t, {
+        i18n: this.i18n,
+        t: this.t,
+        lng: this.i18n.language,
+        ready,
+      })
+    );
   }
 }
 
-I18n.contextTypes = {
-  i18n: PropTypes.object
-};
-
-I18n.childContextTypes = {
-  t: PropTypes.func.isRequired,
-  i18n: PropTypes.object
-};
+export default withContext()(I18n);

@@ -8,10 +8,12 @@ const context = { i18n };
 describe('I18n', () => {
   it('should render correct content', () => {
     const wrapper = mount(
-      <I18n i18n={i18n} ns="translation">{t => <span>{t('key1')}</span>}</I18n>,
+      <I18n i18n={i18n} ns="translation">
+        {t => <span>{t('key1')}</span>}
+      </I18n>,
       { context }
     );
-
+    // console.log(wrapper.debug());
     expect(wrapper.contains(<span>test</span>)).toBe(true);
   });
 

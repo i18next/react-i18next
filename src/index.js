@@ -4,4 +4,12 @@ export { default as Interpolate } from './Interpolate';
 export { default as Trans } from './Trans';
 export { default as I18nextProvider } from './I18nextProvider';
 export { default as loadNamespaces } from './loadNamespaces';
-export { reactI18nextModule, setDefaults, getDefaults, setI18n, getI18n } from './context';
+export {
+  withContext,
+  I18nContext,
+  reactI18nextModule,
+  setDefaults,
+  getDefaults,
+  setI18n,
+  getI18n,
+} from './context';

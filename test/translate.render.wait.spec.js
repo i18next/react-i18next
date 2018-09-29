@@ -17,9 +17,6 @@ newI18n
     }
   })
 
-const context = {
-  i18n: newI18n
-};
 
 describe('translate wait', () => {
   const TestElement = ({ t }) => {
@@ -31,7 +28,7 @@ describe('translate wait', () => {
   it('should wait for correct translation', () => {
     const HocElement = translate(['common'], { wait: true })(TestElement);
 
-    const wrapper = mount(<HocElement />, { context });
+    const wrapper = mount(<HocElement i18n={i18n} />);
     // console.log(wrapper.debug());
     expect(wrapper.contains(<div>test</div>)).toBe(false);
 
@@ -50,7 +47,7 @@ describe('translate wait', () => {
 
     const HocElement = translate(['common'], { /* not use this -> wait: true */ })(TestElement);
 
-    const wrapper = mount(<HocElement />, { context });
+    const wrapper = mount(<HocElement i18n={newI18n} />);
     // console.log(wrapper.debug());
     expect(wrapper.contains(<div>test</div>)).toBe(false);
 

@@ -1,21 +1,21 @@
+import { I18n } from '../src/I18n';
 jest.unmock('../src/I18n');
-import I18n from '../src/I18n';
 
 const i18n = {
   language: 'en',
   languages: ['en'],
   options: {
-    defaultNS: 'defaultNS'
+    defaultNS: 'defaultNS',
   },
   services: {
     resourceStore: {
-      data: {}
-    }
+      data: {},
+    },
   },
   changeLanguage: () => {},
   getFixedT: message => message,
   hasResourceBundle: (lng, ns) => ns === 'alreadyLoadedNS',
-  loadNamespaces: () => {}
+  loadNamespaces: () => {},
 };
 
 describe('I18n', () => {
