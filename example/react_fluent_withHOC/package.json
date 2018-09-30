@@ -9,7 +9,7 @@
     "i18next-fluent-backend": "0.0.2",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "react-i18next": "7.10.1",
+    "react-i18next": "8.0.0",
     "react-scripts": "^2.0.0-next.47d2d941"
   },
   "devDependencies": {

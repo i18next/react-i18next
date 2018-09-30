@@ -1,9 +1,9 @@
 import React from 'react';
 import { shallow, render, mount } from 'enzyme';
 import i18n from './i18n';
-import translate from '../src/translate';
+import { withNamespaces } from '../src/withNamespaces';
 
-describe('translate', () => {
+describe('withNamespaces', () => {
   const TestElement = ({ t, lng }) => (
     <div>
       {t('key1')} - {lng}
@@ -11,7 +11,7 @@ describe('translate', () => {
   );
 
   it('should render correct translation', () => {
-    const HocElement = translate(['translation'], {})(TestElement);
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
 
     const wrapper = mount(<HocElement i18n={i18n} />);
     // console.log(wrapper.debug());
@@ -19,7 +19,7 @@ describe('translate', () => {
   });
 
   it('should bind / unbind', () => {
-    const HocElement = translate(['translation'], {})(TestElement);
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
 
     const wrapper = mount(<HocElement i18n={i18n} />);
     // console.log(wrapper.debug());

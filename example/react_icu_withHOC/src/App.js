@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { translate, Trans } from 'react-i18next';
+import { withNamespaces, Trans } from 'react-i18next';
 import logo from './logo.svg';
 import './App.css';
 
@@ -9,9 +9,9 @@ class App extends Component {
   render() {
     const { t, i18n } = this.props;
 
-    const changeLanguage = (lng) => {
+    const changeLanguage = lng => {
       i18n.changeLanguage(lng);
-    }
+    };
 
     return (
       <div className="App">
@@ -41,4 +41,4 @@ class App extends Component {
   }
 }
 
-export default translate('translations')(App);
+export default withNamespaces('translations')(App);

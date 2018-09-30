@@ -3,8 +3,8 @@ import { shallow, render, mount } from 'enzyme';
 import ifReact from 'enzyme-adapter-react-helper/build/ifReact';
 import PropTypes from 'prop-types';
 import i18n from './i18n';
-import translate from '../src/translate';
-import Trans from '../src/Trans';
+import { withNamespaces } from '../src/withNamespaces';
+import { Trans } from '../src/Trans';
 
 const context = {
   i18n,
@@ -26,7 +26,7 @@ describe('trans simple', () => {
   };
 
   it('should render correct content', () => {
-    const HocElement = translate(['translation'], {})(TestElement);
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
 
     const wrapper = mount(<HocElement i18n={i18n} />);
     // console.log(wrapper.debug());
@@ -57,7 +57,7 @@ describe('trans simple', () => {
       };
 
       it('should render correct content', () => {
-        const HocElement = translate(['translation'], {})(TestElement);
+        const HocElement = withNamespaces(['translation'], {})(TestElement);
 
         const wrapper = mount(<HocElement i18n={i18n} />);
         // console.log(wrapper.debug());
@@ -73,7 +73,7 @@ describe('trans simple', () => {
   );
 
   it('can use a different parent element', () => {
-    const HocElement = translate(['translation'], {})(TestElement);
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
 
     const wrapper = mount(<HocElement i18n={i18n} parent="span" />);
     expect(
@@ -94,7 +94,7 @@ describe('trans simple using ns prop', () => {
   );
 
   it('should render correct content', () => {
-    const HocElement = translate(['translation'], {})(TestElement);
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
 
     const wrapper = mount(<HocElement i18n={i18n} />);
     // console.log(wrapper.debug());
@@ -116,7 +116,7 @@ describe('trans simple with custom html tag', () => {
   );
 
   it('should skip custom html tags', () => {
-    const HocElement = translate(['translation'], {})(TestElement);
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
 
     const wrapper = mount(<HocElement i18n={i18n} />);
     // console.log(wrapper.debug());
@@ -141,7 +141,7 @@ describe('trans testTransKey1 singular', () => {
   };
 
   it('should render correct content', () => {
-    const HocElement = translate(['translation'], {})(TestElement);
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
 
     const wrapper = mount(<HocElement i18n={i18n} />);
     // console.log(wrapper.debug());
@@ -160,7 +160,7 @@ describe('trans testTransKey1 plural', () => {
   };
 
   it('should render correct content', () => {
-    const HocElement = translate(['translation'], {})(TestElement);
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
 
     const wrapper = mount(<HocElement i18n={i18n} />);
     // console.log(wrapper.debug());
@@ -179,7 +179,7 @@ describe('trans testTransKey2', () => {
   };
 
   it('should render correct content', () => {
-    const HocElement = translate(['translation'], {})(TestElement);
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
 
     const wrapper = mount(<HocElement i18n={i18n} />);
     // console.log(wrapper.debug());
@@ -204,7 +204,7 @@ describe('trans testTransKey3', () => {
   };
 
   it('should render correct content', () => {
-    const HocElement = translate(['translation'], {})(TestElement);
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
 
     const wrapper = mount(<HocElement i18n={i18n} />);
     // console.log(wrapper.debug());
@@ -231,10 +231,37 @@ describe('trans complex', () => {
   };
 
   it('should render correct content', () => {
-    const HocElement = translate(['translation'], {})(TestElement);
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
 
     const wrapper = mount(<HocElement i18n={i18n} />);
-    // wconsole.warn(wrapper.debug());
+    // console.warn(wrapper.debug());
+    expect(
+      wrapper.contains(
+        <div>
+          Hello <strong>Jan</strong>, you have 10 messages. Open <Link to="/msgs">here</Link>.
+        </div>
+      )
+    ).toBe(true);
+  });
+});
+
+describe('trans complex v2 no extra pseudo elements for interpolation', () => {
+  const TestElement = ({ t }) => {
+    const count = 10;
+    const name = 'Jan';
+    // prettier-ignore
+    return (
+      <Trans i18nKey="transTest2InV2" count={count}>
+        Hello <strong>{{ name }}</strong>, you have {{ count }} message. Open <Link to="/msgs">here</Link>.
+      </Trans>
+    );
+  };
+
+  it('should render correct content', () => {
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
+
+    const wrapper = mount(<HocElement i18n={i18n} />);
+    // console.warn(wrapper.debug());
     expect(
       wrapper.contains(
         <div>
@@ -264,14 +291,14 @@ describe('trans with t as prop', () => {
       usedCustomT = true;
     };
 
-    const HocElement = translate(['translation'], {})(TestElement);
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
 
     mount(<HocElement i18n={i18n} cb={cb} />);
     expect(usedCustomT).toBe(true);
   });
 
   it('should not pass t to HTML element', () => {
-    const HocElement = translate(['translation'], {})(TestElement);
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
 
     const wrapper = mount(<HocElement i18n={i18n} />);
     expect(
@@ -287,7 +314,7 @@ describe('trans with t as prop', () => {
 describe('trans with empty content', () => {
   const TestElement = ({ t, cb }) => <Trans />;
   it('should render an empty string', () => {
-    const HocElement = translate(['translation'], {})(TestElement);
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
     const wrapper = mount(<HocElement i18n={i18n} />);
     expect(wrapper.contains(<div />)).toBe(true);
   });
@@ -296,7 +323,7 @@ describe('trans with empty content', () => {
 describe('trans with only content from translation file - no children', () => {
   const TestElement = ({ t, cb }) => <Trans i18nKey="key1" />;
   it('should render translated string', () => {
-    const HocElement = translate(['translation'], {})(TestElement);
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
     const wrapper = mount(<HocElement i18n={i18n} />);
     expect(wrapper.contains(<div>test</div>)).toBe(true);
   });
@@ -311,7 +338,7 @@ describe('trans using no children but props - icu case', () => {
     />
   );
   it('should render translated string', () => {
-    const HocElement = translate(['translation'], {})(TestElement);
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
     const wrapper = mount(<HocElement i18n={i18n} />);
     // console.log(wrapper.debug());
     expect(
@@ -338,7 +365,7 @@ describe('trans using no children but props - nested case', () => {
     />
   );
   it('should render translated string', () => {
-    const HocElement = translate(['translation'], {})(TestElement);
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
     const wrapper = mount(<HocElement i18n={i18n} />);
     // console.log(wrapper.debug());
     expect(

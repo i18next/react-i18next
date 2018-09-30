@@ -1,5 +1,22 @@
 ### 8.0.0
 
+- translate HOC was renamed to "withNamespaces" as it controls which namespaces should be loaded
+- I18n render prop was renamed to "NamespacesConsumer" as it controls which namespaces should be "consumed"
+- there is a new context.consuming HOC "withI18n" adds i18n, t to component props (without the extra options of withNamespaces)
+
+- there is a simplification for interpolation in translations
+
+`'Hello <1><0>{{name}}</0></1>, you have <3>{{count}}</3> message. Open <5>hear</5>.'`
+
+can be written as:
+
+`'Hello <1>{{name}}</1>, you have {{count}} message. Open <5>hear</5>.'`
+
+=> there is no need to add `<0>...</0>` around interpolated values anylonger
+=> your old files having those extra pseudo tags will still work without needing to change them
+
+- there is a new I18nContext -> I18nContext.provider, I18next.consumer using new react context api
+
 **Using react's new context api**
 
 should be non breaking in most cases, with following exceptions:

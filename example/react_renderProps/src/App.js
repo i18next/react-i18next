@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { I18n, Trans } from 'react-i18next';
+import { NamespacesConsumer, Trans } from 'react-i18next';
 import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
   render() {
     return (
-      <I18n ns="translations">
+      <NamespacesConsumer ns="translations">
         {
           (t, { i18n }) => (
             <div className="App">
@@ -25,7 +25,7 @@ class App extends Component {
             </div>
           )
         }
-      </I18n>
+      </NamespacesConsumer>
     );
   }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow, render, mount } from 'enzyme';
 import i18n from './i18n';
-import translate from '../src/translate';
+import { withNamespaces } from '../src/withNamespaces';
 
 const newI18n = i18n.createInstance();
 newI18n.init({
@@ -24,11 +24,11 @@ newI18n.init({
   },
 });
 
-describe.only('translate wait', () => {
+describe('withNamespaces fallback', () => {
   const TestElement = ({ t }) => <div>{t('key2')}</div>;
 
   it('should fallback for correct translation', () => {
-    const HocElement = translate(['a', 'b'], { nsMode: 'fallback' })(TestElement);
+    const HocElement = withNamespaces(['a', 'b'], { nsMode: 'fallback' })(TestElement);
 
     const wrapper = mount(<HocElement i18n={newI18n} />);
     // console.log(wrapper.debug());
@@ -39,8 +39,8 @@ describe.only('translate wait', () => {
     // reinit global
     newI18n.init({ react: { nsMode: 'fallback' } });
 
-    const HocElement = translate(['a', 'b'], {
-      /*nsMode: fallback */
+    const HocElement = withNamespaces(['a', 'b'], {
+      /* nsMode: fallback */
     })(TestElement);
 
     const wrapper = mount(<HocElement i18n={newI18n} />);

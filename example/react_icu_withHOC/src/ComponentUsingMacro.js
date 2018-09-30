@@ -1,5 +1,5 @@
 import React from 'react';
-import { translate } from 'react-i18next';
+import { withNamespaces } from 'react-i18next';
 
 // importing the macro components from react-i18next
 import { Trans, Plural, Select } from 'react-i18next/icu.macro';
@@ -9,6 +9,7 @@ import { Trans, Plural, Select } from 'react-i18next/icu.macro';
 // inside Trans -> other option would be an additional component which transforms
 // to needed string, eg. <FormattedNumber count={count} />
 /* eslint-disable no-undef, no-sequences */
+// prettier-ignore
 export function ComponentUsingMacro() {
   const name = 'John Doe';
   const itemsCount1 = 0;
@@ -88,4 +89,4 @@ export function ComponentUsingMacro() {
 }
 /* eslint-enable no-undef, no-sequences */
 
-export default translate('translations')(ComponentUsingMacro);
+export default withNamespaces('translations')(ComponentUsingMacro);

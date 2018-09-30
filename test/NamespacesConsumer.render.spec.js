@@ -1,38 +1,36 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import i18n from './i18n';
-import I18n from '../src/I18n';
+import { NamespacesConsumer } from '../src/NamespacesConsumer';
 
-const context = { i18n };
-
-describe('I18n', () => {
+describe('NamespacesConsumer', () => {
   it('should render correct content', () => {
     const wrapper = mount(
-      <I18n i18n={i18n} ns="translation">
+      <NamespacesConsumer i18n={i18n} ns="translation">
         {t => <span>{t('key1')}</span>}
-      </I18n>,
-      { context }
+      </NamespacesConsumer>,
+      {}
     );
     // console.log(wrapper.debug());
     expect(wrapper.contains(<span>test</span>)).toBe(true);
   });
 
-  it('should render correct content for a component that renders a <I18n /> component', () => {
+  it('should render correct content for a component that renders a <NamespacesConsumer /> component', () => {
     const Comp = () => (
       <div>
         Values:
-        <I18n i18n={i18n} ns="translation">
+        <NamespacesConsumer i18n={i18n} ns="translation">
           {t => (
             <div>
               <span>{t('key1')}</span>
               <span>{t('key1')}</span>
             </div>
           )}
-        </I18n>
+        </NamespacesConsumer>
       </div>
     );
 
-    const wrapper = mount(<Comp />, { context });
+    const wrapper = mount(<Comp />, {});
 
     expect(
       wrapper.contains(

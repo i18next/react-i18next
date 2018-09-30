@@ -1,18 +1,26 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withContext } from './context';
+import { withI18n } from './context';
+import { deprecated } from './utils';
 
-export class Interpolate extends Component {
-  constructor(props, context) {
-    super(props, context);
-    this.i18n = props.i18n || context.i18n;
-    this.t = props.t || context.t;
+let warnedDeprecated = false;
+
+export class InterpolateComponent extends Component {
+  constructor(props) {
+    super(props);
+
+    if (!warnedDeprecated) {
+      deprecated(
+        'Interpolate is deprecated and will be removed in the next major version (v9.0.0). Usage can be replaced by the "Trans" component'
+      );
+      warnedDeprecated = true;
+    }
   }
 
   render() {
+    const { i18n, t, i18nKey, options, className, style } = this.props;
     const parent = this.props.parent || 'span';
-    const REGEXP = this.props.regexp || this.i18n.services.interpolator.regexp;
-    const { className, style } = this.props;
+    const REGEXP = this.props.regexp || i18n.services.interpolator.regexp;
 
     // Set to true if you want to use raw HTML in translation values
     // See https://github.com/i18next/react-i18next/issues/189
@@ -22,33 +30,33 @@ export class Interpolate extends Component {
 
     const tOpts = {
       ...{},
-      ...this.props.options,
+      ...options,
       ...{ interpolation: { prefix: '#$?', suffix: '?$#' } },
     };
-    const format = this.t(this.props.i18nKey, tOpts);
+    const format = t(i18nKey, tOpts);
 
     if (!format || typeof format !== 'string') return React.createElement('noscript', null);
 
     const children = [];
 
     const handleFormat = (key, props) => {
-      if (key.indexOf(this.i18n.options.interpolation.formatSeparator) < 0) {
+      if (key.indexOf(i18n.options.interpolation.formatSeparator) < 0) {
         if (props[key] === undefined)
-          this.i18n.services.logger.warn(
+          i18n.services.logger.warn(
             `interpolator: missed to pass in variable ${key} for interpolating ${format}`
           );
         return props[key];
       }
 
-      const p = key.split(this.i18n.options.interpolation.formatSeparator);
+      const p = key.split(i18n.options.interpolation.formatSeparator);
       const k = p.shift().trim();
-      const f = p.join(this.i18n.options.interpolation.formatSeparator).trim();
+      const f = p.join(i18n.options.interpolation.formatSeparator).trim();
 
       if (props[k] === undefined)
-        this.i18n.services.logger.warn(
+        i18n.services.logger.warn(
           `interpolator: missed to pass in variable ${k} for interpolating ${format}`
         );
-      return this.i18n.options.interpolation.format(props[k], f, this.i18n.language);
+      return i18n.options.interpolation.format(props[k], f, i18n.language);
     };
 
     format.split(REGEXP).reduce((memo, match, index) => {
@@ -72,17 +80,13 @@ export class Interpolate extends Component {
     }, children);
 
     const additionalProps = {};
-    if (this.i18n.options.react && this.i18n.options.react.exposeNamespace) {
-      let ns = typeof this.t.ns === 'string' ? this.t.ns : this.t.ns[0];
-      if (
-        this.props.i18nKey &&
-        this.i18n.options.nsSeparator &&
-        this.props.i18nKey.indexOf(this.i18n.options.nsSeparator) > -1
-      ) {
-        const parts = this.props.i18nKey.split(this.i18n.options.nsSeparator);
+    if (i18n.options.react && i18n.options.react.exposeNamespace) {
+      let ns = typeof t.ns === 'string' ? t.ns : t.ns[0];
+      if (i18nKey && i18n.options.nsSeparator && i18nKey.indexOf(i18n.options.nsSeparator) > -1) {
+        const parts = i18nKey.split(i18n.options.nsSeparator);
         ns = parts[0];
       }
-      if (this.t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns });
+      if (t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns });
     }
 
     if (className) additionalProps.className = className;
@@ -92,12 +96,12 @@ export class Interpolate extends Component {
   }
 }
 
-Interpolate.propTypes = {
+InterpolateComponent.propTypes = {
   className: PropTypes.string,
 };
 
-Interpolate.defaultProps = {
+InterpolateComponent.defaultProps = {
   className: '',
 };
 
-export default withContext()(Interpolate);
+export const Interpolate = withI18n()(InterpolateComponent);

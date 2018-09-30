@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import HTML from 'html-parse-stringify2';
-import { withContext } from './context';
+import { withI18n } from './context';
 
 function hasChildren(node) {
   return node && (node.children || (node.props && node.props.children));
@@ -33,9 +33,9 @@ function nodesToString(mem, children, index) {
 
       const keys = Object.keys(clone);
       if (format && keys.length === 1) {
-        mem = `${mem}<${elementKey}>{{${keys[0]}, ${format}}}</${elementKey}>`;
+        mem = `${mem}{{${keys[0]}, ${format}}}`;
       } else if (keys.length === 1) {
-        mem = `${mem}<${elementKey}>{{${keys[0]}}}</${elementKey}>`;
+        mem = `${mem}{{${keys[0]}}}`;
       } else if (console && console.warn) {
         // not a valid interpolation object (can only contain one value plus format)
         console.warn(
@@ -58,6 +58,20 @@ function renderNodes(children, targetString, i18n) {
   if (targetString === '') return [];
   if (!children) return [targetString];
 
+  // v2 -> interpolates upfront no need for "some <0>{{var}}</0>"" -> will be just "some {{var}}" in translation file
+  const data = {};
+  function getData(childs) {
+    if (Object.prototype.toString.call(childs) !== '[object Array]') childs = [childs];
+    childs.forEach(child => {
+      if (typeof child === 'string') return;
+      if (hasChildren(child)) getData(getChildren(child));
+      else if (typeof child === 'object' && !React.isValidElement(child))
+        Object.assign(data, child);
+    });
+  }
+  getData(children);
+  targetString = i18n.services.interpolator.interpolate(targetString, data, i18n.language);
+
   // parse ast from string with additional wrapper tag
   // -> avoids issues in parser removing prepending text nodes
   const ast = HTML.parse(`<0>${targetString}</0>`);
@@ -79,14 +93,12 @@ function renderNodes(children, targetString, i18n) {
           mem.push(React.cloneElement(child, { ...child.props, key: i }, inner));
         } else if (typeof child === 'object' && !isElement) {
           const content = node.children[0] ? node.children[0].content : null;
-          if (content) {
-            const interpolated = i18n.services.interpolator.interpolate(
-              node.children[0].content,
-              child,
-              i18n.language
-            );
-            mem.push(interpolated);
-          }
+
+          // v1
+          // as interpolation was done already we just have a regular content node
+          // in the translation AST while having an object in reactNodes
+          // -> push the content no need to interpolate again
+          if (content) mem.push(content);
         } else {
           mem.push(child);
         }
@@ -104,7 +116,7 @@ function renderNodes(children, targetString, i18n) {
   return getChildren(result[0]);
 }
 
-export class Trans extends React.Component {
+export class TransComponent extends React.Component {
   render() {
     const {
       children,
@@ -167,7 +179,7 @@ export class Trans extends React.Component {
   }
 }
 
-Trans.propTypes = {
+TransComponent.propTypes = {
   count: PropTypes.number,
   parent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
   i18nKey: PropTypes.string,
@@ -175,4 +187,4 @@ Trans.propTypes = {
   t: PropTypes.func,
 };
 
-export default withContext()(Trans);
+export const Trans = withI18n()(TransComponent);

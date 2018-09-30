@@ -2,11 +2,13 @@ import React, { Component, Children } from 'react';
 import PropTypes from 'prop-types';
 import { I18nContext } from './context';
 
-class I18nextProvider extends Component {
-  constructor(props, context) {
-    super(props, context);
+export class I18nextProvider extends Component {
+  constructor(props) {
+    super(props);
     this.i18n = props.i18n;
     this.defaultNS = props.defaultNS;
+
+    // nextjs / SSR: getting data from next.js or other ssr stack
     if (props.initialI18nStore) {
       this.i18n.services.resourceStore.data = props.initialI18nStore;
       this.i18n.options.isInitialSSR = true; // if set will be deleted on first render in translate hoc
@@ -54,5 +56,3 @@ I18nextProvider.defaultProps = {
   defaultNS: undefined,
   reportNS: undefined,
 };
-
-export default I18nextProvider;
