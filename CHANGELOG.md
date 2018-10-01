@@ -1,3 +1,7 @@
+### 8.0.1
+
+- use @babel/plugin-transform-runtime
+
 ### 8.0.0
 
 - translate HOC was renamed to "withNamespaces" as it controls which namespaces should be loaded

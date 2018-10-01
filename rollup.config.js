@@ -8,7 +8,8 @@ const format = argv.format || argv.f || 'iife';
 const compress = argv.uglify;
 
 const babelOptions = {
-  // babelrc: false,
+  presets: ['@babel/preset-env', '@babel/react'],
+  babelrc: false,
 };
 
 const file = {

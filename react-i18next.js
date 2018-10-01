@@ -340,8 +340,6 @@
     return true;
   }
 
-  var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
   function unwrapExports (x) {
   	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
   }
@@ -350,8 +348,14 @@
   	return module = { exports: {} }, fn(module, module.exports), module.exports;
   }
 
-  var reactIs_production_min = createCommonjsModule(function (module, exports) {
-
+  /** @license React v16.5.2
+   * react-is.production.min.js
+   *
+   * Copyright (c) Facebook, Inc. and its affiliates.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE file in the root directory of this source tree.
+   */
   Object.defineProperty(exports, "__esModule", {
     value: !0
   });
@@ -368,7 +372,7 @@
       n = b ? Symbol.for("react.placeholder") : 60113;
 
   function q(a) {
-    if ("object" === typeof a && null !== a) {
+    if ("object" === _typeof(a) && null !== a) {
       var p = a.$$typeof;
 
       switch (p) {
@@ -411,7 +415,7 @@
   exports.StrictMode = f;
 
   exports.isValidElementType = function (a) {
-    return "string" === typeof a || "function" === typeof a || a === e || a === l || a === g || a === f || a === n || "object" === typeof a && null !== a && ("function" === typeof a.then || a.$$typeof === h || a.$$typeof === k || a.$$typeof === m);
+    return "string" === typeof a || "function" === typeof a || a === e || a === l || a === g || a === f || a === n || "object" === _typeof(a) && null !== a && ("function" === typeof a.then || a.$$typeof === h || a.$$typeof === k || a.$$typeof === m);
   };
 
   exports.isAsyncMode = function (a) {
@@ -427,7 +431,7 @@
   };
 
   exports.isElement = function (a) {
-    return "object" === typeof a && null !== a && a.$$typeof === c;
+    return "object" === _typeof(a) && null !== a && a.$$typeof === c;
   };
 
   exports.isForwardRef = function (a) {
@@ -449,31 +453,19 @@
   exports.isStrictMode = function (a) {
     return q(a) === f;
   };
+
+  var reactIs_production_min = /*#__PURE__*/Object.freeze({
+
   });
 
-  unwrapExports(reactIs_production_min);
-  var reactIs_production_min_1 = reactIs_production_min.typeOf;
-  var reactIs_production_min_2 = reactIs_production_min.AsyncMode;
-  var reactIs_production_min_3 = reactIs_production_min.ContextConsumer;
-  var reactIs_production_min_4 = reactIs_production_min.ContextProvider;
-  var reactIs_production_min_5 = reactIs_production_min.Element;
-  var reactIs_production_min_6 = reactIs_production_min.ForwardRef;
-  var reactIs_production_min_7 = reactIs_production_min.Fragment;
-  var reactIs_production_min_8 = reactIs_production_min.Profiler;
-  var reactIs_production_min_9 = reactIs_production_min.Portal;
-  var reactIs_production_min_10 = reactIs_production_min.StrictMode;
-  var reactIs_production_min_11 = reactIs_production_min.isValidElementType;
-  var reactIs_production_min_12 = reactIs_production_min.isAsyncMode;
-  var reactIs_production_min_13 = reactIs_production_min.isContextConsumer;
-  var reactIs_production_min_14 = reactIs_production_min.isContextProvider;
-  var reactIs_production_min_15 = reactIs_production_min.isElement;
-  var reactIs_production_min_16 = reactIs_production_min.isForwardRef;
-  var reactIs_production_min_17 = reactIs_production_min.isFragment;
-  var reactIs_production_min_18 = reactIs_production_min.isProfiler;
-  var reactIs_production_min_19 = reactIs_production_min.isPortal;
-  var reactIs_production_min_20 = reactIs_production_min.isStrictMode;
-
-  var reactIs_development = createCommonjsModule(function (module, exports) {
+  /** @license React v16.5.2
+   * react-is.development.js
+   *
+   * Copyright (c) Facebook, Inc. and its affiliates.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE file in the root directory of this source tree.
+   */
 
   if (process.env.NODE_ENV !== "production") {
     (function () {
@@ -497,11 +489,11 @@
 
       function isValidElementType(type) {
         return typeof type === 'string' || typeof type === 'function' || // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
-        type === REACT_FRAGMENT_TYPE || type === REACT_ASYNC_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_PLACEHOLDER_TYPE || typeof type === 'object' && type !== null && (typeof type.then === 'function' || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE);
+        type === REACT_FRAGMENT_TYPE || type === REACT_ASYNC_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_PLACEHOLDER_TYPE || _typeof(type) === 'object' && type !== null && (typeof type.then === 'function' || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE);
       }
 
       function typeOf(object) {
-        if (typeof object === 'object' && object !== null) {
+        if (_typeof(object) === 'object' && object !== null) {
           var $$typeof = object.$$typeof;
 
           switch ($$typeof) {
@@ -561,7 +553,7 @@
       }
 
       function isElement(object) {
-        return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
+        return _typeof(object) === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
       }
 
       function isForwardRef(object) {
@@ -606,29 +598,10 @@
       exports.isStrictMode = isStrictMode;
     })();
   }
-  });
 
-  unwrapExports(reactIs_development);
-  var reactIs_development_1 = reactIs_development.typeOf;
-  var reactIs_development_2 = reactIs_development.AsyncMode;
-  var reactIs_development_3 = reactIs_development.ContextConsumer;
-  var reactIs_development_4 = reactIs_development.ContextProvider;
-  var reactIs_development_5 = reactIs_development.Element;
-  var reactIs_development_6 = reactIs_development.ForwardRef;
-  var reactIs_development_7 = reactIs_development.Fragment;
-  var reactIs_development_8 = reactIs_development.Profiler;
-  var reactIs_development_9 = reactIs_development.Portal;
-  var reactIs_development_10 = reactIs_development.StrictMode;
-  var reactIs_development_11 = reactIs_development.isValidElementType;
-  var reactIs_development_12 = reactIs_development.isAsyncMode;
-  var reactIs_development_13 = reactIs_development.isContextConsumer;
-  var reactIs_development_14 = reactIs_development.isContextProvider;
-  var reactIs_development_15 = reactIs_development.isElement;
-  var reactIs_development_16 = reactIs_development.isForwardRef;
-  var reactIs_development_17 = reactIs_development.isFragment;
-  var reactIs_development_18 = reactIs_development.isProfiler;
-  var reactIs_development_19 = reactIs_development.isPortal;
-  var reactIs_development_20 = reactIs_development.isStrictMode;
+  var reactIs_development = /*#__PURE__*/Object.freeze({
+
+  });
 
   var reactIs = createCommonjsModule(function (module) {
 
@@ -736,147 +709,47 @@
 
   var hoistNonReactStatics_cjs = hoistNonReactStatics;
 
-  var key = '__global_unique_id__';
-
-  var gud = function () {
-    return commonjsGlobal[key] = (commonjsGlobal[key] || 0) + 1;
-  };
-
-  /**
-   * Copyright (c) 2013-present, Facebook, Inc.
-   *
-   * This source code is licensed under the MIT license found in the
-   * LICENSE file in the root directory of this source tree.
-   *
-   * 
-   */
-
-  function makeEmptyFunction(arg) {
-    return function () {
-      return arg;
-    };
-  }
-  /**
-   * This function accepts and discards inputs; it has no side effects. This is
-   * primarily useful idiomatically for overridable function endpoints which
-   * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
-   */
-
-
-  var emptyFunction = function emptyFunction() {};
-
-  emptyFunction.thatReturns = makeEmptyFunction;
-  emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
-  emptyFunction.thatReturnsTrue = makeEmptyFunction(true);
-  emptyFunction.thatReturnsNull = makeEmptyFunction(null);
-
-  emptyFunction.thatReturnsThis = function () {
-    return this;
-  };
-
-  emptyFunction.thatReturnsArgument = function (arg) {
-    return arg;
-  };
-
-  var emptyFunction_1 = emptyFunction;
-
-  /**
-   * Similar to invariant but only logs a warning if the condition is not met.
-   * This can be used to log issues in development environments in critical
-   * paths. Removing the logging code for production environments will keep the
-   * same logic and follow the same code paths.
-   */
-
-
-  var warning = emptyFunction_1;
-
-  if (process.env.NODE_ENV !== 'production') {
-    var printWarning = function printWarning(format) {
-      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
-      }
-
-      var argIndex = 0;
-      var message = 'Warning: ' + format.replace(/%s/g, function () {
-        return args[argIndex++];
-      });
-
-      if (typeof console !== 'undefined') {
-        console.error(message);
-      }
-
-      try {
-        // --- Welcome to debugging React ---
-        // This error was thrown as a convenience so that you can use this stack
-        // to find the callsite that caused this warning to fire.
-        throw new Error(message);
-      } catch (x) {}
-    };
-
-    warning = function warning(condition, format) {
-      if (format === undefined) {
-        throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
-      }
-
-      if (format.indexOf('Failed Composite propType: ') === 0) {
-        return; // Ignore CompositeComponent proptype check.
-      }
-
-      if (!condition) {
-        for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
-          args[_key2 - 2] = arguments[_key2];
-        }
-
-        printWarning.apply(undefined, [format].concat(args));
-      }
-    };
-  }
-
-  var warning_1 = warning;
-
-  var implementation = createCommonjsModule(function (module, exports) {
-
   exports.__esModule = true;
 
+  var _react = require('react');
 
+  var _react2 = _interopRequireDefault$1(_react);
 
-  var _react2 = _interopRequireDefault(React__default);
+  var _propTypes = require('prop-types');
 
+  var _propTypes2 = _interopRequireDefault$1(_propTypes);
 
+  var _gud = require('gud');
 
-  var _propTypes2 = _interopRequireDefault(PropTypes);
+  var _gud2 = _interopRequireDefault$1(_gud);
 
+  var _warning = require('fbjs/lib/warning');
 
+  var _warning2 = _interopRequireDefault$1(_warning);
 
-  var _gud2 = _interopRequireDefault(gud);
-
-
-
-  var _warning2 = _interopRequireDefault(warning_1);
-
-  function _interopRequireDefault(obj) {
+  function _interopRequireDefault$1(obj) {
     return obj && obj.__esModule ? obj : {
       default: obj
     };
   }
 
-  function _classCallCheck(instance, Constructor) {
+  function _classCallCheck$1(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
       throw new TypeError("Cannot call a class as a function");
     }
   }
 
-  function _possibleConstructorReturn(self, call) {
+  function _possibleConstructorReturn$1(self, call) {
     if (!self) {
       throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
     }
 
-    return call && (typeof call === "object" || typeof call === "function") ? call : self;
+    return call && (_typeof(call) === "object" || typeof call === "function") ? call : self;
   }
 
-  function _inherits(subClass, superClass) {
+  function _inherits$1(subClass, superClass) {
     if (typeof superClass !== "function" && superClass !== null) {
-      throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+      throw new TypeError("Super expression must either be null or a function, not " + _typeof(superClass));
     }
 
     subClass.prototype = Object.create(superClass && superClass.prototype, {
@@ -934,18 +807,18 @@
     var contextProp = '__create-react-context-' + (0, _gud2.default)() + '__';
 
     var Provider = function (_Component) {
-      _inherits(Provider, _Component);
+      _inherits$1(Provider, _Component);
 
       function Provider() {
         var _temp, _this, _ret;
 
-        _classCallCheck(this, Provider);
+        _classCallCheck$1(this, Provider);
 
         for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
           args[_key] = arguments[_key];
         }
 
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.emitter = createEventEmitter(_this.props.value), _temp), _possibleConstructorReturn(_this, _ret);
+        return _ret = (_temp = (_this = _possibleConstructorReturn$1(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.emitter = createEventEmitter(_this.props.value), _temp), _possibleConstructorReturn$1(_this, _ret);
       }
 
       Provider.prototype.getChildContext = function getChildContext() {
@@ -983,23 +856,23 @@
       };
 
       return Provider;
-    }(React__default.Component);
+    }(_react.Component);
 
     Provider.childContextTypes = (_Provider$childContex = {}, _Provider$childContex[contextProp] = _propTypes2.default.object.isRequired, _Provider$childContex);
 
     var Consumer = function (_Component2) {
-      _inherits(Consumer, _Component2);
+      _inherits$1(Consumer, _Component2);
 
       function Consumer() {
         var _temp2, _this2, _ret2;
 
-        _classCallCheck(this, Consumer);
+        _classCallCheck$1(this, Consumer);
 
         for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
           args[_key2] = arguments[_key2];
         }
 
-        return _ret2 = (_temp2 = (_this2 = _possibleConstructorReturn(this, _Component2.call.apply(_Component2, [this].concat(args))), _this2), _this2.state = {
+        return _ret2 = (_temp2 = (_this2 = _possibleConstructorReturn$1(this, _Component2.call.apply(_Component2, [this].concat(args))), _this2), _this2.state = {
           value: _this2.getValue()
         }, _this2.onUpdate = function (newValue, changedBits) {
           var observedBits = _this2.observedBits | 0;
@@ -1009,7 +882,7 @@
               value: _this2.getValue()
             });
           }
-        }, _temp2), _possibleConstructorReturn(_this2, _ret2);
+        }, _temp2), _possibleConstructorReturn$1(_this2, _ret2);
       }
 
       Consumer.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
@@ -1047,7 +920,7 @@
       };
 
       return Consumer;
-    }(React__default.Component);
+    }(_react.Component);
 
     Consumer.contextTypes = (_Consumer$contextType = {}, _Consumer$contextType[contextProp] = _propTypes2.default.object, _Consumer$contextType);
     return {
@@ -1058,9 +931,10 @@
 
   exports.default = createReactContext;
   module.exports = exports['default'];
-  });
 
-  unwrapExports(implementation);
+  var implementation = /*#__PURE__*/Object.freeze({
+
+  });
 
   var lib = createCommonjsModule(function (module, exports) {
 
@@ -1084,7 +958,7 @@
   module.exports = exports['default'];
   });
 
-  var createReactContext = unwrapExports(lib);
+  var createReactContext$1 = unwrapExports(lib);
 
   var defaultOptions = {
     wait: false,
@@ -1116,7 +990,7 @@
       setI18n(instance);
     }
   };
-  var I18nContext = createReactContext(); // hoc for context
+  var I18nContext = createReactContext$1(); // hoc for context
 
   function withI18n() {
     return function Wrapper(WrappedComponent) {
