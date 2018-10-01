@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { I18nextProvider } from '../src/I18nextProvider';
 import { I18nContext } from '../src/context';
 

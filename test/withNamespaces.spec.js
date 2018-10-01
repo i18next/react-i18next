@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { shallow, render, mount } from 'enzyme';
 import { withNamespaces } from '../src/withNamespaces';
 

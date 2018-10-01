@@ -1,7 +1,6 @@
 import React from 'react';
 import { shallow, render, mount } from 'enzyme';
 import ifReact from 'enzyme-adapter-react-helper/build/ifReact';
-import PropTypes from 'prop-types';
 import i18n from './i18n';
 import { withNamespaces } from '../src/withNamespaces';
 import { Trans } from '../src/Trans';
