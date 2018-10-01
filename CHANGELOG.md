@@ -1,3 +1,7 @@
+### 8.0.3
+
+- remove prop-types in tests
+
 ### 8.0.2
 
 - remove proptypes dependency - not needed anylonger as we do not define old context

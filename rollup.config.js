@@ -23,7 +23,7 @@ export default {
   plugins: [babel(babelOptions), nodeResolve({ jsnext: true, main: true }), commonjs({})].concat(
     compress ? terser() : []
   ),
-  external: ['react', 'react-dom', 'prop-types'],
+  external: ['react', 'react-dom'],
   // moduleId: 'react-i18next',
   output: {
     name: 'react-i18next',
