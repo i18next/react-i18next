@@ -1,11 +1,10 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react'), require('prop-types')) :
-  typeof define === 'function' && define.amd ? define(['exports', 'react', 'prop-types'], factory) :
-  (factory((global['react-i18next'] = {}),global.React,global.PropTypes));
-}(this, (function (exports,React,PropTypes) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'react'], factory) :
+  (factory((global['react-i18next'] = {}),global.React));
+}(this, (function (exports,React) { 'use strict';
 
   var React__default = 'default' in React ? React['default'] : React;
-  PropTypes = PropTypes && PropTypes.hasOwnProperty('default') ? PropTypes['default'] : PropTypes;
 
   function _typeof(obj) {
     if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
@@ -200,6 +199,17 @@
 
   function deprecated(warning) {
     if (process && process.env && (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') && console && console.warn) console.warn("react-i18next:: deprecation warning -> ".concat(warning));
+  }
+  function initSSR(props) {
+    // nextjs / SSR: getting data from next.js or other ssr stack
+    if (props.initialI18nStore) {
+      props.i18n.services.resourceStore.data = props.initialI18nStore;
+      props.i18nOptions.wait = false; // we got all passed down already
+    }
+
+    if (props.initialLanguage) {
+      props.i18n.changeLanguage(props.initialLanguage);
+    }
   } // --------------
   // loadNamespaces
 
@@ -1071,26 +1081,24 @@
 
       _this = _possibleConstructorReturn(this, _getPrototypeOf(NamespacesConsumerComponent).call(this, props)); // nextjs / SSR: getting data from next.js or other ssr stack
 
-      if (props.initialI18nStore) {
-        props.i18n.services.resourceStore.data = props.initialI18nStore;
-        props.i18nOptions.wait = false; // we got all passed down already
-      }
-
-      if (props.initialLanguage) {
-        props.i18n.changeLanguage(props.initialLanguage);
-      } // provider SSR: data was set in provider and ssr flag was set
-
+      initSSR(props); // provider SSR: data was set in provider and ssr flag was set
 
       if (props.i18n.options && props.i18n.options.isInitialSSR) {
         props.i18nOptions.wait = false;
-      }
+      } // reportNS if needed for SSR
+
+
+      var namespaces = _this.getNamespaces();
+
+      if (props.reportNS) {
+        namespaces.forEach(props.reportNS);
+      } // check if we could flag this ready already as all is loaded
+
 
       var language = props.i18n.languages && props.i18n.languages[0];
-
-      var ready = !!language && _this.getNamespaces().every(function (ns) {
+      var ready = !!language && namespaces.every(function (ns) {
         return props.i18n.hasResourceBundle(language, ns);
       });
-
       _this.state = {
         i18nLoadedAt: null,
         ready: ready
@@ -1159,16 +1167,17 @@
             i18n = _this$props2.i18n,
             i18nOptions = _this$props2.i18nOptions;
         var namespaces = this.getNamespaces();
-        return i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces && namespaces.length ? this.getNamespaces()[0] : 'translation');
+        return i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces && namespaces.length ? namespaces[0] : 'translation');
       }
     }, {
       key: "getNamespaces",
       value: function getNamespaces() {
         var _this$props3 = this.props,
             i18n = _this$props3.i18n,
-            ns = _this$props3.ns;
-        var namespace = ns || i18n.options && i18n.options.defaultNS;
-        return typeof namespace === 'string' ? [namespace] : namespace;
+            ns = _this$props3.ns,
+            defaultNS = _this$props3.defaultNS;
+        var namespaces = typeof ns === 'function' ? ns(this.props) : ns || defaultNS || i18n.options && i18n.options.defaultNS;
+        return typeof namespaces === 'string' ? [namespaces] : namespaces || [];
       }
     }, {
       key: "loadNamespaces",
@@ -1283,14 +1292,6 @@
           _classCallCheck(this, LoadNamespace);
 
           _this = _possibleConstructorReturn(this, _getPrototypeOf(LoadNamespace).call(this, props));
-          _this.namespaces = typeof namespaceArg === 'function' ? namespaceArg(props) : namespaceArg || props.defaultNS || props.i18n.options && props.i18n.options.defaultNS;
-          if (typeof _this.namespaces === 'string') _this.namespaces = [_this.namespaces];
-
-          if (props.reportNS) {
-            var namespaces = _this.namespaces || [undefined];
-            namespaces.forEach(props.reportNS);
-          }
-
           _this.getWrappedInstance = _this.getWrappedInstance.bind(_assertThisInitialized(_assertThisInitialized(_this)));
           return _this;
         }
@@ -1325,7 +1326,9 @@
           value: function render() {
             var _this2 = this;
 
-            var i18nOptions = this.props.i18nOptions;
+            var _this$props = this.props,
+                namespaces = _this$props.namespaces,
+                i18nOptions = _this$props.i18nOptions;
 
             var mergedI18nOptions = _objectSpread({}, i18nOptions, options);
 
@@ -1338,7 +1341,7 @@
             }
 
             return React__default.createElement(NamespacesConsumer, _objectSpread({
-              ns: this.namespaces
+              ns: namespaces || namespaceArg
             }, this.props, {
               i18nOptions: mergedI18nOptions
             }), function (t, _ref) {
@@ -1768,13 +1771,6 @@
 
     return TransComponent;
   }(React__default.Component);
-  TransComponent.propTypes = {
-    count: PropTypes.number,
-    parent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
-    i18nKey: PropTypes.string,
-    i18n: PropTypes.object,
-    t: PropTypes.func
-  };
   var Trans = withI18n()(TransComponent);
 
   var I18nextProvider =
@@ -1787,20 +1783,9 @@
 
       _classCallCheck(this, I18nextProvider);
 
-      _this = _possibleConstructorReturn(this, _getPrototypeOf(I18nextProvider).call(this, props));
-      _this.i18n = props.i18n;
-      _this.defaultNS = props.defaultNS; // nextjs / SSR: getting data from next.js or other ssr stack
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(I18nextProvider).call(this, props)); // nextjs / SSR: getting data from next.js or other ssr stack
 
-      if (props.initialI18nStore) {
-        _this.i18n.services.resourceStore.data = props.initialI18nStore;
-        _this.i18n.options.isInitialSSR = true; // if set will be deleted on first render in translate hoc
-      }
-
-      if (props.initialLanguage) {
-        _this.i18n.changeLanguage(props.initialLanguage);
-      }
-
-      _this.reportNS = props.reportNS;
+      initSSR(props);
       return _this;
     }
 
@@ -1814,10 +1799,11 @@
     }, {
       key: "render",
       value: function render() {
-        var children = this.props.children;
-        var i18n = this.i18n,
-            defaultNS = this.defaultNS,
-            reportNS = this.reportNS;
+        var _this$props = this.props,
+            children = _this$props.children,
+            i18n = _this$props.i18n,
+            defaultNS = _this$props.defaultNS,
+            reportNS = _this$props.reportNS;
         return React__default.createElement(I18nContext.Provider, {
           value: {
             i18n: i18n,
@@ -1832,16 +1818,6 @@
 
     return I18nextProvider;
   }(React.Component);
-  I18nextProvider.propTypes = {
-    i18n: PropTypes.object.isRequired,
-    children: PropTypes.element.isRequired,
-    defaultNS: PropTypes.string,
-    reportNS: PropTypes.func
-  };
-  I18nextProvider.defaultProps = {
-    defaultNS: undefined,
-    reportNS: undefined
-  };
 
   var warnedDeprecated = false;
   var InterpolateComponent =
@@ -1952,12 +1928,6 @@
 
     return InterpolateComponent;
   }(React.Component);
-  InterpolateComponent.propTypes = {
-    className: PropTypes.string
-  };
-  InterpolateComponent.defaultProps = {
-    className: ''
-  };
   var Interpolate = withI18n()(InterpolateComponent);
 
   exports.loadNamespaces = loadNamespaces;

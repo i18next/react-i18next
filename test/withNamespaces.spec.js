@@ -68,7 +68,7 @@ describe('withNamespaces', () => {
     const namespaces = [];
     const C = withNamespaces()(() => <div>text</div>);
     mount(<C reportNS={ns => namespaces.push(ns)} />);
-    expect(namespaces).toEqual([undefined]);
+    expect(namespaces).toEqual([]);
   });
   it('should report default namespace if no namespace used', () => {
     const i18n = {

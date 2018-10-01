@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import HTML from 'html-parse-stringify2';
 import { withI18n } from './context';
 
@@ -178,13 +177,5 @@ export class TransComponent extends React.Component {
     );
   }
 }
-
-TransComponent.propTypes = {
-  count: PropTypes.number,
-  parent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
-  i18nKey: PropTypes.string,
-  i18n: PropTypes.object,
-  t: PropTypes.func,
-};
 
 export const Trans = withI18n()(TransComponent);

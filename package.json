@@ -1,6 +1,6 @@
 {
   "name": "react-i18next",
-  "version": "8.0.1",
+  "version": "8.0.2",
   "description": "Internationalization for react done right. Using the i18next i18n ecosystem.",
   "main": "dist/commonjs/index.js",
   "jsnext:main": "dist/es/index.js",
@@ -26,8 +26,7 @@
     "@babel/runtime": "^7.1.2",
     "create-react-context": "0.2.3",
     "hoist-non-react-statics": "3.0.1",
-    "html-parse-stringify2": "2.0.1",
-    "prop-types": "15.6.2"
+    "html-parse-stringify2": "2.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",

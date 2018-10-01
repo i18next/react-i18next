@@ -15,19 +15,6 @@ export function withNamespaces(namespaceArg, options = {}) {
       constructor(props) {
         super(props);
 
-        this.namespaces =
-          typeof namespaceArg === 'function'
-            ? namespaceArg(props)
-            : namespaceArg ||
-              props.defaultNS ||
-              (props.i18n.options && props.i18n.options.defaultNS);
-        if (typeof this.namespaces === 'string') this.namespaces = [this.namespaces];
-
-        if (props.reportNS) {
-          const namespaces = this.namespaces || [undefined];
-          namespaces.forEach(props.reportNS);
-        }
-
         this.getWrappedInstance = this.getWrappedInstance.bind(this);
       }
 
@@ -55,7 +42,7 @@ export function withNamespaces(namespaceArg, options = {}) {
       }
 
       render() {
-        const { i18nOptions } = this.props;
+        const { namespaces, i18nOptions } = this.props;
         const mergedI18nOptions = { ...i18nOptions, ...options };
         const extraProps = {};
 
@@ -67,7 +54,7 @@ export function withNamespaces(namespaceArg, options = {}) {
 
         return React.createElement(
           NamespacesConsumer,
-          { ns: this.namespaces, ...this.props, i18nOptions: mergedI18nOptions },
+          { ns: namespaces || namespaceArg, ...this.props, i18nOptions: mergedI18nOptions },
           (t, { ready, ...rest }) =>
             React.createElement(WrappedComponent, {
               tReady: ready,

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { I18nContext, withI18n } from './context';
-import { deprecated } from './utils';
+import { deprecated, initSSR } from './utils';
 
 let removedIsInitialSSR = false;
 
@@ -9,22 +9,22 @@ export class NamespacesConsumerComponent extends Component {
     super(props);
 
     // nextjs / SSR: getting data from next.js or other ssr stack
-    if (props.initialI18nStore) {
-      props.i18n.services.resourceStore.data = props.initialI18nStore;
-      props.i18nOptions.wait = false; // we got all passed down already
-    }
-    if (props.initialLanguage) {
-      props.i18n.changeLanguage(props.initialLanguage);
-    }
+    initSSR(props);
 
     // provider SSR: data was set in provider and ssr flag was set
     if (props.i18n.options && props.i18n.options.isInitialSSR) {
       props.i18nOptions.wait = false;
     }
 
+    // reportNS if needed for SSR
+    const namespaces = this.getNamespaces();
+    if (props.reportNS) {
+      namespaces.forEach(props.reportNS);
+    }
+
+    // check if we could flag this ready already as all is loaded
     const language = props.i18n.languages && props.i18n.languages[0];
-    const ready =
-      !!language && this.getNamespaces().every(ns => props.i18n.hasResourceBundle(language, ns));
+    const ready = !!language && namespaces.every(ns => props.i18n.hasResourceBundle(language, ns));
 
     this.state = {
       i18nLoadedAt: null,
@@ -80,15 +80,20 @@ export class NamespacesConsumerComponent extends Component {
       i18nOptions.nsMode === 'fallback'
         ? namespaces
         : namespaces && namespaces.length
-          ? this.getNamespaces()[0]
+          ? namespaces[0]
           : 'translation'
     );
   }
 
   getNamespaces() {
-    const { i18n, ns } = this.props;
-    const namespace = ns || (i18n.options && i18n.options.defaultNS);
-    return typeof namespace === 'string' ? [namespace] : namespace;
+    const { i18n, ns, defaultNS } = this.props;
+
+    const namespaces =
+      typeof ns === 'function'
+        ? ns(this.props)
+        : ns || defaultNS || (i18n.options && i18n.options.defaultNS);
+
+    return typeof namespaces === 'string' ? [namespaces] : namespaces || [];
   }
 
   loadNamespaces() {

@@ -1,3 +1,9 @@
+### 8.0.2
+
+- remove proptypes dependency - not needed anylonger as we do not define old context
+- move out ssr stuff to utils
+- move reportNS to the NamespacesConsumer
+
 ### 8.0.1
 
 - use @babel/plugin-transform-runtime

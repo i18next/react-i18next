@@ -9,6 +9,17 @@ export function deprecated(warning) {
     console.warn(`react-i18next:: deprecation warning -> ${warning}`);
 }
 
+export function initSSR(props) {
+  // nextjs / SSR: getting data from next.js or other ssr stack
+  if (props.initialI18nStore) {
+    props.i18n.services.resourceStore.data = props.initialI18nStore;
+    props.i18nOptions.wait = false; // we got all passed down already
+  }
+  if (props.initialLanguage) {
+    props.i18n.changeLanguage(props.initialLanguage);
+  }
+}
+
 // --------------
 // loadNamespaces
 const objectEntries =

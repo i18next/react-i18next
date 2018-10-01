@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { withI18n } from './context';
 import { deprecated } from './utils';
 
@@ -95,13 +94,5 @@ export class InterpolateComponent extends Component {
     return React.createElement.apply(this, [parent, additionalProps].concat(children));
   }
 }
-
-InterpolateComponent.propTypes = {
-  className: PropTypes.string,
-};
-
-InterpolateComponent.defaultProps = {
-  className: '',
-};
 
 export const Interpolate = withI18n()(InterpolateComponent);

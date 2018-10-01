@@ -1,22 +1,13 @@
-import React, { Component, Children } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { I18nContext } from './context';
+import { initSSR } from './utils';
 
 export class I18nextProvider extends Component {
   constructor(props) {
     super(props);
-    this.i18n = props.i18n;
-    this.defaultNS = props.defaultNS;
 
     // nextjs / SSR: getting data from next.js or other ssr stack
-    if (props.initialI18nStore) {
-      this.i18n.services.resourceStore.data = props.initialI18nStore;
-      this.i18n.options.isInitialSSR = true; // if set will be deleted on first render in translate hoc
-    }
-    if (props.initialLanguage) {
-      this.i18n.changeLanguage(props.initialLanguage);
-    }
-    this.reportNS = props.reportNS;
+    initSSR(props);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -26,8 +17,7 @@ export class I18nextProvider extends Component {
   }
 
   render() {
-    const { children } = this.props;
-    const { i18n, defaultNS, reportNS } = this;
+    const { children, i18n, defaultNS, reportNS } = this.props;
 
     return React.createElement(
       I18nContext.Provider,
@@ -44,15 +34,3 @@ export class I18nextProvider extends Component {
     );
   }
 }
-
-I18nextProvider.propTypes = {
-  i18n: PropTypes.object.isRequired,
-  children: PropTypes.element.isRequired,
-  defaultNS: PropTypes.string,
-  reportNS: PropTypes.func,
-};
-
-I18nextProvider.defaultProps = {
-  defaultNS: undefined,
-  reportNS: undefined,
-};
