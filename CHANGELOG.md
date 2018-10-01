@@ -1,3 +1,7 @@
+### 8.0.4
+
+- add prop-types to peer deps as long we use the ponyfill create-react-context
+
 ### 8.0.3
 
 - remove prop-types in tests

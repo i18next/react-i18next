@@ -1,6 +1,6 @@
 {
   "name": "react-i18next",
-  "version": "8.0.3",
+  "version": "8.0.4",
   "description": "Internationalization for react done right. Using the i18next i18n ecosystem.",
   "main": "dist/commonjs/index.js",
   "jsnext:main": "dist/es/index.js",
@@ -75,7 +75,8 @@
   },
   "peerDependencies": {
     "i18next": ">= 6.0.1",
-    "react": "^0.14.0 ||^15.0.0 || ^16.0.0"
+    "react": "^0.14.0 ||^15.0.0 || ^16.0.0",
+    "prop-types": "15.6.2"
   },
   "scripts": {
     "clean": "rimraf dist && mkdirp dist",
