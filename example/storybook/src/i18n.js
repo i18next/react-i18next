@@ -2,12 +2,13 @@ import i18n from 'i18next';
 import LocizeBackend from 'i18next-locize-backend';
 import LocizeEditor from 'locize-editor';
 import LanguageDetector from 'i18next-browser-languagedetector';
-
+import { reactI18nextModule } from 'react-i18next';
 
 i18n
   .use(LocizeBackend)
   .use(LocizeEditor)
   .use(LanguageDetector)
+  .use(reactI18nextModule) // you need it for a render prop style
   .init({
     fallbackLng: 'en',
     appendNamespaceToCIMode: true,
@@ -29,7 +30,7 @@ i18n
     interpolation: {
       escapeValue: false, // not needed for react!!
       formatSeparator: ',',
-      format: function(value, format, lng) {
+      format: function (value, format, lng) {
         if (format === 'uppercase') return value.toUpperCase();
         return value;
       }
@@ -39,6 +40,5 @@ i18n
       wait: true
     }
   });
-
 
 export default i18n;
