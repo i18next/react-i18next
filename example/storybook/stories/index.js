@@ -11,7 +11,7 @@ import '../src/i18n';
 // since its environment is totally separated from the actual app
 
 // If you can't use this.props.t from child components(from this example <App />) check if you wrapped <App /> with translate().
-// example: export default translat()(App)
+// example: export default translate()(App)
 storiesOf('decorated component (having translate hoc)', module)
   .addDecorator(story => (
     <I18nextProvider i18n={i18n}>{story()}</I18nextProvider>
