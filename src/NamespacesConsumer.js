@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
 import { I18nContext, withI18n } from './context';
-import { deprecated, initSSR } from './utils';
+import { warnOnce, deprecated, initSSR } from './utils';
 
 let removedIsInitialSSR = false;
 
 export class NamespacesConsumerComponent extends Component {
   constructor(props) {
     super(props);
+
+    if (!props.i18n) {
+      return warnOnce(
+        'You will need pass in an i18next instance either by props, using I18nextProvider or by using i18nextReactModule. Learn more https://react.i18next.com/components/overview#getting-the-i-18-n-function-into-the-flow'
+      );
+    }
 
     // nextjs / SSR: getting data from next.js or other ssr stack
     initSSR(props);
@@ -167,13 +173,9 @@ export class NamespacesConsumerComponent extends Component {
 
 export const NamespacesConsumer = withI18n()(NamespacesConsumerComponent);
 
-let warnedI18n;
 export function I18n(props) {
-  if (!warnedI18n) {
-    deprecated(
-      'I18n was renamed to "NamespacesConsumer" to make it more clear what the render prop does.'
-    );
-    warnedI18n = true;
-  }
+  deprecated(
+    'I18n was renamed to "NamespacesConsumer" to make it more clear what the render prop does.'
+  );
   return <NamespacesConsumer {...props} />;
 }

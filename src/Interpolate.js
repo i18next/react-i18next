@@ -2,18 +2,13 @@ import React, { Component } from 'react';
 import { withI18n } from './context';
 import { deprecated } from './utils';
 
-let warnedDeprecated = false;
-
 export class InterpolateComponent extends Component {
   constructor(props) {
     super(props);
 
-    if (!warnedDeprecated) {
-      deprecated(
-        'Interpolate is deprecated and will be removed in the next major version (v9.0.0). Usage can be replaced by the "Trans" component'
-      );
-      warnedDeprecated = true;
-    }
+    deprecated(
+      'Interpolate is deprecated and will be removed in the next major version (v9.0.0). Usage can be replaced by the "Trans" component'
+    );
   }
 
   render() {

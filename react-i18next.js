@@ -197,8 +197,35 @@
     throw new TypeError("Invalid attempt to destructure non-iterable instance");
   }
 
-  function deprecated(warning) {
-    if (process && process.env && (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') && console && console.warn) console.warn("react-i18next:: deprecation warning -> ".concat(warning));
+  function warn() {
+    if (console && console.warn) {
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      if (typeof args[0] === 'string') args[0] = "react-i18next:: ".concat(args[0]);
+      console.warn.apply(null, args);
+    }
+  }
+  var alreadyWarned = {};
+  function warnOnce() {
+    for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+
+    if (typeof args[0] === 'string' && alreadyWarned[args[0]]) return;
+    if (typeof args[0] === 'string') alreadyWarned[args[0]] = new Date();
+    warn.apply(void 0, args);
+  }
+  function deprecated() {
+    if (process && process.env && (!process.env.NODE_ENV || process.env.NODE_ENV === 'development')) {
+      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        args[_key3] = arguments[_key3];
+      }
+
+      if (typeof args[0] === 'string') args[0] = "deprecation warning -> ".concat(args[0]);
+      warnOnce.apply(void 0, args);
+    }
   }
   function initSSR(props) {
     // nextjs / SSR: getting data from next.js or other ssr stack
@@ -1002,39 +1029,58 @@
   };
   var I18nContext = createReactContext$1(); // hoc for context
 
-  function withI18n() {
+  function withContext() {
     return function Wrapper(WrappedComponent) {
       var WithContext =
       /*#__PURE__*/
       function (_Component) {
         _inherits(WithContext, _Component);
 
-        function WithContext(props, context) {
-          var _this;
-
+        function WithContext() {
           _classCallCheck(this, WithContext);
 
-          _this = _possibleConstructorReturn(this, _getPrototypeOf(WithContext).call(this, props, context));
-          _this.getWrappedInstance = _this.getWrappedInstance.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-          return _this;
+          return _possibleConstructorReturn(this, _getPrototypeOf(WithContext).apply(this, arguments));
         }
 
         _createClass(WithContext, [{
-          key: "getWrappedInstance",
-          value: function getWrappedInstance() {
-            return this.wrapped;
+          key: "render",
+          value: function render() {
+            var _this = this;
+
+            return React__default.createElement(I18nContext.Consumer, null, function (ctx) {
+              return React__default.createElement(WrappedComponent, _objectSpread({}, ctx, _this.props));
+            });
           }
-        }, {
+        }]);
+
+        return WithContext;
+      }(React.Component);
+
+      return WithContext;
+    };
+  }
+  /* eslint-disable react/no-multi-comp */
+
+  function withI18n() {
+    return function Wrapper(WrappedComponent) {
+      var WithMergedOptions =
+      /*#__PURE__*/
+      function (_Component2) {
+        _inherits(WithMergedOptions, _Component2);
+
+        function WithMergedOptions() {
+          _classCallCheck(this, WithMergedOptions);
+
+          return _possibleConstructorReturn(this, _getPrototypeOf(WithMergedOptions).apply(this, arguments));
+        }
+
+        _createClass(WithMergedOptions, [{
           key: "render",
           value: function render() {
             var _this2 = this;
 
-            // extra props like ref
-            var extraProps = {
-              ref: function ref(c) {
-                _this2.wrapped = c;
-              }
-            };
+            // merged extra props
+            var extraProps = {};
             var i18nOptions = this.props.i18nOptions; // as default we add i18n, basic t function and i18nOptions from setI18n
             // those get overridden by values passed by I18nContext.Provider <- eg. set in I18nextProvider
 
@@ -1055,16 +1101,14 @@
               extraProps.i18nOptions = i18nOptions;
             }
 
-            return React__default.createElement(I18nContext.Consumer, null, function (ctx) {
-              return React__default.createElement(WrappedComponent, _objectSpread({}, extraProps, ctx, _this2.props));
-            });
+            return React__default.createElement(WrappedComponent, _objectSpread({}, extraProps, this.props));
           }
         }]);
 
-        return WithContext;
+        return WithMergedOptions;
       }(React.Component);
 
-      return WithContext;
+      return withContext()(WithMergedOptions);
     };
   }
 
@@ -1079,7 +1123,12 @@
 
       _classCallCheck(this, NamespacesConsumerComponent);
 
-      _this = _possibleConstructorReturn(this, _getPrototypeOf(NamespacesConsumerComponent).call(this, props)); // nextjs / SSR: getting data from next.js or other ssr stack
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(NamespacesConsumerComponent).call(this, props));
+
+      if (!props.i18n) {
+        return _possibleConstructorReturn(_this, warnOnce('You will need pass in an i18next instance either by props, using I18nextProvider or by using i18nextReactModule. Learn more https://react.i18next.com/components/overview#getting-the-i-18-n-function-into-the-flow'));
+      } // nextjs / SSR: getting data from next.js or other ssr stack
+
 
       initSSR(props); // provider SSR: data was set in provider and ssr flag was set
 
@@ -1264,13 +1313,8 @@
     return NamespacesConsumerComponent;
   }(React.Component);
   var NamespacesConsumer = withI18n()(NamespacesConsumerComponent);
-  var warnedI18n;
   function I18n(props) {
-    if (!warnedI18n) {
-      deprecated('I18n was renamed to "NamespacesConsumer" to make it more clear what the render prop does.');
-      warnedI18n = true;
-    }
-
+    deprecated('I18n was renamed to "NamespacesConsumer" to make it more clear what the render prop does.');
     return React__default.createElement(NamespacesConsumer, props);
   }
 
@@ -1343,7 +1387,7 @@
             return React__default.createElement(NamespacesConsumer, _objectSpread({
               ns: namespaces || namespaceArg
             }, this.props, {
-              i18nOptions: mergedI18nOptions
+              i18nOptions: Object.keys(mergedI18nOptions).length > 0 ? mergedI18nOptions : null
             }), function (t, _ref) {
               var ready = _ref.ready,
                   rest = _objectWithoutProperties(_ref, ["ready"]);
@@ -1367,13 +1411,8 @@
   }
   withNamespaces.setDefaults = setDefaults;
   withNamespaces.setI18n = setI18n;
-  var warnedTranslate;
   function translate(ns, opts) {
-    if (!warnedTranslate) {
-      deprecated('translate was renamed to "withNamespaces" to make it more clear what the HOC does.');
-      warnedTranslate = true;
-    }
-
+    deprecated('translate was renamed to "withNamespaces" to make it more clear what the HOC does.');
     return withNamespaces(ns, opts);
   }
 
@@ -1626,12 +1665,12 @@
           mem = "".concat(mem, "{{").concat(keys[0], ", ").concat(format, "}}");
         } else if (keys.length === 1) {
           mem = "".concat(mem, "{{").concat(keys[0], "}}");
-        } else if (console && console.warn) {
+        } else {
           // not a valid interpolation object (can only contain one value plus format)
-          console.warn("react-i18next: the passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.", child);
+          warn("react-i18next: the passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.", child);
         }
-      } else if (console && console.warn) {
-        console.warn("react-i18next: the passed in value is invalid - seems you passed in a variable like {number} - please pass in variables for interpolation as full objects like {{number}}.", child);
+      } else {
+        warn("Trans: the passed in value is invalid - seems you passed in a variable like {number} - please pass in variables for interpolation as full objects like {{number}}.", child);
       }
     });
     return mem;
@@ -1731,7 +1770,8 @@
             defaultNS = _this$props.defaultNS,
             reportNS = _this$props.reportNS,
             lng = _this$props.lng,
-            additionalProps = _objectWithoutProperties(_this$props, ["children", "count", "parent", "i18nKey", "tOptions", "values", "defaults", "components", "ns", "i18n", "t", "defaultNS", "reportNS", "lng"]);
+            i18nOptions = _this$props.i18nOptions,
+            additionalProps = _objectWithoutProperties(_this$props, ["children", "count", "parent", "i18nKey", "tOptions", "values", "defaults", "components", "ns", "i18n", "t", "defaultNS", "reportNS", "lng", "i18nOptions"]);
 
         var t = tFromContextAndProps || i18n.t.bind(i18n);
         var reactI18nextOptions = i18n.options && i18n.options.react || {};
@@ -1819,7 +1859,6 @@
     return I18nextProvider;
   }(React.Component);
 
-  var warnedDeprecated = false;
   var InterpolateComponent =
   /*#__PURE__*/
   function (_Component) {
@@ -1831,12 +1870,7 @@
       _classCallCheck(this, InterpolateComponent);
 
       _this = _possibleConstructorReturn(this, _getPrototypeOf(InterpolateComponent).call(this, props));
-
-      if (!warnedDeprecated) {
-        deprecated('Interpolate is deprecated and will be removed in the next major version (v9.0.0). Usage can be replaced by the "Trans" component');
-        warnedDeprecated = true;
-      }
-
+      deprecated('Interpolate is deprecated and will be removed in the next major version (v9.0.0). Usage can be replaced by the "Trans" component');
       return _this;
     }
 

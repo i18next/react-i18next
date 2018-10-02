@@ -54,7 +54,11 @@ export function withNamespaces(namespaceArg, options = {}) {
 
         return React.createElement(
           NamespacesConsumer,
-          { ns: namespaces || namespaceArg, ...this.props, i18nOptions: mergedI18nOptions },
+          {
+            ns: namespaces || namespaceArg,
+            ...this.props,
+            i18nOptions: Object.keys(mergedI18nOptions).length > 0 ? mergedI18nOptions : null,
+          },
           (t, { ready, ...rest }) =>
             React.createElement(WrappedComponent, {
               tReady: ready,
@@ -79,13 +83,7 @@ export function withNamespaces(namespaceArg, options = {}) {
 withNamespaces.setDefaults = setDefaults;
 withNamespaces.setI18n = setI18n;
 
-let warnedTranslate;
 export function translate(ns, opts) {
-  if (!warnedTranslate) {
-    deprecated(
-      'translate was renamed to "withNamespaces" to make it more clear what the HOC does.'
-    );
-    warnedTranslate = true;
-  }
+  deprecated('translate was renamed to "withNamespaces" to make it more clear what the HOC does.');
   return withNamespaces(ns, opts);
 }

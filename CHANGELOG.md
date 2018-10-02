@@ -1,3 +1,7 @@
+### 8.0.5
+
+- fix issue with context not applied when merging i18n options
+
 ### 8.0.4
 
 - add prop-types to peer deps as long we use the ponyfill create-react-context

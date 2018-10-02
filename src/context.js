@@ -42,26 +42,30 @@ export const reactI18nextModule = {
 export const I18nContext = createReactContext();
 
 // hoc for context
-export function withI18n() {
+export function withContext() {
   return function Wrapper(WrappedComponent) {
     class WithContext extends Component {
-      constructor(props, context) {
-        super(props, context);
-
-        this.getWrappedInstance = this.getWrappedInstance.bind(this);
-      }
-
-      getWrappedInstance() {
-        return this.wrapped;
-      }
-
       render() {
-        // extra props like ref
-        const extraProps = {
-          ref: c => {
-            this.wrapped = c;
-          },
-        };
+        return React.createElement(I18nContext.Consumer, null, ctx =>
+          React.createElement(WrappedComponent, {
+            ...ctx,
+            ...this.props,
+          })
+        );
+      }
+    }
+
+    return WithContext;
+  };
+}
+
+/* eslint-disable react/no-multi-comp */
+export function withI18n() {
+  return function Wrapper(WrappedComponent) {
+    class WithMergedOptions extends Component {
+      render() {
+        // merged extra props
+        const extraProps = {};
 
         let i18nOptions = this.props.i18nOptions;
 
@@ -88,16 +92,13 @@ export function withI18n() {
           extraProps.i18nOptions = i18nOptions;
         }
 
-        return React.createElement(I18nContext.Consumer, null, ctx =>
-          React.createElement(WrappedComponent, {
-            ...extraProps,
-            ...ctx,
-            ...this.props,
-          })
-        );
+        return React.createElement(WrappedComponent, {
+          ...extraProps,
+          ...this.props,
+        });
       }
     }
 
-    return WithContext;
+    return withContext()(WithMergedOptions);
   };
 }
