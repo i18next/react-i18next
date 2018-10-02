@@ -16,3 +16,5 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## information
 
 In the sample we show both a component being decorated by translate hoc using a [storybook decorator](https://storybook.js.org/basics/writing-stories/#using-decorators) to wrap the `I18nextProvider` around the decorated component and a pure component just expecting a t function which we pass in with a mock function.
+
+If you prefer a render prop style, you need to import and use reactI18nextModule on i18n.js and import '../src/i18n' on the storybook file.
