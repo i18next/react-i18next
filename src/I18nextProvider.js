@@ -7,7 +7,7 @@ export class I18nextProvider extends Component {
     super(props);
 
     // nextjs / SSR: getting data from next.js or other ssr stack
-    initSSR(props);
+    initSSR(props, true);
   }
 
   componentWillReceiveProps(nextProps) {

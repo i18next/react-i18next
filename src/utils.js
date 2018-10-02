@@ -19,11 +19,12 @@ export function deprecated(...args) {
   }
 }
 
-export function initSSR(props) {
+export function initSSR(props, setIsInitialSSR) {
   // nextjs / SSR: getting data from next.js or other ssr stack
   if (props.initialI18nStore) {
     props.i18n.services.resourceStore.data = props.initialI18nStore;
-    props.i18nOptions.wait = false; // we got all passed down already
+    if (setIsInitialSSR) props.i18n.options.isInitialSSR = true;
+    if (props.i18nOptions) props.i18nOptions.wait = false; // we got all passed down already
   }
   if (props.initialLanguage) {
     props.i18n.changeLanguage(props.initialLanguage);

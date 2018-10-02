@@ -1,3 +1,7 @@
+### 8.0.6
+
+- fix SSR cases
+
 ### 8.0.5
 
 - fix issue with context not applied when merging i18n options

@@ -227,11 +227,12 @@
       warnOnce.apply(void 0, args);
     }
   }
-  function initSSR(props) {
+  function initSSR(props, setIsInitialSSR) {
     // nextjs / SSR: getting data from next.js or other ssr stack
     if (props.initialI18nStore) {
       props.i18n.services.resourceStore.data = props.initialI18nStore;
-      props.i18nOptions.wait = false; // we got all passed down already
+      if (setIsInitialSSR) props.i18n.options.isInitialSSR = true;
+      if (props.i18nOptions) props.i18nOptions.wait = false; // we got all passed down already
     }
 
     if (props.initialLanguage) {
@@ -1825,7 +1826,7 @@
 
       _this = _possibleConstructorReturn(this, _getPrototypeOf(I18nextProvider).call(this, props)); // nextjs / SSR: getting data from next.js or other ssr stack
 
-      initSSR(props);
+      initSSR(props, true);
       return _this;
     }
 
