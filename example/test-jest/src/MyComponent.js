@@ -1,8 +1,6 @@
 import React from 'react';
-import { translate } from 'react-i18next';
+import { withNamespaces } from 'react-i18next';
 
-export const CustomComponent = ({ t }) => {
-  return <div>{t('description.part2')}</div>
-};
+export const CustomComponent = ({ t }) => <div>{t('description.part2')}</div>;
 
-export default translate('translations')(CustomComponent);
+export default withNamespaces('translations')(CustomComponent);

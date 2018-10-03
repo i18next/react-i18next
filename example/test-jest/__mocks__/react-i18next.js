@@ -1,13 +1,12 @@
 const React = require('react');
 const reactI18next = require('react-i18next');
 
-const hasChildren = node =>
-  node && (node.children || (node.props && node.props.children));
+const hasChildren = node => node && (node.children || (node.props && node.props.children));
 
 const getChildren = node =>
-  (node && node.children ? node.children : node.props && node.props.children);
+  node && node.children ? node.children : node.props && node.props.children;
 
-const renderNodes = (reactNodes) => {
+const renderNodes = reactNodes => {
   if (typeof reactNodes === 'string') {
     return reactNodes;
   }
@@ -18,7 +17,7 @@ const renderNodes = (reactNodes) => {
 
     if (typeof child === 'string') {
       return child;
-    } else if (hasChildren(child)) {
+    } if (hasChildren(child)) {
       const inner = renderNodes(getChildren(child));
       return React.cloneElement(
         child,
@@ -35,9 +34,9 @@ const renderNodes = (reactNodes) => {
 
 module.exports = {
   // this mock makes sure any components using the translate HoC receive the t function as a prop
-  translate: () => Component => props => <Component t={k => k} {...props} />,
+  withNamespaces: () => Component => props => <Component t={k => k} {...props} />,
   Trans: ({ children }) => renderNodes(children),
-  I18n: ({ children }) => children(k => k, { i18n: {} }),
+  NamespacesConsumer: ({ children }) => children(k => k, { i18n: {} }),
 
   // mock if needed
   Interpolate: reactI18next.Interpolate,

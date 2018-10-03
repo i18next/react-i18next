@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { translate, Trans } from 'react-i18next';
+import { withNamespaces, Trans } from 'react-i18next';
 import logo from './react.svg';
 import './Home.css';
 
@@ -35,4 +35,4 @@ class Home extends Component {
   }
 }
 
-export default translate('translations')(Home);
+export default withNamespaces('translations')(Home);
