@@ -2,8 +2,10 @@ import i18n from 'i18next';
 import LocizeBackend from 'i18next-locize-backend';
 import LocizeEditor from 'locize-editor';
 import LanguageDetector from 'i18next-browser-languagedetector';
+import { reactI18nextModule } from 'react-i18next';
 
 i18n
+  .use(reactI18nextModule)
   .use(LocizeBackend)
   .use(LocizeEditor)
   .use(LanguageDetector)
