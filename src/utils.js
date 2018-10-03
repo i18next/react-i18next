@@ -1,12 +1,34 @@
-export function deprecated(warning) {
-  if (
-    process &&
-    process.env &&
-    (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') &&
-    console &&
-    console.warn
-  )
-    console.warn(`react-i18next:: deprecation warning -> ${warning}`);
+export function warn(...args) {
+  if (console && console.warn) {
+    if (typeof args[0] === 'string') args[0] = `react-i18next:: ${args[0]}`;
+    console.warn.apply(null, args);
+  }
+}
+
+const alreadyWarned = {};
+export function warnOnce(...args) {
+  if (typeof args[0] === 'string' && alreadyWarned[args[0]]) return;
+  if (typeof args[0] === 'string') alreadyWarned[args[0]] = new Date();
+  warn(...args);
+}
+
+export function deprecated(...args) {
+  if (process && process.env && (!process.env.NODE_ENV || process.env.NODE_ENV === 'development')) {
+    if (typeof args[0] === 'string') args[0] = `deprecation warning -> ${args[0]}`;
+    warnOnce(...args);
+  }
+}
+
+export function initSSR(props, setIsInitialSSR) {
+  // nextjs / SSR: getting data from next.js or other ssr stack
+  if (props.initialI18nStore) {
+    props.i18n.services.resourceStore.data = props.initialI18nStore;
+    if (setIsInitialSSR) props.i18n.options.isInitialSSR = true;
+    if (props.i18nOptions) props.i18nOptions.wait = false; // we got all passed down already
+  }
+  if (props.initialLanguage) {
+    props.i18n.changeLanguage(props.initialLanguage);
+  }
 }
 
 // --------------

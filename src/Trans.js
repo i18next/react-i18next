@@ -1,7 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import HTML from 'html-parse-stringify2';
 import { withI18n } from './context';
+import { warn } from './utils';
 
 function hasChildren(node) {
   return node && (node.children || (node.props && node.props.children));
@@ -36,16 +36,16 @@ function nodesToString(mem, children, index) {
         mem = `${mem}{{${keys[0]}, ${format}}}`;
       } else if (keys.length === 1) {
         mem = `${mem}{{${keys[0]}}}`;
-      } else if (console && console.warn) {
+      } else {
         // not a valid interpolation object (can only contain one value plus format)
-        console.warn(
+        warn(
           `react-i18next: the passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.`,
           child
         );
       }
-    } else if (console && console.warn) {
-      console.warn(
-        `react-i18next: the passed in value is invalid - seems you passed in a variable like {number} - please pass in variables for interpolation as full objects like {{number}}.`,
+    } else {
+      warn(
+        `Trans: the passed in value is invalid - seems you passed in a variable like {number} - please pass in variables for interpolation as full objects like {{number}}.`,
         child
       );
     }
@@ -133,6 +133,7 @@ export class TransComponent extends React.Component {
       defaultNS,
       reportNS,
       lng,
+      i18nOptions,
       ...additionalProps
     } = this.props;
     const t = tFromContextAndProps || i18n.t.bind(i18n);
@@ -178,13 +179,5 @@ export class TransComponent extends React.Component {
     );
   }
 }
-
-TransComponent.propTypes = {
-  count: PropTypes.number,
-  parent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
-  i18nKey: PropTypes.string,
-  i18n: PropTypes.object,
-  t: PropTypes.func,
-};
 
 export const Trans = withI18n()(TransComponent);

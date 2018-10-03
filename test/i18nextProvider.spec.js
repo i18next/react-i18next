@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { I18nextProvider } from '../src/I18nextProvider';
 import { I18nContext } from '../src/context';
 
@@ -16,14 +15,5 @@ describe('I18nextProvider', () => {
     expect(willReceiveProps).toThrowError(
       '[react-i18next][I18nextProvider]does not support changing the i18n object.'
     );
-  });
-  it('should have i18n proptype required', () => {
-    expect(I18nextProvider.propTypes.i18n).toBe(PropTypes.object.isRequired);
-  });
-  it('should have defaultNS proptype optional string', () => {
-    expect(I18nextProvider.propTypes.defaultNS).toBe(PropTypes.string);
-  });
-  it('should have children proptype required', () => {
-    expect(I18nextProvider.propTypes.children).toBe(PropTypes.element.isRequired);
   });
 });

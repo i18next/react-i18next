@@ -8,7 +8,8 @@ const format = argv.format || argv.f || 'iife';
 const compress = argv.uglify;
 
 const babelOptions = {
-  // babelrc: false,
+  presets: ['@babel/preset-env', '@babel/react'],
+  babelrc: false,
 };
 
 const file = {
@@ -22,7 +23,7 @@ export default {
   plugins: [babel(babelOptions), nodeResolve({ jsnext: true, main: true }), commonjs({})].concat(
     compress ? terser() : []
   ),
-  external: ['react', 'react-dom', 'prop-types'],
+  external: ['react', 'react-dom'],
   // moduleId: 'react-i18next',
   output: {
     name: 'react-i18next',

@@ -1,20 +1,14 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { withI18n } from './context';
 import { deprecated } from './utils';
-
-let warnedDeprecated = false;
 
 export class InterpolateComponent extends Component {
   constructor(props) {
     super(props);
 
-    if (!warnedDeprecated) {
-      deprecated(
-        'Interpolate is deprecated and will be removed in the next major version (v9.0.0). Usage can be replaced by the "Trans" component'
-      );
-      warnedDeprecated = true;
-    }
+    deprecated(
+      'Interpolate is deprecated and will be removed in the next major version (v9.0.0). Usage can be replaced by the "Trans" component'
+    );
   }
 
   render() {
@@ -95,13 +89,5 @@ export class InterpolateComponent extends Component {
     return React.createElement.apply(this, [parent, additionalProps].concat(children));
   }
 }
-
-InterpolateComponent.propTypes = {
-  className: PropTypes.string,
-};
-
-InterpolateComponent.defaultProps = {
-  className: '',
-};
 
 export const Interpolate = withI18n()(InterpolateComponent);

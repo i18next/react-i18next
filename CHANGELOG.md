@@ -1,3 +1,29 @@
+### 8.0.6
+
+- fix SSR cases
+
+### 8.0.5
+
+- fix issue with context not applied when merging i18n options
+
+### 8.0.4
+
+- add prop-types to peer deps as long we use the ponyfill create-react-context
+
+### 8.0.3
+
+- remove prop-types in tests
+
+### 8.0.2
+
+- remove proptypes dependency - not needed anylonger as we do not define old context
+- move out ssr stuff to utils
+- move reportNS to the NamespacesConsumer
+
+### 8.0.1
+
+- use @babel/plugin-transform-runtime
+
 ### 8.0.0
 
 - translate HOC was renamed to "withNamespaces" as it controls which namespaces should be loaded
