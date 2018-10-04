@@ -12,7 +12,12 @@ export default class MyApp extends App {
 
     return (
       <Container>
-        <NamespacesConsumer ns="common" i18n={(pageProps && pageProps.i18n) || i18n} wait>
+        <NamespacesConsumer
+          {...pageProps}
+          ns="common"
+          i18n={(pageProps && pageProps.i18n) || i18n}
+          wait={false}
+        >
           {t => (
             <React.Fragment>
               <h1>{t('common:integrates_react-i18next')}</h1>
