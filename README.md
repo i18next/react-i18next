@@ -73,7 +73,7 @@ Head over to the **interactive playground** at [codesandbox](https://codesandbox
 
 Want to learn more about how seamless your internationalization and translation process can be?
 
-[![video](https://raw.githubusercontent.com/i18next/react-i18next/master/example/locize-example/video_sample.png)](https://www.youtube.com/watch?v=9NOzJhgmyQE)
+[![video](example/locize/video_sample.png)](https://www.youtube.com/watch?v=9NOzJhgmyQE)
 
 [watch the video](https://www.youtube.com/watch?v=9NOzJhgmyQE)
 
@@ -93,10 +93,8 @@ $ bower install react-i18next
 
 ### Examples
 
-* [Example react with render props](https://github.com/i18next/react-i18next/tree/master/example/react_renderProps)
-* [Example react with hoc](https://github.com/i18next/react-i18next/tree/master/example/react_withHOC)
-* [Example preact with render props](https://github.com/i18next/react-i18next/tree/master/example/preact_renderProps)
-* [Example preact with hoc](https://github.com/i18next/react-i18next/tree/master/example/preact_withHOC)
+* [Example react](https://github.com/i18next/react-i18next/tree/master/example/react)
+* [Example preact](https://github.com/i18next/react-i18next/tree/master/example/preact)
 * [Example react-native](https://github.com/i18next/react-i18next/tree/master/example/react-native-expo)
 * [Example expo.io](https://github.com/i18next/react-i18next/tree/master/example/react-native-expo)
 * [Example next.js](https://github.com/i18next/react-i18next/tree/master/example/nextjs)
