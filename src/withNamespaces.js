@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import hoistStatics from 'hoist-non-react-statics';
-import { shallowEqual } from './utils';
+import { shallowEqual, deprecated } from './utils';
 import { withI18n, setDefaults, setI18n } from './context';
 import { NamespacesConsumer } from './NamespacesConsumer';
-import { deprecated } from './utils';
 
 function getDisplayName(component) {
   return component.displayName || component.name || 'Component';
@@ -12,12 +11,6 @@ function getDisplayName(component) {
 export function withNamespaces(namespaceArg, options = {}) {
   return function Wrapper(WrappedComponent) {
     class LoadNamespace extends Component {
-      constructor(props) {
-        super(props);
-
-        this.getWrappedInstance = this.getWrappedInstance.bind(this);
-      }
-
       shouldComponentUpdate(nextProps) {
         const { i18nOptions } = this.props;
         if (!i18nOptions.usePureComponent && !options.usePureComponent) {
@@ -27,29 +20,13 @@ export function withNamespaces(namespaceArg, options = {}) {
         return !shallowEqual(this.props, nextProps);
       }
 
-      getWrappedInstance() {
-        const { i18nOptions } = this.props;
-        if (!i18nOptions.withRef && !options.usePureComponent) {
-          // eslint-disable-next-line no-console
-          console.error(
-            'To access the wrapped instance, you need to specify ' +
-              '{ withRef: true } as the second argument of the translate() call.'
-          );
-        }
-
-        /* eslint react/no-string-refs: 1 */
-        return this.wrappedInstance;
-      }
-
       render() {
         const { namespaces, i18nOptions } = this.props;
         const mergedI18nOptions = { ...i18nOptions, ...options };
         const extraProps = {};
 
-        if (mergedI18nOptions.withRef) {
-          extraProps.ref = c => {
-            this.wrappedInstance = c;
-          };
+        if (mergedI18nOptions.innerRef) {
+          extraProps.ref = mergedI18nOptions.innerRef;
         }
 
         return React.createElement(

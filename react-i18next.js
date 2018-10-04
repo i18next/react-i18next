@@ -1331,14 +1331,10 @@
       function (_Component) {
         _inherits(LoadNamespace, _Component);
 
-        function LoadNamespace(props) {
-          var _this;
-
+        function LoadNamespace() {
           _classCallCheck(this, LoadNamespace);
 
-          _this = _possibleConstructorReturn(this, _getPrototypeOf(LoadNamespace).call(this, props));
-          _this.getWrappedInstance = _this.getWrappedInstance.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-          return _this;
+          return _possibleConstructorReturn(this, _getPrototypeOf(LoadNamespace).apply(this, arguments));
         }
 
         _createClass(LoadNamespace, [{
@@ -1353,23 +1349,9 @@
             return !shallowEqual(this.props, nextProps);
           }
         }, {
-          key: "getWrappedInstance",
-          value: function getWrappedInstance() {
-            var i18nOptions = this.props.i18nOptions;
-
-            if (!i18nOptions.withRef && !options.usePureComponent) {
-              // eslint-disable-next-line no-console
-              console.error('To access the wrapped instance, you need to specify ' + '{ withRef: true } as the second argument of the translate() call.');
-            }
-            /* eslint react/no-string-refs: 1 */
-
-
-            return this.wrappedInstance;
-          }
-        }, {
           key: "render",
           value: function render() {
-            var _this2 = this;
+            var _this = this;
 
             var _this$props = this.props,
                 namespaces = _this$props.namespaces,
@@ -1379,10 +1361,8 @@
 
             var extraProps = {};
 
-            if (mergedI18nOptions.withRef) {
-              extraProps.ref = function (c) {
-                _this2.wrappedInstance = c;
-              };
+            if (mergedI18nOptions.innerRef) {
+              extraProps.ref = mergedI18nOptions.innerRef;
             }
 
             return React__default.createElement(NamespacesConsumer, _objectSpread({
@@ -1395,7 +1375,7 @@
 
               return React__default.createElement(WrappedComponent, _objectSpread({
                 tReady: ready
-              }, _this2.props, extraProps, rest));
+              }, _this.props, extraProps, rest));
             });
           }
         }]);
