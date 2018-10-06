@@ -61,17 +61,6 @@ i18n
         // missing keys
         server.post('/locales/add/:lng/:ns', i18nextMiddleware.missingKeyHandler(i18n));
 
-        // Add language subpaths via i18n middleware
-        i18nextMiddleware.addRoute(
-          i18n,
-          '/:lng/key-to-translate',
-          config.translation.allLanguages,
-          server,
-          'get',
-          // Empty middleware, we'll handle routes via NextJs below
-          (req, res, cb) => cb()
-        );
-
         // use next.js
         server.get('*', (req, res) => {
           // If req.url contains a language subpath, remove
