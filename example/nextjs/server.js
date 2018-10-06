@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const next = require('next');
+const parseURL = require('url').parse;
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -8,7 +9,10 @@ const handle = app.getRequestHandler();
 
 const i18nextMiddleware = require('i18next-express-middleware');
 const Backend = require('i18next-node-fs-backend');
+const config = require('./config');
 const i18n = require('./i18n');
+
+const { allLanguages, defaultLanguage, namespaces } = config.translation;
 
 // init i18next with serverside settings
 // using i18next-express-middleware
@@ -17,9 +21,15 @@ i18n
   .use(i18nextMiddleware.LanguageDetector)
   .init(
     {
-      fallbackLng: 'en',
-      preload: ['en', 'de'], // preload all langages
-      ns: ['common', 'home', 'page2'], // need to preload all the namespaces
+      detection: {
+        order: ['path', 'session', 'querystring', 'cookie', 'header'],
+        lookupPath: 'lng',
+        lookupFromPathIndex: 0,
+      },
+      fallbackLng: defaultLanguage,
+      preload: allLanguages, // preload all langages
+      whitelist: allLanguages,
+      ns: namespaces, // need to preload all the namespaces
       backend: {
         loadPath: path.join(__dirname, '/locales/{{lng}}/{{ns}}.json'),
         addPath: path.join(__dirname, '/locales/{{lng}}/{{ns}}.missing.json'),
@@ -30,6 +40,18 @@ i18n
       app.prepare().then(() => {
         const server = express();
 
+        // Force trailing slash on language subpaths
+        server.get('*', (req, res, cb) => {
+          const { pathname, search } = parseURL(req.url);
+          const searchString = search || '';
+          allLanguages.forEach(lng => {
+            if (pathname.startsWith(`/${lng}`) && !pathname.startsWith(`/${lng}/`)) {
+              res.redirect(301, pathname.replace(`/${lng}`, `/${lng}/`) + searchString);
+            }
+          });
+          cb();
+        });
+
         // enable middleware for i18next
         server.use(i18nextMiddleware.handle(i18n));
 
@@ -39,8 +61,34 @@ i18n
         // missing keys
         server.post('/locales/add/:lng/:ns', i18nextMiddleware.missingKeyHandler(i18n));
 
+        // Add language subpaths via i18n middleware
+        i18nextMiddleware.addRoute(
+          i18n,
+          '/:lng/key-to-translate',
+          config.translation.allLanguages,
+          server,
+          'get',
+          // Empty middleware, we'll handle routes via NextJs below
+          (req, res, cb) => cb()
+        );
+
         // use next.js
-        server.get('*', (req, res) => handle(req, res));
+        server.get('*', (req, res) => {
+          // If req.url contains a language subpath, remove
+          // it so that NextJS will render the correct page
+          let strippedRoute = req.url;
+          for (const lng of allLanguages) {
+            if (req.url.startsWith(`/${lng}/`)) {
+              strippedRoute = strippedRoute.replace(`/${lng}/`, '/');
+              break;
+            }
+          }
+          if (strippedRoute !== req.url) {
+            app.render(req, res, strippedRoute);
+          } else {
+            handle(req, res);
+          }
+        });
 
         server.listen(3000, err => {
           if (err) throw err;
