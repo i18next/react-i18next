@@ -95,8 +95,8 @@ $ bower install react-i18next
 
 * [Example react](https://github.com/i18next/react-i18next/tree/master/example/react)
 * [Example preact](https://github.com/i18next/react-i18next/tree/master/example/preact)
-* [Example react-native](https://github.com/i18next/react-i18next/tree/master/example/react-native-expo)
-* [Example expo.io](https://github.com/i18next/react-i18next/tree/master/example/react-native-expo)
+* [Example react-native](https://github.com/i18next/react-i18next/tree/master/example/reactnative-expo)
+* [Example expo.io](https://github.com/i18next/react-i18next/tree/master/example/reactnative-expo)
 * [Example next.js](https://github.com/i18next/react-i18next/tree/master/example/nextjs)
 * [Example razzle](https://github.com/i18next/react-i18next/tree/master/example/razzle-ssr)
 * [Example hashbase / beaker browser](https://github.com/i18next/react-i18next/tree/master/example/dat)
