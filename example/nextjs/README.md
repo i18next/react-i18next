@@ -1,4 +1,4 @@
-[![Deploy to now](https://deploy.now.sh/static/button.svg)](https://deploy.now.sh/?repo=https://github.com/zeit/next.js/tree/master/examples/with-react-i18next)
+[![Deploy to now](https://deploy.now.sh/static/button.svg)](https://deploy.now.sh/?repo=https://github.com/i18next/react-i18next/edit/master/example/nextjs)
 
 # Internationalization with [react-i18next](https://github.com/i18next/react-i18next).
 
