@@ -1,18 +1,8 @@
-[![Deploy to now](https://deploy.now.sh/static/button.svg)](https://deploy.now.sh/?repo=https://github.com/zeit/next.js/tree/master/examples/with-react-i18next)
+[![Deploy to now](https://deploy.now.sh/static/button.svg)](https://deploy.now.sh/?repo=https://github.com/i18next/react-i18next/edit/master/example/nextjs)
 
 # Internationalization with [react-i18next](https://github.com/i18next/react-i18next).
 
 ## How to use
-
-### Using `create-next-app`
-
-Execute [`create-next-app`](https://github.com/segmentio/create-next-app) with [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) or [npx](https://github.com/zkat/npx#readme) to bootstrap the example:
-
-```bash
-npx create-next-app --example with-react-i18next with-react-i18next-app
-# or
-yarn create next-app --example with-react-i18next with-react-i18next-app
-```
 
 ### Download manually
 
