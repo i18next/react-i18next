@@ -21,8 +21,8 @@ i18n
       preload: ['en', 'de'], // preload all langages
       ns: ['common', 'home', 'page2'], // need to preload all the namespaces
       backend: {
-        loadPath: path.join(__dirname, '/locales/{{lng}}/{{ns}}.json'),
-        addPath: path.join(__dirname, '/locales/{{lng}}/{{ns}}.missing.json'),
+        loadPath: path.join(__dirname, '/static/locales/{{lng}}/{{ns}}.json'),
+        addPath: path.join(__dirname, '/static/locales/{{lng}}/{{ns}}.missing.json'),
       },
     },
     () => {

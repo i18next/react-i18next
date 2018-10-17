@@ -23,6 +23,12 @@ const options = {
       return value;
     },
   },
+
+  // we load the from the static folder which is avaiable on npm run export
+  backend: {
+    loadPath: '/static/locales/{{lng}}/{{ns}}.json',
+    addPath: '/static/locales/{{lng}}/{{ns}}.missing.json',
+  },
 };
 
 // for browser use xhr backend to load translations and browser lng detector
@@ -42,14 +48,14 @@ i18n.getInitialProps = (req, namespaces) => {
   if (typeof namespaces === 'string') namespaces = [namespaces];
 
   // do not serialize i18next instance avoid sending it to client
-  if (req) req.i18n.toJSON = () => null;
+  if (req && req.i18n) req.i18n.toJSON = () => null;
 
   const ret = {
     i18n: req ? req.i18n : i18n, // use the instance on req - fixed language on request (avoid issues in race conditions with lngs of different users)
   };
 
   // for serverside pass down initial translations
-  if (req) {
+  if (req && req.i18n) {
     const initialI18nStore = {};
     req.i18n.languages.forEach(l => {
       initialI18nStore[l] = {};
