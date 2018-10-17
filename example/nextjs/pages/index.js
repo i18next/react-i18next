@@ -3,6 +3,7 @@ import Link from 'next/link';
 
 import PureComponent from '../components/PureComponent';
 import ExtendedComponent from '../components/ExtendedComponent';
+import ExtendedComponentReportingItsNamespace from '../components/ExtendedComponentReportingItsNamespace';
 import ComponentWithTrans from '../components/ComponentWithTrans';
 import { withI18next } from '../lib/withI18next';
 
@@ -16,6 +17,7 @@ export default withI18next(['home', 'common'])(({ t, initialI18nStore, ...rest }
     </div>
     <PureComponent t={t} />
     <ExtendedComponent />
+    <ExtendedComponentReportingItsNamespace />
     <ComponentWithTrans />
     <Link href="/page2">
       <a>{t('link.gotoPage2')}</a>

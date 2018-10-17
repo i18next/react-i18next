@@ -1,0 +1,3 @@
+{
+  "extendedComponentReportingItsNamespace": "Komponenten tiefer im Baum rapportieren ihre Namespaces eigenständig und müssen somit nicht auf Seitenebene im withI18next hoc inkludiert sein!"
+}

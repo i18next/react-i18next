@@ -1,0 +1,3 @@
+{
+  "extendedComponentReportingItsNamespace": "components deeper down the tree will report their namespaces used - no need to include them in page level withI18next hoc!"
+}
