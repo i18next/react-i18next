@@ -1,3 +1,7 @@
+### 8.0.8
+
+- add innerRefs support to withContext, withI18n
+
 ### 8.0.7
 
 - replaces getWrappedInstance on withNamespaces / translate with passing a innerRef https://github.com/facebook/react/issues/13456 [534](https://github.com/i18next/react-i18next/issues/534)

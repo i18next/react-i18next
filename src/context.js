@@ -46,10 +46,13 @@ export function withContext() {
   return function Wrapper(WrappedComponent) {
     class WithContext extends Component {
       render() {
+        const { innerRef, ...rest } = this.props;
+        if (innerRef) rest.ref = innerRef;
+
         return React.createElement(I18nContext.Consumer, null, ctx =>
           React.createElement(WrappedComponent, {
             ...ctx,
-            ...this.props,
+            ...rest,
           })
         );
       }
@@ -64,6 +67,9 @@ export function withI18n() {
   return function Wrapper(WrappedComponent) {
     class WithMergedOptions extends Component {
       render() {
+        const { innerRef, ...rest } = this.props;
+        if (innerRef) rest.ref = innerRef;
+
         // merged extra props
         const extraProps = {};
 
@@ -94,7 +100,7 @@ export function withI18n() {
 
         return React.createElement(WrappedComponent, {
           ...extraProps,
-          ...this.props,
+          ...rest,
         });
       }
     }

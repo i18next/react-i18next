@@ -1046,10 +1046,13 @@
         _createClass(WithContext, [{
           key: "render",
           value: function render() {
-            var _this = this;
+            var _this$props = this.props,
+                innerRef = _this$props.innerRef,
+                rest = _objectWithoutProperties(_this$props, ["innerRef"]);
 
+            if (innerRef) rest.ref = innerRef;
             return React__default.createElement(I18nContext.Consumer, null, function (ctx) {
-              return React__default.createElement(WrappedComponent, _objectSpread({}, ctx, _this.props));
+              return React__default.createElement(WrappedComponent, _objectSpread({}, ctx, rest));
             });
           }
         }]);
@@ -1078,9 +1081,14 @@
         _createClass(WithMergedOptions, [{
           key: "render",
           value: function render() {
-            var _this2 = this;
+            var _this = this;
 
-            // merged extra props
+            var _this$props2 = this.props,
+                innerRef = _this$props2.innerRef,
+                rest = _objectWithoutProperties(_this$props2, ["innerRef"]);
+
+            if (innerRef) rest.ref = innerRef; // merged extra props
+
             var extraProps = {};
             var i18nOptions = this.props.i18nOptions; // as default we add i18n, basic t function and i18nOptions from setI18n
             // those get overridden by values passed by I18nContext.Provider <- eg. set in I18nextProvider
@@ -1089,7 +1097,7 @@
 
             if (!i18nOptions) {
               var possibleI18nOptionsFromProps = Object.keys(defaultOptions).reduce(function (mem, k) {
-                if (_this2.props[k]) mem[k] = _this2.props[k];
+                if (_this.props[k]) mem[k] = _this.props[k];
                 return mem;
               }, {});
               i18nOptions = _objectSpread({}, getDefaults(), i18n && i18n.options && i18n.options.react, possibleI18nOptionsFromProps);
@@ -1102,7 +1110,7 @@
               extraProps.i18nOptions = i18nOptions;
             }
 
-            return React__default.createElement(WrappedComponent, _objectSpread({}, extraProps, this.props));
+            return React__default.createElement(WrappedComponent, _objectSpread({}, extraProps, rest));
           }
         }]);
 
