@@ -8,7 +8,7 @@ module.exports = {
     allLanguages: ['en', 'de'],
 
     // optional settings needed for subpath (/de/page1) handling
-    enableSubpaths: false,
+    enableSubpaths: true,
     subpathsOnNonDefaultLanguageOnly: false, // only redirect to /lng/ if not default language
   },
 };
