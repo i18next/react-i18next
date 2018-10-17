@@ -1,7 +1,7 @@
 import config from '../config';
 import i18n from '../i18n';
 
-const { defaultLanguage, allLanguages } = config.translation;
+const { defaultLanguage, allLanguages, subpathsOnNonDefaultLanguageOnly } = config.translation;
 
 export default (currentRoute, currentLanguage = i18n.languages[0]) => {
   if (!allLanguages.includes(currentLanguage)) {
@@ -17,7 +17,7 @@ export default (currentRoute, currentLanguage = i18n.languages[0]) => {
     }
   }
 
-  if (currentLanguage !== defaultLanguage) {
+  if (!subpathsOnNonDefaultLanguageOnly || currentLanguage !== defaultLanguage) {
     correctRoute = `/${currentLanguage}${correctRoute}`;
   }
 

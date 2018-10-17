@@ -4,23 +4,28 @@ import Router from 'next/router';
 import { NamespacesConsumer } from 'react-i18next';
 import i18n from '../i18n';
 import languagePathCorrection from '../lib/languagePathCorrection';
+import { translation } from '../config';
 
-Router.events.on('routeChangeStart', originalRoute => {
-  const correctedPath = languagePathCorrection(originalRoute);
-  if (correctedPath !== originalRoute) {
-    Router.replace(correctedPath, correctedPath, { shallow: true });
-  }
-});
+const { enableSubpaths } = translation;
 
-i18n.on('languageChanged', lng => {
-  if (process.browser) {
-    const originalRoute = window.location.pathname;
-    const correctedPath = languagePathCorrection(originalRoute, lng);
+if (enableSubpaths) {
+  Router.events.on('routeChangeStart', originalRoute => {
+    const correctedPath = languagePathCorrection(originalRoute);
     if (correctedPath !== originalRoute) {
       Router.replace(correctedPath, correctedPath, { shallow: true });
     }
-  }
-});
+  });
+
+  i18n.on('languageChanged', lng => {
+    if (process.browser) {
+      const originalRoute = window.location.pathname;
+      const correctedPath = languagePathCorrection(originalRoute, lng);
+      if (correctedPath !== originalRoute) {
+        Router.replace(correctedPath, correctedPath, { shallow: true });
+      }
+    }
+  });
+}
 
 // Using _app with translated content will give a warning:
 // Warning: Did not expect server HTML to contain a <h1> in <div>.

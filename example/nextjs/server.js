@@ -12,45 +12,53 @@ const Backend = require('i18next-node-fs-backend');
 const config = require('./config');
 const i18n = require('./i18n');
 
-const { allLanguages, defaultLanguage, namespaces } = config.translation;
+const { allLanguages, defaultLanguage, allNamespaces, enableSubpaths } = config.translation;
+
+const serverSideOptions = {
+  detection:
+  fallbackLng: defaultLanguage,
+  preload: allLanguages, // preload all langages
+  ns: allNamespaces, // need to preload all the namespaces
+  backend: {
+    loadPath: path.join(__dirname, '/static/locales/{{lng}}/{{ns}}.json'),
+    addPath: path.join(__dirname, '/static/locales/{{lng}}/{{ns}}.missing.json'),
+  },
+}
+
+// using subpaths like /de/page2 set whitelist and detection to allow path
+if (enableSubpaths) {
+  serverSideOptions.detection = {
+    order: ['path', 'session', 'querystring', 'cookie', 'header'], // all
+    lookupPath: 'lng',
+    lookupFromPathIndex: 0,
+  };
+  serverSideOptions.whitelist = allLanguages;
+}
 
 // init i18next with serverside settings
 // using i18next-express-middleware
 i18n
   .use(Backend)
   .use(i18nextMiddleware.LanguageDetector)
-  .init(
-    {
-      detection: {
-        order: ['path', 'session', 'querystring', 'cookie', 'header'],
-        lookupPath: 'lng',
-        lookupFromPathIndex: 0,
-      },
-      fallbackLng: defaultLanguage,
-      preload: allLanguages, // preload all langages
-      whitelist: allLanguages,
-      ns: namespaces, // need to preload all the namespaces
-      backend: {
-        loadPath: path.join(__dirname, '/static/locales/{{lng}}/{{ns}}.json'),
-        addPath: path.join(__dirname, '/static/locales/{{lng}}/{{ns}}.missing.json'),
-      },
-    },
+  .init(serverSideOptions,
     () => {
       // loaded translations we can bootstrap our routes
       app.prepare().then(() => {
         const server = express();
 
         // Force trailing slash on language subpaths
-        server.get('*', (req, res, cb) => {
-          const { pathname, search } = parseURL(req.url);
-          const searchString = search || '';
-          allLanguages.forEach(lng => {
-            if (pathname.startsWith(`/${lng}`) && !pathname.startsWith(`/${lng}/`)) {
-              res.redirect(301, pathname.replace(`/${lng}`, `/${lng}/`) + searchString);
-            }
+        if (enableSubpaths) {
+          server.get('*', (req, res, cb) => {
+            const { pathname, search } = parseURL(req.url);
+            const searchString = search || '';
+            allLanguages.forEach(lng => {
+              if (pathname.startsWith(`/${lng}`) && !pathname.startsWith(`/${lng}/`)) {
+                res.redirect(301, pathname.replace(`/${lng}`, `/${lng}/`) + searchString);
+              }
+            });
+            cb();
           });
-          cb();
-        });
+        }
 
         // enable middleware for i18next
         server.use(i18nextMiddleware.handle(i18n));
@@ -62,22 +70,26 @@ i18n
         server.post('/locales/add/:lng/:ns', i18nextMiddleware.missingKeyHandler(i18n));
 
         // use next.js
-        server.get('*', (req, res) => {
-          // If req.url contains a language subpath, remove
-          // it so that NextJS will render the correct page
-          let strippedRoute = req.url;
-          for (const lng of allLanguages) {
-            if (req.url.startsWith(`/${lng}/`)) {
-              strippedRoute = strippedRoute.replace(`/${lng}/`, '/');
-              break;
+        if (enableSubpaths) {
+          server.get('*', (req, res) => {
+            // If req.url contains a language subpath, remove
+            // it so that NextJS will render the correct page
+            let strippedRoute = req.url;
+            for (const lng of allLanguages) {
+              if (req.url.startsWith(`/${lng}/`)) {
+                strippedRoute = strippedRoute.replace(`/${lng}/`, '/');
+                break;
+              }
             }
-          }
-          if (strippedRoute !== req.url) {
-            app.render(req, res, strippedRoute);
-          } else {
-            handle(req, res);
-          }
-        });
+            if (strippedRoute !== req.url) {
+              app.render(req, res, strippedRoute);
+            } else {
+              handle(req, res);
+            }
+          });
+        } else {
+          server.get('*', (req, res) => handle(req, res));
+        }
 
         server.listen(3000, err => {
           if (err) throw err;
