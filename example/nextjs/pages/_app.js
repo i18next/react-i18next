@@ -40,7 +40,7 @@ export default class MyApp extends App {
           {...pageProps}
           ns="common"
           i18n={(pageProps && pageProps.i18n) || i18n}
-          wait={false}
+          wait={process.browser}
         >
           {t => (
             <React.Fragment>
