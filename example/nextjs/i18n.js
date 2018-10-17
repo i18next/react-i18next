@@ -2,10 +2,12 @@ const i18next = require('i18next');
 const XHR = require('i18next-xhr-backend');
 const LanguageDetector = require('i18next-browser-languagedetector');
 
+const config = require('./config');
+
 const i18n = i18next.default ? i18next.default : i18next;
 
 const options = {
-  fallbackLng: 'en',
+  fallbackLng: config.translation.defaultLanguage,
   load: 'languageOnly', // we only provide en, de -> no region specific locals like en-US, de-DE
 
   // have a common namespace used around the full app
