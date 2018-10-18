@@ -39,6 +39,7 @@
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
+    "@types/i18next": "^11.9.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "10.0.1",
     "babel-jest": "23.6.0",
@@ -75,8 +76,8 @@
   },
   "peerDependencies": {
     "i18next": ">= 6.0.1",
-    "react": "^0.14.0 ||^15.0.0 || ^16.0.0",
-    "prop-types": "15.6.2"
+    "prop-types": "15.6.2",
+    "react": "^0.14.0 ||^15.0.0 || ^16.0.0"
   },
   "scripts": {
     "clean": "rimraf dist && mkdirp dist",
