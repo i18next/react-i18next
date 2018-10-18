@@ -77,8 +77,8 @@
   },
   "peerDependencies": {
     "i18next": ">= 6.0.1",
-    "prop-types": "15.6.2",
-    "react": "^0.14.0 ||^15.0.0 || ^16.0.0"
+    "react": "^0.14.0 ||^15.0.0 || ^16.0.0",
+    "prop-types": "15.6.2"
   },
   "scripts": {
     "clean": "rimraf dist && mkdirp dist",
