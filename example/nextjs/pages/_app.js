@@ -5,7 +5,7 @@ import { NamespacesConsumer } from 'react-i18next';
 import i18n from '../i18n';
 import languagePathCorrection from '../lib/languagePathCorrection';
 import { translation } from '../config';
-import 'cookie' from 'cookie'
+import cookie from 'cookie';
 
 const { enableSubpaths } = translation;
 
