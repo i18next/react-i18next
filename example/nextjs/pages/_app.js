@@ -48,8 +48,7 @@ export default class MyApp extends App {
               <button
                 type="button"
                 onClick={() => {
-                  const lng = i18n.languages[0] === 'en' ? 'de' : 'en';
-                  i18n.changeLanguage(lng);
+                  i18n.changeLanguage(i18n.languages[0] === 'en' ? 'de' : 'en');
                 }}
               >
                 Change locale
