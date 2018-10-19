@@ -24,11 +24,33 @@ const serverSideOptions = {
     addPath: path.join(__dirname, '/static/locales/{{lng}}/{{ns}}.missing.json'),
   },
   detection: {
-    order: ['path', 'session', 'querystring', 'cookie', 'header'], // all
-    caches: ['localStorage', 'cookie']
+    caches: ['cookie'] // default: false
   },
-  whitelist: allLanguages,
 };
+
+const serverSideOptions = {
+  fallbackLng: defaultLanguage,
+  preload: allLanguages, // preload all langages
+  ns: getAllNamespaces(`${localesPath}${defaultLanguage}`), // need to preload all the namespaces
+  backend: {
+    loadPath: path.join(__dirname, '/static/locales/{{lng}}/{{ns}}.json'),
+    addPath: path.join(__dirname, '/static/locales/{{lng}}/{{ns}}.missing.json'),
+  },
+  detection: {
+    caches: ['cookie'] // default false
+ }
+};
+
+// using subpaths like /de/page2 set whitelist and detection to allow path
+if (enableSubpaths) {
+  serverSideOptions.detection = {
+    order: ['path', 'session', 'querystring', 'cookie', 'header'], // all
+    caches: ['cookie'], // default false
+    lookupPath: 'lng',
+    lookupFromPathIndex: 0,
+  };
+  serverSideOptions.whitelist = allLanguages;
+}
 
 // init i18next with serverside settings
 // using i18next-express-middleware
