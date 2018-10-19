@@ -12,6 +12,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "cookie": "0.3.1",
     "express": "4.16.3",
     "i18next": "11.9.0",
     "i18next-browser-languagedetector": "2.2.3",

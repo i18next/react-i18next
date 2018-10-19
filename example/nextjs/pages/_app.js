@@ -5,6 +5,7 @@ import { NamespacesConsumer } from 'react-i18next';
 import i18n from '../i18n';
 import languagePathCorrection from '../lib/languagePathCorrection';
 import { translation } from '../config';
+import 'cookie' from 'cookie'
 
 const { enableSubpaths } = translation;
 
@@ -48,7 +49,9 @@ export default class MyApp extends App {
               <button
                 type="button"
                 onClick={() => {
-                  i18n.changeLanguage(i18n.languages[0] === 'en' ? 'de' : 'en');
+                  const lng = i18n.languages[0] === 'en' ? 'de' : 'en'
+                  document.cookie = cookie.serialize('i18next', lng)
+                  i18n.changeLanguage(lng)
                 }}
               >
                 Change locale
