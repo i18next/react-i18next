@@ -8,8 +8,8 @@ import createReactContext, {
 } from 'create-react-context';
 
 export interface ReactI18NextOptions extends I18nOptions {
-  usePureComponent: boolean;
-  omitBoundRerender: boolean;
+  usePureComponent?: boolean;
+  omitBoundRerender?: boolean;
 }
 
 type i18n = i18next.i18n;
@@ -55,6 +55,7 @@ export interface WithNamespaces extends WithI18n {
 
 export interface WithNamespacesOptions extends ReactI18NextOptions {
   wait: boolean;
+  i18n?: i18n;
   innerRef?:
     | ((instance: any) => void)
     | React.RefObject<HTMLElement | SVGElement | React.Component>;
@@ -70,7 +71,6 @@ export function withNamespaces(
 export const translate: typeof withNamespaces;
 
 export interface NamespacesConsumerProps extends ReactI18NextOptions {
-  wait: boolean;
   initialI18nStore?: {};
   initialLanguage?: string;
   children(
@@ -86,8 +86,8 @@ export interface NamespacesConsumerProps extends ReactI18NextOptions {
 export const NamespacesConsumer: React.ComponentClass<NamespacesConsumerProps>;
 
 export interface I18nextProviderProps {
-  defaultNS?: string;
   i18n: i18n;
+  defaultNS?: string;
   initialI18nStore?: {};
   initialLanguage?: string;
 }
