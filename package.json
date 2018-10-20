@@ -3,6 +3,7 @@
   "version": "8.0.8",
   "description": "Internationalization for react done right. Using the i18next i18n ecosystem.",
   "main": "dist/commonjs/index.js",
+  "types": "index.d.ts",
   "jsnext:main": "dist/es/index.js",
   "module": "dist/es/index.js",
   "keywords": [
@@ -39,6 +40,7 @@
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
+    "@types/i18next": "^11.9.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "10.0.1",
     "babel-jest": "23.6.0",
