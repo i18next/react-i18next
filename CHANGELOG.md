@@ -1,3 +1,7 @@
+### 8.1.0
+
+- add typedefinitions [557](https://github.com/i18next/react-i18next/pull/557)
+
 ### 8.0.8
 
 - add innerRefs support to withContext, withI18n
