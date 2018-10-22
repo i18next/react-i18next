@@ -7,6 +7,9 @@ import createReactContext, {
   Context as ReactContext,
 } from 'create-react-context';
 
+type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
+type Subtract<T, K> = Omit<T, keyof K>;
+
 export interface ReactI18NextOptions extends I18nOptions {
   usePureComponent?: boolean;
   omitBoundRerender?: boolean;
@@ -44,8 +47,8 @@ export interface WithI18n extends I18nContextValues {
 }
 
 export function withI18n(): <P extends object>(
-  Wrapper: React.ComponentType<P & WithI18n>,
-) => React.ComponentType<P>;
+  Wrapper: React.ComponentType<P>,
+) => React.ComponentType<Subtract<P, WithI18n>>;
 
 export interface WithNamespaces extends WithI18n {
   tReady: boolean;
@@ -64,9 +67,9 @@ export interface WithNamespacesOptions extends ReactI18NextOptions {
 export function withNamespaces(
   namespace?: string,
   options?: WithNamespacesOptions,
-): <P extends object>(
-  component: React.ComponentType<P & WithNamespaces>,
-) => React.ComponentType<P>;
+): <P extends WithNamespaces>(
+  component: React.ComponentType<P>,
+) => React.ComponentType<Subtract<P, WithNamespaces>>;
 
 export const translate: typeof withNamespaces;
 
