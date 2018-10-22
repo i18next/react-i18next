@@ -1,13 +1,10 @@
 import * as React from 'react';
-import i18next, {
-  TranslationFunction,
-  ReactOptions as I18nOptions,
-} from 'i18next';
+import * as i18next from 'i18next';
 import createReactContext, {
   Context as ReactContext,
 } from 'create-react-context';
 
-export interface ReactI18NextOptions extends I18nOptions {
+export interface ReactI18NextOptions extends i18next.ReactOptions {
   usePureComponent?: boolean;
   omitBoundRerender?: boolean;
 }
@@ -31,7 +28,7 @@ export function getI18n(): i18n;
 
 export interface I18nContextValues {
   i18n: i18n;
-  t: TranslationFunction;
+  t: i18next.TranslationFunction;
   defaultNS?: string;
   reportNS?: string;
   lng?: string;
@@ -74,7 +71,7 @@ export interface NamespacesConsumerProps extends ReactI18NextOptions {
   initialI18nStore?: {};
   initialLanguage?: string;
   children(
-    t: TranslationFunction,
+    t: i18next.TranslationFunction,
     options: {
       i18n: i18n;
       lng: string;
@@ -99,7 +96,7 @@ export interface TransProps {
   count?: number;
   parent?: React.ReactNode;
   i18n?: i18n;
-  t?: TranslationFunction;
+  t?: i18next.TranslationFunction;
   defaults?: string;
   values?: {};
   components?: React.ReactNode[];
