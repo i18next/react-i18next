@@ -43,9 +43,9 @@ export interface WithI18n extends I18nContextValues {
   i18nOptions?: ReactI18NextOptions;
 }
 
-export function withI18n(): <P extends object>(
+export function withI18n(): <P extends object, S extends object>(
   Wrapper: React.ComponentType<P & WithI18n>,
-) => React.ComponentType<P>;
+) => React.ComponentType<P, S>;
 
 export interface WithNamespaces extends WithI18n {
   tReady: boolean;
@@ -64,9 +64,9 @@ export interface WithNamespacesOptions extends ReactI18NextOptions {
 export function withNamespaces(
   namespace?: string,
   options?: WithNamespacesOptions,
-): <P extends object>(
-  component: React.ComponentType<P & WithNamespaces>,
-) => React.ComponentType<P>;
+): <P extends object, S extends object>(
+  component: React.ComponentType<P & WithNamespaces, S>,
+) => React.ComponentType<P, S>;
 
 export const translate: typeof withNamespaces;
 
