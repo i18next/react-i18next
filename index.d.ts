@@ -1,11 +1,10 @@
 import * as React from 'react';
-import i18next, {
+import {
+  i18n,
   TranslationFunction,
   ReactOptions as I18nOptions,
 } from 'i18next';
-import createReactContext, {
-  Context as ReactContext,
-} from 'create-react-context';
+import { Context as ReactContext } from 'create-react-context';
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 type Subtract<T, K> = Omit<T, keyof K>;
@@ -14,8 +13,6 @@ export interface ReactI18NextOptions extends I18nOptions {
   usePureComponent?: boolean;
   omitBoundRerender?: boolean;
 }
-
-type i18n = i18next.i18n;
 
 interface ReactI18nextModule {
   type: string;
