@@ -61,8 +61,13 @@ export interface WithNamespacesOptions extends ReactI18NextOptions {
     | React.RefObject<HTMLElement | SVGElement | React.Component>;
 }
 
+type Namespace = string | string[];
+interface NamespaceExtractor {
+  (props: any & { namespace: Namespace }): Namespace;
+}
+
 export function withNamespaces(
-  namespace?: string,
+  namespace?: Namespace | NamespaceExtractor,
   options?: WithNamespacesOptions,
 ): <P extends WithNamespaces>(
   component: React.ComponentType<P>,
