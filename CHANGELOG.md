@@ -1,3 +1,7 @@
+### 8.1.1
+
+- persisting generated i18nOptions on withI18n hoc to avoid rerenders on pure components
+
 ### 8.1.0
 
 - add typedefinitions [557](https://github.com/i18next/react-i18next/pull/557)

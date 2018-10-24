@@ -73,7 +73,7 @@ export function withI18n() {
         // merged extra props
         const extraProps = {};
 
-        let i18nOptions = this.props.i18nOptions;
+        let i18nOptions = this.props.i18nOptions || this.i18nOptions;
 
         // as default we add i18n, basic t function and i18nOptions from setI18n
         // those get overridden by values passed by I18nContext.Provider <- eg. set in I18nextProvider
@@ -89,6 +89,7 @@ export function withI18n() {
             ...(i18n && i18n.options && i18n.options.react),
             ...possibleI18nOptionsFromProps,
           };
+          this.i18nOptions = i18nOptions;
         }
 
         if (i18n) {

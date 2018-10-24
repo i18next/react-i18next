@@ -1090,7 +1090,7 @@
             if (innerRef) rest.ref = innerRef; // merged extra props
 
             var extraProps = {};
-            var i18nOptions = this.props.i18nOptions; // as default we add i18n, basic t function and i18nOptions from setI18n
+            var i18nOptions = this.props.i18nOptions || this.i18nOptions; // as default we add i18n, basic t function and i18nOptions from setI18n
             // those get overridden by values passed by I18nContext.Provider <- eg. set in I18nextProvider
 
             var i18n = this.props.i18n || getI18n();
@@ -1101,6 +1101,7 @@
                 return mem;
               }, {});
               i18nOptions = _objectSpread({}, getDefaults(), i18n && i18n.options && i18n.options.react, possibleI18nOptionsFromProps);
+              this.i18nOptions = i18nOptions;
             }
 
             if (i18n) {
