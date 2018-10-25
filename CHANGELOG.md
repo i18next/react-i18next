@@ -1,3 +1,7 @@
+### 8.1.2
+
+- publish changes to typescript definitions [567](https://github.com/i18next/react-i18next/pull/567)
+
 ### 8.1.1
 
 - persisting generated i18nOptions on withI18n hoc to avoid rerenders on pure components
