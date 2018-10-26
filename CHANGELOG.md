@@ -1,3 +1,7 @@
+### 8.3.0
+
+- Ensure withI18n hoists static members. [584](https://github.com/i18next/react-i18next/pull/584)
+
 ### 8.2.0
 
 - comes with support for hooks that are experimental in react v16.7.0-alpha [learn more](https://react.i18next.com/experimental/using-with-hooks)

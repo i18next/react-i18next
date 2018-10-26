@@ -379,14 +379,14 @@
   }
 
   function unwrapExports (x) {
-  	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x.default : x;
+  	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
   }
 
   function createCommonjsModule(fn, module) {
   	return module = { exports: {} }, fn(module, module.exports), module.exports;
   }
 
-  /** @license React v16.6.0
+  /** @license React v16.5.2
    * react-is.production.min.js
    *
    * Copyright (c) Facebook, Inc. and its affiliates.
@@ -405,13 +405,11 @@
       g = b ? Symbol.for("react.profiler") : 60114,
       h = b ? Symbol.for("react.provider") : 60109,
       k = b ? Symbol.for("react.context") : 60110,
-      l = b ? Symbol.for("react.concurrent_mode") : 60111,
+      l = b ? Symbol.for("react.async_mode") : 60111,
       m = b ? Symbol.for("react.forward_ref") : 60112,
-      n = b ? Symbol.for("react.suspense") : 60113,
-      q = b ? Symbol.for("react.memo") : 60115,
-      r = b ? Symbol.for("react.lazy") : 60116;
+      n = b ? Symbol.for("react.placeholder") : 60113;
 
-  function t(a) {
+  function q(a) {
     if ("object" === _typeof(a) && null !== a) {
       var p = a.$$typeof;
 
@@ -443,13 +441,8 @@
     }
   }
 
-  function u(a) {
-    return t(a) === l;
-  }
-
-  exports.typeOf = t;
+  exports.typeOf = q;
   exports.AsyncMode = l;
-  exports.ConcurrentMode = l;
   exports.ContextConsumer = k;
   exports.ContextProvider = h;
   exports.Element = c;
@@ -460,21 +453,19 @@
   exports.StrictMode = f;
 
   exports.isValidElementType = function (a) {
-    return "string" === typeof a || "function" === typeof a || a === e || a === l || a === g || a === f || a === n || "object" === _typeof(a) && null !== a && (a.$$typeof === r || a.$$typeof === q || a.$$typeof === h || a.$$typeof === k || a.$$typeof === m);
+    return "string" === typeof a || "function" === typeof a || a === e || a === l || a === g || a === f || a === n || "object" === _typeof(a) && null !== a && ("function" === typeof a.then || a.$$typeof === h || a.$$typeof === k || a.$$typeof === m);
   };
 
   exports.isAsyncMode = function (a) {
-    return u(a);
+    return q(a) === l;
   };
 
-  exports.isConcurrentMode = u;
-
   exports.isContextConsumer = function (a) {
-    return t(a) === k;
+    return q(a) === k;
   };
 
   exports.isContextProvider = function (a) {
-    return t(a) === h;
+    return q(a) === h;
   };
 
   exports.isElement = function (a) {
@@ -482,30 +473,30 @@
   };
 
   exports.isForwardRef = function (a) {
-    return t(a) === m;
+    return q(a) === m;
   };
 
   exports.isFragment = function (a) {
-    return t(a) === e;
+    return q(a) === e;
   };
 
   exports.isProfiler = function (a) {
-    return t(a) === g;
+    return q(a) === g;
   };
 
   exports.isPortal = function (a) {
-    return t(a) === d;
+    return q(a) === d;
   };
 
   exports.isStrictMode = function (a) {
-    return t(a) === f;
+    return q(a) === f;
   };
 
   var reactIs_production_min = /*#__PURE__*/Object.freeze({
 
   });
 
-  /** @license React v16.6.0
+  /** @license React v16.5.2
    * react-is.development.js
    *
    * Copyright (c) Facebook, Inc. and its affiliates.
@@ -530,71 +521,14 @@
       var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
       var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
       var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace;
-      var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
+      var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
       var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
-      var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
-      var REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3;
-      var REACT_LAZY_TYPE = hasSymbol ? Symbol.for('react.lazy') : 0xead4;
+      var REACT_PLACEHOLDER_TYPE = hasSymbol ? Symbol.for('react.placeholder') : 0xead1;
 
       function isValidElementType(type) {
         return typeof type === 'string' || typeof type === 'function' || // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
-        type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || _typeof(type) === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE);
+        type === REACT_FRAGMENT_TYPE || type === REACT_ASYNC_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_PLACEHOLDER_TYPE || _typeof(type) === 'object' && type !== null && (typeof type.then === 'function' || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE);
       }
-      /**
-       * Forked from fbjs/warning:
-       * https://github.com/facebook/fbjs/blob/e66ba20ad5be433eb54423f2b097d829324d9de6/packages/fbjs/src/__forks__/warning.js
-       *
-       * Only change is we use console.warn instead of console.error,
-       * and do nothing when 'console' is not supported.
-       * This really simplifies the code.
-       * ---
-       * Similar to invariant but only logs a warning if the condition is not met.
-       * This can be used to log issues in development environments in critical
-       * paths. Removing the logging code for production environments will keep the
-       * same logic and follow the same code paths.
-       */
-
-
-      var lowPriorityWarning = function lowPriorityWarning() {};
-
-      {
-        var printWarning = function printWarning(format) {
-          for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-            args[_key - 1] = arguments[_key];
-          }
-
-          var argIndex = 0;
-          var message = 'Warning: ' + format.replace(/%s/g, function () {
-            return args[argIndex++];
-          });
-
-          if (typeof console !== 'undefined') {
-            console.warn(message);
-          }
-
-          try {
-            // --- Welcome to debugging React ---
-            // This error was thrown as a convenience so that you can use this stack
-            // to find the callsite that caused this warning to fire.
-            throw new Error(message);
-          } catch (x) {}
-        };
-
-        lowPriorityWarning = function lowPriorityWarning(condition, format) {
-          if (format === undefined) {
-            throw new Error('`lowPriorityWarning(condition, format, ...args)` requires a warning ' + 'message argument');
-          }
-
-          if (!condition) {
-            for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
-              args[_key2 - 2] = arguments[_key2];
-            }
-
-            printWarning.apply(undefined, [format].concat(args));
-          }
-        };
-      }
-      var lowPriorityWarning$1 = lowPriorityWarning;
 
       function typeOf(object) {
         if (_typeof(object) === 'object' && object !== null) {
@@ -605,7 +539,7 @@
               var type = object.type;
 
               switch (type) {
-                case REACT_CONCURRENT_MODE_TYPE:
+                case REACT_ASYNC_MODE_TYPE:
                 case REACT_FRAGMENT_TYPE:
                 case REACT_PROFILER_TYPE:
                 case REACT_STRICT_MODE_TYPE:
@@ -632,11 +566,9 @@
         }
 
         return undefined;
-      } // AsyncMode alias is deprecated along with isAsyncMode
+      }
 
-
-      var AsyncMode = REACT_CONCURRENT_MODE_TYPE;
-      var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
+      var AsyncMode = REACT_ASYNC_MODE_TYPE;
       var ContextConsumer = REACT_CONTEXT_TYPE;
       var ContextProvider = REACT_PROVIDER_TYPE;
       var Element = REACT_ELEMENT_TYPE;
@@ -645,20 +577,9 @@
       var Profiler = REACT_PROFILER_TYPE;
       var Portal = REACT_PORTAL_TYPE;
       var StrictMode = REACT_STRICT_MODE_TYPE;
-      var hasWarnedAboutDeprecatedIsAsyncMode = false; // AsyncMode should be deprecated
 
       function isAsyncMode(object) {
-        {
-          if (!hasWarnedAboutDeprecatedIsAsyncMode) {
-            hasWarnedAboutDeprecatedIsAsyncMode = true;
-            lowPriorityWarning$1(false, 'The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
-          }
-        }
-        return isConcurrentMode(object);
-      }
-
-      function isConcurrentMode(object) {
-        return typeOf(object) === REACT_CONCURRENT_MODE_TYPE;
+        return typeOf(object) === REACT_ASYNC_MODE_TYPE;
       }
 
       function isContextConsumer(object) {
@@ -695,7 +616,6 @@
 
       exports.typeOf = typeOf;
       exports.AsyncMode = AsyncMode;
-      exports.ConcurrentMode = ConcurrentMode;
       exports.ContextConsumer = ContextConsumer;
       exports.ContextProvider = ContextProvider;
       exports.Element = Element;
@@ -706,7 +626,6 @@
       exports.StrictMode = StrictMode;
       exports.isValidElementType = isValidElementType;
       exports.isAsyncMode = isAsyncMode;
-      exports.isConcurrentMode = isConcurrentMode;
       exports.isContextConsumer = isContextConsumer;
       exports.isContextProvider = isContextProvider;
       exports.isElement = isElement;
