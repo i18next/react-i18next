@@ -1,3 +1,7 @@
+### 8.2.0
+
+- comes with support for hooks that are experimental in react v16.7.0-alpha [learn more](https://react.i18next.com/experimental/using-with-hooks)
+
 ### 8.1.2
 
 - publish changes to typescript definitions [567](https://github.com/i18next/react-i18next/pull/567)
