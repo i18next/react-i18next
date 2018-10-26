@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import createReactContext from 'create-react-context';
+import hoistStatics from 'hoist-non-react-statics';
 
 let defaultOptions = {
   wait: false,
@@ -62,6 +63,10 @@ export function withContext() {
   };
 }
 
+function getDisplayName(component) {
+  return component.displayName || component.name || 'Component';
+}
+
 /* eslint-disable react/no-multi-comp */
 export function withI18n() {
   return function Wrapper(WrappedComponent) {
@@ -106,6 +111,13 @@ export function withI18n() {
       }
     }
 
-    return withContext()(WithMergedOptions);
+    const WithMergedOptionsWithContext = withContext()(WithMergedOptions);
+
+    WithMergedOptionsWithContext.WrappedComponent = WrappedComponent;
+    WithMergedOptionsWithContext.displayName = `WithMergedOptions(${getDisplayName(
+      WrappedComponent
+    )})`;
+
+    return hoistStatics(WithMergedOptionsWithContext, WrappedComponent);
   };
 }

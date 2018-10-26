@@ -117,5 +117,10 @@
       "!**/example/**"
     ]
   },
+  "prettier": {
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 100
+  },
   "lock": false
 }
