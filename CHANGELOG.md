@@ -1,3 +1,7 @@
+### 8.3.1
+
+- make export in ./hooks.js explicit
+
 ### 8.3.0
 
 - Ensure withI18n hoists static members. [584](https://github.com/i18next/react-i18next/pull/584)

@@ -1,1 +1,10 @@
-export * from './dist/es/hooks';
+export {
+  useT,
+  withT,
+  Trans,
+  initReactI18n,
+  setDefaults,
+  getDefaults,
+  setI18n,
+  getI18n,
+} from './dist/es/hooks';
