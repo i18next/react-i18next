@@ -1,3 +1,7 @@
+### 8.3.2
+
+- use react suspense in hooks experimental code [learn more](https://react.i18next.com/experimental/using-with-hooks)
+
 ### 8.3.1
 
 - make export in ./hooks.js explicit

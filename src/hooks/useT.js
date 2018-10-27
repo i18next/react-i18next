@@ -26,7 +26,7 @@ export function useT(ns) {
   const i18n = getI18n();
   if (!i18n) {
     warnOnce('You will need pass in an i18next instance by using i18nextReactModule');
-    return [k => k, false, {}];
+    return [k => k, {}];
   }
   const i18nOptions = getDefaults();
 
@@ -39,7 +39,6 @@ export function useT(ns) {
     i18n.isInitialized && namespaces.every(n => i18n.hasResourceBundle(i18n.languages[0], n));
 
   // set states
-  const [isReady, setIsReady] = useState(!!ready);
   const [t, setT] = useState({ t: i18n.getFixedT(null, namespaces[0]) }); // seems we can't have functions as value -> wrap it in obj
 
   function resetT() {
@@ -47,13 +46,6 @@ export function useT(ns) {
   }
 
   useEffect(() => {
-    // not yet loaded namespaces -> load them
-    if (!isReady)
-      loadNamespaces(i18n, namespaces, () => {
-        resetT();
-        setIsReady(true);
-      });
-
     // bind events to trigger change, like languageChanged
     if (i18nOptions.bindI18n && i18n) i18n.on(i18nOptions.bindI18n, resetT);
 
@@ -66,5 +58,15 @@ export function useT(ns) {
     };
   });
 
-  return [t.t, isReady, i18n];
+  // return hook stuff if ready or
+  // not yet loaded namespaces -> load them -> and trigger suspense
+  if (ready) {
+    return [t.t, i18n];
+  }
+  throw new Promise(resolve => {
+    loadNamespaces(i18n, namespaces, () => {
+      resetT();
+      resolve();
+    });
+  });
 }
