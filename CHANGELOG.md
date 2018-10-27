@@ -1,3 +1,7 @@
+### 8.3.3
+
+- remove wait option in hooks code (not used anylonger)
+
 ### 8.3.2
 
 - use react suspense in hooks experimental code [learn more](https://react.i18next.com/experimental/using-with-hooks)
