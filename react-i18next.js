@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react')) :
   typeof define === 'function' && define.amd ? define(['exports', 'react'], factory) :
-  (factory((global['react-i18next'] = {}),global.React));
+  (factory((global.ReactI18next = {}),global.React));
 }(this, (function (exports,React) { 'use strict';
 
   var React__default = 'default' in React ? React['default'] : React;

@@ -1,3 +1,7 @@
+### 8.3.5
+
+- rename named export to window.ReactI18next for standalone js
+
 ### 8.3.4
 
 - try fixing standalone browser build

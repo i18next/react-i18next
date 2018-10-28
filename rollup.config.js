@@ -10,10 +10,10 @@ const compress = argv.uglify;
 const babelOptions = {
   presets: [
     [
-    '@babel/preset-env',
+      '@babel/preset-env',
       {
         targets: {
-        'esmodules': true
+          esmodules: true,
         },
       },
     ],
@@ -36,7 +36,7 @@ export default {
   external: ['react', 'react-dom'],
   // moduleId: 'react-i18next',
   output: {
-    name: 'react-i18next',
+    name: 'ReactI18next',
     format,
     file,
   },
