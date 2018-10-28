@@ -8,7 +8,17 @@ const format = argv.format || argv.f || 'iife';
 const compress = argv.uglify;
 
 const babelOptions = {
-  presets: ['@babel/preset-env', '@babel/react'],
+  presets: [
+    [
+    '@babel/preset-env',
+      {
+        targets: {
+        'esmodules': true
+        },
+      },
+    ],
+    '@babel/react',
+  ],
   babelrc: false,
 };
 

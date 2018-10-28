@@ -1,3 +1,7 @@
+### 8.3.4
+
+- try fixing standalone browser build
+
 ### 8.3.3
 
 - remove wait option in hooks code (not used anylonger)
