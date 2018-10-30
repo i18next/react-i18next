@@ -3,6 +3,12 @@ import { I18nContext } from './context';
 import { initSSR } from './utils';
 
 export class I18nextProvider extends Component {
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.i18n !== nextProps.i18n) {
+      throw new Error('[react-i18next][I18nextProvider]does not support changing the i18n object.');
+    }
+  }
+
   constructor(props) {
     super(props);
 
@@ -11,12 +17,6 @@ export class I18nextProvider extends Component {
 
     const { i18n } = this.props;
     this.state = { i18n };
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (prevState.i18n !== nextProps.i18n) {
-      throw new Error('[react-i18next][I18nextProvider]does not support changing the i18n object.');
-    }
   }
 
   render() {
