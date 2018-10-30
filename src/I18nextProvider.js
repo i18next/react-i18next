@@ -8,10 +8,13 @@ export class I18nextProvider extends Component {
 
     // nextjs / SSR: getting data from next.js or other ssr stack
     initSSR(props, true);
+
+    const { i18n } = this.props;
+    this.state = { i18n };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.i18n !== nextProps.i18n) {
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.i18n !== nextProps.i18n) {
       throw new Error('[react-i18next][I18nextProvider]does not support changing the i18n object.');
     }
   }
