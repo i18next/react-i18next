@@ -105,6 +105,18 @@ $ npm install react-i18next
 - react >= **0.14.0** (in case of < v16 or preact you will need to define parent in [Trans component](https://react.i18next.com/components/trans-component.html#props) or globally in [i18next.react options](https://react.i18next.com/components/trans-component.html#additional-options-on-i18nextinit))
 - i18next >= **2.0.0**
 
+## Contributors
+
+Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+| [<img src="https://avatars3.githubusercontent.com/u/977772?v=4" width="100px;"/><br /><sub><b>Jan Mühlemann</b></sub>](http://twitter.com/jamuhl)<br />[💻](https://github.com/i18next/react-i18next/commits?author=jamuhl "Code") [💡](#example-jamuhl "Examples") [📖](https://github.com/i18next/react-i18next/commits?author=jamuhl "Documentation") [💬](#question-jamuhl "Answering Questions") | [<img src="https://avatars1.githubusercontent.com/u/10575782?v=4" width="100px;"/><br /><sub><b>Isaac Hinman</b></sub>](https://isaachinman.com)<br />[💻](https://github.com/i18next/react-i18next/commits?author=isaachinman "Code") [💡](#example-isaachinman "Examples") [💬](#question-isaachinman "Answering Questions") | [<img src="https://avatars0.githubusercontent.com/u/7825467?v=4" width="100px;"/><br /><sub><b>Matheus Schettino</b></sub>](https://github.com/schettino)<br />[💻](https://github.com/i18next/react-i18next/commits?author=schettino "Code") [💬](#question-schettino "Answering Questions") |
+| :---: | :---: | :---: |
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
+
 ---
 
 <h3 align="center">Gold Sponsors</h3>

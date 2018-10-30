@@ -42,6 +42,7 @@
     "@babel/register": "^7.0.0",
     "@types/i18next": "^11.9.0",
     "@types/react": "^16.4.18",
+    "all-contributors-cli": "^5.4.1",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "10.0.1",
     "babel-jest": "23.6.0",
@@ -96,7 +97,9 @@
     "test": "BABEL_ENV=development jest --no-cache",
     "test:watch": "BABEL_ENV=development jest --no-cache --watch",
     "test:coverage": "enzyme-adapter-react-install 16 && BABEL_ENV=development jest --no-cache --coverage",
-    "test:lint": "./node_modules/.bin/eslint ./src"
+    "test:lint": "./node_modules/.bin/eslint ./src",
+    "contributors:add": "all-contributors add",
+    "contributors:generate": "all-contributors generate"
   },
   "author": "Jan Mühlemann <jan.muehlemann@gmail.com> (https://github.com/jamuhl)",
   "license": "MIT",
