@@ -1,0 +1,58 @@
+{
+  "projectName": "react-i18next",
+  "projectOwner": "i18next",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "jamuhl",
+      "name": "Jan Mühlemann",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/977772?v=4",
+      "profile": "http://twitter.com/jamuhl",
+      "contributions": [
+        "code",
+        "example",
+        "doc",
+        "question"
+      ]
+    },
+    {
+      "login": "adrai",
+      "name": "Adriano Raiano",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1086194?v=4",
+      "profile": "http://twitter.com/#!/adrirai",
+      "contributions": [
+        "code",
+        "example",
+        "doc",
+        "question"
+      ]
+    },
+    {
+      "login": "isaachinman",
+      "name": "Isaac Hinman",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/10575782?v=4",
+      "profile": "https://isaachinman.com",
+      "contributions": [
+        "code",
+        "example",
+        "question"
+      ]
+    },
+    {
+      "login": "schettino",
+      "name": "Matheus Schettino",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/7825467?v=4",
+      "profile": "https://github.com/schettino",
+      "contributions": [
+        "code",
+        "question"
+      ]
+    }
+  ]
+}
