@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getI18n, getDefaults } from './context';
-import { warnOnce } from '../utils';
+import { getI18n, getDefaults, addUsedNamespaces } from './context';
+import { warnOnce } from './utils';
 
 function loadNamespaces(i18n, ns, cb) {
   i18n.loadNamespaces(ns, () => {
@@ -21,7 +21,7 @@ function loadNamespaces(i18n, ns, cb) {
   });
 }
 
-export function useT(ns) {
+export function useTranslation(ns) {
   // assert we have the needed i18nInstance
   const i18n = getI18n();
   if (!i18n) {
@@ -33,6 +33,9 @@ export function useT(ns) {
   // prepare having a namespace
   let namespaces = ns || (i18n.options && i18n.options.defaultNS);
   namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
+
+  // report namespaces as used
+  addUsedNamespaces(namespaces);
 
   // are we ready? yes if all namespaces in first language are loaded already (either with data or empty objedt on failed load)
   const ready =

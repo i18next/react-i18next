@@ -1,7 +1,7 @@
 import React from 'react';
 import HTML from 'html-parse-stringify2';
 import { getI18n } from './context';
-import { warn, warnOnce } from '../utils';
+import { warn, warnOnce } from './utils';
 
 function hasChildren(node) {
   return node && (node.children || (node.props && node.props.children));

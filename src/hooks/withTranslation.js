@@ -1,10 +1,10 @@
 import React from 'react';
-import { useT } from './useT';
+import { useTranslation } from './useTranslation';
 
-export function withT(ns) {
-  return function Wrapper(WrappedComponent) {
+export function withTranslation(ns) {
+  return function Extend(WrappedComponent) {
     function Wrapper(props) {
-      const [t, i18n] = useT(ns);
+      const [t, i18n] = useTranslation(ns);
 
       return React.createElement(WrappedComponent, {
         ...props,

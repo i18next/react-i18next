@@ -1,6 +1,6 @@
 export {
-  useT,
-  withT,
+  useTranslation,
+  withTranslation,
   Trans,
   initReactI18n,
   setDefaults,
