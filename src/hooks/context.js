@@ -41,7 +41,22 @@ export const initReactI18n = {
   },
 };
 
-export function getInitialPropsForSRR() {
+export function composeInitialProps(ForComponent) {
+  return async ctx => {
+    const componentsInitialProps = ForComponent.getInitialProps
+      ? await ForComponent.getInitialProps(ctx)
+      : {};
+
+    const i18nInitialProps = getInitialProps();
+
+    return {
+      ...componentsInitialProps,
+      ...i18nInitialProps,
+    };
+  };
+}
+
+export function getInitialProps() {
   const i18n = getI18n();
   const namespaces = getUsedNamespaces();
 

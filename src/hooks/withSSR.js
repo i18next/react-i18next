@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSSR } from './useSSR';
+import { composeInitialProps } from './context';
 
 export function withSSR() {
   return function Extend(WrappedComponent) {
@@ -10,6 +11,8 @@ export function withSSR() {
         ...rest,
       });
     }
+
+    Wrapper.getInitialProps = composeInitialProps(WrappedComponent);
 
     return Wrapper;
   };
