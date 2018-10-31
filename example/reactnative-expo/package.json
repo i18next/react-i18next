@@ -10,10 +10,11 @@
   },
   "dependencies": {
     "expo": "^30.0.1",
-    "react": "16.3.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-30.0.0.tar.gz",
     "i18next": "11.9.0",
+    "i18next-react-native-async-storage": "1.0.2",
+    "react": "16.3.1",
     "react-i18next": "8.0.6",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-30.0.0.tar.gz",
     "react-navigation": "2.17.0"
   }
 }
