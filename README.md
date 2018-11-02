@@ -89,7 +89,7 @@ $ npm install react-i18next
 ### Examples
 
 - [Example react](https://github.com/i18next/react-i18next/tree/master/example/react)
-- [Example react using hocs (react 16.7.0-alpha)](https://github.com/i18next/react-i18next/tree/master/example/react-hooks)
+- [Example react using hooks (react 16.7.0-alpha)](https://github.com/i18next/react-i18next/tree/master/example/react-hooks)
 - [Example preact](https://github.com/i18next/react-i18next/tree/master/example/preact)
 - [Example react-native](https://github.com/i18next/react-i18next/tree/master/example/reactnative-expo)
 - [Example expo.io](https://github.com/i18next/react-i18next/tree/master/example/reactnative-expo)
