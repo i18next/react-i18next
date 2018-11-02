@@ -18,7 +18,7 @@
     "i18next-express-middleware": "1.4.0",
     "i18next-node-fs-backend": "2.1.0",
     "i18next-xhr-backend": "1.5.1",
-    "next": "^7.0.1",
+    "next": "^7.0.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-i18next": "8.0.6"
