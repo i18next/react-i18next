@@ -7,6 +7,9 @@ about: Create a report to help us improve
 **Describe the bug**
 A clear and concise description of what the bug is.
 
+**Occurs in react-i18next version**
+npm module version, git tag or even better the explict commit causing the issue
+
 **To Reproduce**
 Steps to reproduce the behavior:
 1. Go to '...'
