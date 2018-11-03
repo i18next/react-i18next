@@ -32,15 +32,8 @@ if (enableSubpaths) {
 // not sure - did neither find something wrong - nor seems the warning to make sense
 export default class MyApp extends App {
 
-  static async getInitialProps({ ctx }) {
-    return {
-      initialLanguage: ctx.req.language ?
-        ctx.req.language : translation.defaultLanguage
-    };
-  };
-
   render() {
-    const { Component, pageProps, initialLanguage } = this.props;
+    const { Component, pageProps } = this.props;
 
     return (
       <Container>
@@ -49,7 +42,7 @@ export default class MyApp extends App {
           ns="common"
           i18n={(pageProps && pageProps.i18n) || i18n}
           wait={process.browser}
-          initialLanguage={initialLanguage}
+          initialLanguage={pageProps.initialLanguage}
         >
           {t => (
             <React.Fragment>
