@@ -2574,12 +2574,6 @@
       initSSR(props, true);
     }
 
-    componentWillReceiveProps(nextProps) {
-      if (this.props.i18n !== nextProps.i18n) {
-        throw new Error('[react-i18next][I18nextProvider]does not support changing the i18n object.');
-      }
-    }
-
     render() {
       const _this$props = this.props,
             children = _this$props.children,

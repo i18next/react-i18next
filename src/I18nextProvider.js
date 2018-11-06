@@ -10,12 +10,6 @@ export class I18nextProvider extends Component {
     initSSR(props, true);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.i18n !== nextProps.i18n) {
-      throw new Error('[react-i18next][I18nextProvider]does not support changing the i18n object.');
-    }
-  }
-
   render() {
     const { children, i18n, defaultNS, reportNS } = this.props;
 

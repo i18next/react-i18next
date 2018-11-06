@@ -1,3 +1,7 @@
+### 8.3.6
+
+- remove componentWillReceiveProps call in I18nextProvider to comply with react strict mode [596](https://github.com/i18next/react-i18next/pull/596)
+
 ### 8.3.5
 
 - rename named export to window.ReactI18next for standalone js
