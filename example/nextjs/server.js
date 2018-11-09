@@ -1,102 +1,34 @@
 const express = require('express');
-const path = require('path');
+const i18nextMiddleware = require('i18next-express-middleware');
 const next = require('next');
-const parseURL = require('url').parse;
 
-const dev = process.env.NODE_ENV !== 'production';
-const app = next({ dev });
+const config = require('./config');
+const forceTrailingSlash = require('./lib/forceTrailingSlash');
+const i18n = require('./i18n');
+const lngPathDetector = require('./lib/lngPathDetector');
+
+const app = next({ dev: process.env.NODE_ENV !== 'production' });
 const handle = app.getRequestHandler();
 
-const i18nextMiddleware = require('i18next-express-middleware');
-const Backend = require('i18next-node-fs-backend');
-const config = require('./config');
-const i18n = require('./i18n');
-const getAllNamespaces = require('./lib/getAllNamespaces');
+const { allLanguages, localeSubpaths } = config.translation;
 
-const { localesPath, allLanguages, defaultLanguage, enableSubpaths } = config.translation;
+(async () => {
+  await app.prepare();
+  const server = express();
 
-const serverSideOptions = {
-  fallbackLng: defaultLanguage,
-  preload: allLanguages, // preload all langages
-  ns: getAllNamespaces(`${localesPath}${defaultLanguage}`), // need to preload all the namespaces
-  backend: {
-    loadPath: path.join(__dirname, '/static/locales/{{lng}}/{{ns}}.json'),
-    addPath: path.join(__dirname, '/static/locales/{{lng}}/{{ns}}.missing.json'),
-  },
-  detection: {
-    caches: ['cookie'] // default: false
-  },
-};
+  server.use(i18nextMiddleware.handle(i18n));
 
-// using subpaths like /de/page2 set whitelist and detection to allow path
-if (enableSubpaths) {
-  serverSideOptions.detection = {
-    order: ['path', 'session', 'querystring', 'cookie', 'header'], // all
-    caches: ['cookie'], // default false
-    lookupPath: 'lng',
-    lookupFromPathIndex: 0,
-  };
-  serverSideOptions.whitelist = allLanguages;
-}
-
-// init i18next with serverside settings
-// using i18next-express-middleware
-i18n
-  .use(Backend)
-  .use(i18nextMiddleware.LanguageDetector)
-  .init(serverSideOptions, () => {
-    // loaded translations we can bootstrap our routes
-    app.prepare().then(() => {
-      const server = express();
-
-      // Force trailing slash on language subpaths
-      if (enableSubpaths) {
-        server.get('*', (req, res, cb) => {
-          const { pathname, search } = parseURL(req.url);
-          const searchString = search || '';
-          allLanguages.forEach(lng => {
-            if (pathname.startsWith(`/${lng}`) && !pathname.startsWith(`/${lng}/`)) {
-              res.redirect(301, pathname.replace(`/${lng}`, `/${lng}/`) + searchString);
-            }
-          });
-          cb();
-        });
-      }
-
-      // enable middleware for i18next
-      server.use(i18nextMiddleware.handle(i18n));
-
-      // serve locales for client
-      server.use('/locales', express.static(path.join(__dirname, '/locales')));
-
-      // missing keys
-      server.post('/locales/add/:lng/:ns', i18nextMiddleware.missingKeyHandler(i18n));
-
-      // use next.js
-      if (enableSubpaths) {
-        server.get('*', (req, res) => {
-          // If req.url contains a language subpath, remove
-          // it so that NextJS will render the correct page
-          let strippedRoute = req.url;
-          for (const lng of allLanguages) {
-            if (req.url.startsWith(`/${lng}/`)) {
-              strippedRoute = strippedRoute.replace(`/${lng}/`, '/');
-              break;
-            }
-          }
-          if (strippedRoute !== req.url) {
-            app.render(req, res, strippedRoute);
-          } else {
-            handle(req, res);
-          }
-        });
-      } else {
-        server.get('*', (req, res) => handle(req, res));
-      }
-
-      server.listen(3000, err => {
-        if (err) throw err;
-        console.log('> Ready on http://localhost:3000');
-      });
+  if (localeSubpaths) {
+    server.get('*', forceTrailingSlash);
+    server.get(/^\/(?!_next|static).*$/, lngPathDetector);
+    server.get(`/:lng(${allLanguages.join('|')})/*`, (req, res) => {
+      const { lng } = req.params;
+      app.render(req, res, req.url.replace(`/${lng}`, ''), { lng });
     });
-  });
+  }
+
+  server.get('*', (req, res) => handle(req, res));
+
+  await server.listen(config.port);
+  console.log(`> Ready on http://localhost:${config.port}`);
+})();
