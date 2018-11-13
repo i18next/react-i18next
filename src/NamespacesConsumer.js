@@ -9,6 +9,11 @@ export class NamespacesConsumerComponent extends Component {
     super(props);
 
     if (!props.i18n) {
+      this.state = {
+        i18nLoadedAt: null,
+        ready: false,
+      };
+
       return warnOnce(
         'You will need pass in an i18next instance either by props, using I18nextProvider or by using i18nextReactModule. Learn more https://react.i18next.com/components/overview#getting-the-i-18-n-function-into-the-flow'
       );
@@ -143,7 +148,7 @@ export class NamespacesConsumerComponent extends Component {
 
   render() {
     const { children, i18n, defaultNS, reportNS, i18nOptions } = this.props;
-    const { ready } = this.state;
+    const { ready } = this.state || { ready: false }; // fallback if state is null...unknown edge case https://github.com/i18next/react-i18next/issues/615
     const { t } = this;
 
     if (!ready && i18nOptions.wait) return null;

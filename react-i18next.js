@@ -1960,6 +1960,10 @@
       super(props);
 
       if (!props.i18n) {
+        this.state = {
+          i18nLoadedAt: null,
+          ready: false
+        };
         return warnOnce('You will need pass in an i18next instance either by props, using I18nextProvider or by using i18nextReactModule. Learn more https://react.i18next.com/components/overview#getting-the-i-18-n-function-into-the-flow');
       } // nextjs / SSR: getting data from next.js or other ssr stack
 
@@ -2095,7 +2099,13 @@
             defaultNS = _this$props5.defaultNS,
             reportNS = _this$props5.reportNS,
             i18nOptions = _this$props5.i18nOptions;
-      const ready = this.state.ready;
+
+      const _ref = this.state || {
+        ready: false
+      },
+            ready = _ref.ready; // fallback if state is null...unknown edge case https://github.com/i18next/react-i18next/issues/615
+
+
       const t = this.t;
       if (!ready && i18nOptions.wait) return null; // remove ssr flag set by provider - first render was done from now on wait if set to wait
 

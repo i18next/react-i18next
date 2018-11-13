@@ -1,3 +1,7 @@
+### 8.3.8
+
+- try fixing edge case of unset state: [615](https://github.com/i18next/react-i18next/issues/615)
+
 ### 8.3.7
 
 - handle initial SSR props only once
