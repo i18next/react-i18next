@@ -15,10 +15,10 @@ const i18n = i18next.default ? i18next.default : i18next;
 i18n.nsFromReactTree = [];
 
 if (process.browser) {
-  // Serverside i18n setup
+  // Clientside i18n setup
   i18n.use(i18nextXHRBackend).use(i18nextBrowserLanguageDetector);
 } else {
-  // Clientside i18n setup
+  // Serverside i18n setup
   const i18nextNodeBackend = require('i18next-node-fs-backend');
   const i18nextMiddleware = require('i18next-express-middleware');
   i18n.use(i18nextNodeBackend).use(i18nextMiddleware.LanguageDetector);
