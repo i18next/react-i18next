@@ -57,10 +57,8 @@ i18n
           } else {
             const initialI18nStore = {};
             req.i18n.languages.forEach(l => {
-              console.log(req.i18n.services.resourceStore.data[l]);
               initialI18nStore[l] = req.i18n.services.resourceStore.data[l];
             });
-            debugger;
             const initialLanguage = req.i18n.language;
 
             res.status(200).send(
