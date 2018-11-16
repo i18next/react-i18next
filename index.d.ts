@@ -43,7 +43,7 @@ export interface WithI18n extends I18nContextValues {
   i18nOptions?: ReactI18NextOptions;
 }
 
-export function withI18n(): <P extends object>(
+export function withI18n<P extends object>(): (
   Wrapper: React.ComponentType<P>,
 ) => React.ComponentType<Subtract<P, WithI18n>>;
 
@@ -66,10 +66,10 @@ interface NamespaceExtractor {
   (props: any & { namespace: Namespace }): Namespace;
 }
 
-export function withNamespaces(
+export function withNamespaces<P extends WithNamespaces>(
   namespace?: Namespace | NamespaceExtractor,
   options?: WithNamespacesOptions,
-): <P extends WithNamespaces>(
+): (
   component: React.ComponentType<P>,
 ) => React.ComponentType<Subtract<P, WithNamespaces>>;
 
