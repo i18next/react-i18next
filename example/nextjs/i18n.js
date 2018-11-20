@@ -50,18 +50,16 @@ function forceTrailingSlash(config) {
   };
 }
 
-function makeConfig() {
-  const PORT = process.env.PORT || 3000;
-  const DEFAULT_LANGUAGE = 'en';
-  const OTHER_LANGUAGES = ['de'];
-  const DEFAULT_NAMESPACE = 'common';
-  const LOCALE_PATH = 'static/locales';
-  const LOCALE_STRUCTURE = '{{lng}}/{{ns}}';
-  const LOCALE_SUBPATHS = false;
+function makeConfig(share_config = require('./lib/share-config')) {
+  const DEFAULT_LANGUAGE = share_config.defaultLanguage || 'en';
+  const OTHER_LANGUAGES = share_config.otherLanguages || ['de'];
+  const DEFAULT_NAMESPACE = share_config.defaultNamespace || 'common';
+  const LOCALE_PATH = share_config.localePath || 'static/locales';
+  const LOCALE_STRUCTURE = share_config.localeStructure || '{{lng}}/{{ns}}';
+  const LOCALE_SUBPATHS = share_config.localeSubpaths || false;
 
   /* Core Settings - only change if you understand what you're changing */
   const config = {
-    port: PORT,
     translation: {
       allLanguages: OTHER_LANGUAGES.concat([DEFAULT_LANGUAGE]),
       defaultLanguage: DEFAULT_LANGUAGE,
@@ -105,9 +103,8 @@ function makeConfig() {
   return config
 }
 
-function registerI18n(server) {
+function registerI18n(server, config) {
   const i18next = require('i18next');
-  const config = makeConfig();
   const i18nextNodeBackend = require('i18next-node-fs-backend');
   const i18nextMiddleware = require('i18next-express-middleware');
 
@@ -131,4 +128,4 @@ function registerI18n(server) {
   }
 }
 
-module.exports = registerI18n
+module.exports = {registerI18n, makeConfig}

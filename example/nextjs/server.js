@@ -8,9 +8,8 @@ const handle = app.getRequestHandler();
 (async () => {
   await app.prepare();
   const server = express();
-  const registerI18n = require('./i18n')
-  registerI18n(server)
-  
+  const {registerI18n, makeConfig} = require('./i18n')
+  registerI18n(server, makeConfig())
 
   server.get('*', (req, res) => handle(req, res));
 

@@ -26,13 +26,13 @@ function lngPathCorrection(config, i18n) {
   }
 }
 
-function makeConfig() {
-  const DEFAULT_LANGUAGE = 'en';
-  const OTHER_LANGUAGES = ['de'];
-  const DEFAULT_NAMESPACE = 'common';
-  const LOCALE_PATH = 'static/locales';
-  const LOCALE_STRUCTURE = '{{lng}}/{{ns}}';
-  const LOCALE_SUBPATHS = false;
+function makeConfig(share_config = require('./share-config')) {
+  const DEFAULT_LANGUAGE = share_config.defaultLanguage || 'en';
+  const OTHER_LANGUAGES = share_config.otherLanguages || ['de'];
+  const DEFAULT_NAMESPACE = share_config.defaultNamespace || 'common';
+  const LOCALE_PATH = share_config.localePath || 'static/locales';
+  const LOCALE_STRUCTURE = share_config.localeStructure || '{{lng}}/{{ns}}';
+  const LOCALE_SUBPATHS = share_config.localeSubpaths || false;
 
   /* Core Settings - only change if you understand what you're changing */
   const config = {
