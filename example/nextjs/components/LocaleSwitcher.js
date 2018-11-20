@@ -1,7 +1,5 @@
 import React from 'react';
-import withNamespaces from '../lib/withNamespaces';
-
-import i18n from '../i18n';
+import {i18n, withNamespaces} from '../lib/i18n';
 
 class LocaleSwitcher extends React.Component {
   render() {

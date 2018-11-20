@@ -1,5 +1,5 @@
 import React from 'react';
-import withNamespaces from '../lib/withNamespaces';
+import {withNamespaces} from '../lib/i18n';
 
 class PageWithHOC extends React.Component {
   render() {

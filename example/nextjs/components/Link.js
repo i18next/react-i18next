@@ -19,10 +19,8 @@
 import React from 'react';
 import NextLink from 'next/link';
 
-import { translation } from '../config';
-import withNamespaces from '../lib/withNamespaces';
-import i18n from '../i18n';
-
+import {i18n, withNamespaces, config} from '../lib/i18n';
+const {translation} = config
 class Link extends React.Component {
   render() {
     const { children, href } = this.props;

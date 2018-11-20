@@ -20,32 +20,9 @@ import React from 'react';
 import Router from 'next/router';
 import { I18nextProvider } from 'react-i18next';
 import NextApp, { Container } from 'next/app';
+import {registerI18n, i18n} from '../lib/i18n'
 
-import config from '../config';
-import i18n from '../i18n';
-import languagePathCorrection from '../lib/lngPathCorrection';
-
-/*
-  We need to perform clientside validation of
-  subpaths whenever the i18n language changes.
-  The href/as arguments for Router.replace are
-  critically important to preventing full reloads.
-
-  We don't need to perform any validation on
-  regular route changes, as our `Link` component
-  will handle that automatically.
-*/
-if (config.translation.localeSubpaths) {
-  i18n.on('languageChanged', lng => {
-    if (process.browser) {
-      const originalRoute = window.location.pathname;
-      const [href, as] = languagePathCorrection(originalRoute, lng);
-      if (as !== originalRoute) {
-        Router.replace(href, as, { shallow: true });
-      }
-    }
-  });
-}
+registerI18n(Router)
 
 export default class App extends NextApp {
   /*
