@@ -69,7 +69,7 @@ export default class App extends NextApp {
     // Load translations to serialize if we're serverside
     if (req && req.i18n) {
       [initialLanguage] = req.i18n.languages;
-      i18n.language = initialLanguage;
+      await i18n.changeLanguage(initialLanguage);
       req.i18n.languages.forEach(l => {
         initialI18nStore[l] = {};
         i18n.nsFromReactTree.forEach(ns => {
