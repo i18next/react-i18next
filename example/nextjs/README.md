@@ -6,11 +6,11 @@
 
 ### Download manually
 
-Download the example [or clone the repo](https://github.com/zeit/next.js):
+Download the example [or clone the repo](https://github.com/i18next/react-i18next):
 
 ```bash
-curl https://codeload.github.com/zeit/next.js/tar.gz/master | tar -xz --strip=2 next.js-master/examples/with-react-i18next
-cd with-react-i18next
+curl https://codeload.github.com/i18next/react-i18next/tar.gz/master | tar -xz --strip=2 react-i18next-master/example/nextjs
+cd nextjs
 ```
 
 Install it and run:
