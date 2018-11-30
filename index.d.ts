@@ -1,22 +1,18 @@
 import * as React from 'react';
-import {
-  i18n,
-  TranslationFunction,
-  ReactOptions as I18nOptions,
-} from 'i18next';
+import i18next from 'i18next';
 import { Context as ReactContext } from 'create-react-context';
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 type Subtract<T, K> = Omit<T, keyof K>;
 
-export interface ReactI18NextOptions extends I18nOptions {
+export interface ReactI18NextOptions extends i18next.ReactOptions {
   usePureComponent?: boolean;
   omitBoundRerender?: boolean;
 }
 
 interface ReactI18nextModule {
   type: string;
-  init: (instance: i18n) => void;
+  init: (instance: i18next.i18n) => void;
 }
 
 export const reactI18nextModule: ReactI18nextModule;
@@ -25,13 +21,13 @@ export function setDefaults(options: ReactI18NextOptions): void;
 
 export function getDefaults(): ReactI18NextOptions;
 
-export function setI18n(instance: i18n): void;
+export function setI18n(instance: i18next.i18n): void;
 
-export function getI18n(): i18n;
+export function getI18n(): i18next.i18n;
 
 export interface I18nContextValues {
-  i18n: i18n;
-  t: TranslationFunction;
+  i18n: i18next.i18n;
+  t: i18next.TranslationFunction;
   defaultNS?: string;
   reportNS?: string;
   lng?: string;
@@ -55,7 +51,7 @@ export interface WithNamespaces extends WithI18n {
 
 export interface WithNamespacesOptions extends ReactI18NextOptions {
   wait: boolean;
-  i18n?: i18n;
+  i18n?: i18next.i18n;
   innerRef?:
     | ((instance: any) => void)
     | React.RefObject<HTMLElement | SVGElement | React.Component>;
@@ -80,9 +76,9 @@ export interface NamespacesConsumerProps extends ReactI18NextOptions {
   initialI18nStore?: {};
   initialLanguage?: string;
   children(
-    t: TranslationFunction,
+    t: i18next.TranslationFunction,
     options: {
-      i18n: i18n;
+      i18n: i18next.i18n;
       lng: string;
       ready: boolean;
     },
@@ -92,7 +88,7 @@ export interface NamespacesConsumerProps extends ReactI18NextOptions {
 export const NamespacesConsumer: React.ComponentClass<NamespacesConsumerProps>;
 
 export interface I18nextProviderProps {
-  i18n: i18n;
+  i18n: i18next.i18n;
   defaultNS?: string;
   initialI18nStore?: {};
   initialLanguage?: string;
@@ -104,8 +100,8 @@ export interface TransProps {
   i18nKey?: string;
   count?: number;
   parent?: React.ReactNode;
-  i18n?: i18n;
-  t?: TranslationFunction;
+  i18n?: i18next.i18n;
+  t?: i18next.TranslationFunction;
   defaults?: string;
   values?: {};
   components?: React.ReactNode[];
