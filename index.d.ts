@@ -100,12 +100,17 @@ export interface I18nextProviderProps {
 
 export const I18nextProvider: React.ComponentClass<I18nextProviderProps>;
 
+export interface TOptions {
+  [key: string]: any;
+}
+
 export interface TransProps {
   i18nKey?: string;
   count?: number;
   parent?: React.ReactNode;
   i18n?: i18n;
   t?: TranslationFunction;
+  tOptions?: TOptions;
   defaults?: string;
   values?: {};
   components?: React.ReactNode[];
