@@ -75,6 +75,27 @@ Want to learn more about how seamless your internationalization and translation 
 
 [watch the video](https://www.youtube.com/watch?v=9NOzJhgmyQE)
 
+### Using TypeScript & @withNamespaces()
+
+To help you using TypeScript and the @withNamespaces decorator here is a trival example
+```
+import * as React from 'react';
+import { withNamespaces, WithNamespaces } from 'react-i18next';
+
+class MyComponent extends React.PureComponent<WithNamespaces> {
+  public render() {
+    const { t } = this.props;
+    return (
+      <React.Fragment>
+        <span>{t('my-component-content')}</span>
+      </React.Fragment>
+    );
+  }
+}
+export default withNamespaces()(MyComponent);
+```
+
+
 ### Installation
 
 Source can be loaded via [npm](https://www.npmjs.com/package/react-i18next) or [downloaded](https://github.com/i18next/react-i18next/blob/master/react-i18next.min.js) from this repo.
