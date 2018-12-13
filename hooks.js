@@ -4,7 +4,7 @@ export {
   useSSR,
   withSSR,
   Trans,
-  initReactI18n,
+  initReactI18next,
   setDefaults,
   getDefaults,
   setI18n,

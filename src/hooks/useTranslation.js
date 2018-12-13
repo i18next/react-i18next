@@ -39,7 +39,19 @@ export function useTranslation(ns) {
 
   // are we ready? yes if all namespaces in first language are loaded already (either with data or empty objedt on failed load)
   const ready =
-    i18n.isInitialized && namespaces.every(n => i18n.hasResourceBundle(i18n.languages[0], n));
+    i18n.isInitialized &&
+    namespaces.every(n => {
+      const ret =
+        i18n.hasResourceBundle(i18n.languages[0], n) || // we have the ns loaded for the favorite lng (chances are we do not have that lng so check for fallback or has tried to load that)
+        (!i18n.services.backendConnector.backend &&
+          i18n.hasResourceBundle(i18n.languages[i18n.languages.length - 1], n)) || // we have no backend (translation via init) but fallbackLng
+        (i18n.services.backendConnector.backend &&
+          i18n.services.backendConnector.state[`${i18n.languages[0]}|${n}`] &&
+          i18n.services.backendConnector.state[`${i18n.languages[0]}|${n}`] !== 1 &&
+          i18n.hasResourceBundle(i18n.languages[i18n.languages.length - 1], n)); // we have at least tried to load it and have a fallback
+
+      return ret;
+    });
 
   // set states
   const [t, setT] = useState({ t: i18n.getFixedT(null, namespaces[0]) }); // seems we can't have functions as value -> wrap it in obj

@@ -32,7 +32,7 @@ export function getI18n() {
   return i18nInstance;
 }
 
-export const initReactI18n = {
+export const initReactI18next = {
   type: '3rdParty',
 
   init(instance) {

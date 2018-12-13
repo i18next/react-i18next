@@ -1,3 +1,7 @@
+### 8.3.9
+
+- try fixing hooks ready algorithm [642](https://github.com/i18next/react-i18next/issues/642)
+
 ### 8.3.8
 
 - try fixing edge case of unset state: [615](https://github.com/i18next/react-i18next/issues/615)

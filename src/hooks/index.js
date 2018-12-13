@@ -5,7 +5,7 @@ export { withSSR } from './withSSR';
 export { useSSR } from './useSSR';
 
 export {
-  initReactI18n,
+  initReactI18next,
   setDefaults,
   getDefaults,
   setI18n,

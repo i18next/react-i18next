@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from 'react';
-import { useT, withT, Trans } from 'react-i18next/hooks';
+import { useTranslation, withTranslation, Trans } from 'react-i18next/hooks';
 import logo from './logo.svg';
 import './App.css';
 
@@ -13,7 +13,7 @@ class LegacyWelcomeClass extends Component {
     return <h2>{t('title')}</h2>;
   }
 }
-const Welcome = withT()(LegacyWelcomeClass);
+const Welcome = withTranslation()(LegacyWelcomeClass);
 
 // Component using the Trans component
 function MyComponent() {
@@ -26,7 +26,7 @@ function MyComponent() {
 
 // page uses the hook
 function Page() {
-  const [t, i18n] = useT();
+  const [t, i18n] = useTranslation();
 
   const changeLanguage = lng => {
     i18n.changeLanguage(lng);
