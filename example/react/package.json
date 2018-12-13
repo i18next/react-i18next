@@ -6,10 +6,10 @@
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-scripts": "1.1.4",
-    "i18next": "11.3.2",
-    "i18next-browser-languagedetector": "2.2.0",
+    "i18next": "12.1.0",
+    "i18next-browser-languagedetector": "2.2.4",
     "i18next-xhr-backend": "1.5.1",
-    "react-i18next": "8.0.6"
+    "react-i18next": "8.3.8"
   },
   "scripts": {
     "start": "react-scripts start",
