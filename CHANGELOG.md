@@ -1,3 +1,7 @@
+### 8.4.0
+
+- update typescript definitions for i18next v13 [631](https://github.com/i18next/react-i18next/pull/631)
+
 ### 8.3.9
 
 - try fixing hooks ready algorithm [642](https://github.com/i18next/react-i18next/issues/642)
