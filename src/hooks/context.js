@@ -1,6 +1,7 @@
 let defaultOptions = {
   wait: false,
   bindI18n: 'languageChanged',
+  transEmptyNodeValue: '',
 };
 
 let i18nInstance;

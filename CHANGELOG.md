@@ -1,3 +1,15 @@
+### 9.0.0
+
+- allow defining `transEmptyNodeValue` in i18next.options.react to set a default fallback value for empty nodes to allow i18next fallback flow [462](https://github.com/i18next/react-i18next/pull/462)
+- Warn if i18next instance is a promise [652](https://github.com/i18next/react-i18next/pull/652)
+- keeping legacy names (no deprecation on them as this will be last version using those -> v10 will be based on hooks)
+
+**BREAKING**
+
+- out of licensing reasons the ponyfill for react-context had to be removed [635](https://github.com/i18next/react-i18next/issues/635)
+
+Using react >= 16.3.0 will be save - in other cases you will need to polyfill react.createContext yourself!!
+
 ### 8.4.0
 
 - update typescript definitions for i18next v13 [631](https://github.com/i18next/react-i18next/pull/631)

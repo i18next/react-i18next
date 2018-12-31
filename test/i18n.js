@@ -26,6 +26,8 @@ i18n.init({
         testTransKey2_plural: '<0><0>{{numOfItems}}</0></0> items matched.',
         testTransKey3: 'Result: <1><0>{{numOfItems}}</0></1> item matched.',
         testTransKey3_plural: 'Result: <1><0>{{numOfItems}}</0></1> items matched.',
+        testInvalidHtml: '<hello',
+        testInvalidHtml2: '<hello>',
       },
       other: {
         transTest1: 'Another go <1>there</1>.',

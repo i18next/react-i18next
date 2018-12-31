@@ -11,6 +11,7 @@ let defaultOptions = {
   nsMode: 'default',
   usePureComponent: false,
   omitBoundRerender: true,
+  transEmptyNodeValue: '',
 };
 
 let i18nInstance;

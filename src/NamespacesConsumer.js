@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { I18nContext, withI18n } from './context';
-import { warnOnce, deprecated, initSSR } from './utils';
+import { warnOnce, initSSR } from './utils';
 
 let removedIsInitialSSR = false;
 
@@ -188,10 +188,4 @@ export class NamespacesConsumerComponent extends Component {
 }
 
 export const NamespacesConsumer = withI18n()(NamespacesConsumerComponent);
-
-export function I18n(props) {
-  deprecated(
-    'I18n was renamed to "NamespacesConsumer" to make it more clear what the render prop does.'
-  );
-  return <NamespacesConsumer {...props} />;
-}
+export const I18n = NamespacesConsumer;

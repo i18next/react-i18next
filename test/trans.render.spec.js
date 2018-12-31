@@ -376,3 +376,23 @@ describe('trans using no children but props - nested case', () => {
     ).toBe(true);
   });
 });
+
+describe('trans should not break on invalid node from translations', () => {
+  const TestElement = ({ t, cb }) => <Trans i18nKey="testInvalidHtml" />;
+  it('should render translated string', () => {
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
+    const wrapper = mount(<HocElement i18n={i18n} />);
+    // console.log(wrapper.debug());
+    expect(wrapper.contains(<div>&lt;hello</div>)).toBe(true);
+  });
+});
+
+describe('trans should not break on invalid node from translations - part2', () => {
+  const TestElement = ({ t, cb }) => <Trans i18nKey="testInvalidHtml2" />;
+  it('should render translated string', () => {
+    const HocElement = withNamespaces(['translation'], {})(TestElement);
+    const wrapper = mount(<HocElement i18n={i18n} />);
+    // console.log(wrapper.debug());
+    expect(wrapper.contains(<div>&lt;hello&gt;</div>)).toBe(true);
+  });
+});

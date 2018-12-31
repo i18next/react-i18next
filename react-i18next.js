@@ -1860,7 +1860,8 @@
     translateFuncName: 't',
     nsMode: 'default',
     usePureComponent: false,
-    omitBoundRerender: true
+    omitBoundRerender: true,
+    transEmptyNodeValue: ''
   };
   let i18nInstance;
   function setDefaults(options) {
@@ -1965,6 +1966,14 @@
           ready: false
         };
         return warnOnce('You will need pass in an i18next instance either by props, using I18nextProvider or by using i18nextReactModule. Learn more https://react.i18next.com/components/overview#getting-the-i-18-n-function-into-the-flow');
+      }
+
+      if (typeof props.i18n.then === 'function') {
+        this.state = {
+          i18nLoadedAt: null,
+          ready: false
+        };
+        return warnOnce('Detected a promise instead of an i18next instance. Probably you passed the return value of the i18next.init() function, this is not possible anymore with v13 of i18next. Just pass in the i18next instance directly.');
       } // nextjs / SSR: getting data from next.js or other ssr stack
 
 
@@ -2134,10 +2143,7 @@
 
   }
   const NamespacesConsumer = withI18n()(NamespacesConsumerComponent);
-  function I18n(props) {
-    deprecated('I18n was renamed to "NamespacesConsumer" to make it more clear what the render prop does.');
-    return React__default.createElement(NamespacesConsumer, props);
-  }
+  const I18n = NamespacesConsumer;
 
   function getDisplayName$1(component) {
     return component.displayName || component.name || 'Component';
@@ -2194,10 +2200,7 @@
   }
   withNamespaces.setDefaults = setDefaults;
   withNamespaces.setI18n = setI18n;
-  function translate(ns, opts) {
-    deprecated('translate was renamed to "withNamespaces" to make it more clear what the HOC does.');
-    return withNamespaces(ns, opts);
-  }
+  const translate = withNamespaces;
 
   /**
    * This file automatically generated from `pre-publish.js`.
@@ -2547,7 +2550,7 @@
       const t = tFromContextAndProps || i18n.t.bind(i18n);
       const reactI18nextOptions = i18n.options && i18n.options.react || {};
       const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
-      const defaultValue = defaults || nodesToString('', children, 0);
+      const defaultValue = defaults || nodesToString('', children, 0) || reactI18nextOptions.transEmptyNodeValue;
       const hashTransKey = reactI18nextOptions.hashTransKey;
       const key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
       const interpolationOverride = values ? {} : {

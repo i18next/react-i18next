@@ -60,7 +60,4 @@ export function withNamespaces(namespaceArg, options = {}) {
 withNamespaces.setDefaults = setDefaults;
 withNamespaces.setI18n = setI18n;
 
-export function translate(ns, opts) {
-  deprecated('translate was renamed to "withNamespaces" to make it more clear what the HOC does.');
-  return withNamespaces(ns, opts);
-}
+export const translate = withNamespaces;
