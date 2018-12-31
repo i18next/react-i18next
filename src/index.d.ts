@@ -72,6 +72,7 @@ export const translate: typeof withNamespaces;
 
 export interface NamespacesConsumerProps extends ReactI18NextOptions {
   ns?: Namespace;
+  i18n?: i18next.i18n;
   initialI18nStore?: {};
   initialLanguage?: string;
   children(
