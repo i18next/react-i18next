@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import hoistStatics from 'hoist-non-react-statics';
-import { shallowEqual, deprecated } from './utils';
+import { shallowEqual } from './utils';
 import { withI18n, setDefaults, setI18n } from './context';
 import { NamespacesConsumer } from './NamespacesConsumer';
 

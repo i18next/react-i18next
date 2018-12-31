@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import createReactContext from 'create-react-context';
 import hoistStatics from 'hoist-non-react-statics';
 
 let defaultOptions = {
@@ -41,7 +40,7 @@ export const reactI18nextModule = {
   },
 };
 
-export const I18nContext = createReactContext();
+export const I18nContext = React.createContext();
 
 // hoc for context
 export function withContext() {
