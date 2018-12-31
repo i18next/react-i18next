@@ -75,14 +75,14 @@ export interface NamespacesConsumerProps extends ReactI18NextOptions {
   i18n?: i18next.i18n;
   initialI18nStore?: {};
   initialLanguage?: string;
-  children(
+  children: (
     t: i18next.TranslationFunction,
     options: {
       i18n: i18next.i18n;
       lng: string;
       ready: boolean;
     }
-  ): React.ReactNode;
+  ) => React.ReactNode;
 }
 
 export const NamespacesConsumer: React.ComponentClass<NamespacesConsumerProps>;
