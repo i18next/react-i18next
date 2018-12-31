@@ -19,6 +19,17 @@ export class NamespacesConsumerComponent extends Component {
       );
     }
 
+    if (typeof props.i18n.then === 'function') {
+      this.state = {
+        i18nLoadedAt: null,
+        ready: false,
+      };
+
+      return warnOnce(
+        'Detected a promise instead of an i18next instance. Probably you passed the return value of the i18next.init() function, this is not possible anymore with v13 of i18next. Just pass in the i18next instance directly.'
+      );
+    }
+
     // nextjs / SSR: getting data from next.js or other ssr stack
     initSSR(props);
 
