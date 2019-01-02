@@ -1,3 +1,7 @@
+### 9.0.1
+
+- fix ts [655](https://github.com/i18next/react-i18next/pull/655)
+
 ### 9.0.0
 
 - allow defining `transEmptyNodeValue` in i18next.options.react to set a default fallback value for empty nodes to allow i18next fallback flow [462](https://github.com/i18next/react-i18next/pull/462)
