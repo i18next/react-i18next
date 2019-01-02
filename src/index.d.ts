@@ -1,6 +1,5 @@
-import * as React from 'react';
-import i18next from 'i18next';
-import { Context as ReactContext } from 'create-react-context';
+import * as React from "react";
+import i18next from "i18next";
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 type Subtract<T, K> = Omit<T, keyof K>;
@@ -33,14 +32,14 @@ export interface I18nContextValues {
   lng?: string;
 }
 
-export const I18nContext: ReactContext<I18nContextValues>;
+export const I18nContext: React.Context<I18nContextValues>;
 
 export interface WithI18n extends I18nContextValues {
   i18nOptions?: ReactI18NextOptions;
 }
 
 export function withI18n(): <P extends object>(
-  Wrapper: React.ComponentType<P>,
+  Wrapper: React.ComponentType<P>
 ) => React.ComponentType<Subtract<P, WithI18n>>;
 
 export interface WithNamespaces extends WithI18n {
@@ -64,25 +63,26 @@ interface NamespaceExtractor {
 
 export function withNamespaces(
   namespace?: Namespace | NamespaceExtractor,
-  options?: WithNamespacesOptions,
+  options?: WithNamespacesOptions
 ): <P extends WithNamespaces>(
-  component: React.ComponentType<P>,
+  component: React.ComponentType<P>
 ) => React.ComponentType<Subtract<P, WithNamespaces>>;
 
 export const translate: typeof withNamespaces;
 
 export interface NamespacesConsumerProps extends ReactI18NextOptions {
   ns?: Namespace;
+  i18n?: i18next.i18n;
   initialI18nStore?: {};
   initialLanguage?: string;
-  children(
+  children: (
     t: i18next.TranslationFunction,
     options: {
       i18n: i18next.i18n;
       lng: string;
       ready: boolean;
-    },
-  ): React.ReactNode;
+    }
+  ) => React.ReactNode;
 }
 
 export const NamespacesConsumer: React.ComponentClass<NamespacesConsumerProps>;

@@ -3,7 +3,7 @@
   "version": "9.0.0",
   "description": "Internationalization for react done right. Using the i18next i18n ecosystem.",
   "main": "dist/commonjs/index.js",
-  "types": "index.d.ts",
+  "types": "src/index.d.ts",
   "jsnext:main": "dist/es/index.js",
   "module": "dist/es/index.js",
   "keywords": [
@@ -39,7 +39,6 @@
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
-    "@types/i18next": "^11.9.0",
     "@types/react": "^16.4.18",
     "all-contributors-cli": "^5.4.1",
     "babel-core": "^7.0.0-bridge.0",
@@ -58,7 +57,7 @@
     "eslint-plugin-jsx-a11y": "6.1.1",
     "eslint-plugin-prettier": "2.7.0",
     "eslint-plugin-react": "7.11.1",
-    "i18next": "11.9.0",
+    "i18next": "13.1.0",
     "jest": "23.6.0",
     "jest-cli": "23.6.0",
     "mkdirp": "0.5.1",
@@ -74,12 +73,14 @@
     "rollup-plugin-node-resolve": "3.4.0",
     "rollup-plugin-terser": "^3.0.0",
     "sinon": "^6.3.4",
+    "tslint": "^5.12.0",
+    "typescript": "^3.2.2",
     "yargs": "12.0.2"
   },
   "peerDependencies": {
     "i18next": ">= 6.0.1",
-    "react": ">= 16.3.0",
-    "prop-types": ">= 15.6.2"
+    "prop-types": ">= 15.6.2",
+    "react": ">= 16.3.0"
   },
   "scripts": {
     "clean": "rimraf dist && mkdirp dist",
@@ -92,11 +93,12 @@
     "build": "npm run clean && npm run build:cjs && npm run build:es && npm run build:umd && npm run build:amd && npm run copy",
     "preversion": "npm run build && git push",
     "postversion": "git push && git push --tags",
-    "pretest": "",
+    "pretest": "npm run test:typescript",
     "test": "BABEL_ENV=development jest --no-cache",
     "test:watch": "BABEL_ENV=development jest --no-cache --watch",
     "test:coverage": "enzyme-adapter-react-install 16 && BABEL_ENV=development jest --no-cache --coverage",
     "test:lint": "./node_modules/.bin/eslint ./src",
+    "test:typescript": "tslint --project tsconfig.json && tsc",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate"
   },
