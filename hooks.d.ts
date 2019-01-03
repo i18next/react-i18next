@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import * as React from "react";
-import {Namespace, ReactI18NextOptions, TransProps} from "./index";
+import {Namespace, ReactI18NextOptions, TransProps} from "./src/index";
 
 interface HooksTransProps extends TransProps {
     children: React.ReactElement<any>[];
