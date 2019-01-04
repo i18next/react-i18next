@@ -1,3 +1,7 @@
+### 9.0.2
+
+- fix hooks ts [658](https://github.com/i18next/react-i18next/pull/658)
+
 ### 9.0.1
 
 - fix ts [655](https://github.com/i18next/react-i18next/pull/655)
