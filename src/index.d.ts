@@ -64,7 +64,7 @@ interface NamespaceExtractor {
 export function withNamespaces(
   namespace?: Namespace | NamespaceExtractor,
   options?: WithNamespacesOptions
-): <P extends WithNamespaces>(
+): <P extends Partial<WithNamespaces>>(
   component: React.ComponentType<P>
 ) => React.ComponentType<Subtract<P, WithNamespaces>>;
 
