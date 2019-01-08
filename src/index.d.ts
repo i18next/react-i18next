@@ -26,7 +26,9 @@ export function getI18n(): i18next.i18n;
 
 export interface I18nContextValues {
   i18n: i18next.i18n;
-  t: i18next.TranslationFunction;
+  t<TKeys extends string=string,TVals extends object =object,TResult=any>
+    (key: TKeys | TKeys[], options?: i18next.TranslationOptions<TVals>):
+    ReturnType<i18next.TranslationFunction<TResult,TVals,TKeys>>;
   defaultNS?: string;
   reportNS?: string;
   lng?: string;
@@ -76,7 +78,9 @@ export interface NamespacesConsumerProps extends ReactI18NextOptions {
   initialI18nStore?: {};
   initialLanguage?: string;
   children: (
-    t: i18next.TranslationFunction,
+    t: <TKeys extends string = string,TVals extends object =object,TResult =any>
+      (key: TKeys | TKeys[], options?: i18next.TranslationOptions<TVals>) =>
+      ReturnType<i18next.TranslationFunction<TResult,TVals,TKeys>>,
     options: {
       i18n: i18next.i18n;
       lng: string;
@@ -101,7 +105,9 @@ export interface TransProps {
   count?: number;
   parent?: React.ReactNode;
   i18n?: i18next.i18n;
-  t?: i18next.TranslationFunction;
+  t?<TKeys extends string=string,TVals extends object =object,TResult=any>
+  (key: TKeys | TKeys[], options?: i18next.TranslationOptions<TVals>):
+   ReturnType<i18next.TranslationFunction<TResult,TVals,TKeys>>;
   defaults?: string;
   values?: {};
   components?: React.ReactNode[];
