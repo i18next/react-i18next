@@ -9,12 +9,12 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "expo": "^31.0.4",
+    "expo": "^32.0.0",
     "expo-localization": "^1.0.0",
     "i18next": "11.9.0",
     "react": "16.5.0",
-    "react-i18next": "8.0.6",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.1.tar.gz",
-    "react-navigation": "^2.18.2"
+    "react-i18next": "9.0.2",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-navigation": "^3.0.9"
   }
 }
