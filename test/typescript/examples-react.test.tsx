@@ -32,7 +32,6 @@ const MyComponentWrapped = withNamespaces()(MyComponent);
 // the app gets passed in t and i18n by using same hoc withNamespaces
 // using i18n.changeLanguage you can change the language programmatically
 // (same is possible using the NamespacesConsumer render prop - just read the docs)
-type TKeys = "description.part1" | "description.part2";
 class App extends React.Component<WithNamespaces> {
   public render() {
     const { t, i18n } = this.props;
@@ -51,9 +50,7 @@ class App extends React.Component<WithNamespaces> {
         <div className="App-intro">
           <MyComponentWrapped />
         </div>
-        <div>{t("description.part1")}</div>
-        <div>{t<TKeys>("description.part2")}</div>
-        <div>{t<TKeys, { interpolate: string }>("description.part2", {interpolate: "interpolate" } )}</div>
+        <div>{t("description.part2")}</div>
       </div>
     );
   }
