@@ -8,6 +8,10 @@ import {
 
 type TKeys = "title" | "text";
 
+declare interface IWithNamespacesOverrideTest extends WithNamespaces {
+  t<T extends string| string[]>(a: T): any;
+}
+
 function NamespacesConsumerTest() {
   return (
     <NamespacesConsumer>
@@ -15,6 +19,7 @@ function NamespacesConsumerTest() {
         <div>
           <h2>{t<TKeys>("title")}</h2>
           <span>{t("any")}</span>
+          <span>{t("any", {anyObject: {}})}</span>
           <span>{t<TKeys>("text")}</span>
           <span>{t<TKeys, {key: string}>("text", {key: "foo"})}</span>
         </div>
