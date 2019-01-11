@@ -1,7 +1,7 @@
 {
   "defaultSeverity": "error",
-  "extends": ["tslint:recommended"],
-  "jsRules": {},
-  "rules": {},
-  "rulesDirectory": []
+  "extends": "dtslint/dtslint.json",
+  "rules": {
+    "semicolon": false
+  }
 }
