@@ -49,7 +49,7 @@ export interface WithNamespaces extends WithI18n {
 }
 
 export interface WithNamespacesOptions extends ReactI18NextOptions {
-  wait: boolean
+  wait?: boolean
   i18n?: i18next.i18n
   innerRef?: ((instance: any) => void) | React.RefObject<HTMLElement | SVGElement | React.Component>
 }
@@ -63,8 +63,8 @@ export function withNamespaces(
   namespace?: Namespace | NamespaceExtractor,
   options?: WithNamespacesOptions,
 ): <P extends WithNamespaces>(
-  component: React.ComponentType<P>,
-) => React.ComponentType<Subtract<P, WithNamespaces>>
+    component: React.ComponentType<P>,
+  ) => React.ComponentType<Subtract<P, WithNamespaces>>
 
 export const translate: typeof withNamespaces
 
