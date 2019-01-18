@@ -8,10 +8,6 @@ import {
 
 type TKeys = "title" | "text";
 
-declare interface IWithNamespacesOverrideTest extends WithNamespaces {
-  t<T extends string| string[]>(a: T): any;
-}
-
 function NamespacesConsumerTest() {
   return (
     <NamespacesConsumer>
@@ -22,6 +18,7 @@ function NamespacesConsumerTest() {
           <span>{t("any", {anyObject: {}})}</span>
           <span>{t<TKeys>("text")}</span>
           <span>{t<TKeys, {key: string}>("text", {key: "foo"})}</span>
+          <span>{t<TKeys, {key: "bar"}, string>("text", {key: "bar"})}</span>
         </div>
       }
     </NamespacesConsumer>
@@ -45,7 +42,16 @@ const MyComponentWrapped = withNamespaces()(TransComponentTest);
 
 type ArticleKeys = "article.part1" | "article.part2";
 type AnotherArticleKeys = "anotherArticle.part1" | "anotherArticle.part2";
-class App extends React.Component<WithNamespaces> {
+
+/**
+ * Overload makes completion of arguments by without specifying type parameters
+ */
+interface IOverloadedWithNamespaces extends WithNamespaces {
+  t(key: ArticleKeys, b?: object): any;
+  t<T extends AnotherArticleKeys>(key: T, b: {name: string}): any;
+}
+
+class App extends React.Component<IOverloadedWithNamespaces> {
   public render() {
     const { t, i18n } = this.props;
 
@@ -64,12 +70,12 @@ class App extends React.Component<WithNamespaces> {
           <MyComponentWrapped />
         </div>
         <article>
-          <div>{t<ArticleKeys>("article.part1")}</div>
-          <div>{t<ArticleKeys>("article.part2")}</div>
+          <div>{t("article.part1", {name: "foo"})}</div>
+          <div>{t("article.part2")}</div>
         </article>
         <article>
-          <div>{t<AnotherArticleKeys>("anotherArticle.part1")}</div>
-          <div>{t<AnotherArticleKeys>("anotherArticle.part2")}</div>
+          <div>{t<AnotherArticleKeys>("anotherArticle.part1", {name: "foo"})}</div>
+          <div>{t<AnotherArticleKeys>("anotherArticle.part2", {name: "bar"})}</div>
         </article>
       </div>
     );
