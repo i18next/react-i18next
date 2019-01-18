@@ -18,6 +18,7 @@ function NamespacesConsumerTest() {
           <span>{t("any", {anyObject: {}})}</span>
           <span>{t<TKeys>("text")}</span>
           <span>{t<TKeys, {key: string}>("text", {key: "foo"})}</span>
+          <span>{t<TKeys, {key: "bar"}, string>("text", {key: "bar"})}</span>
         </div>
       }
     </NamespacesConsumer>
@@ -43,8 +44,7 @@ type ArticleKeys = "article.part1" | "article.part2";
 type AnotherArticleKeys = "anotherArticle.part1" | "anotherArticle.part2";
 
 /**
- *
- * Overload can enable completion of args by without specifying TypeParameters
+ * Overload makes completion of arguments by without specifying type parameters
  */
 interface IOverloadedWithNamespaces extends WithNamespaces {
   t(key: ArticleKeys, b?: object): any;
