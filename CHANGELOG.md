@@ -1,3 +1,9 @@
+### 9.0.3
+
+- fix useSSR for hooks storing state on i18n instance and not globally [671](https://github.com/i18next/react-i18next/issues/671)
+- should fix case where fallbackLng is set false and invalid lng is loaded in hooks -> never ready [677](https://github.com/i18next/react-i18next/issues/677)
+- multiple typescript improvements
+
 ### 9.0.2
 
 - fix hooks ts [658](https://github.com/i18next/react-i18next/pull/658)

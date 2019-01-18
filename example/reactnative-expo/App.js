@@ -1,6 +1,6 @@
 import React from 'react';
 import { withNamespaces } from 'react-i18next';
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 import i18n from './js/i18n';
 import Home from './js/pages/Home';
 import Page2 from './js/pages/Page2';
@@ -12,11 +12,17 @@ const Stack = createStackNavigator({
 
 // Wrapping a stack with translation hoc asserts we get new render on language change
 // the hoc is set to only trigger rerender on languageChanged
-const WrappedStack = ({ t }) => <Stack screenProps={{ t }} />;
+class WrappedStack extends React.Component {
+  static router = Stack.router;
+  render() {
+    const { t } = this.props;
+    return <Stack screenProps={{ t }} {...this.props} />;
+  }
+}
 const ReloadAppOnLanguageChange = withNamespaces('common', {
   bindI18n: 'languageChanged',
   bindStore: false,
-})(WrappedStack);
+})(createAppContainer(WrappedStack));
 
 // The entry point using a react navigation stack navigation
 // gets wrapped by the I18nextProvider enabling using translations

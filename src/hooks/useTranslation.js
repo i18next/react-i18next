@@ -48,7 +48,8 @@ export function useTranslation(ns) {
         (i18n.services.backendConnector.backend &&
           i18n.services.backendConnector.state[`${i18n.languages[0]}|${n}`] &&
           i18n.services.backendConnector.state[`${i18n.languages[0]}|${n}`] !== 1 &&
-          i18n.hasResourceBundle(i18n.languages[i18n.languages.length - 1], n)); // we have at least tried to load it and have a fallback
+          ((i18n.options && !i18n.options.fallbackLng) ||
+            i18n.hasResourceBundle(i18n.languages[i18n.languages.length - 1], n))); // we have at least tried to load it and have a fallback if fallbackLng is set
 
       return ret;
     });

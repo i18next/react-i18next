@@ -1,21 +1,16 @@
 import { getI18n } from './context';
 
-let initializedLanguageOnce = false;
-let initializedStoreOnce = false;
-
 export function useSSR(initialI18nStore, initialLanguage) {
-  // only set this once
-  if (initializedLanguageOnce && initializedStoreOnce) return;
-
   const i18n = getI18n();
 
   // nextjs / SSR: getting data from next.js or other ssr stack
-  if (initialI18nStore && !initializedStoreOnce) {
+  if (initialI18nStore && !i18n.initializedStoreOnce) {
     i18n.services.resourceStore.data = initialI18nStore;
-    initializedStoreOnce = true;
+    i18n.initializedStoreOnce = true;
   }
-  if (initialLanguage && !initializedLanguageOnce) {
+
+  if (initialLanguage && !i18n.initializedLanguageOnce) {
     i18n.changeLanguage(initialLanguage);
-    initializedLanguageOnce = true;
+    i18n.initializedLanguageOnce = true;
   }
 }
