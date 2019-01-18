@@ -1,5 +1,6 @@
-### next
+### 9.0.4
 
+- typescript: add generic type to t function and the tests [665](https://github.com/i18next/react-i18next/pull/665)
 - hooks: enable passing in i18n to useTranslation hook so we could wrap that with a useContext enabled hook
 
 ### 9.0.3
