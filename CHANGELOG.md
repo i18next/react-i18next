@@ -1,3 +1,7 @@
+### next
+
+- hooks: enable passing in i18n to useTranslation hook so we could wrap that with a useContext enabled hook
+
 ### 9.0.3
 
 - fix useSSR for hooks storing state on i18n instance and not globally [671](https://github.com/i18next/react-i18next/issues/671)

@@ -21,9 +21,10 @@ function loadNamespaces(i18n, ns, cb) {
   });
 }
 
-export function useTranslation(ns) {
+export function useTranslation(ns, props = {}) {
   // assert we have the needed i18nInstance
-  const i18n = getI18n();
+  const { i18n: i18nFromProps } = props;
+  const i18n = i18nFromProps || getI18n();
   if (!i18n) {
     warnOnce('You will need pass in an i18next instance by using i18nextReactModule');
     return [k => k, {}];
