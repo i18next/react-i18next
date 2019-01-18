@@ -24,9 +24,8 @@ export function setI18n(instance: i18next.i18n): void
 
 export function getI18n(): i18next.i18n
 
-export interface I18nContextValues {
+export interface I18nContextValues extends i18next.WithT {
   i18n: i18next.i18n
-  t: i18next.TranslationFunction
   defaultNS?: string
   reportNS?: string
   lng?: string
@@ -74,7 +73,7 @@ export interface NamespacesConsumerProps extends ReactI18NextOptions {
   initialI18nStore?: {}
   initialLanguage?: string
   children: (
-    t: i18next.TranslationFunction,
+    t: i18next.WithT['t'],
     options: {
       i18n: i18next.i18n
       lng: string
@@ -94,12 +93,11 @@ export interface I18nextProviderProps {
 
 export const I18nextProvider: React.ComponentClass<I18nextProviderProps>
 
-export interface TransProps {
+export interface TransProps extends Partial<i18next.WithT>{
   i18nKey?: string
   count?: number
   parent?: React.ReactNode
   i18n?: i18next.i18n
-  t?: i18next.TranslationFunction
   defaults?: string
   values?: {}
   components?: React.ReactNode[]
