@@ -4,7 +4,7 @@ import {
   Trans,
   withNamespaces,
   WithNamespaces,
-} from "../../src/index";
+} from 'react-i18next';
 
 type TKeys = "title" | "text";
 
@@ -46,13 +46,15 @@ type AnotherArticleKeys = "anotherArticle.part1" | "anotherArticle.part2";
 /**
  * Overload makes completion of arguments by without specifying type parameters
  */
-interface IOverloadedWithNamespaces extends WithNamespaces {
+interface OverloadedWithNamespaces extends WithNamespaces {
   t(key: ArticleKeys, b?: object): any;
+  // NOTION: disable no-unnecessary-generics for generic test
+  // tslint:disable-next-line:no-unnecessary-generics
   t<T extends AnotherArticleKeys>(key: T, b: {name: string}): any;
 }
 
-class App extends React.Component<IOverloadedWithNamespaces> {
-  public render() {
+class App extends React.Component<OverloadedWithNamespaces> {
+  render() {
     const { t, i18n } = this.props;
 
     const changeLanguage = (lng: string) => {
