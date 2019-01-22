@@ -35,7 +35,7 @@ export const reactI18nextModule = {
   type: '3rdParty',
 
   init(instance) {
-    setDefaults(instance.options.react);
+    setDefaults(instance.options.react || {});
     setI18n(instance);
   },
 };
