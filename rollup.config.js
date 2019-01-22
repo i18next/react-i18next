@@ -1,6 +1,7 @@
 import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
+import replace from 'rollup-plugin-replace';
 import { terser } from 'rollup-plugin-terser';
 import { argv } from 'yargs';
 
@@ -30,9 +31,14 @@ const file = {
 
 export default {
   input: 'src/index.js',
-  plugins: [babel(babelOptions), nodeResolve({ jsnext: true, main: true }), commonjs({})].concat(
-    compress ? terser() : []
-  ),
+  plugins: [
+    babel(babelOptions),
+    replace({
+      'process.env.NODE_ENV': JSON.stringify(compress ? 'production' : 'development'),
+    }),
+    nodeResolve({ jsnext: true, main: true }),
+    commonjs({}),
+  ].concat(compress ? terser() : []),
   external: ['react', 'react-dom'],
   // moduleId: 'react-i18next',
   output: {
