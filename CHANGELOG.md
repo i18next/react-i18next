@@ -1,3 +1,7 @@
+### 9.0.6
+
+- updated all deps
+
 ### 9.0.5
 
 - UMD: Environment optimization with rollup-plugin-replace support [683](https://github.com/i18next/react-i18next/pull/683)
