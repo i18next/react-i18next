@@ -32,7 +32,7 @@ function TransComponentTest({ t }: WithNamespaces) {
         To get started, edit <code>src/App.js</code> and save to reload.
       </Trans>
       <Trans i18nKey="description.part1">
-        To get started, <strong title={t<TKeys>("title")}>{{name}}</strong>and save to reload.
+        To get started, <strong title={`${t<TKeys>("title")}`}>{{name}}</strong>and save to reload.
       </Trans>
     </div>
   );
