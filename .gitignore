@@ -6,11 +6,12 @@
 npm-debug.log
 npm-debug.log.*
 *.dat
+.idea
+.vscode
 
 # Ignore various temporary files
 *~
 *.swp
-.idea/
 
 
 # Ignore various Node.js related directories and files
