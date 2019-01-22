@@ -1,3 +1,7 @@
+### 9.0.5
+
+- UMD: Environment optimization with rollup-plugin-replace support [683](https://github.com/i18next/react-i18next/pull/683)
+
 ### 9.0.4
 
 - typescript: add generic type to t function and the tests [665](https://github.com/i18next/react-i18next/pull/665)

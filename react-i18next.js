@@ -127,7 +127,7 @@
     warn(...args);
   }
   function deprecated(...args) {
-    if (process && process.env && (!process.env.NODE_ENV || process.env.NODE_ENV === 'development')) {
+    if (process && process.env && ("development" === 'development')) {
       if (typeof args[0] === 'string') args[0] = `deprecation warning -> ${args[0]}`;
       warnOnce(...args);
     }
@@ -276,132 +276,9 @@
   	return module = { exports: {} }, fn(module, module.exports), module.exports;
   }
 
-  var reactIs_production_min = createCommonjsModule(function (module, exports) {
-
-  Object.defineProperty(exports, "__esModule", {
-    value: !0
-  });
-  var b = "function" === typeof Symbol && Symbol.for,
-      c = b ? Symbol.for("react.element") : 60103,
-      d = b ? Symbol.for("react.portal") : 60106,
-      e = b ? Symbol.for("react.fragment") : 60107,
-      f = b ? Symbol.for("react.strict_mode") : 60108,
-      g = b ? Symbol.for("react.profiler") : 60114,
-      h = b ? Symbol.for("react.provider") : 60109,
-      k = b ? Symbol.for("react.context") : 60110,
-      l = b ? Symbol.for("react.async_mode") : 60111,
-      m = b ? Symbol.for("react.forward_ref") : 60112,
-      n = b ? Symbol.for("react.placeholder") : 60113;
-
-  function q(a) {
-    if ("object" === typeof a && null !== a) {
-      var p = a.$$typeof;
-
-      switch (p) {
-        case c:
-          switch (a = a.type, a) {
-            case l:
-            case e:
-            case g:
-            case f:
-              return a;
-
-            default:
-              switch (a = a && a.$$typeof, a) {
-                case k:
-                case m:
-                case h:
-                  return a;
-
-                default:
-                  return p;
-              }
-
-          }
-
-        case d:
-          return p;
-      }
-    }
-  }
-
-  exports.typeOf = q;
-  exports.AsyncMode = l;
-  exports.ContextConsumer = k;
-  exports.ContextProvider = h;
-  exports.Element = c;
-  exports.ForwardRef = m;
-  exports.Fragment = e;
-  exports.Profiler = g;
-  exports.Portal = d;
-  exports.StrictMode = f;
-
-  exports.isValidElementType = function (a) {
-    return "string" === typeof a || "function" === typeof a || a === e || a === l || a === g || a === f || a === n || "object" === typeof a && null !== a && ("function" === typeof a.then || a.$$typeof === h || a.$$typeof === k || a.$$typeof === m);
-  };
-
-  exports.isAsyncMode = function (a) {
-    return q(a) === l;
-  };
-
-  exports.isContextConsumer = function (a) {
-    return q(a) === k;
-  };
-
-  exports.isContextProvider = function (a) {
-    return q(a) === h;
-  };
-
-  exports.isElement = function (a) {
-    return "object" === typeof a && null !== a && a.$$typeof === c;
-  };
-
-  exports.isForwardRef = function (a) {
-    return q(a) === m;
-  };
-
-  exports.isFragment = function (a) {
-    return q(a) === e;
-  };
-
-  exports.isProfiler = function (a) {
-    return q(a) === g;
-  };
-
-  exports.isPortal = function (a) {
-    return q(a) === d;
-  };
-
-  exports.isStrictMode = function (a) {
-    return q(a) === f;
-  };
-  });
-
-  unwrapExports(reactIs_production_min);
-  var reactIs_production_min_1 = reactIs_production_min.typeOf;
-  var reactIs_production_min_2 = reactIs_production_min.AsyncMode;
-  var reactIs_production_min_3 = reactIs_production_min.ContextConsumer;
-  var reactIs_production_min_4 = reactIs_production_min.ContextProvider;
-  var reactIs_production_min_5 = reactIs_production_min.Element;
-  var reactIs_production_min_6 = reactIs_production_min.ForwardRef;
-  var reactIs_production_min_7 = reactIs_production_min.Fragment;
-  var reactIs_production_min_8 = reactIs_production_min.Profiler;
-  var reactIs_production_min_9 = reactIs_production_min.Portal;
-  var reactIs_production_min_10 = reactIs_production_min.StrictMode;
-  var reactIs_production_min_11 = reactIs_production_min.isValidElementType;
-  var reactIs_production_min_12 = reactIs_production_min.isAsyncMode;
-  var reactIs_production_min_13 = reactIs_production_min.isContextConsumer;
-  var reactIs_production_min_14 = reactIs_production_min.isContextProvider;
-  var reactIs_production_min_15 = reactIs_production_min.isElement;
-  var reactIs_production_min_16 = reactIs_production_min.isForwardRef;
-  var reactIs_production_min_17 = reactIs_production_min.isFragment;
-  var reactIs_production_min_18 = reactIs_production_min.isProfiler;
-  var reactIs_production_min_19 = reactIs_production_min.isPortal;
-  var reactIs_production_min_20 = reactIs_production_min.isStrictMode;
-
   var reactIs_development = createCommonjsModule(function (module, exports) {
 
-  if (process.env.NODE_ENV !== "production") {
+  {
     (function () {
 
       Object.defineProperty(exports, '__esModule', {
@@ -558,9 +435,7 @@
 
   var reactIs = createCommonjsModule(function (module) {
 
-  if (process.env.NODE_ENV === 'production') {
-    module.exports = reactIs_production_min;
-  } else {
+  {
     module.exports = reactIs_development;
   }
   });
