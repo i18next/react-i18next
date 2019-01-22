@@ -1,8 +1,8 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react')) :
   typeof define === 'function' && define.amd ? define(['exports', 'react'], factory) :
-  (factory((global.ReactI18next = {}),global.React));
-}(this, (function (exports,React) { 'use strict';
+  (global = global || self, factory(global.ReactI18next = {}, global.React));
+}(this, function (exports, React) { 'use strict';
 
   var React__default = 'default' in React ? React['default'] : React;
 
@@ -114,20 +114,32 @@
     throw new TypeError("Invalid attempt to destructure non-iterable instance");
   }
 
-  function warn(...args) {
+  function warn() {
     if (console && console.warn) {
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
       if (typeof args[0] === 'string') args[0] = `react-i18next:: ${args[0]}`;
       console.warn.apply(null, args);
     }
   }
   const alreadyWarned = {};
-  function warnOnce(...args) {
+  function warnOnce() {
+    for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+
     if (typeof args[0] === 'string' && alreadyWarned[args[0]]) return;
     if (typeof args[0] === 'string') alreadyWarned[args[0]] = new Date();
     warn(...args);
   }
-  function deprecated(...args) {
+  function deprecated() {
     if (process && process.env && ("development" === 'development')) {
+      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        args[_key3] = arguments[_key3];
+      }
+
       if (typeof args[0] === 'string') args[0] = `deprecation warning -> ${args[0]}`;
       warnOnce(...args);
     }
@@ -193,10 +205,9 @@
     return flattened;
   }
 
-  function loadNamespaces({
-    components,
-    i18n
-  }) {
+  function loadNamespaces(_ref3) {
+    let components = _ref3.components,
+        i18n = _ref3.i18n;
     const allNamespaces = filterAndFlattenComponents(components);
     return new Promise(resolve => {
       i18n.loadNamespaces(allNamespaces, resolve);
@@ -269,7 +280,7 @@
   }
 
   function unwrapExports (x) {
-  	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+  	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x.default : x;
   }
 
   function createCommonjsModule(fn, module) {
@@ -295,13 +306,71 @@
       var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
       var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace;
       var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
+      var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
       var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
-      var REACT_PLACEHOLDER_TYPE = hasSymbol ? Symbol.for('react.placeholder') : 0xead1;
+      var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
+      var REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3;
+      var REACT_LAZY_TYPE = hasSymbol ? Symbol.for('react.lazy') : 0xead4;
 
       function isValidElementType(type) {
         return typeof type === 'string' || typeof type === 'function' || // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
-        type === REACT_FRAGMENT_TYPE || type === REACT_ASYNC_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_PLACEHOLDER_TYPE || typeof type === 'object' && type !== null && (typeof type.then === 'function' || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE);
+        type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || typeof type === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE);
       }
+      /**
+       * Forked from fbjs/warning:
+       * https://github.com/facebook/fbjs/blob/e66ba20ad5be433eb54423f2b097d829324d9de6/packages/fbjs/src/__forks__/warning.js
+       *
+       * Only change is we use console.warn instead of console.error,
+       * and do nothing when 'console' is not supported.
+       * This really simplifies the code.
+       * ---
+       * Similar to invariant but only logs a warning if the condition is not met.
+       * This can be used to log issues in development environments in critical
+       * paths. Removing the logging code for production environments will keep the
+       * same logic and follow the same code paths.
+       */
+
+
+      var lowPriorityWarning = function lowPriorityWarning() {};
+
+      {
+        var printWarning = function printWarning(format) {
+          for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+            args[_key - 1] = arguments[_key];
+          }
+
+          var argIndex = 0;
+          var message = 'Warning: ' + format.replace(/%s/g, function () {
+            return args[argIndex++];
+          });
+
+          if (typeof console !== 'undefined') {
+            console.warn(message);
+          }
+
+          try {
+            // --- Welcome to debugging React ---
+            // This error was thrown as a convenience so that you can use this stack
+            // to find the callsite that caused this warning to fire.
+            throw new Error(message);
+          } catch (x) {}
+        };
+
+        lowPriorityWarning = function lowPriorityWarning(condition, format) {
+          if (format === undefined) {
+            throw new Error('`lowPriorityWarning(condition, format, ...args)` requires a warning ' + 'message argument');
+          }
+
+          if (!condition) {
+            for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+              args[_key2 - 2] = arguments[_key2];
+            }
+
+            printWarning.apply(undefined, [format].concat(args));
+          }
+        };
+      }
+      var lowPriorityWarning$1 = lowPriorityWarning;
 
       function typeOf(object) {
         if (typeof object === 'object' && object !== null) {
@@ -313,9 +382,11 @@
 
               switch (type) {
                 case REACT_ASYNC_MODE_TYPE:
+                case REACT_CONCURRENT_MODE_TYPE:
                 case REACT_FRAGMENT_TYPE:
                 case REACT_PROFILER_TYPE:
                 case REACT_STRICT_MODE_TYPE:
+                case REACT_SUSPENSE_TYPE:
                   return type;
 
                 default:
@@ -333,26 +404,44 @@
 
               }
 
+            case REACT_LAZY_TYPE:
+            case REACT_MEMO_TYPE:
             case REACT_PORTAL_TYPE:
               return $$typeof;
           }
         }
 
         return undefined;
-      }
+      } // AsyncMode is deprecated along with isAsyncMode
+
 
       var AsyncMode = REACT_ASYNC_MODE_TYPE;
+      var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
       var ContextConsumer = REACT_CONTEXT_TYPE;
       var ContextProvider = REACT_PROVIDER_TYPE;
       var Element = REACT_ELEMENT_TYPE;
       var ForwardRef = REACT_FORWARD_REF_TYPE;
       var Fragment = REACT_FRAGMENT_TYPE;
-      var Profiler = REACT_PROFILER_TYPE;
+      var Lazy = REACT_LAZY_TYPE;
+      var Memo = REACT_MEMO_TYPE;
       var Portal = REACT_PORTAL_TYPE;
+      var Profiler = REACT_PROFILER_TYPE;
       var StrictMode = REACT_STRICT_MODE_TYPE;
+      var Suspense = REACT_SUSPENSE_TYPE;
+      var hasWarnedAboutDeprecatedIsAsyncMode = false; // AsyncMode should be deprecated
 
       function isAsyncMode(object) {
-        return typeOf(object) === REACT_ASYNC_MODE_TYPE;
+        {
+          if (!hasWarnedAboutDeprecatedIsAsyncMode) {
+            hasWarnedAboutDeprecatedIsAsyncMode = true;
+            lowPriorityWarning$1(false, 'The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
+          }
+        }
+        return isConcurrentMode(object) || typeOf(object) === REACT_ASYNC_MODE_TYPE;
+      }
+
+      function isConcurrentMode(object) {
+        return typeOf(object) === REACT_CONCURRENT_MODE_TYPE;
       }
 
       function isContextConsumer(object) {
@@ -375,38 +464,58 @@
         return typeOf(object) === REACT_FRAGMENT_TYPE;
       }
 
-      function isProfiler(object) {
-        return typeOf(object) === REACT_PROFILER_TYPE;
+      function isLazy(object) {
+        return typeOf(object) === REACT_LAZY_TYPE;
+      }
+
+      function isMemo(object) {
+        return typeOf(object) === REACT_MEMO_TYPE;
       }
 
       function isPortal(object) {
         return typeOf(object) === REACT_PORTAL_TYPE;
       }
 
+      function isProfiler(object) {
+        return typeOf(object) === REACT_PROFILER_TYPE;
+      }
+
       function isStrictMode(object) {
         return typeOf(object) === REACT_STRICT_MODE_TYPE;
       }
 
+      function isSuspense(object) {
+        return typeOf(object) === REACT_SUSPENSE_TYPE;
+      }
+
       exports.typeOf = typeOf;
       exports.AsyncMode = AsyncMode;
+      exports.ConcurrentMode = ConcurrentMode;
       exports.ContextConsumer = ContextConsumer;
       exports.ContextProvider = ContextProvider;
       exports.Element = Element;
       exports.ForwardRef = ForwardRef;
       exports.Fragment = Fragment;
-      exports.Profiler = Profiler;
+      exports.Lazy = Lazy;
+      exports.Memo = Memo;
       exports.Portal = Portal;
+      exports.Profiler = Profiler;
       exports.StrictMode = StrictMode;
+      exports.Suspense = Suspense;
       exports.isValidElementType = isValidElementType;
       exports.isAsyncMode = isAsyncMode;
+      exports.isConcurrentMode = isConcurrentMode;
       exports.isContextConsumer = isContextConsumer;
       exports.isContextProvider = isContextProvider;
       exports.isElement = isElement;
       exports.isForwardRef = isForwardRef;
       exports.isFragment = isFragment;
-      exports.isProfiler = isProfiler;
+      exports.isLazy = isLazy;
+      exports.isMemo = isMemo;
       exports.isPortal = isPortal;
+      exports.isProfiler = isProfiler;
       exports.isStrictMode = isStrictMode;
+      exports.isSuspense = isSuspense;
     })();
   }
   });
@@ -414,24 +523,32 @@
   unwrapExports(reactIs_development);
   var reactIs_development_1 = reactIs_development.typeOf;
   var reactIs_development_2 = reactIs_development.AsyncMode;
-  var reactIs_development_3 = reactIs_development.ContextConsumer;
-  var reactIs_development_4 = reactIs_development.ContextProvider;
-  var reactIs_development_5 = reactIs_development.Element;
-  var reactIs_development_6 = reactIs_development.ForwardRef;
-  var reactIs_development_7 = reactIs_development.Fragment;
-  var reactIs_development_8 = reactIs_development.Profiler;
-  var reactIs_development_9 = reactIs_development.Portal;
-  var reactIs_development_10 = reactIs_development.StrictMode;
-  var reactIs_development_11 = reactIs_development.isValidElementType;
-  var reactIs_development_12 = reactIs_development.isAsyncMode;
-  var reactIs_development_13 = reactIs_development.isContextConsumer;
-  var reactIs_development_14 = reactIs_development.isContextProvider;
-  var reactIs_development_15 = reactIs_development.isElement;
-  var reactIs_development_16 = reactIs_development.isForwardRef;
-  var reactIs_development_17 = reactIs_development.isFragment;
-  var reactIs_development_18 = reactIs_development.isProfiler;
-  var reactIs_development_19 = reactIs_development.isPortal;
-  var reactIs_development_20 = reactIs_development.isStrictMode;
+  var reactIs_development_3 = reactIs_development.ConcurrentMode;
+  var reactIs_development_4 = reactIs_development.ContextConsumer;
+  var reactIs_development_5 = reactIs_development.ContextProvider;
+  var reactIs_development_6 = reactIs_development.Element;
+  var reactIs_development_7 = reactIs_development.ForwardRef;
+  var reactIs_development_8 = reactIs_development.Fragment;
+  var reactIs_development_9 = reactIs_development.Lazy;
+  var reactIs_development_10 = reactIs_development.Memo;
+  var reactIs_development_11 = reactIs_development.Portal;
+  var reactIs_development_12 = reactIs_development.Profiler;
+  var reactIs_development_13 = reactIs_development.StrictMode;
+  var reactIs_development_14 = reactIs_development.Suspense;
+  var reactIs_development_15 = reactIs_development.isValidElementType;
+  var reactIs_development_16 = reactIs_development.isAsyncMode;
+  var reactIs_development_17 = reactIs_development.isConcurrentMode;
+  var reactIs_development_18 = reactIs_development.isContextConsumer;
+  var reactIs_development_19 = reactIs_development.isContextProvider;
+  var reactIs_development_20 = reactIs_development.isElement;
+  var reactIs_development_21 = reactIs_development.isForwardRef;
+  var reactIs_development_22 = reactIs_development.isFragment;
+  var reactIs_development_23 = reactIs_development.isLazy;
+  var reactIs_development_24 = reactIs_development.isMemo;
+  var reactIs_development_25 = reactIs_development.isPortal;
+  var reactIs_development_26 = reactIs_development.isProfiler;
+  var reactIs_development_27 = reactIs_development.isStrictMode;
+  var reactIs_development_28 = reactIs_development.isSuspense;
 
   var reactIs = createCommonjsModule(function (module) {
 
@@ -440,22 +557,6 @@
   }
   });
 
-  var _ReactIs$ForwardRef;
-
-  function _defineProperty$1(obj, key, value) {
-    if (key in obj) {
-      Object.defineProperty(obj, key, {
-        value: value,
-        enumerable: true,
-        configurable: true,
-        writable: true
-      });
-    } else {
-      obj[key] = value;
-    }
-
-    return obj;
-  }
   /**
    * Copyright 2015, Yahoo! Inc.
    * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
@@ -463,15 +564,14 @@
 
 
 
-
-
-
   var REACT_STATICS = {
     childContextTypes: true,
+    contextType: true,
     contextTypes: true,
     defaultProps: true,
     displayName: true,
     getDefaultProps: true,
+    getDerivedStateFromError: true,
     getDerivedStateFromProps: true,
     mixins: true,
     propTypes: true,
@@ -486,9 +586,15 @@
     arguments: true,
     arity: true
   };
-
-  var TYPE_STATICS = _defineProperty$1({}, reactIs.ForwardRef, (_ReactIs$ForwardRef = {}, _defineProperty$1(_ReactIs$ForwardRef, '$$typeof', true), _defineProperty$1(_ReactIs$ForwardRef, 'render', true), _ReactIs$ForwardRef));
-
+  var FORWARD_REF_STATICS = {
+    '$$typeof': true,
+    render: true,
+    defaultProps: true,
+    displayName: true,
+    propTypes: true
+  };
+  var TYPE_STATICS = {};
+  TYPE_STATICS[reactIs.ForwardRef] = FORWARD_REF_STATICS;
   var defineProperty = Object.defineProperty;
   var getOwnPropertyNames = Object.getOwnPropertyNames;
   var getOwnPropertySymbols = Object.getOwnPropertySymbols;
@@ -834,7 +940,8 @@
     return component.displayName || component.name || 'Component';
   }
 
-  function withNamespaces(namespaceArg, options = {}) {
+  function withNamespaces(namespaceArg) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     return function Wrapper(WrappedComponent) {
       class LoadNamespace extends React.Component {
         shouldComponentUpdate(nextProps) {
@@ -1404,4 +1511,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));
