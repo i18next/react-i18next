@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { withNamespaces, WithNamespaces } from 'react-i18next'
+import * as React from 'react';
+import { withNamespaces, WithNamespaces } from 'react-i18next';
 
 interface WithInnerRefProps extends WithNamespaces {
   outerRef: (ref: WithInnerRef | null) => void;
@@ -7,14 +7,14 @@ interface WithInnerRefProps extends WithNamespaces {
 
 class WithInnerRef extends React.Component<WithInnerRefProps> {
   render() {
-    const { t } = this.props
+    const { t } = this.props;
 
     return (
       <div className="App">
         <h3>{t('content.header')}</h3>
         <div> {t('content.body')}</div>
       </div>
-    )
+    );
   }
 }
 export default withNamespaces(undefined, {
@@ -22,5 +22,5 @@ export default withNamespaces(undefined, {
     if (instance && instance.props.outerRef) {
       instance.props.outerRef(instance);
     }
-  }
-})(WithInnerRef)
+  },
+})(WithInnerRef);

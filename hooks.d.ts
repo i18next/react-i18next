@@ -51,17 +51,15 @@ export function useTranslation(
 export function withSSR(): (
   WrappedComponent: React.ComponentClass<{}, any>,
 ) => {
-  (
-    {
-      initialI18nStore,
-      initialLanguage,
-      ...rest
-    }: {
-      [x: string]: any;
-      initialI18nStore: any;
-      initialLanguage: any;
-    },
-  ): React.ComponentElement<{}, React.Component<{}, any, any>>;
+  ({
+    initialI18nStore,
+    initialLanguage,
+    ...rest
+  }: {
+    [x: string]: any;
+    initialI18nStore: any;
+    initialLanguage: any;
+  }): React.ComponentElement<{}, React.Component<{}, any, any>>;
   getInitialProps: (ctx: unknown) => Promise<any>;
 };
 export function withTranslation(
