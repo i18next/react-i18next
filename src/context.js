@@ -15,7 +15,7 @@ let defaultOptions = {
 
 let i18nInstance;
 
-export function setDefaults(options) {
+export function setDefaults(options = {}) {
   defaultOptions = { ...defaultOptions, ...options };
 }
 

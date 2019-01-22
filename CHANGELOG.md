@@ -1,3 +1,7 @@
+### 9.0.7
+
+- fixing react-i18next throwing webpack error when initializeing using @babel/runtime 7.3.0 [685](https://github.com/i18next/react-i18next/issues/685)
+
 ### 9.0.6
 
 - updated all deps

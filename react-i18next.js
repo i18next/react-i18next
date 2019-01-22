@@ -655,7 +655,8 @@
     transEmptyNodeValue: ''
   };
   let i18nInstance;
-  function setDefaults(options) {
+  function setDefaults() {
+    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     defaultOptions = _objectSpread({}, defaultOptions, options);
   }
   function getDefaults() {
