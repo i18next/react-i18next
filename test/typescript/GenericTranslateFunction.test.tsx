@@ -8,12 +8,12 @@ function NamespacesConsumerTest() {
     <NamespacesConsumer>
       {(t, { i18n }) => (
         <div>
-          <h2>{t<TKeys>('title')}</h2>
+          <h2>{t<string, TKeys>('title')}</h2>
           <span>{t('any')}</span>
           <span>{t('any', { anyObject: {} })}</span>
-          <span>{t<TKeys>('text')}</span>
-          <span>{t<TKeys, { key: string }>('text', { key: 'foo' })}</span>
-          <span>{t<TKeys, { key: 'bar' }, string>('text', { key: 'bar' })}</span>
+          <span>{t<string, TKeys>('text')}</span>
+          <span>{t<string, TKeys, { key: string }>('text', { key: 'foo' })}</span>
+          <span>{t<string, TKeys, { key: 'bar' }>('text', { key: 'bar' })}</span>
         </div>
       )}
     </NamespacesConsumer>
@@ -27,8 +27,8 @@ function TransComponentTest({ t }: WithNamespaces) {
         To get started, edit <code>src/App.js</code> and save to reload.
       </Trans>
       <Trans i18nKey="description.part1">
-        To get started, <strong title={`${t<TKeys>('title')}`}>{{ name }}</strong>and save to
-        reload.
+        To get started, <strong title={`${t<string, TKeys>('title')}`}>{{ name }}</strong>and save
+        to reload.
       </Trans>
     </div>
   );
