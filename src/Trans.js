@@ -40,13 +40,13 @@ function nodesToString(mem, children, index) {
         // not a valid interpolation object (can only contain one value plus format)
         warn(
           `react-i18next: the passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.`,
-          child
+          child,
         );
       }
     } else {
       warn(
         `Trans: the passed in value is invalid - seems you passed in a variable like {number} - please pass in variables for interpolation as full objects like {{number}}.`,
-        child
+        child,
       );
     }
   });
@@ -176,7 +176,7 @@ export class TransComponent extends React.Component {
     return React.createElement(
       useAsParent,
       additionalProps,
-      renderNodes(components || children, translation, i18n)
+      renderNodes(components || children, translation, i18n),
     );
   }
 }

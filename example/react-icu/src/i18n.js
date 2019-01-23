@@ -10,7 +10,7 @@ i18n
   .use(
     new ICU({
       localeData: de, // you also can pass in array of localeData
-    })
+    }),
   )
   .use(Backend)
   .use(LanguageDetector)

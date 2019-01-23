@@ -20,7 +20,7 @@ function ICUMacro({ references, state, babel }) {
           attributes: referencePath.parentPath.get('attributes'),
           children: referencePath.parentPath.parentPath.get('children'),
         },
-        babel
+        babel,
       );
     } else {
       // throw a helpful error message or something :)
@@ -36,7 +36,7 @@ function ICUMacro({ references, state, babel }) {
           attributes: referencePath.parentPath.get('attributes'),
           children: referencePath.parentPath.parentPath.get('children'),
         },
-        babel
+        babel,
       );
     } else {
       // throw a helpful error message or something :)
@@ -52,7 +52,7 @@ function ICUMacro({ references, state, babel }) {
           attributes: referencePath.parentPath.get('attributes'),
           children: referencePath.parentPath.parentPath.get('children'),
         },
-        babel
+        babel,
       );
     } else {
       // throw a helpful error message or something :)
@@ -97,7 +97,7 @@ function pluralAsJSX(parentPath, { attributes }, babel) {
       }
       return mem;
     },
-    { attributesToCopy: [], values: [], components: [], defaults: '' }
+    { attributesToCopy: [], values: [], components: [], defaults: '' },
   );
 
   // replace the node with the new Trans
@@ -136,7 +136,7 @@ function selectAsJSX(parentPath, { attributes }, babel) {
       }
       return mem;
     },
-    { attributesToCopy: [], values: [], components: [], defaults: '' }
+    { attributesToCopy: [], values: [], components: [], defaults: '' },
   );
 
   // replace the node with the new Trans
@@ -148,7 +148,7 @@ function transAsJSX(parentPath, { attributes, children }, babel) {
 
   // replace the node with the new Trans
   children[0].parentPath.replaceWith(
-    buildTransElement(extracted, cloneExistingAttributes(attributes), babel.types, false, true)
+    buildTransElement(extracted, cloneExistingAttributes(attributes), babel.types, false, true),
   );
 }
 
@@ -157,7 +157,7 @@ function buildTransElement(
   finalAttributes,
   t,
   closeDefaults = false,
-  wasElementWithChildren = false
+  wasElementWithChildren = false,
 ) {
   const nodeName = t.jSXIdentifier('Trans');
 
@@ -171,15 +171,15 @@ function buildTransElement(
   // add generated Trans attributes
   if (!attributeExistsAlready('defaults', finalAttributes))
     finalAttributes.push(
-      t.jSXAttribute(t.jSXIdentifier('defaults'), t.StringLiteral(extracted.defaults))
+      t.jSXAttribute(t.jSXIdentifier('defaults'), t.StringLiteral(extracted.defaults)),
     );
   if (!attributeExistsAlready('components', finalAttributes))
     finalAttributes.push(
-      t.jSXAttribute(t.jSXIdentifier('components'), t.jSXExpressionContainer(extracted.components))
+      t.jSXAttribute(t.jSXIdentifier('components'), t.jSXExpressionContainer(extracted.components)),
     );
   if (!attributeExistsAlready('values', finalAttributes))
     finalAttributes.push(
-      t.jSXAttribute(t.jSXIdentifier('values'), t.jSXExpressionContainer(extracted.values))
+      t.jSXAttribute(t.jSXIdentifier('values'), t.jSXExpressionContainer(extracted.values)),
     );
 
   // create selfclosing Trans component
@@ -240,7 +240,7 @@ function mergeChildren(children, babel, componentStartIndex = 0) {
     if (t.isJSXElement(ele)) {
       mem += `<${componentFoundIndex}>${mergeChildren(
         ele.children,
-        babel
+        babel,
       )}</${componentFoundIndex}>`;
       componentFoundIndex++;
     }
@@ -262,7 +262,7 @@ function getValues(children, babel) {
     // add `{ var, number }` to values
     if (ele.expression && ele.expression.expressions)
       mem.push(
-        toObjectProperty(ele.expression.expressions[0].name || ele.expression.expressions[0].value)
+        toObjectProperty(ele.expression.expressions[0].name || ele.expression.expressions[0].value),
       );
     // add `{ var: 'bar' }` to values
     if (ele.expression && ele.expression.properties) mem = mem.concat(ele.expression.properties);
@@ -306,7 +306,7 @@ function addNeededImports(state, babel) {
 
   // check if there is an existing react-i18next import
   const existingImport = state.file.path.node.body.find(
-    importNode => t.isImportDeclaration(importNode) && importNode.source.value === 'react-i18next'
+    importNode => t.isImportDeclaration(importNode) && importNode.source.value === 'react-i18next',
   );
 
   // append Trans to existing or add a new react-i18next import for the Trans
@@ -314,7 +314,7 @@ function addNeededImports(state, babel) {
     importsToAdd.forEach(name => {
       if (
         existingImport.specifiers.findIndex(
-          specifier => specifier.imported && specifier.imported.name === name
+          specifier => specifier.imported && specifier.imported.name === name,
         ) === -1
       ) {
         existingImport.specifiers.push(t.importSpecifier(t.identifier(name), t.identifier(name)));
@@ -324,8 +324,8 @@ function addNeededImports(state, babel) {
     state.file.path.node.body.unshift(
       t.importDeclaration(
         importsToAdd.map(name => t.importSpecifier(t.identifier(name), t.identifier(name))),
-        t.stringLiteral('react/i18next')
-      )
+        t.stringLiteral('react/i18next'),
+      ),
     );
   }
 }

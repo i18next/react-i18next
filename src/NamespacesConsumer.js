@@ -15,7 +15,7 @@ export class NamespacesConsumerComponent extends Component {
       };
 
       return warnOnce(
-        'You will need pass in an i18next instance either by props, using I18nextProvider or by using i18nextReactModule. Learn more https://react.i18next.com/components/overview#getting-the-i-18-n-function-into-the-flow'
+        'You will need pass in an i18next instance either by props, using I18nextProvider or by using i18nextReactModule. Learn more https://react.i18next.com/components/overview#getting-the-i-18-n-function-into-the-flow',
       );
     }
 
@@ -26,7 +26,7 @@ export class NamespacesConsumerComponent extends Component {
       };
 
       return warnOnce(
-        'Detected a promise instead of an i18next instance. Probably you passed the return value of the i18next.init() function, this is not possible anymore with v13 of i18next. Just pass in the i18next instance directly.'
+        'Detected a promise instead of an i18next instance. Probably you passed the return value of the i18next.init() function, this is not possible anymore with v13 of i18next. Just pass in the i18next instance directly.',
       );
     }
 
@@ -102,8 +102,8 @@ export class NamespacesConsumerComponent extends Component {
       i18nOptions.nsMode === 'fallback'
         ? namespaces
         : namespaces && namespaces.length
-          ? namespaces[0]
-          : 'translation'
+        ? namespaces[0]
+        : 'translation',
     );
   }
 
@@ -182,7 +182,7 @@ export class NamespacesConsumerComponent extends Component {
         t,
         lng: i18n.language,
         ready,
-      })
+      }),
     );
   }
 }

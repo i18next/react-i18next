@@ -17,9 +17,8 @@ i18n
 
     react: {
       defaultTransParent: 'div', // needed for preact
-      wait: true
-    }
+      wait: true,
+    },
   });
-
 
 export default i18n;

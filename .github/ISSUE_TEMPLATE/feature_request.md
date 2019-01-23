@@ -1,7 +1,6 @@
 ---
 name: Feature request
 about: Suggest new functionality
-
 ---
 
 **Is your feature request related to a problem? Please describe.**

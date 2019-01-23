@@ -7,27 +7,20 @@ import './App.css';
 // get t function inside the component
 // learn more: https://react.i18next.com/components/namespacesconsumer
 function Welcome() {
-  return (
-    <NamespacesConsumer>
-      {
-        (t, { i18n }) => <h2>{t('title')}</h2>
-      }
-    </NamespacesConsumer>
-  )
+  return <NamespacesConsumer>{(t, { i18n }) => <h2>{t('title')}</h2>}</NamespacesConsumer>;
 }
 
 // Component using the higher order component withNamespaces
 // pass t function via props into the component
 // learn more: https://react.i18next.com/components/withnamespaces
-function MyComponent({t}) {
+function MyComponent({ t }) {
   return (
     <Trans i18nKey="description.part1">
       To get started, edit <code>src/App.js</code> and save to reload.
     </Trans>
-  )
+  );
 }
 const MyComponentWrapped = withNamespaces()(MyComponent);
-
 
 // the app gets passed in t and i18n by using same hoc withNamespaces
 // using i18n.changeLanguage you can change the language programmatically
@@ -36,9 +29,9 @@ class App extends Component {
   render() {
     const { t, i18n } = this.props;
 
-    const changeLanguage = (lng) => {
+    const changeLanguage = lng => {
       i18n.changeLanguage(lng);
-    }
+    };
 
     return (
       <div className="App">
@@ -57,5 +50,3 @@ class App extends Component {
   }
 }
 export default withNamespaces('translation')(App);
-
-

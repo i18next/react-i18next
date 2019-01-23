@@ -1,7 +1,7 @@
 class Backend {
   constructor(services, options = {}) {
     this.init(services, options);
-    this.type = 'backend'
+    this.type = 'backend';
     this.queue = [];
   }
 
@@ -18,11 +18,10 @@ class Backend {
     this.queue.forEach(cb => {
       cb(null, {
         key1: 'test',
-        interpolateKey: 'add {{insert}} {{up, uppercase}}'
+        interpolateKey: 'add {{insert}} {{up, uppercase}}',
       });
-    })
+    });
   }
 }
-
 
 export default Backend;

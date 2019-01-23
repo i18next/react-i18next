@@ -23,8 +23,8 @@ describe('interpolate', () => {
       wrapper.contains(
         <p>
           add <span>something</span> UPPERCASE
-        </p>
-      )
+        </p>,
+      ),
     ).toBe(true);
   });
 });
@@ -52,8 +52,8 @@ describe('interpolate dangerouslySetInnerHTML', () => {
           <span>something</span>
           <span dangerouslySetInnerHTML={{ __html: ' ' }} />
           UPPERCASE
-        </p>
-      )
+        </p>,
+      ),
     ).toBe(true);
   });
 });

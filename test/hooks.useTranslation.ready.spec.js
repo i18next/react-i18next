@@ -43,7 +43,7 @@ describe('useTranslation', () => {
 
       mount(<TestComponentNotReady />, {});
     }).toThrow(
-      'TestComponentNotReady suspended while rendering, but no fallback UI was specified.'
+      'TestComponentNotReady suspended while rendering, but no fallback UI was specified.',
     );
     expect(console.error).toHaveBeenCalled(); // silent down the error boundary error from react-dom
   });
@@ -54,6 +54,3 @@ describe('useTranslation', () => {
     expect(wrapper.contains(<div>keyOne</div>)).toBe(true);
   });
 });
-
-
-

@@ -7,7 +7,7 @@ export class InterpolateComponent extends Component {
     super(props);
 
     deprecated(
-      'Interpolate is deprecated and will be removed in the next major version (v9.0.0). Usage can be replaced by the "Trans" component'
+      'Interpolate is deprecated and will be removed in the next major version (v9.0.0). Usage can be replaced by the "Trans" component',
     );
   }
 
@@ -37,7 +37,7 @@ export class InterpolateComponent extends Component {
       if (key.indexOf(i18n.options.interpolation.formatSeparator) < 0) {
         if (props[key] === undefined)
           i18n.services.logger.warn(
-            `interpolator: missed to pass in variable ${key} for interpolating ${format}`
+            `interpolator: missed to pass in variable ${key} for interpolating ${format}`,
           );
         return props[key];
       }
@@ -48,7 +48,7 @@ export class InterpolateComponent extends Component {
 
       if (props[k] === undefined)
         i18n.services.logger.warn(
-          `interpolator: missed to pass in variable ${k} for interpolating ${format}`
+          `interpolator: missed to pass in variable ${k} for interpolating ${format}`,
         );
       return i18n.options.interpolation.format(props[k], f, i18n.language);
     };

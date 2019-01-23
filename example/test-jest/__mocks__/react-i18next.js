@@ -17,13 +17,10 @@ const renderNodes = reactNodes => {
 
     if (typeof child === 'string') {
       return child;
-    } if (hasChildren(child)) {
+    }
+    if (hasChildren(child)) {
       const inner = renderNodes(getChildren(child));
-      return React.cloneElement(
-        child,
-        { ...child.props, key: i },
-        inner,
-      );
+      return React.cloneElement(child, { ...child.props, key: i }, inner);
     } else if (typeof child === 'object' && !isElement) {
       return Object.keys(child).reduce((str, childKey) => `${str}${child[childKey]}`, '');
     }

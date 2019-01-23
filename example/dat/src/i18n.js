@@ -46,16 +46,19 @@ switch (whichBackend()) {
     options.resources = {
       en: {
         translations: {
-          'To get started, edit <1>src/App.js</1> and save to reload.': 'To get started, edit <1>src/App.js</1> and save to reload.',
+          'To get started, edit <1>src/App.js</1> and save to reload.':
+            'To get started, edit <1>src/App.js</1> and save to reload.',
           'Welcome to React': 'Welcome to React and react-i18next',
-          'advice': 'Try to set the query parameter "backend" to memory, xhr or locize i.e. {{url}}'
+          advice: 'Try to set the query parameter "backend" to memory, xhr or locize i.e. {{url}}',
         },
       },
       de: {
         translations: {
-          'To get started, edit <1>src/App.js</1> and save to reload.': 'Starte in dem du, <1>src/App.js</1> editierst und speicherst.',
+          'To get started, edit <1>src/App.js</1> and save to reload.':
+            'Starte in dem du, <1>src/App.js</1> editierst und speicherst.',
           'Welcome to React': 'Willkommen bei React und react-i18next',
-          'advice': 'Versuche den query Parameter "backend" auf memory, xhr oder locize zu setzen zBsp. {{url}}'
+          advice:
+            'Versuche den query Parameter "backend" auf memory, xhr oder locize zu setzen zBsp. {{url}}',
         },
       },
     };

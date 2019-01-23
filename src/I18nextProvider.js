@@ -24,7 +24,7 @@ export class I18nextProvider extends Component {
           t: i18n && i18n.t.bind(i18n),
         },
       },
-      children
+      children,
     );
   }
 }

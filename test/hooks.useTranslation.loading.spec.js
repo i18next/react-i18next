@@ -23,7 +23,7 @@ class ErrorBoundary extends React.Component {
     super(props);
 
     this.state = {
-      hasError: false
+      hasError: false,
     };
   }
 
@@ -63,7 +63,7 @@ describe('useTranslation loading ns', () => {
     const wrapper = mount(
       <ErrorBoundary spy={spy}>
         <TestElement />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     expect(wrapper.contains(<div>Something went wrong.</div>)).toBe(true);

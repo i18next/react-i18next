@@ -9,7 +9,7 @@ describe('NamespacesConsumer', () => {
       <NamespacesConsumer i18n={i18n} ns="translation">
         {t => <span>{t('key1')}</span>}
       </NamespacesConsumer>,
-      {}
+      {},
     );
     // console.log(wrapper.debug());
     expect(wrapper.contains(<span>test</span>)).toBe(true);
@@ -37,8 +37,8 @@ describe('NamespacesConsumer', () => {
         <div>
           <span>test</span>
           <span>test</span>
-        </div>
-      )
+        </div>,
+      ),
     ).toBe(true);
   });
 });
