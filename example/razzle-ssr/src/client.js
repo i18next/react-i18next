@@ -8,7 +8,7 @@ import i18n from './i18n';
 
 render(
   <I18nextProvider
-    i18n={ i18n }
+    i18n={i18n}
     initialI18nStore={window.initialI18nStore}
     initialLanguage={window.initialLanguage}
   >
@@ -16,7 +16,7 @@ render(
       <App />
     </BrowserRouter>
   </I18nextProvider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 
 if (module.hot) {

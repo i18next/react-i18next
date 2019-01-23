@@ -42,7 +42,7 @@ export function withNamespaces(namespaceArg, options = {}) {
               ...this.props,
               ...extraProps,
               ...rest,
-            })
+            }),
         );
       }
     }

@@ -47,7 +47,7 @@ i18n
               <StaticRouter context={context} location={req.url}>
                 <App />
               </StaticRouter>
-            </I18nextProvider>
+            </I18nextProvider>,
           );
           // This line must be placed after renderToString method
           // otherwise context won't be populated by App
@@ -79,11 +79,11 @@ i18n
         <body>
             <div id="root">${markup}</div>
         </body>
-    </html>`
+    </html>`,
             );
           }
         });
-    }
+    },
   );
 
 export default server;

@@ -54,7 +54,7 @@ export function withContext() {
           React.createElement(WrappedComponent, {
             ...ctx,
             ...rest,
-          })
+          }),
         );
       }
     }
@@ -115,7 +115,7 @@ export function withI18n() {
 
     WithMergedOptionsWithContext.WrappedComponent = WrappedComponent;
     WithMergedOptionsWithContext.displayName = `WithMergedOptions(${getDisplayName(
-      WrappedComponent
+      WrappedComponent,
     )})`;
 
     return hoistStatics(WithMergedOptionsWithContext, WrappedComponent);

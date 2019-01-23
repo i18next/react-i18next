@@ -24,7 +24,7 @@ describe('NamespacesConsumer', () => {
   it('sets initial ready state to false if resource bundles are not loaded', () => {
     const notLoadedInstance = new NamespacesConsumerComponent(
       { i18n, ns: ['notLoadedNS', 'alreadyLoadedNS'], i18nOptions: { ...i18n.options } },
-      {}
+      {},
     );
     expect(notLoadedInstance.state.ready).toBe(false);
   });
@@ -32,7 +32,7 @@ describe('NamespacesConsumer', () => {
   it('sets initial ready state to true if resource bundles are already loaded', () => {
     const notLoadedInstance = new NamespacesConsumerComponent(
       { i18n, ns: ['alreadyLoadedNS'], i18nOptions: { ...i18n.options } },
-      {}
+      {},
     );
     expect(notLoadedInstance.state.ready).toBe(true);
   });

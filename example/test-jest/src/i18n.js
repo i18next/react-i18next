@@ -21,9 +21,8 @@ i18n
     },
 
     react: {
-      wait: true
-    }
+      wait: true,
+    },
   });
-
 
 export default i18n;

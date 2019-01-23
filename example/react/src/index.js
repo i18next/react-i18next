@@ -15,5 +15,4 @@ ReactDOM.render(<App />, document.getElementById('root'));
 // -> remove the i18n.use(reactI18nextModule) in file ./i18n.js
 // ReactDOM.render(<I18nextProvider i18n={i18n}><App /></I18nextProvider>, document.getElementById('root'));
 
-
 registerServiceWorker();

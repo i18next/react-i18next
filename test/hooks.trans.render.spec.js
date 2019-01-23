@@ -5,7 +5,6 @@ import i18n from './i18n';
 import { withTranslation } from '../src/hooks/withTranslation';
 import { Trans } from '../src/hooks/Trans';
 
-
 function Link({ to, children }) {
   return <a href={to}>{children}</a>;
 }
@@ -28,8 +27,8 @@ describe('trans simple', () => {
       wrapper.contains(
         <div>
           Go <Link to="/msgs">there</Link>.
-        </div>
-      )
+        </div>,
+      ),
     ).toBe(true);
   });
 
@@ -70,8 +69,8 @@ describe('trans simple', () => {
       wrapper.contains(
         <span>
           Go <Link to="/msgs">there</Link>.
-        </span>
-      )
+        </span>,
+      ),
     ).toBe(true);
   });
 });
@@ -90,8 +89,8 @@ describe('trans simple using ns prop', () => {
       wrapper.contains(
         <div>
           Another go <Link to="/msgs">there</Link>.
-        </div>
-      )
+        </div>,
+      ),
     ).toBe(true);
   });
 });
@@ -110,8 +109,8 @@ describe('trans simple with custom html tag', () => {
       wrapper.contains(
         <div>
           Go <Link to="/msgs">there</Link>.
-        </div>
-      )
+        </div>,
+      ),
     ).toBe(true);
   });
 });
@@ -167,8 +166,8 @@ describe('trans testTransKey2', () => {
       wrapper.contains(
         <div>
           <span className="matchCount">10</span> items matched.
-        </div>
-      )
+        </div>,
+      ),
     ).toBe(true);
   });
 });
@@ -190,8 +189,8 @@ describe('trans testTransKey3', () => {
       wrapper.contains(
         <div>
           Result: <span className="matchCount">10</span> items matched.
-        </div>
-      )
+        </div>,
+      ),
     ).toBe(true);
   });
 });
@@ -215,8 +214,8 @@ describe('trans complex', () => {
       wrapper.contains(
         <div>
           Hello <strong>Jan</strong>, you have 10 messages. Open <Link to="/msgs">here</Link>.
-        </div>
-      )
+        </div>,
+      ),
     ).toBe(true);
   });
 });
@@ -240,8 +239,8 @@ describe('trans complex v2 no extra pseudo elements for interpolation', () => {
       wrapper.contains(
         <div>
           Hello <strong>Jan</strong>, you have 10 messages. Open <Link to="/msgs">here</Link>.
-        </div>
-      )
+        </div>,
+      ),
     ).toBe(true);
   });
 });
@@ -279,8 +278,8 @@ describe('trans with t as prop', () => {
       wrapper.contains(
         <div>
           Go <Link to="/msgs">there</Link>.
-        </div>
-      )
+        </div>,
+      ),
     ).toBe(true);
   });
 });
@@ -316,8 +315,8 @@ describe('trans using no children but props - icu case', () => {
       wrapper.contains(
         <div>
           hello <strong>world</strong>
-        </div>
-      )
+        </div>,
+      ),
     ).toBe(true);
   });
 });
@@ -342,8 +341,8 @@ describe('trans using no children but props - nested case', () => {
       wrapper.contains(
         <span>
           hello <br /> world
-        </span>
-      )
+        </span>,
+      ),
     ).toBe(true);
   });
 });

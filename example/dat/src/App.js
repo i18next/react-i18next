@@ -7,13 +7,16 @@ class App extends Component {
   render() {
     const { t, i18n } = this.props;
 
-    const changeLanguage = (lng) => {
+    const changeLanguage = lng => {
       i18n.changeLanguage(lng);
-    }
+    };
 
     let url = window.location.origin + '?backend=locize';
 
-    if (document.location.href.indexOf('https://') === 0 && document.location.hostname.indexOf('hashbase.io') > 0) {
+    if (
+      document.location.href.indexOf('https://') === 0 &&
+      document.location.hostname.indexOf('hashbase.io') > 0
+    ) {
       url = window.location.origin + '?backend=xhr';
     }
 
@@ -30,7 +33,11 @@ class App extends Component {
             To get started, edit <code>src/App.js</code> and save to reload.
           </Trans>
         </div>
-        <div style={{margin: 10}}><a href={url} style={{ textDecoration: 'none' }}>{t('advice', { url })}</a></div>
+        <div style={{ margin: 10 }}>
+          <a href={url} style={{ textDecoration: 'none' }}>
+            {t('advice', { url })}
+          </a>
+        </div>
         <a href="https://github.com/i18next/react-i18next/tree/master/example/dat">GitHub</a>
       </div>
     );
