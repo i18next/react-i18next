@@ -6,3 +6,15 @@ function withi18nProp() {
   // const i18n = i18next.init({});
   return <NamespacesConsumer i18n={i18next}>{t => <h2>{t('title')}</h2>}</NamespacesConsumer>;
 }
+
+function workWithOptionalProps() {
+  interface ControlProps {
+    hint?: string;
+  }
+  function Control(props: ControlProps) {
+    return <div>{props.hint === undefined ? 'undefined' : props.hint}</div>;
+  }
+  return (
+    <NamespacesConsumer i18n={i18next}>{t => <Control hint={t('title')} />}</NamespacesConsumer>
+  );
+}
