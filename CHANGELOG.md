@@ -1,3 +1,7 @@
+### 9.0.8
+
+- typescript: TFunction usage inside NamespacesConsumer should behave [694](https://github.com/i18next/react-i18next/pull/694)
+
 ### 9.0.7
 
 - fixing react-i18next throwing webpack error when initializeing using @babel/runtime 7.3.0 [685](https://github.com/i18next/react-i18next/issues/685)
