@@ -75,7 +75,7 @@ export interface NamespacesConsumerProps extends ReactI18NextOptions {
   initialI18nStore?: {};
   initialLanguage?: string;
   children: (
-    t: i18next.WithT['t'],
+    t: i18next.TFunction,
     options: {
       i18n: i18next.i18n;
       lng: string;
