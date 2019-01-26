@@ -1,3 +1,7 @@
+### 9.0.9
+
+- typescript: fix: useTranslation hooks typing [698](https://github.com/i18next/react-i18next/pull/698)
+
 ### 9.0.8
 
 - typescript: TFunction usage inside NamespacesConsumer should behave [694](https://github.com/i18next/react-i18next/pull/694)
