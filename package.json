@@ -132,6 +132,11 @@
     "*.{ts,tsx,js,json,md}": [
       "prettier --write",
       "git add"
+    ],
+    "ignore": [
+      "**/dist/**/*.js",
+      "**/react-i18next.js",
+      "**/react-i18next.min.js"
     ]
   },
   "lock": false
