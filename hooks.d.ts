@@ -46,7 +46,7 @@ export function useSSR(initialI18nStore: any, initialLanguage: any): void;
 export function useTranslation(
   ns?: Namespace,
   options?: UseTranslationOptions,
-): [i18next.TranslationFunction, i18next.i18n | {}];
+): [i18next.TFunction, i18next.i18n | {}];
 
 export function withSSR(): (
   WrappedComponent: React.ComponentClass<{}, any>,
