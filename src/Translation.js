@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from './useTranslation';
 
-export function TranslationRenderProp(props) {
+export function Translation(props) {
   const { ns, children } = props;
   const [t, i18n] = useTranslation(ns, props);
 

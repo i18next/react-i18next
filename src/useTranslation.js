@@ -1,5 +1,11 @@
-import { useState, useEffect } from 'react';
-import { getI18n, getDefaults, addUsedNamespaces } from './context';
+import { useState, useEffect, useContext } from 'react';
+import {
+  getI18n,
+  getDefaults,
+  addUsedNamespaces,
+  getHasUsedI18nextProvider,
+  I18nContext,
+} from './context';
 import { warnOnce } from './utils';
 
 function loadNamespaces(i18n, ns, cb) {
@@ -24,7 +30,8 @@ function loadNamespaces(i18n, ns, cb) {
 export function useTranslation(ns, props = {}) {
   // assert we have the needed i18nInstance
   const { i18n: i18nFromProps } = props;
-  const i18n = i18nFromProps || getI18n();
+  const { i18n: i18nFromContext } = getHasUsedI18nextProvider() ? useContext(I18nContext) : {};
+  const i18n = i18nFromProps || i18nFromContext || getI18n();
   if (!i18n) {
     warnOnce('You will need pass in an i18next instance by using i18nextReactModule');
     return [k => k, {}];
@@ -42,6 +49,10 @@ export function useTranslation(ns, props = {}) {
   const ready =
     i18n.isInitialized &&
     namespaces.every(n => {
+      if (!i18n.languages || !i18n.languages.length) {
+        warnOnce('i18n.languages were undefined or empty', i18n.languages);
+        return true;
+      }
       const ret =
         i18n.hasResourceBundle(i18n.languages[0], n) || // we have the ns loaded for the favorite lng (chances are we do not have that lng so check for fallback or has tried to load that)
         (!i18n.services.backendConnector.backend &&
@@ -50,7 +61,17 @@ export function useTranslation(ns, props = {}) {
           i18n.services.backendConnector.state[`${i18n.languages[0]}|${n}`] &&
           i18n.services.backendConnector.state[`${i18n.languages[0]}|${n}`] !== 1 &&
           ((i18n.options && !i18n.options.fallbackLng) ||
-            i18n.hasResourceBundle(i18n.languages[i18n.languages.length - 1], n))); // we have at least tried to load it and have a fallback if fallbackLng is set
+            i18n.hasResourceBundle(i18n.languages[i18n.languages.length - 1], n))) || // we have at least tried to load it and have a fallback if fallbackLng is set
+        (i18n.services.backendConnector.backend &&
+          i18n.services.backendConnector.state[`${i18n.languages[0]}|${n}`] &&
+          i18n.services.backendConnector.state[`${i18n.languages[0]}|${n}`] !== 1 &&
+          ((i18n.options && !i18n.options.fallbackLng) ||
+            (i18n.services.backendConnector.state[
+              `${i18n.languages[i18n.languages.length - 1]}|${n}`
+            ] &&
+              i18n.services.backendConnector.state[
+                `${i18n.languages[i18n.languages.length - 1]}|${n}`
+              ] < 0))); // we have at least tried to load it and have a fallback that failed loading
 
       return ret;
     });

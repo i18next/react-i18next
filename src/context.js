@@ -6,8 +6,17 @@ let defaultOptions = {
 };
 
 let i18nInstance;
+let hasUsedI18nextProvider;
 
 export const I18nContext = React.createContext();
+
+export function usedI18nextProvider(used) {
+  hasUsedI18nextProvider = used;
+}
+
+export function getHasUsedI18nextProvider() {
+  return hasUsedI18nextProvider;
+}
 
 export function setDefaults(options = {}) {
   defaultOptions = { ...defaultOptions, ...options };

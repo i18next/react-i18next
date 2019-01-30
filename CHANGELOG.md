@@ -1,3 +1,9 @@
+### 10.0.0-alpha.2
+
+- hooks: add Translation render prop [708](https://github.com/i18next/react-i18next/issues/708)
+- hooks: add I18nextProvider for passing i18n instance via context
+- hooks: might fix infinit loop issue on undefined language (set ready to true anyway) [673](https://github.com/i18next/react-i18next/issues/673)
+
 ### 10.0.0-alpha.1
 
 - hooks: initial alpha version with all build targets -> preparing v10 release

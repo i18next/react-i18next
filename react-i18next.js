@@ -335,6 +335,14 @@
     transEmptyNodeValue: ''
   };
   let i18nInstance;
+  let hasUsedI18nextProvider;
+  const I18nContext = React__default.createContext();
+  function usedI18nextProvider(used) {
+    hasUsedI18nextProvider = used;
+  }
+  function getHasUsedI18nextProvider() {
+    return hasUsedI18nextProvider;
+  }
   function setDefaults() {
     let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     defaultOptions = _objectSpread({}, defaultOptions, options);
@@ -533,7 +541,10 @@
         tFromProps = _ref.t,
         additionalProps = _objectWithoutProperties(_ref, ["children", "count", "parent", "i18nKey", "tOptions", "values", "defaults", "components", "ns", "i18n", "t"]);
 
-    const i18n = i18nFromProps || getI18n();
+    const _ref2 = getHasUsedI18nextProvider() ? React.useContext(I18nContext) : {},
+          i18nFromContext = _ref2.i18n;
+
+    const i18n = i18nFromProps || i18nFromContext || getI18n();
 
     if (!i18n) {
       warnOnce('You will need pass in an i18next instance by using i18nextReactModule');
@@ -584,7 +595,11 @@
     let props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     // assert we have the needed i18nInstance
     const i18nFromProps = props.i18n;
-    const i18n = i18nFromProps || getI18n();
+
+    const _ref = getHasUsedI18nextProvider() ? React.useContext(I18nContext) : {},
+          i18nFromContext = _ref.i18n;
+
+    const i18n = i18nFromProps || i18nFromContext || getI18n();
 
     if (!i18n) {
       warnOnce('You will need pass in an i18next instance by using i18nextReactModule');
@@ -599,9 +614,15 @@
     addUsedNamespaces(namespaces); // are we ready? yes if all namespaces in first language are loaded already (either with data or empty objedt on failed load)
 
     const ready = i18n.isInitialized && namespaces.every(n => {
+      if (!i18n.languages || !i18n.languages.length) {
+        warnOnce('i18n.languages were undefined or empty', i18n.languages);
+        return true;
+      }
+
       const ret = i18n.hasResourceBundle(i18n.languages[0], n) || // we have the ns loaded for the favorite lng (chances are we do not have that lng so check for fallback or has tried to load that)
       !i18n.services.backendConnector.backend && i18n.hasResourceBundle(i18n.languages[i18n.languages.length - 1], n) || // we have no backend (translation via init) but fallbackLng
-      i18n.services.backendConnector.backend && i18n.services.backendConnector.state[`${i18n.languages[0]}|${n}`] && i18n.services.backendConnector.state[`${i18n.languages[0]}|${n}`] !== 1 && (i18n.options && !i18n.options.fallbackLng || i18n.hasResourceBundle(i18n.languages[i18n.languages.length - 1], n)); // we have at least tried to load it and have a fallback if fallbackLng is set
+      i18n.services.backendConnector.backend && i18n.services.backendConnector.state[`${i18n.languages[0]}|${n}`] && i18n.services.backendConnector.state[`${i18n.languages[0]}|${n}`] !== 1 && (i18n.options && !i18n.options.fallbackLng || i18n.hasResourceBundle(i18n.languages[i18n.languages.length - 1], n)) || // we have at least tried to load it and have a fallback if fallbackLng is set
+      i18n.services.backendConnector.backend && i18n.services.backendConnector.state[`${i18n.languages[0]}|${n}`] && i18n.services.backendConnector.state[`${i18n.languages[0]}|${n}`] !== 1 && (i18n.options && !i18n.options.fallbackLng || i18n.services.backendConnector.state[`${i18n.languages[i18n.languages.length - 1]}|${n}`] && i18n.services.backendConnector.state[`${i18n.languages[i18n.languages.length - 1]}|${n}`] < 0); // we have at least tried to load it and have a fallback that failed loading
 
       return ret;
     }); // set states
@@ -663,8 +684,41 @@
     };
   }
 
+  function Translation(props) {
+    const ns = props.ns,
+          children = props.children;
+
+    const _useTranslation = useTranslation(ns, props),
+          _useTranslation2 = _slicedToArray(_useTranslation, 2),
+          t = _useTranslation2[0],
+          i18n = _useTranslation2[1];
+
+    return children(t, {
+      i18n,
+      t,
+      lng: i18n.language
+    });
+  }
+
+  function I18nextProvider(_ref) {
+    let i18n = _ref.i18n,
+        children = _ref.children;
+    usedI18nextProvider(true);
+    return React__default.createElement(I18nContext.Provider, {
+      value: {
+        i18n
+      }
+    }, children);
+  }
+
   function useSSR(initialI18nStore, initialLanguage) {
-    const i18n = getI18n(); // nextjs / SSR: getting data from next.js or other ssr stack
+    let props = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    const i18nFromProps = props.i18n;
+
+    const _ref = getHasUsedI18nextProvider() ? React.useContext(I18nContext) : {},
+          i18nFromContext = _ref.i18n;
+
+    const i18n = i18nFromProps || i18nFromContext || getI18n(); // nextjs / SSR: getting data from next.js or other ssr stack
 
     if (initialI18nStore && !i18n.initializedStoreOnce) {
       i18n.services.resourceStore.data = initialI18nStore;
@@ -696,6 +750,8 @@
   exports.Trans = Trans;
   exports.useTranslation = useTranslation;
   exports.withTranslation = withTranslation;
+  exports.Translation = Translation;
+  exports.I18nextProvider = I18nextProvider;
   exports.withSSR = withSSR;
   exports.useSSR = useSSR;
   exports.initReactI18next = initReactI18next;

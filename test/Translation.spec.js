@@ -1,13 +1,13 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import i18n from './i18n';
-import { TranslationRenderProp } from '../src/TranslationRenderProp';
+import { Translation } from '../src/Translation';
 
-jest.unmock('../src/TranslationRenderProp');
+jest.unmock('../src/Translation');
 
-describe('TranslationRenderProp', () => {
+describe('Translation', () => {
   function TestComponent() {
-    return <TranslationRenderProp>{t => <div>{t('key1')}</div>}</TranslationRenderProp>;
+    return <Translation>{t => <div>{t('key1')}</div>}</Translation>;
   }
 
   it('should render correct content', () => {
