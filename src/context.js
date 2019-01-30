@@ -1,9 +1,13 @@
+import React from 'react';
+
 let defaultOptions = {
   bindI18n: 'languageChanged',
   transEmptyNodeValue: '',
 };
 
 let i18nInstance;
+
+export const I18nContext = React.createContext();
 
 export function setDefaults(options = {}) {
   defaultOptions = { ...defaultOptions, ...options };

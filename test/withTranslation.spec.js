@@ -5,7 +5,7 @@ import { withTranslation } from '../src/withTranslation';
 
 jest.unmock('../src/withTranslation');
 
-describe('useTranslation', () => {
+describe('withTranslation', () => {
   function TestComponent({ t, i18n: instance }) {
     expect(typeof t).toBe('function');
     expect(instance).toBe(i18n);
