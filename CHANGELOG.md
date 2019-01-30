@@ -1,3 +1,7 @@
+### 9.0.10
+
+- typescript: Add TS definition for reportNS prop [699](https://github.com/i18next/react-i18next/pull/699)
+
 ### 9.0.9
 
 - typescript: fix: useTranslation hooks typing [698](https://github.com/i18next/react-i18next/pull/698)
