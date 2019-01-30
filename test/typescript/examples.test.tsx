@@ -1,10 +1,8 @@
-import React, { Component, Suspense } from 'react';
-import { useTranslation, withTranslation, Trans } from 'react-i18next';
-import logo from './logo.svg';
-import './App.css';
+import * as React from 'react';
+import { useTranslation, withTranslation, Trans, WithTranslation } from 'react-i18next';
 
 // use hoc for class based components
-class LegacyWelcomeClass extends Component {
+class LegacyWelcomeClass extends React.Component<WithTranslation> {
   render() {
     const { t, i18n } = this.props;
     return <h2>{t('title')}</h2>;
@@ -25,15 +23,14 @@ function MyComponent() {
 function Page() {
   const [t, i18n] = useTranslation();
 
-  const changeLanguage = lng => {
+  const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
   };
 
   return (
     <div className="App">
-      <Suspense fallback={<Loader />}>
+      <React.Suspense fallback={<Loader />}>
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
           <Welcome />
           <button onClick={() => changeLanguage('de')}>de</button>
           <button onClick={() => changeLanguage('en')}>en</button>
@@ -42,23 +39,19 @@ function Page() {
           <MyComponent />
         </div>
         <div>{t('description.part2')}</div>
-      </Suspense>
+      </React.Suspense>
     </div>
   );
 }
 
 // loading component for suspence fallback
-const Loader = () => (
-  <div className="App">
-    <img src={logo} className="App-logo" alt="logo" />
-  </div>
-);
+const Loader = () => <div className="App">Loading...</div>;
 
 // here app catches the suspense from page in case translations are not yet loaded
 export default function App() {
   return (
-    <Suspense fallback={<Loader />}>
+    <React.Suspense fallback={<Loader />}>
       <Page />
-    </Suspense>
+    </React.Suspense>
   );
 }
