@@ -107,7 +107,9 @@
   "author": "Jan Mühlemann <jan.muehlemann@gmail.com> (https://github.com/jamuhl)",
   "license": "MIT",
   "jest": {
-    "setupTestFrameworkScriptFile": "./test/setup.js",
+    "setupFilesAfterEnv": [
+      "./test/setup.js"
+    ],
     "unmockedModulePathPatterns": [
       "react"
     ],
