@@ -1,7 +1,8 @@
 import i18n from 'i18next';
 
 // set instance on hooks stuff
-import { setI18n } from '../src/hooks/context';
+import { setI18n } from '../src/context';
+
 setI18n(i18n);
 
 i18n.init({

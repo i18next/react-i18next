@@ -3,9 +3,9 @@ import { shallow, render, mount } from 'enzyme';
 import sinon from 'sinon';
 import i18n from './i18n';
 import BackendMock from './backendMock';
-import { useTranslation } from '../src/hooks/useTranslation';
+import { useTranslation } from '../src/useTranslation';
 
-jest.unmock('../src/hooks/useTranslation');
+jest.unmock('../src/useTranslation');
 
 const newI18n = i18n.createInstance();
 const backend = new BackendMock();

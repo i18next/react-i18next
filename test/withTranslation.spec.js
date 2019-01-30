@@ -1,9 +1,9 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import i18n from './i18n';
-import { withTranslation } from '../src/hooks/withTranslation';
+import { withTranslation } from '../src/withTranslation';
 
-jest.unmock('../src/hooks/withTranslation');
+jest.unmock('../src/withTranslation');
 
 describe('useTranslation', () => {
   function TestComponent({ t, i18n: instance }) {

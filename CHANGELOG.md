@@ -1,3 +1,7 @@
+### 10.0.0-alpha.1
+
+- hooks: initial alpha version with all build targets -> preparing v10 release
+
 ### 9.0.10
 
 - typescript: Add TS definition for reportNS prop [699](https://github.com/i18next/react-i18next/pull/699)

@@ -1,7 +1,7 @@
 import React from 'react';
 import HTML from 'html-parse-stringify2';
-import { withI18n } from './context';
-import { warn } from './utils';
+import { getI18n } from './context';
+import { warn, warnOnce } from './utils';
 
 function hasChildren(node) {
   return node && (node.children || (node.props && node.props.children));
@@ -116,69 +116,52 @@ function renderNodes(children, targetString, i18n) {
   return getChildren(result[0]);
 }
 
-export class TransComponent extends React.Component {
-  render() {
-    const {
-      children,
-      count,
-      parent,
-      i18nKey,
-      tOptions,
-      values,
-      defaults,
-      components,
-      ns: namespace,
-      i18n,
-      t: tFromContextAndProps,
-      defaultNS,
-      reportNS,
-      lng,
-      i18nOptions,
-      ...additionalProps
-    } = this.props;
-    const t = tFromContextAndProps || i18n.t.bind(i18n);
-
-    const reactI18nextOptions = (i18n.options && i18n.options.react) || {};
-    const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
-
-    const defaultValue =
-      defaults || nodesToString('', children, 0) || reactI18nextOptions.transEmptyNodeValue;
-    const hashTransKey = reactI18nextOptions.hashTransKey;
-    const key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
-    const interpolationOverride = values ? {} : { interpolation: { prefix: '#$?', suffix: '?$#' } };
-    const translation = key
-      ? t(key, {
-          ...tOptions,
-          ...values,
-          ...interpolationOverride,
-          defaultValue,
-          count,
-          ns: namespace,
-        })
-      : defaultValue;
-
-    if (reactI18nextOptions.exposeNamespace) {
-      let ns = typeof t.ns === 'string' ? t.ns : t.ns[0];
-      if (
-        i18nKey &&
-        i18n.options &&
-        i18n.options.nsSeparator &&
-        i18nKey.indexOf(i18n.options.nsSeparator) > -1
-      ) {
-        const parts = i18nKey.split(i18n.options.nsSeparator);
-        ns = parts[0];
-      }
-      if (t.ns) additionalProps['data-i18next-options'] = JSON.stringify({ ns });
-    }
-
-    if (!useAsParent) return renderNodes(components || children, translation, i18n);
-
-    return React.createElement(
-      useAsParent,
-      additionalProps,
-      renderNodes(components || children, translation, i18n),
-    );
+export function Trans({
+  children,
+  count,
+  parent,
+  i18nKey,
+  tOptions,
+  values,
+  defaults,
+  components,
+  ns,
+  i18n: i18nFromProps,
+  t: tFromProps,
+  ...additionalProps
+}) {
+  const i18n = i18nFromProps || getI18n();
+  if (!i18n) {
+    warnOnce('You will need pass in an i18next instance by using i18nextReactModule');
+    return children;
   }
-}
 
-export const Trans = withI18n()(TransComponent);
+  const t = tFromProps || i18n.t.bind(i18n);
+
+  const reactI18nextOptions = (i18n.options && i18n.options.react) || {};
+  const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
+
+  const defaultValue =
+    defaults || nodesToString('', children, 0) || reactI18nextOptions.transEmptyNodeValue;
+  const hashTransKey = reactI18nextOptions.hashTransKey;
+  const key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
+  const interpolationOverride = values ? {} : { interpolation: { prefix: '#$?', suffix: '?$#' } };
+  const translation = key
+    ? t(key, {
+        ...tOptions,
+        ...values,
+        ...interpolationOverride,
+        defaultValue,
+        count,
+        ns,
+      })
+    : defaultValue;
+
+  if (!useAsParent) return renderNodes(components || children, translation, i18n);
+
+  return React.createElement(
+    useAsParent,
+    additionalProps,
+    renderNodes(components || children, translation, i18n),
+  );
+}

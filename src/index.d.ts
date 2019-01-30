@@ -1,100 +1,12 @@
-import * as React from 'react';
 import i18next from 'i18next';
+import * as React from 'react';
 
-type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
-type Subtract<T, K> = Omit<T, keyof K>;
+type Namespace = string | string[];
 
 export interface ReactI18NextOptions extends i18next.ReactOptions {
   usePureComponent?: boolean;
   omitBoundRerender?: boolean;
 }
-
-interface ReactI18nextModule {
-  type: string;
-  init: (instance: i18next.i18n) => void;
-}
-
-export const reactI18nextModule: ReactI18nextModule;
-
-export function setDefaults(options: ReactI18NextOptions): void;
-
-export function getDefaults(): ReactI18NextOptions;
-
-export function setI18n(instance: i18next.i18n): void;
-
-export function getI18n(): i18next.i18n;
-
-export interface I18nContextValues extends i18next.WithT {
-  i18n: i18next.i18n;
-  defaultNS?: string;
-  reportNS?: string;
-  lng?: string;
-}
-
-export const I18nContext: React.Context<I18nContextValues>;
-
-export interface WithI18n extends I18nContextValues {
-  i18nOptions?: ReactI18NextOptions;
-}
-
-export function withI18n(): <P extends object>(
-  Wrapper: React.ComponentType<P>,
-) => React.ComponentType<Subtract<P, WithI18n>>;
-
-export interface WithNamespaces extends WithI18n {
-  tReady: boolean;
-  initialI18nStore?: {};
-  initialLanguage?: string;
-}
-
-export interface WithNamespacesOptions extends ReactI18NextOptions {
-  wait?: boolean;
-  i18n?: i18next.i18n;
-  innerRef?:
-    | ((instance: any) => void)
-    | React.RefObject<HTMLElement | SVGElement | React.Component>;
-}
-
-type Namespace = string | string[];
-interface NamespaceExtractor {
-  (props: any & { namespace: Namespace }): Namespace;
-}
-
-export function withNamespaces(
-  namespace?: Namespace | NamespaceExtractor,
-  options?: WithNamespacesOptions,
-): <P extends WithNamespaces>(
-  component: React.ComponentType<P>,
-) => React.ComponentType<Subtract<P, WithNamespaces>>;
-
-export const translate: typeof withNamespaces;
-
-export interface NamespacesConsumerProps extends ReactI18NextOptions {
-  ns?: Namespace;
-  i18n?: i18next.i18n;
-  initialI18nStore?: {};
-  initialLanguage?: string;
-  children: (
-    t: i18next.TFunction,
-    options: {
-      i18n: i18next.i18n;
-      lng: string;
-      ready: boolean;
-    },
-  ) => React.ReactNode;
-}
-
-export const NamespacesConsumer: React.ComponentClass<NamespacesConsumerProps>;
-
-export interface I18nextProviderProps {
-  i18n: i18next.i18n;
-  defaultNS?: string;
-  reportNS?: (ns: string) => void;
-  initialI18nStore?: {};
-  initialLanguage?: string;
-}
-
-export const I18nextProvider: React.ComponentClass<I18nextProviderProps>;
 
 export interface TransProps extends Partial<i18next.WithT> {
   i18nKey?: string;
@@ -106,4 +18,66 @@ export interface TransProps extends Partial<i18next.WithT> {
   components?: React.ReactNode[];
 }
 
-export const Trans: React.ComponentClass<TransProps>;
+interface HooksTransProps extends TransProps {
+  children: React.ReactElement<any>[];
+  tOptions?: {};
+  ns?: Namespace;
+}
+interface UseTranslationOptions {
+  i18n?: i18next.i18n;
+}
+export function setDefaults(options: ReactI18NextOptions): void;
+export function getDefaults(): ReactI18NextOptions;
+export function addUsedNamespaces(namespaces: Namespace[]): void;
+export function getUsedNamespaces(): string[];
+export function setI18n(instance: i18next.i18n): void;
+export function getI18n(): i18next.i18n;
+export const initReactI18next: {
+  type: string;
+  init(instance: i18next.i18n): void;
+};
+export function composeInitialProps(ForComponent: any): (ctx: unknown) => Promise<any>;
+export function getInitialProps(): {
+  initialI18nStore: {
+    [ns: string]: {};
+  };
+  initialLanguage: string;
+};
+export function Trans({
+  i18nKey,
+  count,
+  parent,
+  i18n: i18nFromProps,
+  t: tFromProps,
+  defaults,
+  values,
+  components,
+  children,
+  tOptions,
+  ns,
+  ...additionalProps
+}: HooksTransProps): any;
+
+export function useSSR(initialI18nStore: any, initialLanguage: any): void;
+export function useTranslation(
+  ns?: Namespace,
+  options?: UseTranslationOptions,
+): [i18next.TFunction, i18next.i18n | {}];
+
+export function withSSR(): (
+  WrappedComponent: React.ComponentClass<{}, any>,
+) => {
+  ({
+    initialI18nStore,
+    initialLanguage,
+    ...rest
+  }: {
+    [x: string]: any;
+    initialI18nStore: any;
+    initialLanguage: any;
+  }): React.ComponentElement<{}, React.Component<{}, any, any>>;
+  getInitialProps: (ctx: unknown) => Promise<any>;
+};
+export function withTranslation(
+  ns?: Namespace,
+): (WrappedComponent: React.ComponentClass<any>) => (props: any) => any;

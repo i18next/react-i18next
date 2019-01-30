@@ -1,8 +1,8 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { useTranslation } from '../src/hooks/useTranslation';
+import { useTranslation } from '../src/useTranslation';
 
-jest.unmock('../src/hooks/useTranslation');
+jest.unmock('../src/useTranslation');
 
 const i18n = {
   language: 'en',

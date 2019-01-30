@@ -1,9 +1,9 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { useTranslation } from '../src/hooks/useTranslation';
-import { getUsedNamespaces } from '../src/hooks/context';
+import { useTranslation } from '../src/useTranslation';
+import { getUsedNamespaces } from '../src/context';
 
-jest.unmock('../src/hooks/useTranslation');
+jest.unmock('../src/useTranslation');
 
 const i18n = {
   language: 'en',

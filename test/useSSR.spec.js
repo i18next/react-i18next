@@ -1,10 +1,10 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import i18n from './i18n';
-import { setI18n } from '../src/hooks/context';
-import { useSSR } from '../src/hooks/useSSR';
+import { setI18n } from '../src/context';
+import { useSSR } from '../src/useSSR';
 
-jest.unmock('../src/hooks/useSSR');
+jest.unmock('../src/useSSR');
 
 const mockI18n = {
   language: 'en',

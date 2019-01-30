@@ -18,6 +18,22 @@
 [quality-badge]: http://npm.packagequality.com/shield/react-i18next.svg
 [quality-url]: http://packagequality.com/#?package=react-i18next
 
+### IMPORTANT:
+
+Master Branch is now the v10 using hooks.
+
+```bash
+$ v10.0.0-alpha.1
+npm i react-i18next@next
+```
+
+For the current published version please use the [v9.x.x Branch](https://github.com/i18next/react-i18next/tree/v9.x.x)
+
+```bash
+$ v9.0.10 (latest)
+npm i react-i18next
+```
+
 ### Documentation
 
 The documentation is published on [react.i18next.com](https://react.i18next.com)
@@ -89,18 +105,26 @@ $ npm install react-i18next
 ### Examples
 
 - [Example react](https://github.com/i18next/react-i18next/tree/master/example/react)
-- [Example react using hooks (react 16.7.0-alpha)](https://github.com/i18next/react-i18next/tree/master/example/react-hooks)
-- [Example preact](https://github.com/i18next/react-i18next/tree/master/example/preact)
-- [Example react-native](https://github.com/i18next/react-i18next/tree/master/example/reactnative-expo)
-- [Example expo.io](https://github.com/i18next/react-i18next/tree/master/example/reactnative-expo)
-- [Example next.js](https://github.com/i18next/react-i18next/tree/master/example/nextjs)
-- [Example razzle](https://github.com/i18next/react-i18next/tree/master/example/razzle-ssr)
-- [Example hashbase / beaker browser](https://github.com/i18next/react-i18next/tree/master/example/dat)
-- [Example storybook](https://github.com/i18next/react-i18next/tree/master/example/storybook)
-- [Example locize.com](https://github.com/i18next/react-i18next/tree/master/example/locize-example)
-- [Example test with jest](https://github.com/i18next/react-i18next/tree/master/example/test-jest)
+
+#### v9 samples
+
+- [Example react](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/react)
+- [Example preact](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/preact)
+- [Example react-native](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/reactnative-expo)
+- [Example expo.io](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/reactnative-expo)
+- [Example next.js](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/nextjs)
+- [Example razzle](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/razzle-ssr)
+- [Example hashbase / beaker browser](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/dat)
+- [Example storybook](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/storybook)
+- [Example locize.com](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/locize-example)
+- [Example test with jest](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/test-jest)
 
 ### Requirements
+
+- react >= **16.7.0-alpha.2**
+- i18next >= **10.0.0**
+
+#### v9
 
 - react >= **0.14.0** (in case of < v16 or preact you will need to define parent in [Trans component](https://react.i18next.com/components/trans-component.html#props) or globally in [i18next.react options](https://react.i18next.com/components/trans-component.html#additional-options-on-i18nextinit))
 - i18next >= **2.0.0**

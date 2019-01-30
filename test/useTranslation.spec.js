@@ -1,9 +1,9 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import i18n from './i18n';
-import { useTranslation } from '../src/hooks/useTranslation';
+import { useTranslation } from '../src/useTranslation';
 
-jest.unmock('../src/hooks/useTranslation');
+jest.unmock('../src/useTranslation');
 
 describe('useTranslation', () => {
   function TestComponent() {
