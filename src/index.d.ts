@@ -4,6 +4,20 @@ import i18next from 'i18next';
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 type Subtract<T, K> = Omit<T, keyof K>;
 
+type TFuncWithTSA = <
+  TResult extends string | object | Array<string | object> | undefined = string,
+  TValues extends object = object
+>(
+  key: TemplateStringsArray,
+  opt?: i18next.TOptions<TValues>,
+) => TResult;
+
+interface ExternalWithT {
+  t: TFuncWithTSA;
+}
+
+type WithT = i18next.WithT & ExternalWithT;
+
 export interface ReactI18NextOptions extends i18next.ReactOptions {
   usePureComponent?: boolean;
   omitBoundRerender?: boolean;
@@ -24,7 +38,7 @@ export function setI18n(instance: i18next.i18n): void;
 
 export function getI18n(): i18next.i18n;
 
-export interface I18nContextValues extends i18next.WithT {
+export interface I18nContextValues extends WithT {
   i18n: i18next.i18n;
   defaultNS?: string;
   reportNS?: string;
@@ -75,7 +89,7 @@ export interface NamespacesConsumerProps extends ReactI18NextOptions {
   initialI18nStore?: {};
   initialLanguage?: string;
   children: (
-    t: i18next.TFunction,
+    t: i18next.TFunction & TFuncWithTSA,
     options: {
       i18n: i18next.i18n;
       lng: string;
@@ -96,7 +110,7 @@ export interface I18nextProviderProps {
 
 export const I18nextProvider: React.ComponentClass<I18nextProviderProps>;
 
-export interface TransProps extends Partial<i18next.WithT> {
+export interface TransProps extends Partial<WithT> {
   i18nKey?: string;
   count?: number;
   parent?: React.ReactNode;
