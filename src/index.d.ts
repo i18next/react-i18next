@@ -47,7 +47,7 @@ export function useTranslation(
   options?: UseTranslationOptions,
 ): [i18next.TFunction, i18next.i18n];
 
-// FIXME: need to see usage to improve this
+// Need to see usage to improve this
 export function withSSR(): (
   WrappedComponent: React.ComponentClass<{}, any>,
 ) => {
