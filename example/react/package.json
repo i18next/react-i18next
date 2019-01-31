@@ -6,8 +6,8 @@
     "i18next": "13.1.0",
     "i18next-browser-languagedetector": "2.2.0",
     "i18next-xhr-backend": "1.5.1",
-    "react": "16.7.0-alpha.2",
-    "react-dom": "16.7.0-alpha.2",
+    "react": "16.8.0-alpha.1",
+    "react-dom": "16.8.0-alpha.1",
     "react-i18next": "10.0.0-alpha.2",
     "react-scripts": "2.0.0"
   },
