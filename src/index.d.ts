@@ -71,3 +71,17 @@ export function withTranslation(
 ): <P extends WithTranslation>(
   component: React.ComponentType<P>,
 ) => React.ComponentType<Omit<P, keyof WithTranslation>>;
+
+export interface TranslationProps {
+  children: (
+    t: i18next.TFunction,
+    options: {
+      i18n: i18next.i18n;
+      lng: string;
+    },
+  ) => React.ReactNode;
+  ns?: Namespace;
+  i18n?: i18next.i18n;
+}
+
+export function Translation(props: TranslationProps): any;

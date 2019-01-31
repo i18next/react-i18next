@@ -2,12 +2,11 @@ import React from 'react';
 import { useTranslation } from './useTranslation';
 
 export function Translation(props) {
-  const { ns, children } = props;
-  const [t, i18n] = useTranslation(ns, props);
+  const { ns, children, ...options } = props;
+  const [t, i18n] = useTranslation(ns, options);
 
   return children(t, {
     i18n,
-    t,
     lng: i18n.language,
   });
 }
