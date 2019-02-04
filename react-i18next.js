@@ -350,14 +350,21 @@
   function getDefaults() {
     return defaultOptions;
   }
-  const usedNamespaces = {};
-  function addUsedNamespaces(namespaces) {
-    namespaces.forEach(ns => {
-      if (!usedNamespaces[ns]) usedNamespaces[ns] = true;
-    });
-  }
-  function getUsedNamespaces() {
-    return Object.keys(usedNamespaces);
+  class ReportNamespaces {
+    constructor() {
+      this.usedNamespaces = {};
+    }
+
+    addUsedNamespaces(namespaces) {
+      namespaces.forEach(ns => {
+        if (!this.usedNamespaces[ns]) this.usedNamespaces[ns] = true;
+      });
+    }
+
+    getUsedNamespaces() {
+      return Object.keys(this.usedNamespaces);
+    }
+
   }
   function setI18n(instance) {
     i18nInstance = instance;
@@ -600,6 +607,7 @@
           i18nFromContext = _ref.i18n;
 
     const i18n = i18nFromProps || i18nFromContext || getI18n();
+    if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
 
     if (!i18n) {
       warnOnce('You will need pass in an i18next instance by using i18nextReactModule');
@@ -611,7 +619,7 @@
     let namespaces = ns || i18n.options && i18n.options.defaultNS;
     namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation']; // report namespaces as used
 
-    addUsedNamespaces(namespaces); // are we ready? yes if all namespaces in first language are loaded already (either with data or empty objedt on failed load)
+    if (i18n.reportNamespaces.addUsedNamespaces) i18n.reportNamespaces.addUsedNamespaces(namespaces); // are we ready? yes if all namespaces in first language are loaded already (either with data or empty objedt on failed load)
 
     const ready = i18n.isInitialized && namespaces.every(n => {
       if (!i18n.languages || !i18n.languages.length) {
@@ -686,16 +694,16 @@
 
   function Translation(props) {
     const ns = props.ns,
-          children = props.children;
+          children = props.children,
+          options = _objectWithoutProperties(props, ["ns", "children"]);
 
-    const _useTranslation = useTranslation(ns, props),
+    const _useTranslation = useTranslation(ns, options),
           _useTranslation2 = _slicedToArray(_useTranslation, 2),
           t = _useTranslation2[0],
           i18n = _useTranslation2[1];
 
     return children(t, {
       i18n,
-      t,
       lng: i18n.language
     });
   }

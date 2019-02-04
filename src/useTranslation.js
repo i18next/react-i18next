@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import {
   getI18n,
   getDefaults,
-  addUsedNamespaces,
+  ReportNamespaces,
   getHasUsedI18nextProvider,
   I18nContext,
 } from './context';
@@ -32,6 +32,7 @@ export function useTranslation(ns, props = {}) {
   const { i18n: i18nFromProps } = props;
   const { i18n: i18nFromContext } = getHasUsedI18nextProvider() ? useContext(I18nContext) : {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
+  if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
   if (!i18n) {
     warnOnce('You will need pass in an i18next instance by using i18nextReactModule');
     return [k => k, {}];
@@ -43,7 +44,7 @@ export function useTranslation(ns, props = {}) {
   namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
 
   // report namespaces as used
-  addUsedNamespaces(namespaces);
+  if (i18n.reportNamespaces.addUsedNamespaces) i18n.reportNamespaces.addUsedNamespaces(namespaces);
 
   // are we ready? yes if all namespaces in first language are loaded already (either with data or empty objedt on failed load)
   const ready =

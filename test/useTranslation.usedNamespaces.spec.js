@@ -1,7 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { useTranslation } from '../src/useTranslation';
-import { getUsedNamespaces } from '../src/context';
 
 jest.unmock('../src/useTranslation');
 
@@ -35,6 +34,6 @@ describe('useTranslation', () => {
   it('should render correct content if ready (having all ns)', () => {
     const wrapper = mount(<TestComponent />, {});
     // console.log(wrapper.debug());
-    expect(getUsedNamespaces()).toEqual(['ns1', 'ns2', 'ns3']);
+    expect(i18n.reportNamespaces.getUsedNamespaces()).toEqual(['ns1', 'ns2', 'ns3']);
   });
 });

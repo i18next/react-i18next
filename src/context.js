@@ -26,15 +26,20 @@ export function getDefaults() {
   return defaultOptions;
 }
 
-const usedNamespaces = {};
-export function addUsedNamespaces(namespaces) {
-  namespaces.forEach(ns => {
-    if (!usedNamespaces[ns]) usedNamespaces[ns] = true;
-  });
-}
+export class ReportNamespaces {
+  constructor() {
+    this.usedNamespaces = {};
+  }
 
-export function getUsedNamespaces() {
-  return Object.keys(usedNamespaces);
+  addUsedNamespaces(namespaces) {
+    namespaces.forEach(ns => {
+      if (!this.usedNamespaces[ns]) this.usedNamespaces[ns] = true;
+    });
+  }
+
+  getUsedNamespaces() {
+    return Object.keys(this.usedNamespaces);
+  }
 }
 
 export function setI18n(instance) {

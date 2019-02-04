@@ -1,3 +1,7 @@
+### 10.0.0-alpha.3
+
+- hooks: make reportNS bound to the i18n instance - so report is per request [711](https://github.com/i18next/react-i18next/issues/711)
+
 ### 10.0.0-alpha.2
 
 - hooks: add Translation render prop [708](https://github.com/i18next/react-i18next/issues/708)
