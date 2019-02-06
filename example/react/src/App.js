@@ -24,6 +24,7 @@ function MyComponent() {
 // page uses the hook
 function Page() {
   const [t, i18n] = useTranslation();
+  // or const { t, i18n } = useTranslation();
 
   const changeLanguage = lng => {
     i18n.changeLanguage(lng);

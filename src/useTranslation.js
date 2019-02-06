@@ -35,7 +35,10 @@ export function useTranslation(ns, props = {}) {
   if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
   if (!i18n) {
     warnOnce('You will need pass in an i18next instance by using i18nextReactModule');
-    return [k => k, {}];
+    const retNotReady = [k => k, {}];
+    retNotReady.t = k => k;
+    retNotReady.i18n = {};
+    return retNotReady;
   }
   const i18nOptions = getDefaults();
 
@@ -100,7 +103,10 @@ export function useTranslation(ns, props = {}) {
   // return hook stuff if ready or
   // not yet loaded namespaces -> load them -> and trigger suspense
   if (ready) {
-    return [t.t, i18n];
+    const ret = [t.t, i18n];
+    ret.t = t.t;
+    ret.i18n = i18n;
+    return ret;
   }
   throw new Promise(resolve => {
     loadNamespaces(i18n, namespaces, () => {
