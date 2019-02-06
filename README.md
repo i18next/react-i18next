@@ -20,18 +20,18 @@
 
 ### IMPORTANT:
 
-Master Branch is now the v10 using hooks.
+Master Branch is the new v10 using hooks.
 
 ```bash
-$ v10.0.0-alpha.1
-npm i react-i18next@next
+$ v10.0.0
+npm i react-i18next
 ```
 
-For the current published version please use the [v9.x.x Branch](https://github.com/i18next/react-i18next/tree/v9.x.x)
+For the legacy version please use the [v9.x.x Branch](https://github.com/i18next/react-i18next/tree/v9.x.x)
 
 ```bash
-$ v9.0.10 (latest)
-npm i react-i18next
+$ v9.0.10 (legacy)
+npm i react-i18next@legacy
 ```
 
 ### Documentation
@@ -121,7 +121,7 @@ $ npm install react-i18next
 
 ### Requirements
 
-- react >= **16.7.0-alpha.2**
+- react >= **16.8.0**
 - i18next >= **10.0.0**
 
 #### v9
