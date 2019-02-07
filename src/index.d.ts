@@ -42,12 +42,10 @@ export function useSSR(initialI18nStore: any, initialLanguage: any): void;
 export interface UseTranslationOptions {
   i18n?: i18next.i18n;
 }
-export interface UseTranslationResponse extends Array<i18next.TFunction | i18next.i18n> {
-  0: i18next.TFunction;
-  1: i18next.i18n;
+export type UseTranslationResponse = [i18next.TFunction, i18next.i18n] & {
   t: i18next.TFunction;
   i18n: i18next.i18n;
-}
+};
 export function useTranslation(
   ns?: Namespace,
   options?: UseTranslationOptions,
