@@ -76,7 +76,7 @@ export interface I18nextProviderProps {
   i18n: i18next.i18n;
 }
 
-export const I18nextProvider: React.ComponentClass<I18nextProviderProps>;
+export const I18nextProvider: React.FunctionComponent<I18nextProviderProps>;
 
 export interface TranslationProps {
   children: (
