@@ -72,6 +72,16 @@ export function withTranslation(
   component: React.ComponentType<P>,
 ) => React.ComponentType<Omit<P, keyof WithTranslation>>;
 
+export interface I18nextProviderProps {
+  i18n: i18next.i18n;
+  defaultNS?: string;
+  reportNS?: (ns: string) => void;
+  initialI18nStore?: {};
+  initialLanguage?: string;
+}
+
+export const I18nextProvider: React.ComponentClass<I18nextProviderProps>;
+
 export interface TranslationProps {
   children: (
     t: i18next.TFunction,
