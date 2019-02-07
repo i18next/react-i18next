@@ -611,7 +611,12 @@
 
     if (!i18n) {
       warnOnce('You will need pass in an i18next instance by using i18nextReactModule');
-      return [k => k, {}];
+      const retNotReady = [k => k, {}];
+
+      retNotReady.t = k => k;
+
+      retNotReady.i18n = {};
+      return retNotReady;
     }
 
     const i18nOptions = getDefaults(); // prepare having a namespace
@@ -663,7 +668,10 @@
     // not yet loaded namespaces -> load them -> and trigger suspense
 
     if (ready) {
-      return [t.t, i18n];
+      const ret = [t.t, i18n];
+      ret.t = t.t;
+      ret.i18n = i18n;
+      return ret;
     }
 
     throw new Promise(resolve => {
