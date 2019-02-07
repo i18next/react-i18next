@@ -1,3 +1,8 @@
+### 10.0.1
+
+- allow object spread `const { t } = useTranslation()` [714](https://github.com/i18next/react-i18next/pull/714)
+- typescript: add types for I18nextProvider [721](https://github.com/i18next/react-i18next/pull/721)
+
 ### 10.0.0
 
 - released to npm

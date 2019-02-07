@@ -51,6 +51,7 @@ function Page() {
 const Loader = () => (
   <div className="App">
     <img src={logo} className="App-logo" alt="logo" />
+    <div>loading...</div>
   </div>
 );
 
