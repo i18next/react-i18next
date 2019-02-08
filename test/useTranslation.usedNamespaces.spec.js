@@ -7,15 +7,11 @@ jest.unmock('../src/useTranslation');
 const i18n = {
   language: 'en',
   languages: ['en'],
-  options: {
-    defaultNS: 'defaultNS',
-    nsMode: 'fallback',
-  },
   services: {
     resourceStore: {
       data: {},
     },
-    backendConnector: {},
+    backendConnector: { backend: {} },
   },
   isInitialized: true,
   changeLanguage: () => {},

@@ -1,3 +1,7 @@
+### 10.0.2
+
+- refactor ready state in useTranslation
+
 ### 10.0.1
 
 - allow object spread `const { t } = useTranslation()` [714](https://github.com/i18next/react-i18next/pull/714)

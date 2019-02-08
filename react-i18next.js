@@ -424,6 +424,23 @@
     if (typeof args[0] === 'string') alreadyWarned[args[0]] = new Date();
     warn(...args);
   }
+  function hasLoadedNamespace(ns, i18n) {
+    if (!i18n.languages || !i18n.languages.length) {
+      warnOnce('i18n.languages were undefined or empty', i18n.languages);
+      return true;
+    }
+
+    const lng = i18n.languages[0];
+    const fallbackLng = i18n.options ? i18n.options.fallbackLng : false;
+    const lastLng = i18n.languages[i18n.languages.length - 1];
+
+    const loadNotPending = (l, n) => (i18n.services.backendConnector.state[`${l}|${n}`] || 0) !== 1;
+
+    if (i18n.hasResourceBundle(lng, ns)) return true;
+    if (!i18n.services.backendConnector.backend) return true;
+    if (loadNotPending(lng, ns) && (!fallbackLng || loadNotPending(lastLng, ns))) return true;
+    return false;
+  }
 
   function hasChildren(node) {
     return node && (node.children || node.props && node.props.children);
@@ -626,19 +643,7 @@
 
     if (i18n.reportNamespaces.addUsedNamespaces) i18n.reportNamespaces.addUsedNamespaces(namespaces); // are we ready? yes if all namespaces in first language are loaded already (either with data or empty objedt on failed load)
 
-    const ready = i18n.isInitialized && namespaces.every(n => {
-      if (!i18n.languages || !i18n.languages.length) {
-        warnOnce('i18n.languages were undefined or empty', i18n.languages);
-        return true;
-      }
-
-      const ret = i18n.hasResourceBundle(i18n.languages[0], n) || // we have the ns loaded for the favorite lng (chances are we do not have that lng so check for fallback or has tried to load that)
-      !i18n.services.backendConnector.backend && i18n.hasResourceBundle(i18n.languages[i18n.languages.length - 1], n) || // we have no backend (translation via init) but fallbackLng
-      i18n.services.backendConnector.backend && i18n.services.backendConnector.state[`${i18n.languages[0]}|${n}`] && i18n.services.backendConnector.state[`${i18n.languages[0]}|${n}`] !== 1 && (i18n.options && !i18n.options.fallbackLng || i18n.hasResourceBundle(i18n.languages[i18n.languages.length - 1], n)) || // we have at least tried to load it and have a fallback if fallbackLng is set
-      i18n.services.backendConnector.backend && i18n.services.backendConnector.state[`${i18n.languages[0]}|${n}`] && i18n.services.backendConnector.state[`${i18n.languages[0]}|${n}`] !== 1 && (i18n.options && !i18n.options.fallbackLng || i18n.services.backendConnector.state[`${i18n.languages[i18n.languages.length - 1]}|${n}`] && i18n.services.backendConnector.state[`${i18n.languages[i18n.languages.length - 1]}|${n}`] < 0); // we have at least tried to load it and have a fallback that failed loading
-
-      return ret;
-    }); // set states
+    const ready = i18n.isInitialized && namespaces.every(n => hasLoadedNamespace(n, i18n)); // set states
 
     const _useState = React.useState({
       t: i18n.getFixedT(null, namespaces[0])
