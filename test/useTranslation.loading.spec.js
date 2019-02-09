@@ -74,6 +74,6 @@ describe('useTranslation loading ns', () => {
 
     setTimeout(() => {
       expect(wrapper.contains(<div>test2</div>)).toBe(true);
-    }, 50);
+    }, 250);
   });
 });
