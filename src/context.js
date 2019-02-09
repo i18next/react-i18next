@@ -76,7 +76,7 @@ export function composeInitialProps(ForComponent) {
 
 export function getInitialProps() {
   const i18n = getI18n();
-  const namespaces = getUsedNamespaces();
+  const namespaces = i18n.reportNamespaces ? i18n.reportNamespaces.getUsedNamespaces() : [];
 
   const ret = {};
   const initialI18nStore = {};

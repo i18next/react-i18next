@@ -3,6 +3,7 @@ import { mount } from 'enzyme';
 import i18n from './i18n';
 import { setI18n } from '../src/context';
 import { withSSR } from '../src/withSSR';
+import { useTranslation } from '../src/useTranslation';
 
 jest.unmock('../src/withSSR');
 
@@ -25,13 +26,17 @@ const mockI18n = {
   },
   getFixedT: () => message => message,
   hasResourceBundle: (lng, ns) => ns === 'alreadyLoadedNS',
+  getResourceBundle: (lng, ns) => ({ lng, ns }),
   loadNamespaces: () => {},
 };
 
-describe('useSSR', () => {
+describe('withSSR', () => {
   function TestComponent() {
+    const { t } = useTranslation('ns1');
     return <div>SSR</div>;
   }
+
+  TestComponent.getInitialProps = async ctx => ({ foo: 'bar' });
 
   beforeAll(() => {
     setI18n(mockI18n);
@@ -48,5 +53,27 @@ describe('useSSR', () => {
     expect(wrapper.contains(<div>SSR</div>)).toBe(true);
     expect(mockI18n.language).toBe('de');
     expect(mockI18n.services.resourceStore.data).toEqual({ foo: 'bar' });
+  });
+
+  it('should get initialProps', async () => {
+    const HocElement = withSSR()(TestComponent);
+
+    expect.assertions(1);
+    const props = await HocElement.getInitialProps({});
+
+    const expected = {
+      foo: 'bar',
+      initialI18nStore: {
+        en: {
+          ns1: {
+            lng: 'en',
+            ns: 'ns1',
+          },
+        },
+      },
+      initialLanguage: 'de',
+    };
+
+    expect(props).toEqual(expected);
   });
 });

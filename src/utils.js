@@ -12,12 +12,14 @@ export function warnOnce(...args) {
   warn(...args);
 }
 
-export function deprecated(...args) {
-  if (process && process.env && (!process.env.NODE_ENV || process.env.NODE_ENV === 'development')) {
-    if (typeof args[0] === 'string') args[0] = `deprecation warning -> ${args[0]}`;
-    warnOnce(...args);
-  }
-}
+// not needed right now
+//
+// export function deprecated(...args) {
+//   if (process && process.env && (!process.env.NODE_ENV || process.env.NODE_ENV === 'development')) {
+//     if (typeof args[0] === 'string') args[0] = `deprecation warning -> ${args[0]}`;
+//     warnOnce(...args);
+//   }
+// }
 
 export function loadNamespaces(i18n, ns, cb) {
   i18n.loadNamespaces(ns, () => {
