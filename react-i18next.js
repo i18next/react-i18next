@@ -382,11 +382,27 @@
 
   };
   function composeInitialProps(ForComponent) {
-    return async ctx => {
-      const componentsInitialProps = ForComponent.getInitialProps ? await ForComponent.getInitialProps(ctx) : {};
+    return ctx => new Promise(resolve => {
       const i18nInitialProps = getInitialProps();
-      return _objectSpread({}, componentsInitialProps, i18nInitialProps);
-    };
+
+      if (ForComponent.getInitialProps) {
+        ForComponent.getInitialProps(ctx).then(componentsInitialProps => {
+          resolve(_objectSpread({}, componentsInitialProps, i18nInitialProps));
+        });
+      } else {
+        resolve(i18nInitialProps);
+      }
+    }); // Avoid async for now - so we do not need to pull in regenerator
+    // return async ctx => {
+    //   const componentsInitialProps = ForComponent.getInitialProps
+    //     ? await ForComponent.getInitialProps(ctx)
+    //     : {};
+    //   const i18nInitialProps = getInitialProps();
+    //   return {
+    //     ...componentsInitialProps,
+    //     ...i18nInitialProps,
+    //   };
+    // };
   }
   function getInitialProps() {
     const i18n = getI18n();

@@ -1,3 +1,7 @@
+### 10.0.4
+
+- try avoiding pull in of regenerator runtime for async usage -> use Promise for now
+
 ### 10.0.3
 
 - fix initial props on withSSR
