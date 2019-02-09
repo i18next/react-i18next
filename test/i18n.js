@@ -51,7 +51,6 @@ i18n.init({
 
   react: {
     defaultTransParent: 'div',
-    nsMode: 'default',
   },
 });
 
