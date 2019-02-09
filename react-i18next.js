@@ -390,7 +390,7 @@
   }
   function getInitialProps() {
     const i18n = getI18n();
-    const namespaces = getUsedNamespaces();
+    const namespaces = i18n.reportNamespaces ? i18n.reportNamespaces.getUsedNamespaces() : [];
     const ret = {};
     const initialI18nStore = {};
     i18n.languages.forEach(l => {
@@ -423,6 +423,32 @@
     if (typeof args[0] === 'string' && alreadyWarned[args[0]]) return;
     if (typeof args[0] === 'string') alreadyWarned[args[0]] = new Date();
     warn(...args);
+  } // not needed right now
+  //
+  // export function deprecated(...args) {
+  //   if (process && process.env && (!"development" || "development" === 'development')) {
+  //     if (typeof args[0] === 'string') args[0] = `deprecation warning -> ${args[0]}`;
+  //     warnOnce(...args);
+  //   }
+  // }
+
+  function loadNamespaces(i18n, ns, cb) {
+    i18n.loadNamespaces(ns, () => {
+      // delay ready if not yet initialized i18n instance
+      if (i18n.isInitialized) {
+        cb();
+      } else {
+        const initialized = () => {
+          // due to emitter removing issue in i18next we need to delay remove
+          setImmediate(() => {
+            i18n.off('initialized', initialized);
+          });
+          cb();
+        };
+
+        i18n.on('initialized', initialized);
+      }
+    });
   }
   function hasLoadedNamespace(ns, i18n) {
     if (!i18n.languages || !i18n.languages.length) {
@@ -434,10 +460,13 @@
     const fallbackLng = i18n.options ? i18n.options.fallbackLng : false;
     const lastLng = i18n.languages[i18n.languages.length - 1];
 
-    const loadNotPending = (l, n) => (i18n.services.backendConnector.state[`${l}|${n}`] || 0) !== 1;
+    const loadNotPending = (l, n) => (i18n.services.backendConnector.state[`${l}|${n}`] || 0) !== 1; // loaded -> SUCCESS
 
-    if (i18n.hasResourceBundle(lng, ns)) return true;
-    if (!i18n.services.backendConnector.backend) return true;
+
+    if (i18n.hasResourceBundle(lng, ns)) return true; // were not loading at all -> SEMI SUCCESS
+
+    if (!i18n.services.backendConnector.backend) return true; // failed loading ns - but at least fallback is not pending -> SEMI SUCCESS
+
     if (loadNotPending(lng, ns) && (!fallbackLng || loadNotPending(lastLng, ns))) return true;
     return false;
   }
@@ -594,25 +623,6 @@
     })) : defaultValue;
     if (!useAsParent) return renderNodes(components || children, translation, i18n);
     return React__default.createElement(useAsParent, additionalProps, renderNodes(components || children, translation, i18n));
-  }
-
-  function loadNamespaces(i18n, ns, cb) {
-    i18n.loadNamespaces(ns, () => {
-      // delay ready if not yet initialized i18n instance
-      if (i18n.isInitialized) {
-        cb();
-      } else {
-        const initialized = () => {
-          // due to emitter removing issue in i18next we need to delay remove
-          setImmediate(() => {
-            i18n.off('initialized', initialized);
-          });
-          cb();
-        };
-
-        i18n.on('initialized', initialized);
-      }
-    });
   }
 
   function useTranslation(ns) {
