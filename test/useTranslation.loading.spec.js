@@ -56,11 +56,11 @@ describe('useTranslation loading ns', () => {
     return <div>{t('key1')}</div>;
   };
 
-  it('should wait for correct translation', () => {
+  it('should wait for correct translation', done => {
     const spy = sinon.spy();
 
     console.error = jest.fn(); // silent down the error boundary error from react-dom
-    const wrapper = mount(
+    let wrapper = mount(
       <ErrorBoundary spy={spy}>
         <TestElement />
       </ErrorBoundary>,
@@ -70,10 +70,18 @@ describe('useTranslation loading ns', () => {
     expect(spy.callCount).toBe(1);
 
     backend.flush();
-    wrapper.update();
 
     setTimeout(() => {
-      expect(wrapper.contains(<div>test2</div>)).toBe(true);
-    }, 250);
+      // mount again - no suspense recovering from promise resolve
+      wrapper = mount(
+        <ErrorBoundary spy={spy}>
+          <TestElement />
+        </ErrorBoundary>,
+      );
+
+      // console.log(wrapper.debug());
+      expect(wrapper.contains(<div>test</div>)).toBe(true);
+      done();
+    }, 500);
   });
 });

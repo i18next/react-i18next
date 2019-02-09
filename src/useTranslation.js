@@ -61,6 +61,7 @@ export function useTranslation(ns, props = {}) {
     ret.i18n = i18n;
     return ret;
   }
+
   throw new Promise(resolve => {
     loadNamespaces(i18n, namespaces, () => {
       resetT();
