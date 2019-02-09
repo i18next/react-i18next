@@ -1,3 +1,7 @@
+### 10.0.3
+
+- fix initial props on withSSR
+
 ### 10.0.2
 
 - refactor ready state in useTranslation
