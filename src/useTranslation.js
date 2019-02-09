@@ -6,26 +6,7 @@ import {
   getHasUsedI18nextProvider,
   I18nContext,
 } from './context';
-import { warnOnce, hasLoadedNamespace } from './utils';
-
-function loadNamespaces(i18n, ns, cb) {
-  i18n.loadNamespaces(ns, () => {
-    // delay ready if not yet initialized i18n instance
-    if (i18n.isInitialized) {
-      cb();
-    } else {
-      const initialized = () => {
-        // due to emitter removing issue in i18next we need to delay remove
-        setImmediate(() => {
-          i18n.off('initialized', initialized);
-        });
-        cb();
-      };
-
-      i18n.on('initialized', initialized);
-    }
-  });
-}
+import { warnOnce, loadNamespaces, hasLoadedNamespace } from './utils';
 
 export function useTranslation(ns, props = {}) {
   // assert we have the needed i18nInstance

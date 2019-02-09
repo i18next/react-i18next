@@ -19,6 +19,25 @@ export function deprecated(...args) {
   }
 }
 
+export function loadNamespaces(i18n, ns, cb) {
+  i18n.loadNamespaces(ns, () => {
+    // delay ready if not yet initialized i18n instance
+    if (i18n.isInitialized) {
+      cb();
+    } else {
+      const initialized = () => {
+        // due to emitter removing issue in i18next we need to delay remove
+        setImmediate(() => {
+          i18n.off('initialized', initialized);
+        });
+        cb();
+      };
+
+      i18n.on('initialized', initialized);
+    }
+  });
+}
+
 export function hasLoadedNamespace(ns, i18n) {
   if (!i18n.languages || !i18n.languages.length) {
     warnOnce('i18n.languages were undefined or empty', i18n.languages);
