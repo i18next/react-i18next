@@ -71,7 +71,7 @@ describe('useTranslation', () => {
     const instance2 = { ...instance };
     instance2.services.backendConnector = {
       backend: {},
-      state: { 'en.notLoadedNS': -1, 'fr.notLoadedNS': 2 },
+      state: { 'en|notLoadedNS': -1, 'fr|notLoadedNS': 2 },
     };
     const wrapper = mount(<TestComponentNotReady i18n={instance2} />, {});
     // console.log(wrapper.debug());
@@ -82,7 +82,7 @@ describe('useTranslation', () => {
     const instance2 = { ...instance };
     instance2.services.backendConnector = {
       backend: {},
-      state: { 'en.notLoadedNS': -1, 'fr.notLoadedNS': -1 },
+      state: { 'en|notLoadedNS': -1, 'fr|notLoadedNS': -1 },
     };
     const wrapper = mount(<TestComponentNotReady i18n={instance2} />, {});
     // console.log(wrapper.debug());

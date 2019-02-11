@@ -476,7 +476,10 @@
     const fallbackLng = i18n.options ? i18n.options.fallbackLng : false;
     const lastLng = i18n.languages[i18n.languages.length - 1];
 
-    const loadNotPending = (l, n) => (i18n.services.backendConnector.state[`${l}|${n}`] || 0) !== 1; // loaded -> SUCCESS
+    const loadNotPending = (l, n) => {
+      const loadState = i18n.services.backendConnector.state[`${l}|${n}`];
+      return loadState === -1 || loadState === 2;
+    }; // loaded -> SUCCESS
 
 
     if (i18n.hasResourceBundle(lng, ns)) return true; // were not loading at all -> SEMI SUCCESS

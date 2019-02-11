@@ -1,3 +1,8 @@
+### 10.0.5
+
+- fixes namespace loading for false inital state undefined
+- typescript: Make children optional within TransProps [728](https://github.com/i18next/react-i18next/pull/728)
+
 ### 10.0.4
 
 - try avoiding pull in of regenerator runtime for async usage -> use Promise for now
