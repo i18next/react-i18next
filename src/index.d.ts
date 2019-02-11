@@ -24,7 +24,7 @@ export function getInitialProps(): {
 };
 
 export interface TransProps extends Partial<i18next.WithT> {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   components?: React.ReactNode[];
   count?: number;
   defaults?: string;
