@@ -3,7 +3,7 @@ import { useTranslation } from './useTranslation';
 
 export function withTranslation(ns) {
   return function Extend(WrappedComponent) {
-    function Wrapper(props) {
+    function I18nextWithTranslation(props) {
       const [t, i18n] = useTranslation(ns, props);
 
       return React.createElement(WrappedComponent, {

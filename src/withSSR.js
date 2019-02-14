@@ -4,7 +4,7 @@ import { composeInitialProps } from './context';
 
 export function withSSR() {
   return function Extend(WrappedComponent) {
-    function Wrapper({ initialI18nStore, initialLanguage, ...rest }) {
+    function I18nextWithSSR({ initialI18nStore, initialLanguage, ...rest }) {
       useSSR(initialI18nStore, initialLanguage);
 
       return React.createElement(WrappedComponent, {
