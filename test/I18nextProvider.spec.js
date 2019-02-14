@@ -21,6 +21,7 @@ const instance = {
   hasResourceBundle: (lng, ns) => ns === 'translation',
   loadNamespaces: () => {},
   on: () => {},
+  options: {},
 };
 
 describe('I18nextProvider', () => {

@@ -19,6 +19,7 @@ const instance = {
   hasResourceBundle: (lng, ns) => ns === 'alreadyLoadedNS',
   loadNamespaces: () => {},
   on: () => {},
+  options: {},
 };
 
 describe('useTranslation', () => {
@@ -84,6 +85,14 @@ describe('useTranslation', () => {
       backend: {},
       state: { 'en|notLoadedNS': -1, 'fr|notLoadedNS': -1 },
     };
+    const wrapper = mount(<TestComponentNotReady i18n={instance2} />, {});
+    // console.log(wrapper.debug());
+    expect(wrapper.contains(<div>keyOne</div>)).toBe(true);
+  });
+
+  it('should ignore suspense if set useSuspense to false', () => {
+    const instance2 = { ...instance };
+    instance2.options.react = { useSuspense: false };
     const wrapper = mount(<TestComponentNotReady i18n={instance2} />, {});
     // console.log(wrapper.debug());
     expect(wrapper.contains(<div>keyOne</div>)).toBe(true);

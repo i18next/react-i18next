@@ -1,3 +1,8 @@
+### 10.1.0
+
+- better naming for Wrappers in HOC for easier use of react debugger in console
+- allow setting options react.useSuspense to false on i18next.init to avoid usage of suspense
+
 ### 10.0.5
 
 - fixes namespace loading for false inital state undefined

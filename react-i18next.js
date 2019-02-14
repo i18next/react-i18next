@@ -332,7 +332,8 @@
 
   let defaultOptions = {
     bindI18n: 'languageChanged',
-    transEmptyNodeValue: ''
+    transEmptyNodeValue: '',
+    useSuspense: true
   };
   let i18nInstance;
   let hasUsedI18nextProvider;
@@ -662,10 +663,12 @@
       retNotReady.t = k => k;
 
       retNotReady.i18n = {};
+      retNotReady.ready = true;
       return retNotReady;
     }
 
-    const i18nOptions = getDefaults(); // prepare having a namespace
+    const i18nOptions = _objectSpread({}, getDefaults(), i18n.options.react); // prepare having a namespace
+
 
     let namespaces = ns || i18n.options && i18n.options.defaultNS;
     namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation']; // report namespaces as used
@@ -698,15 +701,21 @@
           p.forEach(f => i18n.off(f, resetT));
         }
       };
-    }); // return hook stuff if ready or
-    // not yet loaded namespaces -> load them -> and trigger suspense
+    });
+    const ret = [t.t, i18n, ready];
+    ret.t = t.t;
+    ret.i18n = i18n;
+    ret.ready = ready; // return hook stuff if ready
 
-    if (ready) {
-      const ret = [t.t, i18n];
-      ret.t = t.t;
-      ret.i18n = i18n;
+    if (ready) return ret; // not yet loaded namespaces -> load them -> and return if useSuspense option set false
+
+    if (!ready && !i18nOptions.useSuspense) {
+      loadNamespaces(i18n, namespaces, () => {
+        resetT();
+      });
       return ret;
-    }
+    } // not yet loaded namespaces -> load them -> and trigger suspense
+
 
     throw new Promise(resolve => {
       loadNamespaces(i18n, namespaces, () => {
@@ -718,7 +727,7 @@
 
   function withTranslation(ns) {
     return function Extend(WrappedComponent) {
-      function Wrapper(props) {
+      function I18nextWithTranslation(props) {
         const _useTranslation = useTranslation(ns, props),
               _useTranslation2 = _slicedToArray(_useTranslation, 2),
               t = _useTranslation2[0],
@@ -730,7 +739,7 @@
         }));
       }
 
-      return Wrapper;
+      return I18nextWithTranslation;
     };
   }
 
@@ -783,7 +792,7 @@
 
   function withSSR() {
     return function Extend(WrappedComponent) {
-      function Wrapper(_ref) {
+      function I18nextWithSSR(_ref) {
         let initialI18nStore = _ref.initialI18nStore,
             initialLanguage = _ref.initialLanguage,
             rest = _objectWithoutProperties(_ref, ["initialI18nStore", "initialLanguage"]);
@@ -792,8 +801,8 @@
         return React__default.createElement(WrappedComponent, _objectSpread({}, rest));
       }
 
-      Wrapper.getInitialProps = composeInitialProps(WrappedComponent);
-      return Wrapper;
+      I18nextWithSSR.getInitialProps = composeInitialProps(WrappedComponent);
+      return I18nextWithSSR;
     };
   }
 

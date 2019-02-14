@@ -18,6 +18,7 @@ const i18n = {
   getFixedT: () => message => message,
   hasResourceBundle: (lng, ns) => ns === 'ns1' || ns === 'ns2' || ns === 'ns3',
   loadNamespaces: () => {},
+  options: {},
 };
 
 describe('useTranslation', () => {

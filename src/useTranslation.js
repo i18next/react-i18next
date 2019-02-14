@@ -19,9 +19,10 @@ export function useTranslation(ns, props = {}) {
     const retNotReady = [k => k, {}];
     retNotReady.t = k => k;
     retNotReady.i18n = {};
+    retNotReady.ready = true;
     return retNotReady;
   }
-  const i18nOptions = getDefaults();
+  const i18nOptions = { ...getDefaults(), ...i18n.options.react };
 
   // prepare having a namespace
   let namespaces = ns || (i18n.options && i18n.options.defaultNS);
@@ -53,15 +54,23 @@ export function useTranslation(ns, props = {}) {
     };
   });
 
-  // return hook stuff if ready or
-  // not yet loaded namespaces -> load them -> and trigger suspense
-  if (ready) {
-    const ret = [t.t, i18n];
-    ret.t = t.t;
-    ret.i18n = i18n;
+  const ret = [t.t, i18n, ready];
+  ret.t = t.t;
+  ret.i18n = i18n;
+  ret.ready = ready;
+
+  // return hook stuff if ready
+  if (ready) return ret;
+
+  // not yet loaded namespaces -> load them -> and return if useSuspense option set false
+  if (!ready && !i18nOptions.useSuspense) {
+    loadNamespaces(i18n, namespaces, () => {
+      resetT();
+    });
     return ret;
   }
 
+  // not yet loaded namespaces -> load them -> and trigger suspense
   throw new Promise(resolve => {
     loadNamespaces(i18n, namespaces, () => {
       resetT();
