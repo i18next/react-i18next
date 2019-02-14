@@ -13,6 +13,6 @@ export function withTranslation(ns) {
       });
     }
 
-    return Wrapper;
+    return I18nextWithTranslation;
   };
 }

@@ -12,8 +12,8 @@ export function withSSR() {
       });
     }
 
-    Wrapper.getInitialProps = composeInitialProps(WrappedComponent);
+    I18nextWithSSR.getInitialProps = composeInitialProps(WrappedComponent);
 
-    return Wrapper;
+    return I18nextWithSSR;
   };
 }
