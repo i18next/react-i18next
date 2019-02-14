@@ -658,7 +658,7 @@
 
     if (!i18n) {
       warnOnce('You will need pass in an i18next instance by using i18nextReactModule');
-      const retNotReady = [k => k, {}];
+      const retNotReady = [k => k, {}, true];
 
       retNotReady.t = k => k;
 
@@ -729,13 +729,15 @@
     return function Extend(WrappedComponent) {
       function I18nextWithTranslation(props) {
         const _useTranslation = useTranslation(ns, props),
-              _useTranslation2 = _slicedToArray(_useTranslation, 2),
+              _useTranslation2 = _slicedToArray(_useTranslation, 3),
               t = _useTranslation2[0],
-              i18n = _useTranslation2[1];
+              i18n = _useTranslation2[1],
+              ready = _useTranslation2[2];
 
         return React__default.createElement(WrappedComponent, _objectSpread({}, props, {
           t,
-          i18n
+          i18n,
+          tReady: ready
         }));
       }
 
@@ -749,14 +751,15 @@
           options = _objectWithoutProperties(props, ["ns", "children"]);
 
     const _useTranslation = useTranslation(ns, options),
-          _useTranslation2 = _slicedToArray(_useTranslation, 2),
+          _useTranslation2 = _slicedToArray(_useTranslation, 3),
           t = _useTranslation2[0],
-          i18n = _useTranslation2[1];
+          i18n = _useTranslation2[1],
+          ready = _useTranslation2[2];
 
     return children(t, {
       i18n,
       lng: i18n.language
-    });
+    }, ready);
   }
 
   function I18nextProvider(_ref) {

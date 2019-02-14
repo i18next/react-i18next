@@ -21,7 +21,8 @@ const renderNodes = reactNodes => {
     if (hasChildren(child)) {
       const inner = renderNodes(getChildren(child));
       return React.cloneElement(child, { ...child.props, key: i }, inner);
-    } if (typeof child === 'object' && !isElement) {
+    }
+    if (typeof child === 'object' && !isElement) {
       return Object.keys(child).reduce((str, childKey) => `${str}${child[childKey]}`, '');
     }
 
@@ -29,7 +30,7 @@ const renderNodes = reactNodes => {
   });
 };
 
-const useMock = [k=>k, {}];
+const useMock = [k => k, {}];
 useMock.t = k => k;
 useMock.i18n = {};
 

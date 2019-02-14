@@ -1,3 +1,7 @@
+### 10.1.1
+
+- forward ready state in withTranslation, Translation
+
 ### 10.1.0
 
 - better naming for Wrappers in HOC for easier use of react debugger in console

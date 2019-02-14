@@ -21,9 +21,7 @@ function MyComponent() {
 
 // Component using the Trans component without children (Self-closing)
 function MyComponentWithoutChildren() {
-  return (
-    <Trans i18nKey="description.part1" />
-  );
+  return <Trans i18nKey="description.part1" />;
 }
 
 // page uses the hook
