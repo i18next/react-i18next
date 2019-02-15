@@ -1,3 +1,7 @@
+### 10.1.2
+
+- allow passing ready if i18next not initialized yet but initialStore set (timing issue in razzle)
+
 ### 10.1.1
 
 - forward ready state in withTranslation, Translation

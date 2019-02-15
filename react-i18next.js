@@ -675,7 +675,7 @@
 
     if (i18n.reportNamespaces.addUsedNamespaces) i18n.reportNamespaces.addUsedNamespaces(namespaces); // are we ready? yes if all namespaces in first language are loaded already (either with data or empty objedt on failed load)
 
-    const ready = i18n.isInitialized && namespaces.every(n => hasLoadedNamespace(n, i18n)); // set states
+    const ready = (i18n.isInitialized || i18n.initializedStoreOnce) && namespaces.every(n => hasLoadedNamespace(n, i18n)); // set states
 
     const _useState = React.useState({
       t: i18n.getFixedT(null, namespaces[0])
