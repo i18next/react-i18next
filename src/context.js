@@ -2,6 +2,7 @@ import React from 'react';
 
 let defaultOptions = {
   bindI18n: 'languageChanged',
+  bindI18nStore: '',
   transEmptyNodeValue: '',
   useSuspense: true,
 };
