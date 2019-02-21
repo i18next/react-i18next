@@ -1,3 +1,7 @@
+### 10.2.0
+
+- Add bindI18nStore event options to listen to store changes if needed [749](https://github.com/i18next/react-i18next/pull/749)
+
 ### 10.1.2
 
 - allow passing ready if i18next not initialized yet but initialStore set (timing issue in razzle)

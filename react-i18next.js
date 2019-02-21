@@ -332,6 +332,7 @@
 
   let defaultOptions = {
     bindI18n: 'languageChanged',
+    bindI18nStore: '',
     transEmptyNodeValue: '',
     useSuspense: true
   };
@@ -692,14 +693,15 @@
     }
 
     React.useEffect(() => {
-      // bind events to trigger change, like languageChanged
-      if (i18nOptions.bindI18n && i18n) i18n.on(i18nOptions.bindI18n, resetT); // unbinding
+      const bindI18n = i18nOptions.bindI18n,
+            bindI18nStore = i18nOptions.bindI18nStore; // bind events to trigger change, like languageChanged
+
+      if (bindI18n && i18n) i18n.on(bindI18n, resetT);
+      if (bindI18nStore && i18n) i18n.store.on(bindI18nStore, resetT); // unbinding
 
       return () => {
-        if (i18nOptions.bindI18n) {
-          const p = i18nOptions.bindI18n.split(' ');
-          p.forEach(f => i18n.off(f, resetT));
-        }
+        if (bindI18n && i18n) bindI18n.split(' ').forEach(e => i18n.off(e, resetT));
+        if (bindI18nStore && i18n) bindI18nStore.split(' ').forEach(e => i18n.store.off(e, resetT));
       };
     });
     const ret = [t.t, i18n, ready];
