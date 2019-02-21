@@ -27,6 +27,8 @@ $ v10.0.0
 npm i react-i18next
 ```
 
+**react-native: not yet supports hooks (hooks are part of react-native v0.59.0)!!!**
+
 For the legacy version please use the [v9.x.x Branch](https://github.com/i18next/react-i18next/tree/v9.x.x)
 
 ```bash
@@ -122,6 +124,7 @@ $ npm install react-i18next
 ### Requirements
 
 - react >= **16.8.0**
+- react-native >= **0.59.0**
 - i18next >= **10.0.0**
 
 #### v9
