@@ -37,7 +37,7 @@ export interface TransProps extends Partial<i18next.WithT> {
 }
 export function Trans(props: TransProps): any;
 
-export function useSSR(initialI18nStore: any, initialLanguage: any): void;
+export function useSSR(initialI18nStore: any, initialLanguage: any, props: any): void;
 
 export interface UseTranslationOptions {
   i18n?: i18next.i18n;
