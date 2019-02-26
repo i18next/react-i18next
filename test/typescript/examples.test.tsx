@@ -1,14 +1,7 @@
 import * as React from 'react';
-import { useTranslation, withTranslation, Trans, WithTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 
-// use hoc for class based components
-class LegacyWelcomeClass extends React.Component<WithTranslation> {
-  render() {
-    const { t, i18n } = this.props;
-    return <h2>{t('title')}</h2>;
-  }
-}
-const Welcome = withTranslation()(LegacyWelcomeClass);
+// use
 
 // Component using the Trans component
 function MyComponent() {
@@ -36,7 +29,6 @@ function Page() {
     <div className="App">
       <React.Suspense fallback={<Loader />}>
         <div className="App-header">
-          <Welcome />
           <button onClick={() => changeLanguage('de')}>de</button>
           <button onClick={() => changeLanguage('en')}>en</button>
         </div>
