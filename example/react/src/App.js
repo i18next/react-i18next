@@ -31,18 +31,16 @@ function Page() {
 
   return (
     <div className="App">
-      <Suspense fallback={<Loader />}>
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <Welcome />
-          <button onClick={() => changeLanguage('de')}>de</button>
-          <button onClick={() => changeLanguage('en')}>en</button>
-        </div>
-        <div className="App-intro">
-          <MyComponent />
-        </div>
-        <div>{t('description.part2')}</div>
-      </Suspense>
+      <div className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <Welcome />
+        <button onClick={() => changeLanguage('de')}>de</button>
+        <button onClick={() => changeLanguage('en')}>en</button>
+      </div>
+      <div className="App-intro">
+        <MyComponent />
+      </div>
+      <div>{t('description.part2')}</div>
     </div>
   );
 }
