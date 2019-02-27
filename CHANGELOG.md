@@ -40,6 +40,7 @@
 ### 10.0.0
 
 - released to npm
+- for MIGRATION READ [https://react.i18next.com/latest/migrating-v9-to-v10](https://react.i18next.com/latest/migrating-v9-to-v10)
 
 ### 10.0.0-alpha.3
 
