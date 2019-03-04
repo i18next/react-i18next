@@ -51,7 +51,7 @@ export function hasLoadedNamespace(ns, i18n) {
   const lastLng = i18n.languages[i18n.languages.length - 1];
 
   // we're in cimode so this shall pass
-  if (lng === 'cimode') return true;
+  if (lng.toLowerCase() === 'cimode') return true;
 
   const loadNotPending = (l, n) => {
     const loadState = i18n.services.backendConnector.state[`${l}|${n}`];
