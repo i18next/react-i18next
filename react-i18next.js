@@ -476,7 +476,9 @@
 
     const lng = i18n.languages[0];
     const fallbackLng = i18n.options ? i18n.options.fallbackLng : false;
-    const lastLng = i18n.languages[i18n.languages.length - 1];
+    const lastLng = i18n.languages[i18n.languages.length - 1]; // we're in cimode so this shall pass
+
+    if (lng === 'cimode') return true;
 
     const loadNotPending = (l, n) => {
       const loadState = i18n.services.backendConnector.state[`${l}|${n}`];
