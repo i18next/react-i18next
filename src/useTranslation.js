@@ -65,7 +65,8 @@ export function useTranslation(ns, props = {}) {
   if (ready) return ret;
 
   // not yet loaded namespaces -> load them -> and return if useSuspense option set false
-  if (!ready && !i18nOptions.useSuspense) {
+  const { useSuspense = i18nOptions.useSuspense } = props;
+  if (!ready && !useSuspense) {
     loadNamespaces(i18n, namespaces, () => {
       resetT();
     });

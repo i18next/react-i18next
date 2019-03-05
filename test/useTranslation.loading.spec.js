@@ -1,22 +1,11 @@
 import React from 'react';
-import { shallow, render, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import sinon from 'sinon';
 import i18n from './i18n';
 import BackendMock from './backendMock';
 import { useTranslation } from '../src/useTranslation';
 
 jest.unmock('../src/useTranslation');
-
-const newI18n = i18n.createInstance();
-const backend = new BackendMock();
-newI18n.use(backend).init({
-  lng: 'en',
-  fallbackLng: 'en',
-
-  interpolation: {
-    escapeValue: false, // not needed for react!!
-  },
-});
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -51,8 +40,24 @@ class ErrorBoundary extends React.Component {
 }
 
 describe('useTranslation loading ns', () => {
-  const TestElement = () => {
-    const [t] = useTranslation('common', { i18n: newI18n });
+  let newI18n;
+  let backend;
+
+  beforeEach(() => {
+    newI18n = i18n.createInstance();
+    backend = new BackendMock();
+    newI18n.use(backend).init({
+      lng: 'en',
+      fallbackLng: 'en',
+
+      interpolation: {
+        escapeValue: false, // not needed for react!!
+      },
+    });
+  });
+
+  const TestElement = ({ useSuspense = undefined }) => {
+    const [t] = useTranslation('common', { i18n: newI18n, useSuspense });
     return <div>{t('key1')}</div>;
   };
 
@@ -81,6 +86,35 @@ describe('useTranslation loading ns', () => {
 
       // console.log(wrapper.debug());
       expect(wrapper.contains(<div>test</div>)).toBe(true);
+      done();
+    }, 500);
+  });
+
+  it('should wait for correct translation without suspense', done => {
+    const spy = sinon.spy();
+
+    let wrapper = mount(
+      <ErrorBoundary spy={spy}>
+        <TestElement useSuspense={false} />
+      </ErrorBoundary>,
+    );
+
+    expect(wrapper.contains(<div>key1</div>)).toBe(true);
+    expect(spy.callCount).toBe(0);
+
+    backend.flush();
+
+    setTimeout(() => {
+      // mount again with translation loaded
+      wrapper = mount(
+        <ErrorBoundary spy={spy}>
+          <TestElement useSuspense={false} />
+        </ErrorBoundary>,
+      );
+
+      // console.log(wrapper.debug());
+      expect(wrapper.contains(<div>test</div>)).toBe(true);
+      expect(spy.callCount).toBe(0);
       done();
     }, 500);
   });
