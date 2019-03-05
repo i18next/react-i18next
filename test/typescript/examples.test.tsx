@@ -60,3 +60,27 @@ export default function App() {
     </React.Suspense>
   );
 }
+
+export function componentsWithoutSuspenseUsage() {
+  // Component that uses ready to wait until translations are loaded because useSuspense is set to false
+  function ComponentNotUsingSuspense() {
+    const { t, ready } = useTranslation();
+    return <div>{ready && t('key1')}</div>;
+  }
+
+  // Class based component that uses tReady to wait until translations are loaded because useSuspense is set to false
+  class ClassComponentNotUsingSuspense extends React.Component<WithTranslation> {
+    render() {
+      const { t, tReady } = this.props;
+      return <h2>{tReady && t('title')}</h2>;
+    }
+  }
+  const NotUsingSuspense = withTranslation()(ClassComponentNotUsingSuspense);
+
+  return (
+    <React.Fragment>
+      <ComponentNotUsingSuspense />
+      <NotUsingSuspense />
+    </React.Fragment>
+  );
+}
