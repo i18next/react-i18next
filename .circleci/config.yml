@@ -1,0 +1,7 @@
+language: node_js
+services: mongodb
+before_install:
+  - npm i -g npm@6
+node_js:
+  - '10'
+cache: npm
