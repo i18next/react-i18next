@@ -1,3 +1,8 @@
+### 10.3.0
+
+- Allow to enable/disable useSuspense at a hook or component level [769](https://github.com/i18next/react-i18next/pull/769)
+- typescript: Add ready/tReady type definitions [753](https://github.com/i18next/react-i18next/pull/753)
+
 ### 10.2.1
 
 - fix cimode won't load therefore won't be ready [768](https://github.com/i18next/react-i18next/issues/768)

@@ -478,7 +478,7 @@
     const fallbackLng = i18n.options ? i18n.options.fallbackLng : false;
     const lastLng = i18n.languages[i18n.languages.length - 1]; // we're in cimode so this shall pass
 
-    if (lng === 'cimode') return true;
+    if (lng.toLowerCase() === 'cimode') return true;
 
     const loadNotPending = (l, n) => {
       const loadState = i18n.services.backendConnector.state[`${l}|${n}`];
@@ -713,7 +713,10 @@
 
     if (ready) return ret; // not yet loaded namespaces -> load them -> and return if useSuspense option set false
 
-    if (!ready && !i18nOptions.useSuspense) {
+    const _props$useSuspense = props.useSuspense,
+          useSuspense = _props$useSuspense === void 0 ? i18nOptions.useSuspense : _props$useSuspense;
+
+    if (!ready && !useSuspense) {
       loadNamespaces(i18n, namespaces, () => {
         resetT();
       });
