@@ -20,3 +20,6 @@ jobs:
       - run:
           name: test
           command: npm test
+      - run:
+          name: coverage
+          command: npm test:coverage
