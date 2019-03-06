@@ -22,4 +22,4 @@ jobs:
           command: npm test
       - run:
           name: coverage
-          command: npm run test:coverage
+          command: npm run test:coverage && cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
