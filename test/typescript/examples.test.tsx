@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTranslation, Trans } from 'react-i18next';
+import { useTranslation, Trans, withTranslation, WithTranslation } from 'react-i18next';
 
 // use
 
