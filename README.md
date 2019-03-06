@@ -1,6 +1,6 @@
 # react-i18next [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Awesome%20react-i18next%20for%20react.js%20based%20on%20i18next%20internationalization%20ecosystem%20&url=https://github.com/i18next/react-i18next&via=jamuhl&hashtags=i18n,reactjs,js,dev)
 
-[![CircleCI](circle-ci-image)](circle-ci-url)
+[![CircleCI](https://circleci.com/gh/i18next/react-i18next.svg?style=svg)](https://circleci.com/gh/i18next/react-i18next)
 [![Code Climate](https://codeclimate.com/github/codeclimate/codeclimate/badges/gpa.svg)](https://codeclimate.com/github/i18next/react-i18next)
 [![Coverage Status](https://coveralls.io/repos/github/i18next/react-i18next/badge.svg)](https://coveralls.io/github/i18next/react-i18next)
 [![Quality][quality-badge] ][quality-url]
@@ -9,8 +9,6 @@
 
 [npm-icon]: https://nodei.co/npm/react-i18next.png?downloads=true
 [npm-url]: https://npmjs.org/package/react-i18next
-[circle-ci-image]: https://circleci.com/gh/i18next/react-i18next.svg?style=svg
-[circle-ci-url]: https://circleci.com/gh/i18next/react-i18next
 [dependencies-image]: https://david-dm.org/i18next/react-i18next.png
 [dependencies-url]: https://david-dm.org/i18next/react-i18next
 [devdependencies-image]: https://david-dm.org/i18next/react-i18next/dev-status.png
