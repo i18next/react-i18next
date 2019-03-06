@@ -42,9 +42,10 @@ export function useSSR(initialI18nStore: any, initialLanguage: any): void;
 export interface UseTranslationOptions {
   i18n?: i18next.i18n;
 }
-export type UseTranslationResponse = [i18next.TFunction, i18next.i18n] & {
+export type UseTranslationResponse = [i18next.TFunction, i18next.i18n, boolean] & {
   t: i18next.TFunction;
   i18n: i18next.i18n;
+  ready: boolean;
 };
 export function useTranslation(
   ns?: Namespace,
@@ -69,6 +70,7 @@ export function withSSR(): (
 
 export interface WithTranslation extends i18next.WithT {
   i18n: i18next.i18n;
+  tReady: boolean;
 }
 export function withTranslation(
   ns?: Namespace,
