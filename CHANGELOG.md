@@ -1,3 +1,7 @@
+### 10.3.1
+
+- IE11 sending console as the first argument to apply [774](https://github.com/i18next/react-i18next/pull/774)
+
 ### 10.3.0
 
 - Allow to enable/disable useSuspense at a hook or component level [769](https://github.com/i18next/react-i18next/pull/769)
