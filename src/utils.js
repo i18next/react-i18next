@@ -1,7 +1,7 @@
 export function warn(...args) {
   if (console && console.warn) {
     if (typeof args[0] === 'string') args[0] = `react-i18next:: ${args[0]}`;
-    console.warn.apply(null, args);
+    console.warn.apply(console, args);
   }
 }
 
