@@ -142,6 +142,29 @@ export function Trans({
   const reactI18nextOptions = (i18n.options && i18n.options.react) || {};
   const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
 
+  let contents = components || children;
+
+  // Replace any component values with <n></n> placeholders
+  // e.g. { br: <br/> } => <0></0>
+  if (values) {
+    contents = contents ? (contents instanceof Array ? contents.slice(0) : [contents]) : [];
+
+    Object.keys(values).forEach(valueKey => {
+      const _value = values[valueKey];
+      const isElement = React.isValidElement(_value);
+      if (isElement) {
+        const valueIndex = contents.length;
+        const clonedElement = React.cloneElement(
+          _value,
+          { ..._value.props, key: valueIndex },
+          _value.children,
+        );
+        contents.push(clonedElement);
+        values[valueKey] = `<${valueIndex}></${valueIndex}>`;
+      }
+    });
+  }
+
   const defaultValue =
     defaults || nodesToString('', children, 0) || reactI18nextOptions.transEmptyNodeValue;
   const hashTransKey = reactI18nextOptions.hashTransKey;
@@ -158,11 +181,11 @@ export function Trans({
       })
     : defaultValue;
 
-  if (!useAsParent) return renderNodes(components || children, translation, i18n);
+  if (!useAsParent) return renderNodes(contents, translation, i18n);
 
   return React.createElement(
     useAsParent,
     additionalProps,
-    renderNodes(components || children, translation, i18n),
+    renderNodes(contents, translation, i18n),
   );
 }

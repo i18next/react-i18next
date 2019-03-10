@@ -364,3 +364,58 @@ describe('trans should not break on invalid node from translations - part2', () 
     expect(wrapper.contains(<div>&lt;hello&gt;</div>)).toBe(true);
   });
 });
+
+describe('replace keyword with component', () => {
+  it('should replace keyword with component', () => {
+    const TestElement = () => <Trans i18nKey="interpolateKey3" values={{ br: <br /> }} />;
+    const wrapper = mount(<TestElement />);
+    expect(
+      wrapper.contains(
+        <div>
+          Put a line break here:
+          <br />
+          And then have more text afterward.
+        </div>,
+      ),
+    ).toBe(true);
+  });
+
+  it('should replace keyword when a list of components exists', () => {
+    const TestElement = () => (
+      <Trans
+        i18nKey="interpolateKey4"
+        values={{ br: <br /> }}
+        components={[<em className="test">replace</em>, <span className="test">replace</span>]}
+      />
+    );
+    const wrapper = mount(<TestElement />);
+    expect(
+      wrapper.contains(
+        <div>
+          Put a <em className="test">line break here</em>:
+          <br />
+          <span className="test">And then have more text afterward.</span>
+        </div>,
+      ),
+    ).toBe(true);
+  });
+
+  it('should use the default value with no issues', () => {
+    const TestElement = () => (
+      <Trans i18nKey="interpolateKey5">
+        Put a <em className="test">line break here</em>:<br />
+        <span className="test">And then have more text afterward.</span>
+      </Trans>
+    );
+    const wrapper = mount(<TestElement />);
+    expect(
+      wrapper.contains(
+        <div>
+          Put a <em className="test">line break here</em>:
+          <br />
+          <span className="test">And then have more text afterward.</span>
+        </div>,
+      ),
+    ).toBe(true);
+  });
+});

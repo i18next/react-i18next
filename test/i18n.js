@@ -15,6 +15,8 @@ i18n.init({
         key1: 'test',
         interpolateKey: 'add {{insert}} {{up, uppercase}}',
         interpolateKey2: '<strong>add</strong> {{insert}} {{up, uppercase}}',
+        interpolateKey3: `Put a line break here:{{br}}And then have more text afterward.`,
+        interpolateKey4: `Put a <0>line break here</0>:{{br}}<1>And then have more text afterward.</1>`,
         transTest1: 'Go <1>there</1>.',
         transTest1_noParent: '<0>Go <1>there</1>.</0>',
         transTest1_customHtml: 'Go <br/><1>there</1>.',
