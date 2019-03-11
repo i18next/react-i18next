@@ -1,3 +1,7 @@
+### 10.4.0
+
+- allow br, strong, i tags be used for translations handled by Trans
+
 ### 10.3.1
 
 - IE11 sending console as the first argument to apply [774](https://github.com/i18next/react-i18next/pull/774)

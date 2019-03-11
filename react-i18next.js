@@ -334,6 +334,8 @@
     bindI18n: 'languageChanged',
     bindI18nStore: '',
     transEmptyNodeValue: '',
+    transSupportBasicHtmlNodes: true,
+    transKeepBasicHtmlNodesFor: ['br', 'strong', 'i'],
     useSuspense: true
   };
   let i18nInstance;
@@ -502,9 +504,10 @@
     return node && node.children ? node.children : node.props && node.props.children;
   }
 
-  function nodesToString(mem, children, index) {
+  function nodesToString(mem, children, index, i18nOptions) {
     if (!children) return '';
     if (Object.prototype.toString.call(children) !== '[object Array]') children = [children];
+    const keepArray = i18nOptions.transKeepBasicHtmlNodesFor && i18nOptions.transKeepBasicHtmlNodesFor || [];
     children.forEach((child, i) => {
       // const isElement = React.isValidElement(child);
       // const elementKey = `${index !== 0 ? index + '-' : ''}${i}:${typeof child.type === 'function' ? child.type.name : child.type || 'var'}`;
@@ -513,9 +516,14 @@
       if (typeof child === 'string') {
         mem = `${mem}${child}`;
       } else if (hasChildren(child)) {
-        mem = `${mem}<${elementKey}>${nodesToString('', getChildren(child), i + 1)}</${elementKey}>`;
+        const elementTag = keepArray.indexOf(child.type) > -1 && Object.keys(child.props).length === 1 && typeof hasChildren(child) === 'string' ? child.type : elementKey;
+        mem = `${mem}<${elementTag}>${nodesToString('', getChildren(child), i + 1, i18nOptions)}</${elementTag}>`;
       } else if (React__default.isValidElement(child)) {
-        mem = `${mem}<${elementKey}></${elementKey}>`;
+        if (keepArray.indexOf(child.type) > -1 && Object.keys(child.props).length === 0) {
+          mem = `${mem}<${child.type}/>`;
+        } else {
+          mem = `${mem}<${elementKey}></${elementKey}>`;
+        }
       } else if (typeof child === 'object') {
         const clone = _objectSpread({}, child);
 
@@ -538,7 +546,7 @@
     return mem;
   }
 
-  function renderNodes(children, targetString, i18n) {
+  function renderNodes(children, targetString, i18n, i18nOptions) {
     if (targetString === '') return [];
     if (!children) return [targetString]; // v2 -> interpolates upfront no need for "some <0>{{var}}</0>"" -> will be just "some {{var}}" in translation file
 
@@ -575,6 +583,19 @@
             mem.push(React__default.cloneElement(child, _objectSpread({}, child.props, {
               key: i
             }), inner));
+          } else if (isNaN(node.name) && i18nOptions.transSupportBasicHtmlNodes) {
+            if (node.voidElement) {
+              mem.push(React__default.createElement(node.name, {
+                key: `${node.name}-${i}`
+              }));
+            } else {
+              const inner = mapAST(reactNodes
+              /* wrong but we need something */
+              , node.children);
+              mem.push(React__default.createElement(node.name, {
+                key: `${node.name}-${i}`
+              }, inner));
+            }
           } else if (typeof child === 'object' && !isElement) {
             const content = node.children[0] ? node.children[0].content : null; // v1
             // as interpolation was done already we just have a regular content node
@@ -630,7 +651,7 @@
     const t = tFromProps || i18n.t.bind(i18n);
     const reactI18nextOptions = i18n.options && i18n.options.react || {};
     const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
-    const defaultValue = defaults || nodesToString('', children, 0) || reactI18nextOptions.transEmptyNodeValue;
+    const defaultValue = defaults || nodesToString('', children, 0, reactI18nextOptions) || reactI18nextOptions.transEmptyNodeValue;
     const hashTransKey = reactI18nextOptions.hashTransKey;
     const key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
     const interpolationOverride = values ? {} : {
@@ -644,8 +665,8 @@
       count,
       ns
     })) : defaultValue;
-    if (!useAsParent) return renderNodes(components || children, translation, i18n);
-    return React__default.createElement(useAsParent, additionalProps, renderNodes(components || children, translation, i18n));
+    if (!useAsParent) return renderNodes(components || children, translation, i18n, reactI18nextOptions);
+    return React__default.createElement(useAsParent, additionalProps, renderNodes(components || children, translation, i18n, reactI18nextOptions));
   }
 
   function useTranslation(ns) {
