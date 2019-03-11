@@ -102,13 +102,14 @@ describe('trans simple with custom html tag', () => {
     </Trans>
   );
 
-  it('should skip custom html tags', () => {
+  it('should not skip custom html tags', () => {
     const wrapper = mount(<TestElement />);
     // console.log(wrapper.debug());
     expect(
       wrapper.contains(
         <div>
-          Go <Link to="/msgs">there</Link>.
+          <strong>Go</strong> <br />
+          <Link to="/msgs">there</Link>.
         </div>,
       ),
     ).toBe(true);

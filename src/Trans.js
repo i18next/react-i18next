@@ -11,9 +11,11 @@ function getChildren(node) {
   return node && node.children ? node.children : node.props && node.props.children;
 }
 
-function nodesToString(mem, children, index) {
+export function nodesToString(mem, children, index, i18nOptions) {
   if (!children) return '';
   if (Object.prototype.toString.call(children) !== '[object Array]') children = [children];
+  const keepArray =
+    (i18nOptions.transKeepBasicHtmlNodesFor && i18nOptions.transKeepBasicHtmlNodesFor) || [];
 
   children.forEach((child, i) => {
     // const isElement = React.isValidElement(child);
@@ -23,9 +25,24 @@ function nodesToString(mem, children, index) {
     if (typeof child === 'string') {
       mem = `${mem}${child}`;
     } else if (hasChildren(child)) {
-      mem = `${mem}<${elementKey}>${nodesToString('', getChildren(child), i + 1)}</${elementKey}>`;
+      const elementTag =
+        keepArray.indexOf(child.type) > -1 &&
+        Object.keys(child.props).length === 1 &&
+        typeof hasChildren(child) === 'string'
+          ? child.type
+          : elementKey;
+      mem = `${mem}<${elementTag}>${nodesToString(
+        '',
+        getChildren(child),
+        i + 1,
+        i18nOptions,
+      )}</${elementTag}>`;
     } else if (React.isValidElement(child)) {
-      mem = `${mem}<${elementKey}></${elementKey}>`;
+      if (keepArray.indexOf(child.type) > -1 && Object.keys(child.props).length === 0) {
+        mem = `${mem}<${child.type}/>`;
+      } else {
+        mem = `${mem}<${elementKey}></${elementKey}>`;
+      }
     } else if (typeof child === 'object') {
       const clone = { ...child };
       const format = clone.format;
@@ -54,7 +71,7 @@ function nodesToString(mem, children, index) {
   return mem;
 }
 
-function renderNodes(children, targetString, i18n) {
+function renderNodes(children, targetString, i18n, i18nOptions) {
   if (targetString === '') return [];
   if (!children) return [targetString];
 
@@ -91,6 +108,14 @@ function renderNodes(children, targetString, i18n) {
           const inner = mapAST(getChildren(child), node.children);
           if (child.dummy) child.children = inner; // needed on preact!
           mem.push(React.cloneElement(child, { ...child.props, key: i }, inner));
+        } else if (isNaN(node.name) && i18nOptions.transSupportBasicHtmlNodes) {
+          if (node.voidElement) {
+            mem.push(React.createElement(node.name, { key: `${node.name}-${i}` }));
+          } else {
+            const inner = mapAST(reactNodes /* wrong but we need something */, node.children);
+
+            mem.push(React.createElement(node.name, { key: `${node.name}-${i}` }, inner));
+          }
         } else if (typeof child === 'object' && !isElement) {
           const content = node.children[0] ? node.children[0].content : null;
 
@@ -143,7 +168,9 @@ export function Trans({
   const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
 
   const defaultValue =
-    defaults || nodesToString('', children, 0) || reactI18nextOptions.transEmptyNodeValue;
+    defaults ||
+    nodesToString('', children, 0, reactI18nextOptions) ||
+    reactI18nextOptions.transEmptyNodeValue;
   const hashTransKey = reactI18nextOptions.hashTransKey;
   const key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
   const interpolationOverride = values ? {} : { interpolation: { prefix: '#$?', suffix: '?$#' } };
@@ -158,11 +185,12 @@ export function Trans({
       })
     : defaultValue;
 
-  if (!useAsParent) return renderNodes(components || children, translation, i18n);
+  if (!useAsParent)
+    return renderNodes(components || children, translation, i18n, reactI18nextOptions);
 
   return React.createElement(
     useAsParent,
     additionalProps,
-    renderNodes(components || children, translation, i18n),
+    renderNodes(components || children, translation, i18n, reactI18nextOptions),
   );
 }

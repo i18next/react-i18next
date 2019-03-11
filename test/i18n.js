@@ -17,7 +17,7 @@ i18n.init({
         interpolateKey2: '<strong>add</strong> {{insert}} {{up, uppercase}}',
         transTest1: 'Go <1>there</1>.',
         transTest1_noParent: '<0>Go <1>there</1>.</0>',
-        transTest1_customHtml: 'Go <br/><1>there</1>.',
+        transTest1_customHtml: '<strong>Go</strong> <br/><1>there</1>.',
         transTest2:
           'Hello <1><0>{{name}}</0></1>, you have <3>{{count}}</3> message. Open <5>hear</5>.',
         transTest2_plural:
@@ -51,6 +51,8 @@ i18n.init({
 
   react: {
     defaultTransParent: 'div',
+    transSupportBasicHtmlNodes: true,
+    transKeepBasicHtmlNodesFor: ['br', 'strong', 'i'],
   },
 });
 

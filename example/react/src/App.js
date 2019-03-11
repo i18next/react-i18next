@@ -16,7 +16,9 @@ const Welcome = withTranslation()(LegacyWelcomeClass);
 function MyComponent() {
   return (
     <Trans i18nKey="description.part1">
-      To get started, edit <code>src/App.js</code> and save to reload.
+      To get started
+      <br /> <strong>test</strong> <i className="icon-arrow" />, edit <code>src/App.js</code> and
+      save to reload.
     </Trans>
   );
 }
