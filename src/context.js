@@ -5,7 +5,7 @@ let defaultOptions = {
   bindI18nStore: '',
   transEmptyNodeValue: '',
   transSupportBasicHtmlNodes: true,
-  transKeepBasicHtmlNodesFor: ['br', 'strong', 'i'],
+  transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'p'],
   useSuspense: true,
 };
 

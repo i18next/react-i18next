@@ -1,3 +1,7 @@
+### 10.4.1
+
+- allow p in Trans
+
 ### 10.4.0
 
 - allow br, strong, i tags be used for translations handled by Trans
