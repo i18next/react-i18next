@@ -138,12 +138,14 @@ function renderNodes(children, targetString, i18n, i18nOptions) {
           // in the translation AST while having an object in reactNodes
           // -> push the content no need to interpolate again
           if (content) mem.push(content);
-        } else if (!hasChildren(child) && node.children.length === 1 && translationContent) {
-          // If component does not have children, but translation - has
-          // with this in component could be components={[<span class='make-beautiful'/>]} and in translation - 'some text <0>some highlighted message</0>'
-          mem.push(React.cloneElement(child, { ...child.props, key: i }, translationContent));
         } else {
-          mem.push(child);
+          if (node.children.length === 1 && translationContent) {
+            // If component does not have children, but translation - has
+            // with this in component could be components={[<span class='make-beautiful'/>]} and in translation - 'some text <0>some highlighted message</0>'
+            mem.push(React.cloneElement(child, { ...child.props, key: i }, translationContent));
+          } else {
+            mem.push(child);
+          }
         }
       } else if (node.type === 'text') {
         mem.push(node.content);
