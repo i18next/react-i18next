@@ -365,3 +365,64 @@ describe('trans should not break on invalid node from translations - part2', () 
     expect(wrapper.contains(<div>&lt;hello&gt;</div>)).toBe(true);
   });
 });
+
+describe('Trans should render nested components', () => {
+  it('should render dynamic ul as components property', () => {
+    const list = ['li1', 'li2'];
+
+    const TestElement = () => (
+      <Trans
+        i18nKey="testTrans4KeyWithNestedComponent"
+        components={[
+          <ul>
+            {list.map(item => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>,
+        ]}
+      />
+    );
+    const wrapper = mount(<TestElement />);
+
+    expect(
+      wrapper.contains(
+        <ul>
+          <li>li1</li>
+          <li>li2</li>
+        </ul>,
+      ),
+    ).toBe(true);
+  });
+});
+
+describe('Trans should use value from translation', () => {
+  it('should use value from translation if no data provided in component', () => {
+    const TestElement = () => (
+      <Trans
+        i18nKey="testTrans5KeyWithValue"
+        values={{
+          testValue: 'dragonfly',
+        }}
+        components={[<span className="awesome-styles" />]}
+      />
+    );
+
+    const wrapper = mount(<TestElement />);
+    expect(wrapper.contains(<span className="awesome-styles">dragonfly</span>)).toBe(true);
+  });
+
+  it('should use value from translation if dummy data provided in component', () => {
+    const TestElement = () => (
+      <Trans
+        i18nKey="testTrans5KeyWithValue"
+        values={{
+          testValue: 'dragonfly',
+        }}
+        components={[<span className="awesome-styles">test string</span>]}
+      />
+    );
+
+    const wrapper = mount(<TestElement />);
+    expect(wrapper.contains(<span className="awesome-styles">dragonfly</span>)).toBe(true);
+  });
+});
