@@ -393,6 +393,30 @@ describe('Trans should render nested components', () => {
       ),
     ).toBe(true);
   });
+
+  it('should render dynamic ul as components property when pass as a children', () => {
+    const list = ['li1', 'li2'];
+
+    const TestElement = () => (
+      <Trans i18nKey="testTrans5KeyWithNestedComponent">
+        My list:
+        <ul>
+          {list.map(item => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </Trans>
+    );
+    const wrapper = mount(<TestElement />);
+    expect(
+      wrapper.contains(
+        <ul>
+          <li>li1</li>
+          <li>li2</li>
+        </ul>,
+      ),
+    ).toBe(true);
+  });
 });
 
 describe('Trans should use value from translation', () => {
