@@ -1,6 +1,6 @@
 ### 10.4.2
 
-- updated typescript definition of the UseTranslationOptions interface, added the useSuspense configuration property
+- typescript: updated typescript definition of the UseTranslationOptions interface, added the useSuspense configuration property [778](https://github.com/i18next/react-i18next/pull/778)
 
 ### 10.4.1
 
