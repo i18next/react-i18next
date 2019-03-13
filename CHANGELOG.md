@@ -1,3 +1,7 @@
+### 10.4.2
+
+- updated typescript definition of the UseTranslationOptions interface, added the useSuspense configuration property
+
 ### 10.4.1
 
 - allow p in Trans
