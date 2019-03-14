@@ -28,6 +28,7 @@ const mockI18n = {
   hasResourceBundle: (lng, ns) => ns === 'alreadyLoadedNS',
   getResourceBundle: (lng, ns) => ({ lng, ns }),
   loadNamespaces: () => {},
+  on: () => {},
 };
 
 describe('withSSR', () => {
