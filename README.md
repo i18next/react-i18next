@@ -62,7 +62,7 @@ The documentation is published on [react.i18next.com](https://react.i18next.com)
 ...
 ```
 
-Head over to the **interactive playground** at [codesandbox](https://codesandbox.io/s/8n252n822).
+Head over to the **interactive playground** at [codesandbox](https://codesandbox.io/s/14m4o720mq).
 
 ### 📖 What others say
 
