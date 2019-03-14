@@ -1,3 +1,7 @@
+### 10.5.1
+
+- ReferenceError: setImmediate is not defined [787](https://github.com/i18next/react-i18next/issues/787)
+
 ### 10.5.0
 
 - Adding support for nested component inside Trans that are a list.map like `<ul>{['a', 'b'].map(item => ( <li key={item}>{item}</li> ))}</ul>` [784](https://github.com/i18next/react-i18next/pull/784) (Adding `<ul i18nIsDynamicList>` will also create correct missing string)

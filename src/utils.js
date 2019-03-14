@@ -1,7 +1,7 @@
 export function warn(...args) {
   if (console && console.warn) {
     if (typeof args[0] === 'string') args[0] = `react-i18next:: ${args[0]}`;
-    console.warn.apply(console, args);
+    console.warn(...args);
   }
 }
 
@@ -29,9 +29,9 @@ export function loadNamespaces(i18n, ns, cb) {
     } else {
       const initialized = () => {
         // due to emitter removing issue in i18next we need to delay remove
-        setImmediate(() => {
+        setTimeout(() => {
           i18n.off('initialized', initialized);
-        });
+        }, 0);
         cb();
       };
 
