@@ -33,6 +33,9 @@ i18n.init({
         testTransKey3_plural: 'Result: <1><0>{{numOfItems}}</0></1> items matched.',
         testInvalidHtml: '<hello',
         testInvalidHtml2: '<hello>',
+        testTrans4KeyWithNestedComponent: 'Result should be a list: <0></0>',
+        testTrans5KeyWithNestedComponent: 'Result should be a list: <1></1>',
+        testTrans5KeyWithValue: 'Result should be rendered within tag <0>{{testValue}}</0>',
       },
       other: {
         transTest1: 'Another go <1>there</1>.',

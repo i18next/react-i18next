@@ -11,6 +11,11 @@ function getChildren(node) {
   return node && node.children ? node.children : node.props && node.props.children;
 }
 
+function hasValidReactChildren(children) {
+  if (Object.prototype.toString.call(children) !== '[object Array]') return false;
+  return children.every(child => React.isValidElement(child));
+}
+
 export function nodesToString(mem, children, index, i18nOptions) {
   if (!children) return '';
   if (Object.prototype.toString.call(children) !== '[object Array]') children = [children];
@@ -98,6 +103,7 @@ function renderNodes(children, targetString, i18n, i18nOptions) {
     if (Object.prototype.toString.call(astNodes) !== '[object Array]') astNodes = [astNodes];
 
     return astNodes.reduce((mem, node, i) => {
+      const translationContent = node.children && node.children[0] && node.children[0].content;
       if (node.type === 'tag') {
         const child = reactNodes[parseInt(node.name, 10)] || {};
         const isElement = React.isValidElement(child);
@@ -105,7 +111,16 @@ function renderNodes(children, targetString, i18n, i18nOptions) {
         if (typeof child === 'string') {
           mem.push(child);
         } else if (hasChildren(child)) {
-          const inner = mapAST(getChildren(child), node.children);
+          let inner;
+          if (
+            hasValidReactChildren(getChildren(child)) &&
+            mapAST(getChildren(child), node.children).length === 0
+          ) {
+            // In a case Trans have nested components without translation values
+            inner = getChildren(child);
+          } else {
+            inner = mapAST(getChildren(child), node.children);
+          }
           if (child.dummy) child.children = inner; // needed on preact!
           mem.push(React.cloneElement(child, { ...child.props, key: i }, inner));
         } else if (isNaN(node.name) && i18nOptions.transSupportBasicHtmlNodes) {
@@ -117,15 +132,20 @@ function renderNodes(children, targetString, i18n, i18nOptions) {
             mem.push(React.createElement(node.name, { key: `${node.name}-${i}` }, inner));
           }
         } else if (typeof child === 'object' && !isElement) {
-          const content = node.children[0] ? node.children[0].content : null;
-
+          const content = node.children[0] ? translationContent : null;
           // v1
           // as interpolation was done already we just have a regular content node
           // in the translation AST while having an object in reactNodes
           // -> push the content no need to interpolate again
           if (content) mem.push(content);
         } else {
-          mem.push(child);
+          if (node.children.length === 1 && translationContent) {
+            // If component does not have children, but translation - has
+            // with this in component could be components={[<span class='make-beautiful'/>]} and in translation - 'some text <0>some highlighted message</0>'
+            mem.push(React.cloneElement(child, { ...child.props, key: i }, translationContent));
+          } else {
+            mem.push(child);
+          }
         }
       } else if (node.type === 'text') {
         mem.push(node.content);
