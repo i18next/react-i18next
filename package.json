@@ -44,7 +44,7 @@
     "babel-eslint": "10.0.1",
     "babel-jest": "24.1.0",
     "babel-plugin-macros": "^2.5.0",
-    "babel-plugin-tester": "^5.5.2",
+    "babel-plugin-tester": "^6.0.0",
     "coveralls": "^3.0.2",
     "dtslint": "^0.5.3",
     "enzyme": "^3.8.0",

@@ -1,3 +1,7 @@
+### 10.5.0
+
+- Adding support for nested component inside Trans that are a list.map like `<ul>{['a', 'b'].map(item => ( <li key={item}>{item}</li> ))}</ul>` [784](https://github.com/i18next/react-i18next/pull/784) (Adding `<ul i18nIsDynamicList>` will also create correct missing string)
+
 ### 10.4.2
 
 - typescript: updated typescript definition of the UseTranslationOptions interface, added the useSuspense configuration property [778](https://github.com/i18next/react-i18next/pull/778)

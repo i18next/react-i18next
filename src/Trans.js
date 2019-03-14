@@ -36,12 +36,20 @@ export function nodesToString(mem, children, index, i18nOptions) {
         typeof hasChildren(child) === 'string'
           ? child.type
           : elementKey;
-      mem = `${mem}<${elementTag}>${nodesToString(
-        '',
-        getChildren(child),
-        i + 1,
-        i18nOptions,
-      )}</${elementTag}>`;
+
+      if (child.props && child.props.i18nIsDynamicList) {
+        // we got a dynamic list like "<ul>{['a', 'b'].map(item => ( <li key={item}>{item}</li> ))}</ul>""
+        // the result should be "<0></0>" and not "<0><0>a</0><1>b</1></0>"
+        mem = `${mem}<${elementTag}></${elementTag}>`;
+      } else {
+        // regular case mapping the inner children
+        mem = `${mem}<${elementTag}>${nodesToString(
+          '',
+          getChildren(child),
+          i + 1,
+          i18nOptions,
+        )}</${elementTag}>`;
+      }
     } else if (React.isValidElement(child)) {
       if (keepArray.indexOf(child.type) > -1 && Object.keys(child.props).length === 0) {
         mem = `${mem}<${child.type}/>`;
@@ -111,16 +119,11 @@ function renderNodes(children, targetString, i18n, i18nOptions) {
         if (typeof child === 'string') {
           mem.push(child);
         } else if (hasChildren(child)) {
-          let inner;
-          if (
-            hasValidReactChildren(getChildren(child)) &&
-            mapAST(getChildren(child), node.children).length === 0
-          ) {
-            // In a case Trans have nested components without translation values
-            inner = getChildren(child);
-          } else {
-            inner = mapAST(getChildren(child), node.children);
-          }
+          const childs = getChildren(child);
+          const mappedChildren = mapAST(childs, node.children);
+          const inner =
+            hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
+
           if (child.dummy) child.children = inner; // needed on preact!
           mem.push(React.cloneElement(child, { ...child.props, key: i }, inner));
         } else if (isNaN(node.name) && i18nOptions.transSupportBasicHtmlNodes) {
@@ -138,14 +141,12 @@ function renderNodes(children, targetString, i18n, i18nOptions) {
           // in the translation AST while having an object in reactNodes
           // -> push the content no need to interpolate again
           if (content) mem.push(content);
+        } else if (node.children.length === 1 && translationContent) {
+          // If component does not have children, but translation - has
+          // with this in component could be components={[<span class='make-beautiful'/>]} and in translation - 'some text <0>some highlighted message</0>'
+          mem.push(React.cloneElement(child, { ...child.props, key: i }, translationContent));
         } else {
-          if (node.children.length === 1 && translationContent) {
-            // If component does not have children, but translation - has
-            // with this in component could be components={[<span class='make-beautiful'/>]} and in translation - 'some text <0>some highlighted message</0>'
-            mem.push(React.cloneElement(child, { ...child.props, key: i }, translationContent));
-          } else {
-            mem.push(child);
-          }
+          mem.push(child);
         }
       } else if (node.type === 'text') {
         mem.push(node.content);

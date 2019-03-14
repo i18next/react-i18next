@@ -504,6 +504,11 @@
     return node && node.children ? node.children : node.props && node.props.children;
   }
 
+  function hasValidReactChildren(children) {
+    if (Object.prototype.toString.call(children) !== '[object Array]') return false;
+    return children.every(child => React__default.isValidElement(child));
+  }
+
   function nodesToString(mem, children, index, i18nOptions) {
     if (!children) return '';
     if (Object.prototype.toString.call(children) !== '[object Array]') children = [children];
@@ -517,7 +522,15 @@
         mem = `${mem}${child}`;
       } else if (hasChildren(child)) {
         const elementTag = keepArray.indexOf(child.type) > -1 && Object.keys(child.props).length === 1 && typeof hasChildren(child) === 'string' ? child.type : elementKey;
-        mem = `${mem}<${elementTag}>${nodesToString('', getChildren(child), i + 1, i18nOptions)}</${elementTag}>`;
+
+        if (child.props && child.props.i18nIsDynamicList) {
+          // we got a dynamic list like "<ul>{['a', 'b'].map(item => ( <li key={item}>{item}</li> ))}</ul>""
+          // the result should be "<0></0>" and not "<0><0>a</0><1>b</1></0>"
+          mem = `${mem}<${elementTag}></${elementTag}>`;
+        } else {
+          // regular case mapping the inner children
+          mem = `${mem}<${elementTag}>${nodesToString('', getChildren(child), i + 1, i18nOptions)}</${elementTag}>`;
+        }
       } else if (React__default.isValidElement(child)) {
         if (keepArray.indexOf(child.type) > -1 && Object.keys(child.props).length === 0) {
           mem = `${mem}<${child.type}/>`;
@@ -570,6 +583,8 @@
       if (Object.prototype.toString.call(reactNodes) !== '[object Array]') reactNodes = [reactNodes];
       if (Object.prototype.toString.call(astNodes) !== '[object Array]') astNodes = [astNodes];
       return astNodes.reduce((mem, node, i) => {
+        const translationContent = node.children && node.children[0] && node.children[0].content;
+
         if (node.type === 'tag') {
           const child = reactNodes[parseInt(node.name, 10)] || {};
           const isElement = React__default.isValidElement(child);
@@ -577,7 +592,9 @@
           if (typeof child === 'string') {
             mem.push(child);
           } else if (hasChildren(child)) {
-            const inner = mapAST(getChildren(child), node.children);
+            const childs = getChildren(child);
+            const mappedChildren = mapAST(childs, node.children);
+            const inner = hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
             if (child.dummy) child.children = inner; // needed on preact!
 
             mem.push(React__default.cloneElement(child, _objectSpread({}, child.props, {
@@ -597,12 +614,18 @@
               }, inner));
             }
           } else if (typeof child === 'object' && !isElement) {
-            const content = node.children[0] ? node.children[0].content : null; // v1
+            const content = node.children[0] ? translationContent : null; // v1
             // as interpolation was done already we just have a regular content node
             // in the translation AST while having an object in reactNodes
             // -> push the content no need to interpolate again
 
             if (content) mem.push(content);
+          } else if (node.children.length === 1 && translationContent) {
+            // If component does not have children, but translation - has
+            // with this in component could be components={[<span class='make-beautiful'/>]} and in translation - 'some text <0>some highlighted message</0>'
+            mem.push(React__default.cloneElement(child, _objectSpread({}, child.props, {
+              key: i
+            }), translationContent));
           } else {
             mem.push(child);
           }

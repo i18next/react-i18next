@@ -87,7 +87,7 @@ Head over to the **interactive playground** at [codesandbox](https://codesandbox
 
 Want to learn more about how seamless your internationalization and translation process can be?
 
-[![video](example/locize/video_sample.png)](https://www.youtube.com/watch?v=9NOzJhgmyQE)
+[![video](example/v9.x.x/locize/video_sample.png)](https://www.youtube.com/watch?v=9NOzJhgmyQE)
 
 [watch the video](https://www.youtube.com/watch?v=9NOzJhgmyQE)
 

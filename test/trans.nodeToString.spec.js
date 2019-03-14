@@ -85,4 +85,63 @@ describe('trans nodeToString', () => {
       expect(result).toEqual('lorem <1>bold</1> ipsum');
     });
   });
+
+  describe('having dynamic list maps', () => {
+    it('should create normal inner children if not set to ignore them', () => {
+      const children = [
+        'lorem ',
+        {
+          $$typeof: Symbol.for('react.element'),
+          type: 'ul',
+          props: {
+            children: [
+              {
+                $$typeof: Symbol.for('react.element'),
+                type: 'li',
+                props: { children: 'a' },
+              },
+              {
+                $$typeof: Symbol.for('react.element'),
+                type: 'li',
+                props: { children: 'b' },
+              },
+            ],
+          },
+        },
+        ' ipsum',
+      ];
+
+      const result = nodesToString('', children, 0, {});
+      expect(result).toEqual('lorem <1><0>a</0><1>b</1></1> ipsum');
+    });
+
+    it('should omit inner children if set', () => {
+      const children = [
+        'lorem ',
+        {
+          $$typeof: Symbol.for('react.element'),
+          type: 'ul',
+          props: {
+            i18nIsDynamicList: true,
+            children: [
+              {
+                $$typeof: Symbol.for('react.element'),
+                type: 'li',
+                props: { children: 'a' },
+              },
+              {
+                $$typeof: Symbol.for('react.element'),
+                type: 'li',
+                props: { children: 'b' },
+              },
+            ],
+          },
+        },
+        ' ipsum',
+      ];
+
+      const result = nodesToString('', children, 0, {});
+      expect(result).toEqual('lorem <1></1> ipsum');
+    });
+  });
 });
