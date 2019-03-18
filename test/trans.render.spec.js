@@ -102,6 +102,10 @@ describe('trans simple with custom html tag', () => {
     </Trans>
   );
 
+  const TestElement2 = ({ t, parent }) => (
+    <Trans i18nKey="transTest1_customHtml2" parent={parent} />
+  );
+
   it('should not skip custom html tags', () => {
     const wrapper = mount(<TestElement />);
     // console.log(wrapper.debug());
@@ -110,6 +114,18 @@ describe('trans simple with custom html tag', () => {
         <div>
           <strong>Go</strong> <br />
           <Link to="/msgs">there</Link>.
+        </div>,
+      ),
+    ).toBe(true);
+  });
+
+  it('should not skip custom html tags - empty node', () => {
+    const wrapper = mount(<TestElement2 />);
+    // console.log(wrapper.debug());
+    expect(
+      wrapper.contains(
+        <div>
+          <strong>Go</strong> <br /> there.
         </div>,
       ),
     ).toBe(true);
@@ -289,6 +305,7 @@ describe('trans with empty content', () => {
   const TestElement = () => <Trans />;
   it('should render an empty string', () => {
     const wrapper = mount(<TestElement />);
+    // console.log(wrapper.debug());
     expect(wrapper.contains(<div />)).toBe(true);
   });
 });

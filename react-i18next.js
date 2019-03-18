@@ -501,6 +501,7 @@
   }
 
   function getChildren(node) {
+    if (!node) return [];
     return node && node.children ? node.children : node.props && node.props.children;
   }
 
@@ -512,7 +513,7 @@
   function nodesToString(mem, children, index, i18nOptions) {
     if (!children) return '';
     if (Object.prototype.toString.call(children) !== '[object Array]') children = [children];
-    const keepArray = i18nOptions.transKeepBasicHtmlNodesFor && i18nOptions.transKeepBasicHtmlNodesFor || [];
+    const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
     children.forEach((child, i) => {
       // const isElement = React.isValidElement(child);
       // const elementKey = `${index !== 0 ? index + '-' : ''}${i}:${typeof child.type === 'function' ? child.type.name : child.type || 'var'}`;
@@ -560,8 +561,12 @@
   }
 
   function renderNodes(children, targetString, i18n, i18nOptions) {
-    if (targetString === '') return [];
-    if (!children) return [targetString]; // v2 -> interpolates upfront no need for "some <0>{{var}}</0>"" -> will be just "some {{var}}" in translation file
+    if (targetString === '') return []; // check if contains tags we need to replace from html string to react nodes
+
+    const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
+    const emptyChildrenButNeedsHandling = targetString && new RegExp(keepArray.join('|')).test(targetString); // no need to replace tags in the targetstring
+
+    if (!children && !emptyChildrenButNeedsHandling) return [targetString]; // v2 -> interpolates upfront no need for "some <0>{{var}}</0>"" -> will be just "some {{var}}" in translation file
 
     const data = {};
 
@@ -597,6 +602,16 @@
             const inner = hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
             if (child.dummy) child.children = inner; // needed on preact!
 
+            mem.push(React__default.cloneElement(child, _objectSpread({}, child.props, {
+              key: i
+            }), inner));
+          } else if (emptyChildrenButNeedsHandling && typeof child === 'object' && child.dummy && !isElement) {
+            // we have a empty Trans node (the dummy element) with a targetstring that contains html tags needing
+            // conversion to react nodes
+            // so we just need to map the inner stuff
+            const inner = mapAST(reactNodes
+            /* wrong but we need something */
+            , node.children);
             mem.push(React__default.cloneElement(child, _objectSpread({}, child.props, {
               key: i
             }), inner));

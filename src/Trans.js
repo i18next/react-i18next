@@ -8,6 +8,7 @@ function hasChildren(node) {
 }
 
 function getChildren(node) {
+  if (!node) return [];
   return node && node.children ? node.children : node.props && node.props.children;
 }
 
@@ -19,8 +20,7 @@ function hasValidReactChildren(children) {
 export function nodesToString(mem, children, index, i18nOptions) {
   if (!children) return '';
   if (Object.prototype.toString.call(children) !== '[object Array]') children = [children];
-  const keepArray =
-    (i18nOptions.transKeepBasicHtmlNodesFor && i18nOptions.transKeepBasicHtmlNodesFor) || [];
+  const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
 
   children.forEach((child, i) => {
     // const isElement = React.isValidElement(child);
@@ -86,7 +86,14 @@ export function nodesToString(mem, children, index, i18nOptions) {
 
 function renderNodes(children, targetString, i18n, i18nOptions) {
   if (targetString === '') return [];
-  if (!children) return [targetString];
+
+  // check if contains tags we need to replace from html string to react nodes
+  const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
+  const emptyChildrenButNeedsHandling =
+    targetString && new RegExp(keepArray.join('|')).test(targetString);
+
+  // no need to replace tags in the targetstring
+  if (!children && !emptyChildrenButNeedsHandling) return [targetString];
 
   // v2 -> interpolates upfront no need for "some <0>{{var}}</0>"" -> will be just "some {{var}}" in translation file
   const data = {};
@@ -126,6 +133,17 @@ function renderNodes(children, targetString, i18n, i18nOptions) {
 
           if (child.dummy) child.children = inner; // needed on preact!
           mem.push(React.cloneElement(child, { ...child.props, key: i }, inner));
+        } else if (
+          emptyChildrenButNeedsHandling &&
+          typeof child === 'object' &&
+          child.dummy &&
+          !isElement
+        ) {
+          // we have a empty Trans node (the dummy element) with a targetstring that contains html tags needing
+          // conversion to react nodes
+          // so we just need to map the inner stuff
+          const inner = mapAST(reactNodes /* wrong but we need something */, node.children);
+          mem.push(React.cloneElement(child, { ...child.props, key: i }, inner));
         } else if (isNaN(node.name) && i18nOptions.transSupportBasicHtmlNodes) {
           if (node.voidElement) {
             mem.push(React.createElement(node.name, { key: `${node.name}-${i}` }));
@@ -136,6 +154,7 @@ function renderNodes(children, targetString, i18n, i18nOptions) {
           }
         } else if (typeof child === 'object' && !isElement) {
           const content = node.children[0] ? translationContent : null;
+
           // v1
           // as interpolation was done already we just have a regular content node
           // in the translation AST while having an object in reactNodes

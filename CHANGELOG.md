@@ -1,3 +1,7 @@
+### 10.5.2
+
+- fixes: transSupportBasicHtmlNodes doesn't work with self-closing Trans [790](https://github.com/i18next/react-i18next/issues/790)
+
 ### 10.5.1
 
 - ReferenceError: setImmediate is not defined [787](https://github.com/i18next/react-i18next/issues/787)
