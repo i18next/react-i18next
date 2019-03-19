@@ -1,0 +1,39 @@
+{
+  "name": "storybook",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "i18next": "^15.0.7",
+    "i18next-browser-languagedetector": "3.0.0",
+    "i18next-xhr-backend": "2.0.0",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
+    "react-i18next": "^10.5.2",
+    "react-scripts": "2.1.8"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "@storybook/react": "^5.0.3",
+    "@storybook/addon-actions": "^5.0.3",
+    "@storybook/addon-links": "^5.0.3",
+    "@storybook/addons": "^5.0.3",
+    "@babel/core": "^7.3.4",
+    "babel-loader": "^8.0.5"
+  }
+}
