@@ -122,6 +122,7 @@ $ npm install react-i18next
 ### Requirements
 
 - react >= **16.8.0**
+- react-dom >= **16.8.0**
 - react-native >= **0.59.0**
 - i18next >= **10.0.0**
 
