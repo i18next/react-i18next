@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSSR } from './useSSR';
 import { composeInitialProps } from './context';
+import { getDisplayName } from './utils';
 
 export function withSSR() {
   return function Extend(WrappedComponent) {
@@ -13,6 +14,7 @@ export function withSSR() {
     }
 
     I18nextWithSSR.getInitialProps = composeInitialProps(WrappedComponent);
+    I18nextWithSSR.displayName = `withI18nextSSR(${getDisplayName(WrappedComponent)})`;
 
     return I18nextWithSSR;
   };

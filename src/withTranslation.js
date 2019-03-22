@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from './useTranslation';
+import { getDisplayName } from './utils';
 
 export function withTranslation(ns) {
   return function Extend(WrappedComponent) {
@@ -13,6 +14,10 @@ export function withTranslation(ns) {
         tReady: ready,
       });
     }
+
+    I18nextWithTranslation.displayName = `withI18nextTranslation(${getDisplayName(
+      WrappedComponent,
+    )})`;
 
     return I18nextWithTranslation;
   };
