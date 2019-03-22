@@ -495,6 +495,9 @@
     if (loadNotPending(lng, ns) && (!fallbackLng || loadNotPending(lastLng, ns))) return true;
     return false;
   }
+  function getDisplayName(Component) {
+    return Component.displayName || Component.name || (typeof Component === 'string' && Component.length > 0 ? Component : 'Unknown');
+  }
 
   function hasChildren(node) {
     return node && (node.children || node.props && node.props.children);
@@ -807,6 +810,7 @@
         }));
       }
 
+      I18nextWithTranslation.displayName = `withI18nextTranslation(${getDisplayName(WrappedComponent)})`;
       return I18nextWithTranslation;
     };
   }
@@ -871,6 +875,7 @@
       }
 
       I18nextWithSSR.getInitialProps = composeInitialProps(WrappedComponent);
+      I18nextWithSSR.displayName = `withI18nextSSR(${getDisplayName(WrappedComponent)})`;
       return I18nextWithSSR;
     };
   }

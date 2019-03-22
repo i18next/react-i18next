@@ -1,3 +1,7 @@
+### 10.5.3
+
+- Fix the displayName of HOC components [798](https://github.com/i18next/react-i18next/pull/798)
+
 ### 10.5.2
 
 - fixes: transSupportBasicHtmlNodes doesn't work with self-closing Trans [790](https://github.com/i18next/react-i18next/issues/790)
