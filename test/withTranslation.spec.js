@@ -19,4 +19,11 @@ describe('withTranslation', () => {
     // console.log(wrapper.debug());
     expect(wrapper.contains(<div>test</div>)).toBe(true);
   });
+
+  it('should has ref', () => {
+    const HocElement = withTranslation('translation', { withRef: true })(TestComponent);
+    const hocRef = React.createRef();
+    const parentWrapper = mount(<HocElement ref={hocRef} />);
+    expect(hocRef.current).not.toBeNull();
+  });
 });
