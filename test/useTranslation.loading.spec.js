@@ -1,4 +1,5 @@
 import React from 'react';
+import { act } from 'react-dom/test-utils';
 import { mount } from 'enzyme';
 import sinon from 'sinon';
 import i18n from './i18n';
@@ -93,24 +94,32 @@ describe('useTranslation loading ns', () => {
   it('should wait for correct translation without suspense', done => {
     const spy = sinon.spy();
 
-    let wrapper = mount(
-      <ErrorBoundary spy={spy}>
-        <TestElement useSuspense={false} />
-      </ErrorBoundary>,
-    );
-
-    expect(wrapper.contains(<div>key1</div>)).toBe(true);
-    expect(spy.callCount).toBe(0);
-
-    backend.flush();
-
-    setTimeout(() => {
-      // mount again with translation loaded
+    let wrapper;
+    act(() => {
       wrapper = mount(
         <ErrorBoundary spy={spy}>
           <TestElement useSuspense={false} />
         </ErrorBoundary>,
       );
+    });
+
+    expect(wrapper.contains(<div>key1</div>)).toBe(true);
+    expect(spy.callCount).toBe(0);
+
+    act(() => {
+      backend.flush();
+    });
+
+    setTimeout(() => {
+      // mount again with translation loaded
+
+      act(() => {
+        wrapper = mount(
+          <ErrorBoundary spy={spy}>
+            <TestElement useSuspense={false} />
+          </ErrorBoundary>,
+        );
+      });
 
       // console.log(wrapper.debug());
       expect(wrapper.contains(<div>test</div>)).toBe(true);

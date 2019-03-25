@@ -732,8 +732,10 @@
       return retNotReady;
     }
 
-    const i18nOptions = _objectSpread({}, getDefaults(), i18n.options.react); // prepare having a namespace
+    const i18nOptions = _objectSpread({}, getDefaults(), i18n.options.react);
 
+    const _props$useSuspense = props.useSuspense,
+          useSuspense = _props$useSuspense === void 0 ? i18nOptions.useSuspense : _props$useSuspense; // prepare having a namespace
 
     let namespaces = ns || i18n.options && i18n.options.defaultNS;
     namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation']; // report namespaces as used
@@ -757,13 +759,23 @@
     }
 
     React.useEffect(() => {
+      let isMounted = true;
       const bindI18n = i18nOptions.bindI18n,
-            bindI18nStore = i18nOptions.bindI18nStore; // bind events to trigger change, like languageChanged
+            bindI18nStore = i18nOptions.bindI18nStore; // if not ready and not using suspense load the namespaces
+      // in side effect and do not call resetT if unmounted
+
+      if (!ready && !useSuspense) {
+        loadNamespaces(i18n, namespaces, () => {
+          if (isMounted) resetT();
+        });
+      } // bind events to trigger change, like languageChanged
+
 
       if (bindI18n && i18n) i18n.on(bindI18n, resetT);
-      if (bindI18nStore && i18n) i18n.store.on(bindI18nStore, resetT); // unbinding
+      if (bindI18nStore && i18n) i18n.store.on(bindI18nStore, resetT); // unbinding on unmount
 
       return () => {
+        isMounted = false;
         if (bindI18n && i18n) bindI18n.split(' ').forEach(e => i18n.off(e, resetT));
         if (bindI18nStore && i18n) bindI18nStore.split(' ').forEach(e => i18n.store.off(e, resetT));
       };
@@ -775,16 +787,7 @@
 
     if (ready) return ret; // not yet loaded namespaces -> load them -> and return if useSuspense option set false
 
-    const _props$useSuspense = props.useSuspense,
-          useSuspense = _props$useSuspense === void 0 ? i18nOptions.useSuspense : _props$useSuspense;
-
-    if (!ready && !useSuspense) {
-      loadNamespaces(i18n, namespaces, () => {
-        resetT();
-      });
-      return ret;
-    } // not yet loaded namespaces -> load them -> and trigger suspense
-
+    if (!ready && !useSuspense) return ret; // not yet loaded namespaces -> load them -> and trigger suspense
 
     throw new Promise(resolve => {
       loadNamespaces(i18n, namespaces, () => {
@@ -795,23 +798,30 @@
   }
 
   function withTranslation(ns) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     return function Extend(WrappedComponent) {
-      function I18nextWithTranslation(props) {
+      function I18nextWithTranslation(props, ref) {
         const _useTranslation = useTranslation(ns, props),
               _useTranslation2 = _slicedToArray(_useTranslation, 3),
               t = _useTranslation2[0],
               i18n = _useTranslation2[1],
               ready = _useTranslation2[2];
 
-        return React__default.createElement(WrappedComponent, _objectSpread({}, props, {
+        const passDownProps = _objectSpread({}, props, {
           t,
           i18n,
           tReady: ready
-        }));
+        });
+
+        if (options.withRef && ref) {
+          passDownProps.ref = ref;
+        }
+
+        return React__default.createElement(WrappedComponent, passDownProps);
       }
 
       I18nextWithTranslation.displayName = `withI18nextTranslation(${getDisplayName(WrappedComponent)})`;
-      return I18nextWithTranslation;
+      return options.withRef ? React__default.forwardRef(I18nextWithTranslation) : I18nextWithTranslation;
     };
   }
 

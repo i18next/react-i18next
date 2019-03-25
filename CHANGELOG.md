@@ -1,3 +1,8 @@
+### 10.6.0
+
+- use forwardRef for withTranslation [802](https://github.com/i18next/react-i18next/pull/802)
+- fixes Translation reset after component is unmounted with useTranslation [801](https://github.com/i18next/react-i18next/issues/801)
+
 ### 10.5.3
 
 - Fix the displayName of HOC components [798](https://github.com/i18next/react-i18next/pull/798)

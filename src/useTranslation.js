@@ -23,6 +23,7 @@ export function useTranslation(ns, props = {}) {
     return retNotReady;
   }
   const i18nOptions = { ...getDefaults(), ...i18n.options.react };
+  const { useSuspense = i18nOptions.useSuspense } = props;
 
   // prepare having a namespace
   let namespaces = ns || (i18n.options && i18n.options.defaultNS);
@@ -44,13 +45,24 @@ export function useTranslation(ns, props = {}) {
   }
 
   useEffect(() => {
+    let isMounted = true;
     const { bindI18n, bindI18nStore } = i18nOptions;
+
+    // if not ready and not using suspense load the namespaces
+    // in side effect and do not call resetT if unmounted
+    if (!ready && !useSuspense) {
+      loadNamespaces(i18n, namespaces, () => {
+        if (isMounted) resetT();
+      });
+    }
+
     // bind events to trigger change, like languageChanged
     if (bindI18n && i18n) i18n.on(bindI18n, resetT);
     if (bindI18nStore && i18n) i18n.store.on(bindI18nStore, resetT);
 
-    // unbinding
+    // unbinding on unmount
     return () => {
+      isMounted = false;
       if (bindI18n && i18n) bindI18n.split(' ').forEach(e => i18n.off(e, resetT));
       if (bindI18nStore && i18n) bindI18nStore.split(' ').forEach(e => i18n.store.off(e, resetT));
     };
@@ -65,13 +77,7 @@ export function useTranslation(ns, props = {}) {
   if (ready) return ret;
 
   // not yet loaded namespaces -> load them -> and return if useSuspense option set false
-  const { useSuspense = i18nOptions.useSuspense } = props;
-  if (!ready && !useSuspense) {
-    loadNamespaces(i18n, namespaces, () => {
-      resetT();
-    });
-    return ret;
-  }
+  if (!ready && !useSuspense) return ret;
 
   // not yet loaded namespaces -> load them -> and trigger suspense
   throw new Promise(resolve => {
