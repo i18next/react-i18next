@@ -1,3 +1,7 @@
+### 10.6.1
+
+- useTranslation useEffect also guard against unmounted for bound events...seems unmount and actual call to useEffect cleanup are not in correct order (component is first unmounted and then unbound - should be vice versa)
+
 ### 10.6.0
 
 - use forwardRef for withTranslation [802](https://github.com/i18next/react-i18next/pull/802)

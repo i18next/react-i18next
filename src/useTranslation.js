@@ -56,15 +56,20 @@ export function useTranslation(ns, props = {}) {
       });
     }
 
+    function boundReset() {
+      if (isMounted) resetT();
+    }
+
     // bind events to trigger change, like languageChanged
-    if (bindI18n && i18n) i18n.on(bindI18n, resetT);
-    if (bindI18nStore && i18n) i18n.store.on(bindI18nStore, resetT);
+    if (bindI18n && i18n) i18n.on(bindI18n, boundReset);
+    if (bindI18nStore && i18n) i18n.store.on(bindI18nStore, boundReset);
 
     // unbinding on unmount
     return () => {
       isMounted = false;
-      if (bindI18n && i18n) bindI18n.split(' ').forEach(e => i18n.off(e, resetT));
-      if (bindI18nStore && i18n) bindI18nStore.split(' ').forEach(e => i18n.store.off(e, resetT));
+      if (bindI18n && i18n) bindI18n.split(' ').forEach(e => i18n.off(e, boundReset));
+      if (bindI18nStore && i18n)
+        bindI18nStore.split(' ').forEach(e => i18n.store.off(e, boundReset));
     };
   });
 
