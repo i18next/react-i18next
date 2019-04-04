@@ -59,6 +59,7 @@ export const initReactI18next = {
 
   init(instance) {
     setDefaults(instance.options.react);
+    instance.options.react = getDefaults();
     setI18n(instance);
   },
 };
