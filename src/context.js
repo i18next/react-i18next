@@ -58,8 +58,6 @@ export const initReactI18next = {
   type: '3rdParty',
 
   init(instance) {
-    setDefaults(instance.options.react);
-    instance.options.react = getDefaults();
     setI18n(instance);
   },
 };

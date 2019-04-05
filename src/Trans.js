@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import HTML from 'html-parse-stringify2';
-import { getI18n, getHasUsedI18nextProvider, I18nContext } from './context';
+import { getI18n, getHasUsedI18nextProvider, I18nContext, getDefaults } from './context';
 import { warn, warnOnce } from './utils';
 
 function hasChildren(node) {
@@ -204,7 +204,8 @@ export function Trans({
 
   const t = tFromProps || i18n.t.bind(i18n);
 
-  const reactI18nextOptions = (i18n.options && i18n.options.react) || {};
+  const options = (i18n.options && i18n.options.react) || {};
+  const reactI18nextOptions = { ...getDefaults(), ...options };
   const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
 
   const defaultValue =
