@@ -690,7 +690,9 @@
     }
 
     const t = tFromProps || i18n.t.bind(i18n);
-    const reactI18nextOptions = i18n.options && i18n.options.react || {};
+
+    const reactI18nextOptions = _objectSpread({}, getDefaults(), i18n.options && i18n.options.react);
+
     const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
     const defaultValue = defaults || nodesToString('', children, 0, reactI18nextOptions) || reactI18nextOptions.transEmptyNodeValue;
     const hashTransKey = reactI18nextOptions.hashTransKey;
@@ -722,7 +724,7 @@
     if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
 
     if (!i18n) {
-      warnOnce('You will need pass in an i18next instance by using i18nextReactModule');
+      warnOnce('You will need pass in an i18next instance by using initReactI18next');
       const retNotReady = [k => k, {}, true];
 
       retNotReady.t = k => k;

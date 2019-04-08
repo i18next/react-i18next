@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import HTML from 'html-parse-stringify2';
-import { getI18n, getHasUsedI18nextProvider, I18nContext } from './context';
+import { getI18n, getHasUsedI18nextProvider, I18nContext, getDefaults } from './context';
 import { warn, warnOnce } from './utils';
 
 function hasChildren(node) {
@@ -204,14 +204,14 @@ export function Trans({
 
   const t = tFromProps || i18n.t.bind(i18n);
 
-  const reactI18nextOptions = (i18n.options && i18n.options.react) || {};
+  const reactI18nextOptions = { ...getDefaults(), ...(i18n.options && i18n.options.react) };
   const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
 
   const defaultValue =
     defaults ||
     nodesToString('', children, 0, reactI18nextOptions) ||
     reactI18nextOptions.transEmptyNodeValue;
-  const hashTransKey = reactI18nextOptions.hashTransKey;
+  const { hashTransKey } = reactI18nextOptions;
   const key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
   const interpolationOverride = values ? {} : { interpolation: { prefix: '#$?', suffix: '?$#' } };
   const translation = key
