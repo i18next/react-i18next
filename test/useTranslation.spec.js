@@ -69,4 +69,37 @@ describe('useTranslation', () => {
       });
     });
   });
+
+  describe('few namespaces', () => {
+    function TestComponent() {
+      const { t, i18n } = useTranslation(['other', 'translation'], { i18n: i18nInstance });
+
+      expect(typeof t).toBe('function');
+      expect(i18n).toEqual(i18nInstance);
+
+      return <div>{t('key1')}</div>;
+    }
+
+    describe('fallback mode', () => {
+      beforeAll(() => {
+        i18nInstance.options.react.nsMode = 'fallback';
+      });
+
+      afterAll(() => {
+        delete i18nInstance.options.react.nsMode;
+      });
+
+      it('should render correct content', () => {
+        const wrapper = mount(<TestComponent />, {});
+        // console.log(wrapper.debug());
+        expect(wrapper.contains(<div>test</div>)).toBe(true);
+      });
+    });
+
+    it('should render content fallback', () => {
+      const wrapper = mount(<TestComponent />, {});
+      // console.log(wrapper.debug());
+      expect(wrapper.contains(<div>key1</div>)).toBe(true);
+    });
+  });
 });
