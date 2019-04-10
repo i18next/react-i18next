@@ -75,6 +75,9 @@ export interface WithTranslation extends i18next.WithT {
 }
 export function withTranslation(
   ns?: Namespace,
+  options?: {
+    withRef?: boolean;
+  }
 ): <P extends WithTranslation>(
   component: React.ComponentType<P>,
 ) => React.ComponentType<Omit<P, keyof WithTranslation>>;
