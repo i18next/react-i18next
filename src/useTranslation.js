@@ -38,7 +38,9 @@ export function useTranslation(ns, props = {}) {
     namespaces.every(n => hasLoadedNamespace(n, i18n));
 
   // set states
-  const [t, setT] = useState({ t: i18n.getFixedT(null, namespaces[0]) }); // seems we can't have functions as value -> wrap it in obj
+  const [t, setT] = useState({
+    t: i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0]),
+  }); // seems we can't have functions as value -> wrap it in obj
 
   function resetT() {
     setT({ t: i18n.getFixedT(null, namespaces[0]) });
