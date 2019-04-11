@@ -333,9 +333,11 @@
   let defaultOptions = {
     bindI18n: 'languageChanged',
     bindI18nStore: '',
+    // nsMode: 'fallback' // loop through all namespaces given to hook, HOC, render prop for key lookup
     transEmptyNodeValue: '',
     transSupportBasicHtmlNodes: true,
     transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'p'],
+    // hashTransKey: key => key // calculate a key for Trans component based on defaultValue
     useSuspense: true
   };
   let i18nInstance;
@@ -747,7 +749,7 @@
     const ready = (i18n.isInitialized || i18n.initializedStoreOnce) && namespaces.every(n => hasLoadedNamespace(n, i18n)); // set states
 
     const _useState = React.useState({
-      t: i18n.getFixedT(null, namespaces[0])
+      t: i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0])
     }),
           _useState2 = _slicedToArray(_useState, 2),
           t = _useState2[0],

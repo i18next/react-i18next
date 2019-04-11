@@ -3,9 +3,11 @@ import React from 'react';
 let defaultOptions = {
   bindI18n: 'languageChanged',
   bindI18nStore: '',
+  // nsMode: 'fallback' // loop through all namespaces given to hook, HOC, render prop for key lookup
   transEmptyNodeValue: '',
   transSupportBasicHtmlNodes: true,
   transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'p'],
+  // hashTransKey: key => key // calculate a key for Trans component based on defaultValue
   useSuspense: true,
 };
 

@@ -1,3 +1,8 @@
+### 10.7.0
+
+- brings back nsMode=default|fallback [822](https://github.com/i18next/react-i18next/pull/822)
+- typescript: Add missing type definition for withTranslation options [821](https://github.com/i18next/react-i18next/pull/821)
+
 ### 10.6.2
 
 - Fix Trans component ignore default options [818](https://github.com/i18next/react-i18next/pull/818)
