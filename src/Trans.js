@@ -84,7 +84,7 @@ export function nodesToString(mem, children, index, i18nOptions) {
   return mem;
 }
 
-function renderNodes(children, targetString, i18n, i18nOptions) {
+function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
   if (targetString === '') return [];
 
   // check if contains tags we need to replace from html string to react nodes
@@ -107,7 +107,11 @@ function renderNodes(children, targetString, i18n, i18nOptions) {
     });
   }
   getData(children);
-  targetString = i18n.services.interpolator.interpolate(targetString, data, i18n.language);
+  targetString = i18n.services.interpolator.interpolate(
+    targetString,
+    { ...data, ...combinedTOpts },
+    i18n.language,
+  );
 
   // parse ast from string with additional wrapper tag
   // -> avoids issues in parser removing prepending text nodes
@@ -214,23 +218,28 @@ export function Trans({
   const { hashTransKey } = reactI18nextOptions;
   const key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
   const interpolationOverride = values ? {} : { interpolation: { prefix: '#$?', suffix: '?$#' } };
-  const translation = key
-    ? t(key, {
-        ...tOptions,
-        ...values,
-        ...interpolationOverride,
-        defaultValue,
-        count,
-        ns,
-      })
-    : defaultValue;
+  const combinedTOpts = {
+    ...tOptions,
+    ...values,
+    ...interpolationOverride,
+    defaultValue,
+    count,
+    ns,
+  };
+  const translation = key ? t(key, combinedTOpts) : defaultValue;
 
   if (!useAsParent)
-    return renderNodes(components || children, translation, i18n, reactI18nextOptions);
+    return renderNodes(
+      components || children,
+      translation,
+      i18n,
+      reactI18nextOptions,
+      combinedTOpts,
+    );
 
   return React.createElement(
     useAsParent,
     additionalProps,
-    renderNodes(components || children, translation, i18n, reactI18nextOptions),
+    renderNodes(components || children, translation, i18n, reactI18nextOptions, combinedTOpts),
   );
 }

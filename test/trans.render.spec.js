@@ -237,6 +237,31 @@ describe('trans complex', () => {
   });
 });
 
+describe('trans complex - count only in props', () => {
+  const TestElement = ({ t }) => {
+    const count = 10;
+    const name = 'Jan';
+    // prettier-ignore
+    return (
+      <Trans i18nKey="transTest2" count={count}>
+        Hello <strong>{{ name }}</strong>, you have {{n: count}} message. Open <Link to="/msgs">here</Link>.
+      </Trans>
+    );
+  };
+
+  it('should render correct content', () => {
+    const wrapper = mount(<TestElement />);
+    // console.warn(wrapper.debug());
+    expect(
+      wrapper.contains(
+        <div>
+          Hello <strong>Jan</strong>, you have 10 messages. Open <Link to="/msgs">here</Link>.
+        </div>,
+      ),
+    ).toBe(true);
+  });
+});
+
 describe('trans complex v2 no extra pseudo elements for interpolation', () => {
   const TestElement = ({ t }) => {
     const count = 10;
