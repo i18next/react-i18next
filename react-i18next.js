@@ -565,7 +565,7 @@
     return mem;
   }
 
-  function renderNodes(children, targetString, i18n, i18nOptions) {
+  function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
     if (targetString === '') return []; // check if contains tags we need to replace from html string to react nodes
 
     const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
@@ -584,7 +584,7 @@
     }
 
     getData(children);
-    targetString = i18n.services.interpolator.interpolate(targetString, data, i18n.language); // parse ast from string with additional wrapper tag
+    targetString = i18n.services.interpolator.interpolate(targetString, _objectSpread({}, data, combinedTOpts), i18n.language); // parse ast from string with additional wrapper tag
     // -> avoids issues in parser removing prepending text nodes
 
     const ast = htmlParseStringify2.parse(`<0>${targetString}</0>`);
@@ -705,13 +705,16 @@
         suffix: '?$#'
       }
     };
-    const translation = key ? t(key, _objectSpread({}, tOptions, values, interpolationOverride, {
+
+    const combinedTOpts = _objectSpread({}, tOptions, values, interpolationOverride, {
       defaultValue,
       count,
       ns
-    })) : defaultValue;
-    if (!useAsParent) return renderNodes(components || children, translation, i18n, reactI18nextOptions);
-    return React__default.createElement(useAsParent, additionalProps, renderNodes(components || children, translation, i18n, reactI18nextOptions));
+    });
+
+    const translation = key ? t(key, combinedTOpts) : defaultValue;
+    if (!useAsParent) return renderNodes(components || children, translation, i18n, reactI18nextOptions, combinedTOpts);
+    return React__default.createElement(useAsParent, additionalProps, renderNodes(components || children, translation, i18n, reactI18nextOptions, combinedTOpts));
   }
 
   function useTranslation(ns) {
