@@ -908,6 +908,7 @@
   exports.I18nextProvider = I18nextProvider;
   exports.withSSR = withSSR;
   exports.useSSR = useSSR;
+  exports.I18nContext = I18nContext;
   exports.initReactI18next = initReactI18next;
   exports.setDefaults = setDefaults;
   exports.getDefaults = getDefaults;

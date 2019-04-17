@@ -1,3 +1,7 @@
+### 10.8.1
+
+- expose context [829](https://github.com/i18next/react-i18next/pull/829)
+
 ### 10.8.0
 
 - Support taking values for interpolation not only from content but the props count, values too: Replace count prop from <Trans> in translation string automatically [826](https://github.com/i18next/react-i18next/issues/826)
