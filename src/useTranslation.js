@@ -43,7 +43,9 @@ export function useTranslation(ns, props = {}) {
   }); // seems we can't have functions as value -> wrap it in obj
 
   function resetT() {
-    setT({ t: i18n.getFixedT(null, namespaces[0]) });
+    setT({
+      t: i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0]),
+    });
   }
 
   useEffect(() => {
