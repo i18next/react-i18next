@@ -331,7 +331,7 @@
   };
 
   let defaultOptions = {
-    bindI18n: 'languageChanged',
+    bindI18n: 'languageChanging languageChanged',
     bindI18nStore: '',
     // nsMode: 'fallback' // loop through all namespaces given to hook, HOC, render prop for key lookup
     transEmptyNodeValue: '',
@@ -747,23 +747,21 @@
     let namespaces = ns || i18n.options && i18n.options.defaultNS;
     namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation']; // report namespaces as used
 
-    if (i18n.reportNamespaces.addUsedNamespaces) i18n.reportNamespaces.addUsedNamespaces(namespaces); // are we ready? yes if all namespaces in first language are loaded already (either with data or empty objedt on failed load)
+    if (i18n.reportNamespaces.addUsedNamespaces) i18n.reportNamespaces.addUsedNamespaces(namespaces); // are we ready? yes if all namespaces in first language are loaded already (either with data or empty object on failed load)
 
-    const ready = (i18n.isInitialized || i18n.initializedStoreOnce) && namespaces.every(n => hasLoadedNamespace(n, i18n)); // set states
+    const ready = (i18n.isInitialized || i18n.initializedStoreOnce) && namespaces.every(n => hasLoadedNamespace(n, i18n)); // binding t function to namespace (acts also as rerender trigger)
 
-    const _useState = React.useState({
-      t: i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0])
-    }),
+    function getT() {
+      return {
+        t: i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0])
+      };
+    }
+
+    const _useState = React.useState(getT()),
           _useState2 = _slicedToArray(_useState, 2),
           t = _useState2[0],
           setT = _useState2[1]; // seems we can't have functions as value -> wrap it in obj
 
-
-    function resetT() {
-      setT({
-        t: i18n.getFixedT(null, namespaces[0])
-      });
-    }
 
     React.useEffect(() => {
       let isMounted = true;
@@ -773,12 +771,12 @@
 
       if (!ready && !useSuspense) {
         loadNamespaces(i18n, namespaces, () => {
-          if (isMounted) resetT();
+          if (isMounted) setT(getT());
         });
       }
 
       function boundReset() {
-        if (isMounted) resetT();
+        if (isMounted) setT(getT());
       } // bind events to trigger change, like languageChanged
 
 
@@ -802,7 +800,7 @@
 
     throw new Promise(resolve => {
       loadNamespaces(i18n, namespaces, () => {
-        resetT();
+        setT(getT());
         resolve();
       });
     });
