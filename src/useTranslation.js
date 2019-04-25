@@ -37,16 +37,14 @@ export function useTranslation(ns, props = {}) {
     (i18n.isInitialized || i18n.initializedStoreOnce) &&
     namespaces.every(n => hasLoadedNamespace(n, i18n));
 
-  // set states
-  const [t, setT] = useState({
-    t: i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0]),
-  }); // seems we can't have functions as value -> wrap it in obj
-
-  function resetT() {
-    setT({
+  function getT() {
+    return {
       t: i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0]),
-    });
+    };
   }
+
+  // set states
+  const [t, setT] = useState(getT()); // seems we can't have functions as value -> wrap it in obj
 
   useEffect(() => {
     let isMounted = true;
@@ -56,12 +54,12 @@ export function useTranslation(ns, props = {}) {
     // in side effect and do not call resetT if unmounted
     if (!ready && !useSuspense) {
       loadNamespaces(i18n, namespaces, () => {
-        if (isMounted) resetT();
+        if (isMounted) setT(getT());
       });
     }
 
     function boundReset() {
-      if (isMounted) resetT();
+      if (isMounted) setT(getT());
     }
 
     // bind events to trigger change, like languageChanged
@@ -91,7 +89,7 @@ export function useTranslation(ns, props = {}) {
   // not yet loaded namespaces -> load them -> and trigger suspense
   throw new Promise(resolve => {
     loadNamespaces(i18n, namespaces, () => {
-      resetT();
+      setT(getT());
       resolve();
     });
   });
