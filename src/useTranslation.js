@@ -32,18 +32,17 @@ export function useTranslation(ns, props = {}) {
   // report namespaces as used
   if (i18n.reportNamespaces.addUsedNamespaces) i18n.reportNamespaces.addUsedNamespaces(namespaces);
 
-  // are we ready? yes if all namespaces in first language are loaded already (either with data or empty objedt on failed load)
+  // are we ready? yes if all namespaces in first language are loaded already (either with data or empty object on failed load)
   const ready =
     (i18n.isInitialized || i18n.initializedStoreOnce) &&
     namespaces.every(n => hasLoadedNamespace(n, i18n));
 
+  // binding t function to namespace (acts also as rerender trigger)
   function getT() {
     return {
       t: i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0]),
     };
   }
-
-  // set states
   const [t, setT] = useState(getT()); // seems we can't have functions as value -> wrap it in obj
 
   useEffect(() => {
