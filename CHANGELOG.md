@@ -1,3 +1,7 @@
+### 10.9.1
+
+- Fix useEffect mount/unmount usage [852](https://github.com/i18next/react-i18next/pull/852)
+
 ### 10.9.0
 
 - trigger suspense on languageChanging by add listening to that event too (new in i18next@15.1.0) - if you do not like this behaviour of suspending during languageChange - remove it from bindI18n

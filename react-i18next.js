@@ -788,7 +788,7 @@
         if (bindI18n && i18n) bindI18n.split(' ').forEach(e => i18n.off(e, boundReset));
         if (bindI18nStore && i18n) bindI18nStore.split(' ').forEach(e => i18n.store.off(e, boundReset));
       };
-    });
+    }, []);
     const ret = [t.t, i18n, ready];
     ret.t = t.t;
     ret.i18n = i18n;
