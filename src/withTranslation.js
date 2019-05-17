@@ -22,6 +22,9 @@ export function withTranslation(ns, options = {}) {
     I18nextWithTranslation.displayName = `withI18nextTranslation(${getDisplayName(
       WrappedComponent,
     )})`;
+
+    I18nextWithTranslation.WrappedComponent = WrappedComponent;
+
     return options.withRef ? React.forwardRef(I18nextWithTranslation) : I18nextWithTranslation;
   };
 }

@@ -47,6 +47,11 @@ describe('withSSR', () => {
     setI18n(i18n);
   });
 
+  it('should export wrapped component', () => {
+    const HocElement = withSSR()(TestComponent);
+    expect(HocElement.WrappedComponent).toBe(TestComponent);
+  });
+
   it('should set values', () => {
     const HocElement = withSSR()(TestComponent);
     const wrapper = mount(<HocElement initialI18nStore={{ foo: 'bar' }} initialLanguage="de" />);

@@ -13,6 +13,11 @@ describe('withTranslation', () => {
     return <div>{t('key1')}</div>;
   }
 
+  it('should export wrapped component', () => {
+    const HocElement = withTranslation()(TestComponent);
+    expect(HocElement.WrappedComponent).toBe(TestComponent);
+  });
+
   it('should render correct content', () => {
     const HocElement = withTranslation()(TestComponent);
     const wrapper = mount(<HocElement />);
