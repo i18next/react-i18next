@@ -1,3 +1,7 @@
+### 10.10.0
+
+- HOC: expose wrapped component as WrappedComponent property [853](https://github.com/i18next/react-i18next/pull/853)
+
 ### 10.9.1
 
 - Fix useEffect mount/unmount usage [852](https://github.com/i18next/react-i18next/pull/852)
