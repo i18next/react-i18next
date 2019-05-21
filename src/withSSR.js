@@ -15,6 +15,7 @@ export function withSSR() {
 
     I18nextWithSSR.getInitialProps = composeInitialProps(WrappedComponent);
     I18nextWithSSR.displayName = `withI18nextSSR(${getDisplayName(WrappedComponent)})`;
+    I18nextWithSSR.WrappedComponent = WrappedComponent;
 
     return I18nextWithSSR;
   };
