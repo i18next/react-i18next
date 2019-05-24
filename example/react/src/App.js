@@ -45,7 +45,7 @@ function Page() {
   );
 }
 
-// loading component for suspence fallback
+// loading component for suspense fallback
 const Loader = () => (
   <div className="App">
     <img src={logo} className="App-logo" alt="logo" />
