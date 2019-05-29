@@ -1,7 +1,7 @@
 import React from 'react';
 import { I18nContext, usedI18nextProvider } from './context';
 
-export function I18nextProvider({ i18n, children }) {
+export function I18nextProvider({ i18n, defaultNS, children }) {
   usedI18nextProvider(true);
 
   return React.createElement(
@@ -9,6 +9,7 @@ export function I18nextProvider({ i18n, children }) {
     {
       value: {
         i18n,
+        defaultNS,
       },
     },
     children,

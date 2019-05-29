@@ -11,7 +11,9 @@ import { warnOnce, loadNamespaces, hasLoadedNamespace } from './utils';
 export function useTranslation(ns, props = {}) {
   // assert we have the needed i18nInstance
   const { i18n: i18nFromProps } = props;
-  const { i18n: i18nFromContext } = getHasUsedI18nextProvider() ? useContext(I18nContext) : {};
+  const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = getHasUsedI18nextProvider()
+    ? useContext(I18nContext)
+    : {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
   if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
   if (!i18n) {
@@ -26,7 +28,7 @@ export function useTranslation(ns, props = {}) {
   const { useSuspense = i18nOptions.useSuspense } = props;
 
   // prepare having a namespace
-  let namespaces = ns || (i18n.options && i18n.options.defaultNS);
+  let namespaces = ns || defaultNSFromContext || (i18n.options && i18n.options.defaultNS);
   namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
 
   // report namespaces as used
