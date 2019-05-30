@@ -1,3 +1,7 @@
+### 10.11.0
+
+- Restore support passing the defaultNS via I18nextProvider prop [860](https://github.com/i18next/react-i18next/pull/860)
+
 ### 10.10.0
 
 - HOC: expose wrapped component as WrappedComponent property [853](https://github.com/i18next/react-i18next/pull/853)

@@ -682,7 +682,8 @@
         additionalProps = _objectWithoutProperties(_ref, ["children", "count", "parent", "i18nKey", "tOptions", "values", "defaults", "components", "ns", "i18n", "t"]);
 
     const _ref2 = getHasUsedI18nextProvider() ? React.useContext(I18nContext) : {},
-          i18nFromContext = _ref2.i18n;
+          i18nFromContext = _ref2.i18n,
+          defaultNSFromContext = _ref2.defaultNS;
 
     const i18n = i18nFromProps || i18nFromContext || getI18n();
 
@@ -695,7 +696,10 @@
 
     const reactI18nextOptions = _objectSpread({}, getDefaults(), i18n.options && i18n.options.react);
 
-    const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
+    const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent; // prepare having a namespace
+
+    let namespaces = ns || defaultNSFromContext || i18n.options && i18n.options.defaultNS;
+    namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
     const defaultValue = defaults || nodesToString('', children, 0, reactI18nextOptions) || reactI18nextOptions.transEmptyNodeValue;
     const hashTransKey = reactI18nextOptions.hashTransKey;
     const key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
@@ -709,7 +713,7 @@
     const combinedTOpts = _objectSpread({}, tOptions, values, interpolationOverride, {
       defaultValue,
       count,
-      ns
+      ns: namespaces
     });
 
     const translation = key ? t(key, combinedTOpts) : defaultValue;
@@ -723,7 +727,8 @@
     const i18nFromProps = props.i18n;
 
     const _ref = getHasUsedI18nextProvider() ? React.useContext(I18nContext) : {},
-          i18nFromContext = _ref.i18n;
+          i18nFromContext = _ref.i18n,
+          defaultNSFromContext = _ref.defaultNS;
 
     const i18n = i18nFromProps || i18nFromContext || getI18n();
     if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
@@ -744,7 +749,7 @@
     const _props$useSuspense = props.useSuspense,
           useSuspense = _props$useSuspense === void 0 ? i18nOptions.useSuspense : _props$useSuspense; // prepare having a namespace
 
-    let namespaces = ns || i18n.options && i18n.options.defaultNS;
+    let namespaces = ns || defaultNSFromContext || i18n.options && i18n.options.defaultNS;
     namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation']; // report namespaces as used
 
     if (i18n.reportNamespaces.addUsedNamespaces) i18n.reportNamespaces.addUsedNamespaces(namespaces); // are we ready? yes if all namespaces in first language are loaded already (either with data or empty object on failed load)
@@ -855,11 +860,13 @@
 
   function I18nextProvider(_ref) {
     let i18n = _ref.i18n,
+        defaultNS = _ref.defaultNS,
         children = _ref.children;
     usedI18nextProvider(true);
     return React__default.createElement(I18nContext.Provider, {
       value: {
-        i18n
+        i18n,
+        defaultNS
       }
     }, children);
   }

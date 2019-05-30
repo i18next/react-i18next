@@ -199,7 +199,9 @@ export function Trans({
   t: tFromProps,
   ...additionalProps
 }) {
-  const { i18n: i18nFromContext } = getHasUsedI18nextProvider() ? useContext(I18nContext) : {};
+  const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = getHasUsedI18nextProvider()
+    ? useContext(I18nContext)
+    : {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
   if (!i18n) {
     warnOnce('You will need pass in an i18next instance by using i18nextReactModule');
@@ -210,6 +212,10 @@ export function Trans({
 
   const reactI18nextOptions = { ...getDefaults(), ...(i18n.options && i18n.options.react) };
   const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
+
+  // prepare having a namespace
+  let namespaces = ns || defaultNSFromContext || (i18n.options && i18n.options.defaultNS);
+  namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
 
   const defaultValue =
     defaults ||
@@ -224,7 +230,7 @@ export function Trans({
     ...interpolationOverride,
     defaultValue,
     count,
-    ns,
+    ns: namespaces,
   };
   const translation = key ? t(key, combinedTOpts) : defaultValue;
 
