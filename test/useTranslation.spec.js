@@ -2,9 +2,11 @@ import React from 'react';
 import { mount } from 'enzyme';
 import i18nInstance from './i18n';
 import { useTranslation } from '../src/useTranslation';
-import { setI18n } from '../src/context';
+import { setI18n, usedI18nextProvider } from '../src/context';
+import { I18nextProvider } from '../src/I18nextProvider';
 
 jest.unmock('../src/useTranslation');
+jest.unmock('../src/I18nextProvider');
 
 describe('useTranslation', () => {
   describe('object', () => {
@@ -100,6 +102,37 @@ describe('useTranslation', () => {
       const wrapper = mount(<TestComponent />, {});
       // console.log(wrapper.debug());
       expect(wrapper.contains(<div>key1</div>)).toBe(true);
+    });
+  });
+
+  describe('default namespace from context', () => {
+    function TestComponent() {
+      const { t } = useTranslation();
+
+      expect(typeof t).toBe('function');
+
+      return <div>{t('key1')}</div>;
+    }
+
+    beforeEach(() => {
+      usedI18nextProvider(false);
+    });
+
+    afterEach(() => {
+      i18nInstance.reportNamespaces.usedNamespaces = {};
+    });
+
+    it('should render content fallback', () => {
+      const namespace = 'sampleNS';
+      const wrapper = mount(
+        <I18nextProvider defaultNS={namespace} i18={i18nInstance}>
+          <TestComponent />
+        </I18nextProvider>,
+        {},
+      );
+
+      expect(wrapper.contains(<div>key1</div>)).toBe(true);
+      expect(i18nInstance.reportNamespaces.getUsedNamespaces()).toContain(namespace);
     });
   });
 });
