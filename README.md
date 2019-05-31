@@ -38,7 +38,7 @@ npm i react-i18next@legacy
 
 The documentation is published on [react.i18next.com](https://react.i18next.com)
 
-### How will my code look like?
+### What will my code look like?
 
 **Before:** Your react code would have looked something like:
 
