@@ -692,13 +692,13 @@
       return children;
     }
 
-    const t = tFromProps || i18n.t.bind(i18n);
+    const t = tFromProps || i18n.t.bind(i18n) || (k => k);
 
     const reactI18nextOptions = _objectSpread({}, getDefaults(), i18n.options && i18n.options.react);
 
     const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent; // prepare having a namespace
 
-    let namespaces = ns || defaultNSFromContext || i18n.options && i18n.options.defaultNS;
+    let namespaces = ns || t.ns || defaultNSFromContext || i18n.options && i18n.options.defaultNS;
     namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
     const defaultValue = defaults || nodesToString('', children, 0, reactI18nextOptions) || reactI18nextOptions.transEmptyNodeValue;
     const hashTransKey = reactI18nextOptions.hashTransKey;
