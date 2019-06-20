@@ -74,7 +74,7 @@ export function useTranslation(ns, props = {}) {
       if (bindI18nStore && i18n)
         bindI18nStore.split(' ').forEach(e => i18n.store.off(e, boundReset));
     };
-  }, []); // define props to trigger using effect on rerender (none here)
+  }, [namespaces.join()]); // re-run effect whenever list of namespaces changes
 
   const ret = [t.t, i18n, ready];
   ret.t = t.t;
