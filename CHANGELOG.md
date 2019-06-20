@@ -1,3 +1,7 @@
+### 10.11.2
+
+- Reload translations whenever namespaces passed to useTranslation() change [878](https://github.com/i18next/react-i18next/pull/878)
+
 ### 10.11.1
 
 - fixes a regression in Trans component taking namespace from passed t function [867](https://github.com/i18next/react-i18next/issues/867#issuecomment-502395958)
