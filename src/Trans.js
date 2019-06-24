@@ -3,13 +3,12 @@ import HTML from 'html-parse-stringify2';
 import { getI18n, getHasUsedI18nextProvider, I18nContext, getDefaults } from './context';
 import { warn, warnOnce } from './utils';
 
-function hasChildren(node) {
-  return node && (node.children || (node.props && node.props.children));
+function getChildren(node) {
+  return (node && ((node.props && node.props.children) || node.children)) || [];
 }
 
-function getChildren(node) {
-  if (!node) return [];
-  return node && node.children ? node.children : node.props && node.props.children;
+function hasChildren(node) {
+  return !!getChildren(node).length;
 }
 
 function hasValidReactChildren(children) {
