@@ -878,7 +878,10 @@
     const _ref = getHasUsedI18nextProvider() ? React.useContext(I18nContext) : {},
           i18nFromContext = _ref.i18n;
 
-    const i18n = i18nFromProps || i18nFromContext || getI18n(); // nextjs / SSR: getting data from next.js or other ssr stack
+    const i18n = i18nFromProps || i18nFromContext || getI18n(); // opt out if is a cloned instance, eg. created by i18next-express-middleware on request
+    // -> do not set initial stuff on server side
+
+    if (i18n.options && i18n.options.isClone) return; // nextjs / SSR: getting data from next.js or other ssr stack
 
     if (initialI18nStore && !i18n.initializedStoreOnce) {
       i18n.services.resourceStore.data = initialI18nStore;

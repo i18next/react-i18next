@@ -6,6 +6,10 @@ export function useSSR(initialI18nStore, initialLanguage, props = {}) {
   const { i18n: i18nFromContext } = getHasUsedI18nextProvider() ? useContext(I18nContext) : {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
 
+  // opt out if is a cloned instance, eg. created by i18next-express-middleware on request
+  // -> do not set initial stuff on server side
+  if (i18n.options && i18n.options.isClone) return;
+
   // nextjs / SSR: getting data from next.js or other ssr stack
   if (initialI18nStore && !i18n.initializedStoreOnce) {
     i18n.services.resourceStore.data = initialI18nStore;

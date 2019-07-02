@@ -1,3 +1,7 @@
+### 10.11.3
+
+- only apply initial values in useSSR, withSSR on i18next instances not being a clone (eg. created by express middleware on server) ==> don't apply on serverside
+
 ### 10.11.2
 
 - Reload translations whenever namespaces passed to useTranslation() change [878](https://github.com/i18next/react-i18next/pull/878)
