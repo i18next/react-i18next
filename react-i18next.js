@@ -647,7 +647,9 @@
               key: i
             }), translationContent));
           } else {
-            mem.push(child);
+            mem.push(React__default.cloneElement(child, _objectSpread({}, child.props, {
+              key: i
+            })));
           }
         } else if (node.type === 'text') {
           mem.push(node.content);
@@ -681,7 +683,7 @@
         tFromProps = _ref.t,
         additionalProps = _objectWithoutProperties(_ref, ["children", "count", "parent", "i18nKey", "tOptions", "values", "defaults", "components", "ns", "i18n", "t"]);
 
-    const _ref2 = getHasUsedI18nextProvider() ? React.useContext(I18nContext) : {},
+    const _ref2 = getHasUsedI18nextProvider() ? React.useContext(I18nContext) || {} : {},
           i18nFromContext = _ref2.i18n,
           defaultNSFromContext = _ref2.defaultNS;
 
@@ -726,7 +728,7 @@
     // assert we have the needed i18nInstance
     const i18nFromProps = props.i18n;
 
-    const _ref = getHasUsedI18nextProvider() ? React.useContext(I18nContext) : {},
+    const _ref = getHasUsedI18nextProvider() ? React.useContext(I18nContext) || {} : {},
           i18nFromContext = _ref.i18n,
           defaultNSFromContext = _ref.defaultNS;
 
