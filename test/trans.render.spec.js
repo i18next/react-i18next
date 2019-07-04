@@ -390,6 +390,24 @@ describe('trans using no children but props - nested case', () => {
   });
 });
 
+describe('trans using no children but props - self closing case', () => {
+  const TestElement = () => (
+    <Trans defaults="hello <0/>{{what}}" values={{ what: 'world' }} components={[<br />]} />
+  );
+  it('should render translated string', () => {
+    const wrapper = mount(<TestElement />);
+    // console.log(wrapper.debug());
+    expect(
+      wrapper.contains(
+        <div>
+          hello <br />
+          world
+        </div>,
+      ),
+    ).toBe(true);
+  });
+});
+
 describe('trans should not break on invalid node from translations', () => {
   const TestElement = () => <Trans i18nKey="testInvalidHtml" />;
   it('should render translated string', () => {

@@ -1,3 +1,8 @@
+### 10.11.4
+
+- assert edge case trans component get set a key
+- assert context get destructed of empty object if context gets used falsely on a component got pulled out of main tree from react-portal or similar
+
 ### 10.11.3
 
 - only apply initial values in useSSR, withSSR on i18next instances not being a clone (eg. created by express middleware on server) ==> don't apply on serverside

@@ -169,7 +169,7 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
           // with this in component could be components={[<span class='make-beautiful'/>]} and in translation - 'some text <0>some highlighted message</0>'
           mem.push(React.cloneElement(child, { ...child.props, key: i }, translationContent));
         } else {
-          mem.push(child);
+          mem.push(React.cloneElement(child, { ...child.props, key: i }));
         }
       } else if (node.type === 'text') {
         mem.push(node.content);
@@ -200,7 +200,7 @@ export function Trans({
   ...additionalProps
 }) {
   const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = getHasUsedI18nextProvider()
-    ? useContext(I18nContext)
+    ? useContext(I18nContext) || {}
     : {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
   if (!i18n) {
