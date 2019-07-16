@@ -128,7 +128,7 @@ $ npm install react-i18next
 
 #### v9
 
-- react >= **0.14.0** (in case of < v16 or preact you will need to define parent in [Trans component](https://react.i18next.com/components/trans-component.html#props) or globally in [i18next.react options](https://react.i18next.com/components/trans-component.html#additional-options-on-i18nextinit))
+- react >= **0.14.0** (in case of < v16 or preact you will need to define parent in [Trans component](https://react.i18next.com/legacy-v9/trans-component#trans-props) or globally in [i18next.react options](https://react.i18next.com/legacy-v9/trans-component#additional-options-on-i-18-next-init))
 - i18next >= **2.0.0**
 
 ## Core Contributors
