@@ -6,10 +6,10 @@ export function withTranslation(ns, options = {}) {
   return function Extend(WrappedComponent) {
     function I18nextWithTranslation(props, ref) {
       const [t, i18n, ready] = useTranslation(ns, props);
-
       const passDownProps = {
         ...props,
         t,
+        translate: t,
         i18n,
         tReady: ready,
       };
