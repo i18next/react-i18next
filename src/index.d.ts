@@ -1,4 +1,4 @@
-import i18next from 'i18next';
+import * as i18next from 'i18next';
 import * as React from 'react';
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
@@ -11,10 +11,7 @@ export function addUsedNamespaces(namespaces: Namespace[]): void;
 export function getUsedNamespaces(): string[];
 export function setI18n(instance: i18next.i18n): void;
 export function getI18n(): i18next.i18n;
-export const initReactI18next: {
-  type: string;
-  init(instance: i18next.i18n): void;
-};
+export const initReactI18next: i18next.ThirdPartyModule;
 export function composeInitialProps(ForComponent: any): (ctx: unknown) => Promise<any>;
 export function getInitialProps(): {
   initialI18nStore: {
@@ -77,7 +74,7 @@ export function withTranslation(
   ns?: Namespace,
   options?: {
     withRef?: boolean;
-  }
+  },
 ): <P extends WithTranslation>(
   component: React.ComponentType<P>,
 ) => React.ComponentType<Omit<P, keyof WithTranslation>>;
