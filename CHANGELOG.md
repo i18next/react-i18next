@@ -1,3 +1,7 @@
+### 10.11.5
+
+- typescript: fix types for use() [912](https://github.com/i18next/react-i18next/pull/912)
+
 ### 10.11.4
 
 - assert edge case trans component get set a key
