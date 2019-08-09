@@ -8,7 +8,7 @@ const x = <Trans>Welcome, { name }!</Trans>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from \\"react/i18next\\";
+import { Trans } from \\"react-i18next\\";
 const x = <Trans defaults=\\"Welcome, {name}!\\" components={[]} values={{
   name
 }} />;
@@ -23,7 +23,7 @@ const x = <Trans>Welcome, <strong>{ name }</strong>!</Trans>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from \\"react/i18next\\";
+import { Trans } from \\"react-i18next\\";
 const x = <Trans defaults=\\"Welcome, <0>{name}</0>!\\" components={[<strong>{name}</strong>]} values={{
   name
 }} />;
@@ -33,12 +33,13 @@ const x = <Trans defaults=\\"Welcome, <0>{name}</0>!\\" components={[<strong>{na
 exports[`macros 3. macros: 3. macros 1`] = `
 "
 import { Trans } from '../icu.macro'
+import { useTranslation } from 'react-i18next'
 
 const x = <Trans>Trainers: { trainersCount, number }</Trans>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from \\"react/i18next\\";
+import { useTranslation, Trans } from 'react-i18next';
 const x = <Trans defaults=\\"Trainers: {trainersCount, number}\\" components={[]} values={{
   trainersCount
 }} />;
@@ -53,7 +54,7 @@ const x = <Trans>Trainers: <strong>{ trainersCount, number }</strong>!</Trans>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from \\"react/i18next\\";
+import { Trans } from \\"react-i18next\\";
 const x = <Trans defaults=\\"Trainers: <0>{trainersCount, number}</0>!\\" components={[<strong>{(trainersCount)}</strong>]} values={{
   trainersCount
 }} />;
@@ -68,7 +69,7 @@ const x = <Trans>Caught on { catchDate, date, short }</Trans>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from \\"react/i18next\\";
+import { Trans } from \\"react-i18next\\";
 const x = <Trans defaults=\\"Caught on {catchDate, date, short}\\" components={[]} values={{
   catchDate
 }} />;
@@ -83,7 +84,7 @@ const x = <Trans>Caught on <strong>{ catchDate, date, short }</strong>!</Trans>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from \\"react/i18next\\";
+import { Trans } from \\"react-i18next\\";
 const x = <Trans defaults=\\"Caught on <0>{catchDate, date, short}</0>!\\" components={[<strong>{(catchDate)}</strong>]} values={{
   catchDate
 }} />;
@@ -92,9 +93,107 @@ const x = <Trans defaults=\\"Caught on <0>{catchDate, date, short}</0>!\\" compo
 
 exports[`macros 7. macros: 7. macros 1`] = `
 "
+import { Trans } from '../icu.macro'
+
+const x = <Trans defaults=\\"Trainers: { trainersCount, number }\\" />
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from \\"react-i18next\\";
+const x = <Trans defaults=\\"Trainers: {trainersCount, number}\\" components={[]} values={{
+  trainersCount
+}} />;
+"
+`;
+
+exports[`macros 8. macros: 8. macros 1`] = `
+"
+import { Trans } from '../icu.macro'
+
+const x = <Trans i18nKey=\\"trainersWithDefaults\\" defaults=\\"Trainers: <strong>{ trainersCount, number }</strong>!\\" />
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from \\"react-i18next\\";
+const x = <Trans i18nKey=\\"trainersWithDefaults\\" defaults=\\"Trainers: <0>{trainersCount, number}</0>!\\" components={[<strong>{(trainersCount)}</strong>]} values={{
+  trainersCount
+}} />;
+"
+`;
+
+exports[`macros 9. macros: 9. macros 1`] = `
+"
+import { Trans } from '../icu.macro'
+
+const x = <Trans i18nKey=\\"caughtWithDefaults\\" defaults=\\"Caught on { catchDate, date, short }\\" />
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from \\"react-i18next\\";
+const x = <Trans i18nKey=\\"caughtWithDefaults\\" defaults=\\"Caught on {catchDate, date, short}\\" components={[]} values={{
+  catchDate
+}} />;
+"
+`;
+
+exports[`macros 10. macros: 10. macros 1`] = `
+"
+import { Trans } from '../icu.macro'
+
+const x = <Trans defaults=\\"Caught on <strong>{ catchDate, date, short }</strong>!\\" />
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from \\"react-i18next\\";
+const x = <Trans defaults=\\"Caught on <0>{catchDate, date, short}</0>!\\" components={[<strong>{(catchDate)}</strong>]} values={{
+  catchDate
+}} />;
+"
+`;
+
+exports[`macros 11. macros: 11. macros 1`] = `
+"
+import { Trans } from '../icu.macro'
+const Link = ({to, children}) => (<a href={to}>{children}</a>)
+
+const x = <Trans defaults=\\"Caught on <Link to='/dest'>{ catchDate, date, short }</Link>!\\" values={{catchDate: Date.now()}}>This should be overridden by defaults</Trans>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from \\"react-i18next\\";
+
+const Link = ({
+  to,
+  children
+}) => <a href={to}>{children}</a>;
+
+const x = <Trans values={{
+  catchDate: Date.now()
+}} defaults=\\"Caught on <0>{catchDate, date, short}</0>!\\" components={[<Link to='/dest'>{(catchDate)}</Link>]} />;
+"
+`;
+
+exports[`macros 12. macros: 12. macros 1`] = `
+"
+import { Trans } from '../icu.macro'
+
+const x = <Trans i18nKey=\\"trainersWithDefaults\\" values={{trainersCount}} defaults=\\"Trainers: <strong>{ trainersCount, number }</strong>!\\" components={[]} />
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from \\"react-i18next\\";
+const x = <Trans i18nKey=\\"trainersWithDefaults\\" values={{
+  trainersCount
+}} defaults=\\"Trainers: <strong>{ trainersCount, number }</strong>!\\" components={[]} />;
+"
+`;
+
+exports[`macros 13. macros: 13. macros 1`] = `
+"
 import { Select } from '../icu.macro'
 
 const x = <Select
+  i18nKey=\\"selectExample\\"
   switch={gender}
   male=\\"He avoids bugs.\\"
   female=\\"She avoids bugs.\\"
@@ -103,14 +202,14 @@ const x = <Select
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from \\"react/i18next\\";
-const x = <Trans defaults=\\"{gender, select,  male {He avoids bugs.} female {She avoids bugs.} other {They avoid bugs.}}\\" components={[]} values={{
+import { Trans } from \\"react-i18next\\";
+const x = <Trans i18nKey=\\"selectExample\\" defaults=\\"{gender, select,  male {He avoids bugs.} female {She avoids bugs.} other {They avoid bugs.}}\\" components={[]} values={{
   gender
 }} />;
 "
 `;
 
-exports[`macros 8. macros: 8. macros 1`] = `
+exports[`macros 14. macros: 14. macros 1`] = `
 "
 import { Select } from '../icu.macro'
 
@@ -123,34 +222,34 @@ const x = <Select
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from \\"react/i18next\\";
+import { Trans } from \\"react-i18next\\";
 const x = <Trans defaults=\\"{gender, select,  male {<0>He</0> avoids bugs.} female {<1>She</1> avoids bugs.} other {<2>They</2> avoid bugs.}}\\" components={[<strong>He</strong>, <strong>She</strong>, <strong>They</strong>]} values={{
   gender
 }} />;
 "
 `;
 
-exports[`macros 9. macros: 9. macros 1`] = `
+exports[`macros 15. macros: 15. macros 1`] = `
 "
 import { Plural } from '../icu.macro'
 
 const x = <Plural
   count={itemsCount1}
-  $0=\\"There is no item.\\"
+  $0=\\"There are no items.\\"
   one=\\"There is # item.\\"
   other=\\"There are # items.\\"
 />
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from \\"react/i18next\\";
-const x = <Trans defaults=\\"{itemsCount1, plural,  =0 {There is no item.} one {There is # item.} other {There are # items.}}\\" components={[]} values={{
+import { Trans } from \\"react-i18next\\";
+const x = <Trans defaults=\\"{itemsCount1, plural,  =0 {There are no items.} one {There is # item.} other {There are # items.}}\\" components={[]} values={{
   itemsCount1
 }} />;
 "
 `;
 
-exports[`macros 10. macros: 10. macros 1`] = `
+exports[`macros 16. macros: 16. macros 1`] = `
 "
 import { Plural } from '../icu.macro'
 
@@ -164,9 +263,56 @@ const x = <Plural
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from \\"react/i18next\\";
+import { Trans } from \\"react-i18next\\";
 const x = <Trans i18nKey=\\"testKey\\" defaults=\\"{itemsCount3, plural,  =0 {There is <0>no</0> item.} one {There is <1>#</1> item.} other {There are <2>#</2> items.}}\\" components={[<strong>no</strong>, <strong>#</strong>, <strong>#</strong>]} values={{
   itemsCount3
+}} />;
+"
+`;
+
+exports[`macros 17. macros: 17. macros 1`] = `
+"
+import { SelectOrdinal } from '../icu.macro'
+
+const x = <SelectOrdinal
+  count={position}
+  zero=\\"You are #th in line\\"
+  one=\\"You are #st in line\\"
+  two=\\"You are #nd in line\\"
+  few=\\"You are #rd in line\\"
+  many=\\"You are #th in line\\"
+  other=\\"You are #th in line\\"
+  $7=\\"You are in the lucky #th place in line\\"
+/>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from \\"react-i18next\\";
+const x = <Trans defaults=\\"{position, selectordinal,  zero {You are #th in line} one {You are #st in line} two {You are #nd in line} few {You are #rd in line} many {You are #th in line} other {You are #th in line} =7 {You are in the lucky #th place in line}}\\" components={[]} values={{
+  position
+}} />;
+"
+`;
+
+exports[`macros 18. macros: 18. macros 1`] = `
+"
+import { SelectOrdinal } from '../icu.macro'
+
+const x = <SelectOrdinal
+  i18nKey=\\"testKey\\"
+  count={position}
+  one={<Trans>You are <strong>#st in line</strong></Trans>}
+  two={<Trans>You are <strong>#nd in line</strong></Trans>}
+  few={<Trans>You are <strong>#rd in line</strong></Trans>}
+  other={<Trans>You are <strong>#th in line</strong></Trans>}
+  $0={<Trans>You are <strong>#th in line</strong></Trans>}
+/>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from \\"react-i18next\\";
+const x = <Trans i18nKey=\\"testKey\\" defaults=\\"{position, selectordinal,  one {You are <0>#st in line</0>} two {You are <1>#nd in line</1>} few {You are <2>#rd in line</2>} other {You are <3>#th in line</3>} =0 {You are <4>#th in line</4>}}\\" components={[<strong>#st in line</strong>, <strong>#nd in line</strong>, <strong>#rd in line</strong>, <strong>#th in line</strong>, <strong>#th in line</strong>]} values={{
+  position
 }} />;
 "
 `;
