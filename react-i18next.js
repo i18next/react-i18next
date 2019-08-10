@@ -21,35 +21,20 @@
     return obj;
   }
 
-  function ownKeys(object, enumerableOnly) {
-    var keys = Object.keys(object);
-
-    if (Object.getOwnPropertySymbols) {
-      var symbols = Object.getOwnPropertySymbols(object);
-      if (enumerableOnly) symbols = symbols.filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-      });
-      keys.push.apply(keys, symbols);
-    }
-
-    return keys;
-  }
-
-  function _objectSpread2(target) {
+  function _objectSpread(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i] != null ? arguments[i] : {};
+      var ownKeys = Object.keys(source);
 
-      if (i % 2) {
-        ownKeys(source, true).forEach(function (key) {
-          _defineProperty(target, key, source[key]);
-        });
-      } else if (Object.getOwnPropertyDescriptors) {
-        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-      } else {
-        ownKeys(source).forEach(function (key) {
-          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-        });
+      if (typeof Object.getOwnPropertySymbols === 'function') {
+        ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
+          return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+        }));
       }
+
+      ownKeys.forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
     }
 
     return target;
@@ -89,6 +74,44 @@
     }
 
     return target;
+  }
+
+  function _slicedToArray(arr, i) {
+    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
+  }
+
+  function _arrayWithHoles(arr) {
+    if (Array.isArray(arr)) return arr;
+  }
+
+  function _iterableToArrayLimit(arr, i) {
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _e = undefined;
+
+    try {
+      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+        _arr.push(_s.value);
+
+        if (i && _arr.length === i) break;
+      }
+    } catch (err) {
+      _d = true;
+      _e = err;
+    } finally {
+      try {
+        if (!_n && _i["return"] != null) _i["return"]();
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+
+    return _arr;
+  }
+
+  function _nonIterableRest() {
+    throw new TypeError("Invalid attempt to destructure non-iterable instance");
   }
 
   /**
@@ -307,7 +330,7 @@
     stringify: stringify_1
   };
 
-  var defaultOptions = {
+  let defaultOptions = {
     bindI18n: 'languageChanging languageChanged',
     bindI18nStore: '',
     // nsMode: 'fallback' // loop through all namespaces given to hook, HOC, render prop for key lookup
@@ -317,9 +340,9 @@
     // hashTransKey: key => key // calculate a key for Trans component based on defaultValue
     useSuspense: true
   };
-  var i18nInstance;
-  var hasUsedI18nextProvider;
-  var I18nContext = React__default.createContext();
+  let i18nInstance;
+  let hasUsedI18nextProvider;
+  const I18nContext = React__default.createContext();
   function usedI18nextProvider(used) {
     hasUsedI18nextProvider = used;
   }
@@ -327,8 +350,8 @@
     return hasUsedI18nextProvider;
   }
   function setDefaults() {
-    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    defaultOptions = _objectSpread2({}, defaultOptions, {}, options);
+    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    defaultOptions = _objectSpread({}, defaultOptions, options);
   }
   function getDefaults() {
     return defaultOptions;
@@ -355,7 +378,7 @@
   function getI18n() {
     return i18nInstance;
   }
-  var initReactI18next = {
+  const initReactI18next = {
     type: '3rdParty',
 
     init(instance) {
@@ -366,11 +389,11 @@
   };
   function composeInitialProps(ForComponent) {
     return ctx => new Promise(resolve => {
-      var i18nInitialProps = getInitialProps();
+      const i18nInitialProps = getInitialProps();
 
       if (ForComponent.getInitialProps) {
         ForComponent.getInitialProps(ctx).then(componentsInitialProps => {
-          resolve(_objectSpread2({}, componentsInitialProps, {}, i18nInitialProps));
+          resolve(_objectSpread({}, componentsInitialProps, i18nInitialProps));
         });
       } else {
         resolve(i18nInitialProps);
@@ -388,10 +411,10 @@
     // };
   }
   function getInitialProps() {
-    var i18n = getI18n();
-    var namespaces = i18n.reportNamespaces ? i18n.reportNamespaces.getUsedNamespaces() : [];
-    var ret = {};
-    var initialI18nStore = {};
+    const i18n = getI18n();
+    const namespaces = i18n.reportNamespaces ? i18n.reportNamespaces.getUsedNamespaces() : [];
+    const ret = {};
+    const initialI18nStore = {};
     i18n.languages.forEach(l => {
       initialI18nStore[l] = {};
       namespaces.forEach(ns => {
@@ -409,11 +432,11 @@
         args[_key] = arguments[_key];
       }
 
-      if (typeof args[0] === 'string') args[0] = "react-i18next:: ".concat(args[0]);
+      if (typeof args[0] === 'string') args[0] = `react-i18next:: ${args[0]}`;
       console.warn(...args);
     }
   }
-  var alreadyWarned = {};
+  const alreadyWarned = {};
   function warnOnce() {
     for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
       args[_key2] = arguments[_key2];
@@ -437,7 +460,7 @@
       if (i18n.isInitialized) {
         cb();
       } else {
-        var initialized = () => {
+        const initialized = () => {
           // due to emitter removing issue in i18next we need to delay remove
           setTimeout(() => {
             i18n.off('initialized', initialized);
@@ -455,14 +478,14 @@
       return true;
     }
 
-    var lng = i18n.languages[0];
-    var fallbackLng = i18n.options ? i18n.options.fallbackLng : false;
-    var lastLng = i18n.languages[i18n.languages.length - 1]; // we're in cimode so this shall pass
+    const lng = i18n.languages[0];
+    const fallbackLng = i18n.options ? i18n.options.fallbackLng : false;
+    const lastLng = i18n.languages[i18n.languages.length - 1]; // we're in cimode so this shall pass
 
     if (lng.toLowerCase() === 'cimode') return true;
 
-    var loadNotPending = (l, n) => {
-      var loadState = i18n.services.backendConnector.state["".concat(l, "|").concat(n)];
+    const loadNotPending = (l, n) => {
+      const loadState = i18n.services.backendConnector.state[`${l}|${n}`];
       return loadState === -1 || loadState === 2;
     }; // loaded -> SUCCESS
 
@@ -495,48 +518,48 @@
   function nodesToString(mem, children, index, i18nOptions) {
     if (!children) return '';
     if (Object.prototype.toString.call(children) !== '[object Array]') children = [children];
-    var keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
+    const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
     children.forEach((child, i) => {
       // const isElement = React.isValidElement(child);
       // const elementKey = `${index !== 0 ? index + '-' : ''}${i}:${typeof child.type === 'function' ? child.type.name : child.type || 'var'}`;
-      var elementKey = "".concat(i);
+      const elementKey = `${i}`;
 
       if (typeof child === 'string') {
-        mem = "".concat(mem).concat(child);
+        mem = `${mem}${child}`;
       } else if (hasChildren(child)) {
-        var elementTag = keepArray.indexOf(child.type) > -1 && Object.keys(child.props).length === 1 && typeof hasChildren(child) === 'string' ? child.type : elementKey;
+        const elementTag = keepArray.indexOf(child.type) > -1 && Object.keys(child.props).length === 1 && typeof hasChildren(child) === 'string' ? child.type : elementKey;
 
         if (child.props && child.props.i18nIsDynamicList) {
           // we got a dynamic list like "<ul>{['a', 'b'].map(item => ( <li key={item}>{item}</li> ))}</ul>""
           // the result should be "<0></0>" and not "<0><0>a</0><1>b</1></0>"
-          mem = "".concat(mem, "<").concat(elementTag, "></").concat(elementTag, ">");
+          mem = `${mem}<${elementTag}></${elementTag}>`;
         } else {
           // regular case mapping the inner children
-          mem = "".concat(mem, "<").concat(elementTag, ">").concat(nodesToString('', getChildren(child), i + 1, i18nOptions), "</").concat(elementTag, ">");
+          mem = `${mem}<${elementTag}>${nodesToString('', getChildren(child), i + 1, i18nOptions)}</${elementTag}>`;
         }
       } else if (React__default.isValidElement(child)) {
         if (keepArray.indexOf(child.type) > -1 && Object.keys(child.props).length === 0) {
-          mem = "".concat(mem, "<").concat(child.type, "/>");
+          mem = `${mem}<${child.type}/>`;
         } else {
-          mem = "".concat(mem, "<").concat(elementKey, "></").concat(elementKey, ">");
+          mem = `${mem}<${elementKey}></${elementKey}>`;
         }
       } else if (typeof child === 'object') {
-        var clone = _objectSpread2({}, child);
+        const clone = _objectSpread({}, child);
 
-        var format = clone.format;
+        const format = clone.format;
         delete clone.format;
-        var keys = Object.keys(clone);
+        const keys = Object.keys(clone);
 
         if (format && keys.length === 1) {
-          mem = "".concat(mem, "{{").concat(keys[0], ", ").concat(format, "}}");
+          mem = `${mem}{{${keys[0]}, ${format}}}`;
         } else if (keys.length === 1) {
-          mem = "".concat(mem, "{{").concat(keys[0], "}}");
+          mem = `${mem}{{${keys[0]}}}`;
         } else {
           // not a valid interpolation object (can only contain one value plus format)
-          warn("react-i18next: the passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.", child);
+          warn(`react-i18next: the passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.`, child);
         }
       } else {
-        warn("Trans: the passed in value is invalid - seems you passed in a variable like {number} - please pass in variables for interpolation as full objects like {{number}}.", child);
+        warn(`Trans: the passed in value is invalid - seems you passed in a variable like {number} - please pass in variables for interpolation as full objects like {{number}}.`, child);
       }
     });
     return mem;
@@ -545,12 +568,12 @@
   function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
     if (targetString === '') return []; // check if contains tags we need to replace from html string to react nodes
 
-    var keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
-    var emptyChildrenButNeedsHandling = targetString && new RegExp(keepArray.join('|')).test(targetString); // no need to replace tags in the targetstring
+    const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
+    const emptyChildrenButNeedsHandling = targetString && new RegExp(keepArray.join('|')).test(targetString); // no need to replace tags in the targetstring
 
     if (!children && !emptyChildrenButNeedsHandling) return [targetString]; // v2 -> interpolates upfront no need for "some <0>{{var}}</0>"" -> will be just "some {{var}}" in translation file
 
-    var data = {};
+    const data = {};
 
     function getData(childs) {
       if (Object.prototype.toString.call(childs) !== '[object Array]') childs = [childs];
@@ -561,59 +584,57 @@
     }
 
     getData(children);
-    targetString = i18n.services.interpolator.interpolate(targetString, _objectSpread2({}, data, {}, combinedTOpts), i18n.language); // parse ast from string with additional wrapper tag
+    targetString = i18n.services.interpolator.interpolate(targetString, _objectSpread({}, data, combinedTOpts), i18n.language); // parse ast from string with additional wrapper tag
     // -> avoids issues in parser removing prepending text nodes
 
-    var ast = htmlParseStringify2.parse("<0>".concat(targetString, "</0>"));
+    const ast = htmlParseStringify2.parse(`<0>${targetString}</0>`);
 
     function mapAST(reactNodes, astNodes) {
       if (Object.prototype.toString.call(reactNodes) !== '[object Array]') reactNodes = [reactNodes];
       if (Object.prototype.toString.call(astNodes) !== '[object Array]') astNodes = [astNodes];
       return astNodes.reduce((mem, node, i) => {
-        var translationContent = node.children && node.children[0] && node.children[0].content;
+        const translationContent = node.children && node.children[0] && node.children[0].content;
 
         if (node.type === 'tag') {
-          var child = reactNodes[parseInt(node.name, 10)] || {};
-          var isElement = React__default.isValidElement(child);
+          const child = reactNodes[parseInt(node.name, 10)] || {};
+          const isElement = React__default.isValidElement(child);
 
           if (typeof child === 'string') {
             mem.push(child);
           } else if (hasChildren(child)) {
-            var childs = getChildren(child);
-            var mappedChildren = mapAST(childs, node.children);
-            var inner = hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
+            const childs = getChildren(child);
+            const mappedChildren = mapAST(childs, node.children);
+            const inner = hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
             if (child.dummy) child.children = inner; // needed on preact!
 
-            mem.push(React__default.cloneElement(child, _objectSpread2({}, child.props, {
+            mem.push(React__default.cloneElement(child, _objectSpread({}, child.props, {
               key: i
             }), inner));
           } else if (emptyChildrenButNeedsHandling && typeof child === 'object' && child.dummy && !isElement) {
             // we have a empty Trans node (the dummy element) with a targetstring that contains html tags needing
             // conversion to react nodes
             // so we just need to map the inner stuff
-            var _inner = mapAST(reactNodes
+            const inner = mapAST(reactNodes
             /* wrong but we need something */
             , node.children);
-
-            mem.push(React__default.cloneElement(child, _objectSpread2({}, child.props, {
+            mem.push(React__default.cloneElement(child, _objectSpread({}, child.props, {
               key: i
-            }), _inner));
+            }), inner));
           } else if (isNaN(node.name) && i18nOptions.transSupportBasicHtmlNodes) {
             if (node.voidElement) {
               mem.push(React__default.createElement(node.name, {
-                key: "".concat(node.name, "-").concat(i)
+                key: `${node.name}-${i}`
               }));
             } else {
-              var _inner2 = mapAST(reactNodes
+              const inner = mapAST(reactNodes
               /* wrong but we need something */
               , node.children);
-
               mem.push(React__default.createElement(node.name, {
-                key: "".concat(node.name, "-").concat(i)
-              }, _inner2));
+                key: `${node.name}-${i}`
+              }, inner));
             }
           } else if (typeof child === 'object' && !isElement) {
-            var content = node.children[0] ? translationContent : null; // v1
+            const content = node.children[0] ? translationContent : null; // v1
             // as interpolation was done already we just have a regular content node
             // in the translation AST while having an object in reactNodes
             // -> push the content no need to interpolate again
@@ -622,11 +643,11 @@
           } else if (node.children.length === 1 && translationContent) {
             // If component does not have children, but translation - has
             // with this in component could be components={[<span class='make-beautiful'/>]} and in translation - 'some text <0>some highlighted message</0>'
-            mem.push(React__default.cloneElement(child, _objectSpread2({}, child.props, {
+            mem.push(React__default.cloneElement(child, _objectSpread({}, child.props, {
               key: i
             }), translationContent));
           } else {
-            mem.push(React__default.cloneElement(child, _objectSpread2({}, child.props, {
+            mem.push(React__default.cloneElement(child, _objectSpread({}, child.props, {
               key: i
             })));
           }
@@ -641,7 +662,7 @@
     // return the children of that extra node to get expected result
 
 
-    var result = mapAST([{
+    const result = mapAST([{
       dummy: true,
       children
     }], ast);
@@ -649,79 +670,74 @@
   }
 
   function Trans(_ref) {
-    var {
-      children,
-      count,
-      parent,
-      i18nKey,
-      tOptions,
-      values,
-      defaults,
-      components,
-      ns,
-      i18n: i18nFromProps,
-      t: tFromProps
-    } = _ref,
+    let children = _ref.children,
+        count = _ref.count,
+        parent = _ref.parent,
+        i18nKey = _ref.i18nKey,
+        tOptions = _ref.tOptions,
+        values = _ref.values,
+        defaults = _ref.defaults,
+        components = _ref.components,
+        ns = _ref.ns,
+        i18nFromProps = _ref.i18n,
+        tFromProps = _ref.t,
         additionalProps = _objectWithoutProperties(_ref, ["children", "count", "parent", "i18nKey", "tOptions", "values", "defaults", "components", "ns", "i18n", "t"]);
 
-    var {
-      i18n: i18nFromContext,
-      defaultNS: defaultNSFromContext
-    } = getHasUsedI18nextProvider() ? React.useContext(I18nContext) || {} : {};
-    var i18n = i18nFromProps || i18nFromContext || getI18n();
+    const _ref2 = getHasUsedI18nextProvider() ? React.useContext(I18nContext) || {} : {},
+          i18nFromContext = _ref2.i18n,
+          defaultNSFromContext = _ref2.defaultNS;
+
+    const i18n = i18nFromProps || i18nFromContext || getI18n();
 
     if (!i18n) {
       warnOnce('You will need pass in an i18next instance by using i18nextReactModule');
       return children;
     }
 
-    var t = tFromProps || i18n.t.bind(i18n) || (k => k);
+    const t = tFromProps || i18n.t.bind(i18n) || (k => k);
 
-    var reactI18nextOptions = _objectSpread2({}, getDefaults(), {}, i18n.options && i18n.options.react);
+    const reactI18nextOptions = _objectSpread({}, getDefaults(), i18n.options && i18n.options.react);
 
-    var useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent; // prepare having a namespace
+    const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent; // prepare having a namespace
 
-    var namespaces = ns || t.ns || defaultNSFromContext || i18n.options && i18n.options.defaultNS;
+    let namespaces = ns || t.ns || defaultNSFromContext || i18n.options && i18n.options.defaultNS;
     namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
-    var defaultValue = defaults || nodesToString('', children, 0, reactI18nextOptions) || reactI18nextOptions.transEmptyNodeValue;
-    var {
-      hashTransKey
-    } = reactI18nextOptions;
-    var key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
-    var interpolationOverride = values ? {} : {
+    const defaultValue = defaults || nodesToString('', children, 0, reactI18nextOptions) || reactI18nextOptions.transEmptyNodeValue;
+    const hashTransKey = reactI18nextOptions.hashTransKey;
+    const key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
+    const interpolationOverride = values ? {} : {
       interpolation: {
         prefix: '#$?',
         suffix: '?$#'
       }
     };
 
-    var combinedTOpts = _objectSpread2({}, tOptions, {}, values, {}, interpolationOverride, {
+    const combinedTOpts = _objectSpread({}, tOptions, values, interpolationOverride, {
       defaultValue,
       count,
       ns: namespaces
     });
 
-    var translation = key ? t(key, combinedTOpts) : defaultValue;
+    const translation = key ? t(key, combinedTOpts) : defaultValue;
     if (!useAsParent) return renderNodes(components || children, translation, i18n, reactI18nextOptions, combinedTOpts);
     return React__default.createElement(useAsParent, additionalProps, renderNodes(components || children, translation, i18n, reactI18nextOptions, combinedTOpts));
   }
 
   function useTranslation(ns) {
-    var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    let props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     // assert we have the needed i18nInstance
-    var {
-      i18n: i18nFromProps
-    } = props;
-    var {
-      i18n: i18nFromContext,
-      defaultNS: defaultNSFromContext
-    } = getHasUsedI18nextProvider() ? React.useContext(I18nContext) || {} : {};
-    var i18n = i18nFromProps || i18nFromContext || getI18n();
+    const i18nFromProps = props.i18n;
+
+    const _ref = getHasUsedI18nextProvider() ? React.useContext(I18nContext) || {} : {},
+          i18nFromContext = _ref.i18n,
+          defaultNSFromContext = _ref.defaultNS;
+
+    const i18n = i18nFromProps || i18nFromContext || getI18n();
     if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
 
     if (!i18n) {
       warnOnce('You will need pass in an i18next instance by using initReactI18next');
-      var retNotReady = [k => k, {}, true];
+      const retNotReady = [k => k, {}, true];
 
       retNotReady.t = k => k;
 
@@ -730,18 +746,17 @@
       return retNotReady;
     }
 
-    var i18nOptions = _objectSpread2({}, getDefaults(), {}, i18n.options.react);
+    const i18nOptions = _objectSpread({}, getDefaults(), i18n.options.react);
 
-    var {
-      useSuspense = i18nOptions.useSuspense
-    } = props; // prepare having a namespace
+    const _props$useSuspense = props.useSuspense,
+          useSuspense = _props$useSuspense === void 0 ? i18nOptions.useSuspense : _props$useSuspense; // prepare having a namespace
 
-    var namespaces = ns || defaultNSFromContext || i18n.options && i18n.options.defaultNS;
+    let namespaces = ns || defaultNSFromContext || i18n.options && i18n.options.defaultNS;
     namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation']; // report namespaces as used
 
     if (i18n.reportNamespaces.addUsedNamespaces) i18n.reportNamespaces.addUsedNamespaces(namespaces); // are we ready? yes if all namespaces in first language are loaded already (either with data or empty object on failed load)
 
-    var ready = (i18n.isInitialized || i18n.initializedStoreOnce) && namespaces.every(n => hasLoadedNamespace(n, i18n)); // binding t function to namespace (acts also as rerender trigger)
+    const ready = (i18n.isInitialized || i18n.initializedStoreOnce) && namespaces.every(n => hasLoadedNamespace(n, i18n)); // binding t function to namespace (acts also as rerender trigger)
 
     function getT() {
       return {
@@ -749,14 +764,16 @@
       };
     }
 
-    var [t, setT] = React.useState(getT()); // seems we can't have functions as value -> wrap it in obj
+    const _useState = React.useState(getT()),
+          _useState2 = _slicedToArray(_useState, 2),
+          t = _useState2[0],
+          setT = _useState2[1]; // seems we can't have functions as value -> wrap it in obj
+
 
     React.useEffect(() => {
-      var isMounted = true;
-      var {
-        bindI18n,
-        bindI18nStore
-      } = i18nOptions; // if not ready and not using suspense load the namespaces
+      let isMounted = true;
+      const bindI18n = i18nOptions.bindI18n,
+            bindI18nStore = i18nOptions.bindI18nStore; // if not ready and not using suspense load the namespaces
       // in side effect and do not call resetT if unmounted
 
       if (!ready && !useSuspense) {
@@ -780,7 +797,7 @@
       };
     }, [namespaces.join()]); // re-run effect whenever list of namespaces changes
 
-    var ret = [t.t, i18n, ready];
+    const ret = [t.t, i18n, ready];
     ret.t = t.t;
     ret.i18n = i18n;
     ret.ready = ready; // return hook stuff if ready
@@ -798,12 +815,16 @@
   }
 
   function withTranslation(ns) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     return function Extend(WrappedComponent) {
       function I18nextWithTranslation(props, ref) {
-        var [t, i18n, ready] = useTranslation(ns, props);
+        const _useTranslation = useTranslation(ns, props),
+              _useTranslation2 = _slicedToArray(_useTranslation, 3),
+              t = _useTranslation2[0],
+              i18n = _useTranslation2[1],
+              ready = _useTranslation2[2];
 
-        var passDownProps = _objectSpread2({}, props, {
+        const passDownProps = _objectSpread({}, props, {
           t,
           i18n,
           tReady: ready
@@ -816,20 +837,23 @@
         return React__default.createElement(WrappedComponent, passDownProps);
       }
 
-      I18nextWithTranslation.displayName = "withI18nextTranslation(".concat(getDisplayName(WrappedComponent), ")");
+      I18nextWithTranslation.displayName = `withI18nextTranslation(${getDisplayName(WrappedComponent)})`;
       I18nextWithTranslation.WrappedComponent = WrappedComponent;
       return options.withRef ? React__default.forwardRef(I18nextWithTranslation) : I18nextWithTranslation;
     };
   }
 
   function Translation(props) {
-    var {
-      ns,
-      children
-    } = props,
-        options = _objectWithoutProperties(props, ["ns", "children"]);
+    const ns = props.ns,
+          children = props.children,
+          options = _objectWithoutProperties(props, ["ns", "children"]);
 
-    var [t, i18n, ready] = useTranslation(ns, options);
+    const _useTranslation = useTranslation(ns, options),
+          _useTranslation2 = _slicedToArray(_useTranslation, 3),
+          t = _useTranslation2[0],
+          i18n = _useTranslation2[1],
+          ready = _useTranslation2[2];
+
     return children(t, {
       i18n,
       lng: i18n.language
@@ -837,11 +861,9 @@
   }
 
   function I18nextProvider(_ref) {
-    var {
-      i18n,
-      defaultNS,
-      children
-    } = _ref;
+    let i18n = _ref.i18n,
+        defaultNS = _ref.defaultNS,
+        children = _ref.children;
     usedI18nextProvider(true);
     return React__default.createElement(I18nContext.Provider, {
       value: {
@@ -852,14 +874,13 @@
   }
 
   function useSSR(initialI18nStore, initialLanguage) {
-    var props = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    var {
-      i18n: i18nFromProps
-    } = props;
-    var {
-      i18n: i18nFromContext
-    } = getHasUsedI18nextProvider() ? React.useContext(I18nContext) : {};
-    var i18n = i18nFromProps || i18nFromContext || getI18n(); // opt out if is a cloned instance, eg. created by i18next-express-middleware on request
+    let props = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    const i18nFromProps = props.i18n;
+
+    const _ref = getHasUsedI18nextProvider() ? React.useContext(I18nContext) : {},
+          i18nFromContext = _ref.i18n;
+
+    const i18n = i18nFromProps || i18nFromContext || getI18n(); // opt out if is a cloned instance, eg. created by i18next-express-middleware on request
     // -> do not set initial stuff on server side
 
     if (i18n.options && i18n.options.isClone) return; // nextjs / SSR: getting data from next.js or other ssr stack
@@ -878,18 +899,16 @@
   function withSSR() {
     return function Extend(WrappedComponent) {
       function I18nextWithSSR(_ref) {
-        var {
-          initialI18nStore,
-          initialLanguage
-        } = _ref,
+        let initialI18nStore = _ref.initialI18nStore,
+            initialLanguage = _ref.initialLanguage,
             rest = _objectWithoutProperties(_ref, ["initialI18nStore", "initialLanguage"]);
 
         useSSR(initialI18nStore, initialLanguage);
-        return React__default.createElement(WrappedComponent, _objectSpread2({}, rest));
+        return React__default.createElement(WrappedComponent, _objectSpread({}, rest));
       }
 
       I18nextWithSSR.getInitialProps = composeInitialProps(WrappedComponent);
-      I18nextWithSSR.displayName = "withI18nextSSR(".concat(getDisplayName(WrappedComponent), ")");
+      I18nextWithSSR.displayName = `withI18nextSSR(${getDisplayName(WrappedComponent)})`;
       I18nextWithSSR.WrappedComponent = WrappedComponent;
       return I18nextWithSSR;
     };
