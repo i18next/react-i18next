@@ -118,6 +118,7 @@
     ],
     "collectCoverageFrom": [
       "**/src/*.{js,jsx}",
+      "*.macro.js",
       "!**/src/index.js",
       "!**/src/shallowEqual.js",
       "!**/node_modules/**",
