@@ -1,3 +1,7 @@
+### 10.12.0
+
+- fix / extend icu.macro: ICU: Trans macro will parse defaults as alternate to children [917](https://github.com/i18next/react-i18next/pull/917)
+
 ### 10.11.5
 
 - typescript: fix types for use() [912](https://github.com/i18next/react-i18next/pull/912)
