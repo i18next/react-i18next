@@ -737,12 +737,12 @@
 
     if (!i18n) {
       warnOnce('You will need pass in an i18next instance by using initReactI18next');
-      const retNotReady = [k => k, {}, true];
+      const retNotReady = [k => k, {}, false];
 
       retNotReady.t = k => k;
 
       retNotReady.i18n = {};
-      retNotReady.ready = true;
+      retNotReady.ready = false;
       return retNotReady;
     }
 
