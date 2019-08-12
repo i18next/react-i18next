@@ -1,3 +1,7 @@
+### 10.12.1
+
+- Set ready flag to false when i18n instance has not been initialised [918](https://github.com/i18next/react-i18next/pull/918)
+
 ### 10.12.0
 
 - fix / extend icu.macro: ICU: Trans macro will parse defaults as alternate to children [917](https://github.com/i18next/react-i18next/pull/917)
