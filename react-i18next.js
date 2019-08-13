@@ -523,7 +523,9 @@
       } else if (typeof child === 'object') {
         var clone = _objectSpread2({}, child);
 
-        var format = clone.format;
+        var {
+          format
+        } = clone;
         delete clone.format;
         var keys = Object.keys(clone);
 
@@ -598,19 +600,29 @@
             mem.push(React__default.cloneElement(child, _objectSpread2({}, child.props, {
               key: i
             }), _inner));
-          } else if (isNaN(node.name) && i18nOptions.transSupportBasicHtmlNodes) {
-            if (node.voidElement) {
-              mem.push(React__default.createElement(node.name, {
-                key: "".concat(node.name, "-").concat(i)
-              }));
+          } else if (isNaN(node.name)) {
+            if (i18nOptions.transSupportBasicHtmlNodes && keepArray.indexOf(node.name) > -1) {
+              if (node.voidElement) {
+                mem.push(React__default.createElement(node.name, {
+                  key: "".concat(node.name, "-").concat(i)
+                }));
+              } else {
+                var _inner2 = mapAST(reactNodes
+                /* wrong but we need something */
+                , node.children);
+
+                mem.push(React__default.createElement(node.name, {
+                  key: "".concat(node.name, "-").concat(i)
+                }, _inner2));
+              }
+            } else if (node.voidElement) {
+              mem.push("<".concat(node.name, " />"));
             } else {
-              var _inner2 = mapAST(reactNodes
+              var _inner3 = mapAST(reactNodes
               /* wrong but we need something */
               , node.children);
 
-              mem.push(React__default.createElement(node.name, {
-                key: "".concat(node.name, "-").concat(i)
-              }, _inner2));
+              mem.push("<".concat(node.name, ">").concat(_inner3, "</").concat(node.name, ">"));
             }
           } else if (typeof child === 'object' && !isElement) {
             var content = node.children[0] ? translationContent : null; // v1

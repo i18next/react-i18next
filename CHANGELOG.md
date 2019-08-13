@@ -1,3 +1,7 @@
+### 10.12.2
+
+- Trans: do not replace html tags in translation strings that are not in the transKeepBasicHtmlNodesFor array [919](https://github.com/i18next/react-i18next/issues/919)
+
 ### 10.12.1
 
 - Set ready flag to false when i18n instance has not been initialised [918](https://github.com/i18next/react-i18next/pull/918)
