@@ -58,7 +58,7 @@ export function nodesToString(mem, children, index, i18nOptions) {
       }
     } else if (typeof child === 'object') {
       const clone = { ...child };
-      const format = clone.format;
+      const { format } = clone;
       delete clone.format;
 
       const keys = Object.keys(clone);
@@ -148,13 +148,21 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
           // so we just need to map the inner stuff
           const inner = mapAST(reactNodes /* wrong but we need something */, node.children);
           mem.push(React.cloneElement(child, { ...child.props, key: i }, inner));
-        } else if (isNaN(node.name) && i18nOptions.transSupportBasicHtmlNodes) {
-          if (node.voidElement) {
-            mem.push(React.createElement(node.name, { key: `${node.name}-${i}` }));
+        } else if (isNaN(node.name)) {
+          if (i18nOptions.transSupportBasicHtmlNodes && keepArray.indexOf(node.name) > -1) {
+            if (node.voidElement) {
+              mem.push(React.createElement(node.name, { key: `${node.name}-${i}` }));
+            } else {
+              const inner = mapAST(reactNodes /* wrong but we need something */, node.children);
+
+              mem.push(React.createElement(node.name, { key: `${node.name}-${i}` }, inner));
+            }
+          } else if (node.voidElement) {
+            mem.push(`<${node.name} />`);
           } else {
             const inner = mapAST(reactNodes /* wrong but we need something */, node.children);
 
-            mem.push(React.createElement(node.name, { key: `${node.name}-${i}` }, inner));
+            mem.push(`<${node.name}>${inner}</${node.name}>`);
           }
         } else if (typeof child === 'object' && !isElement) {
           const content = node.children[0] ? translationContent : null;

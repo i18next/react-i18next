@@ -106,6 +106,10 @@ describe('trans simple with custom html tag', () => {
     <Trans i18nKey="transTest1_customHtml2" parent={parent} />
   );
 
+  const TestElement3 = ({ t, parent }) => (
+    <Trans i18nKey="transTest1_customHtml3" parent={parent} />
+  );
+
   it('should not skip custom html tags', () => {
     const wrapper = mount(<TestElement />);
     // console.log(wrapper.debug());
@@ -126,6 +130,19 @@ describe('trans simple with custom html tag', () => {
       wrapper.contains(
         <div>
           <strong>Go</strong> <br /> there.
+        </div>,
+      ),
+    ).toBe(true);
+  });
+
+  it('should skip custom html tags not listed in transKeepBasicHtmlNodesFor', () => {
+    const wrapper = mount(<TestElement3 />);
+    // console.log(wrapper.debug());
+    expect(
+      wrapper.contains(
+        <div>
+          <strong>Go</strong>&lt;video
+          /&gt;&lt;script&gt;console.warn(&quot;test&quot;)&lt;/script&gt; there.
         </div>,
       ),
     ).toBe(true);
