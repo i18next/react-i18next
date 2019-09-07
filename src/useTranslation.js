@@ -11,8 +11,9 @@ import { warnOnce, loadNamespaces, hasLoadedNamespace } from './utils';
 export function useTranslation(ns, props = {}) {
   // assert we have the needed i18nInstance
   const { i18n: i18nFromProps } = props;
+  const ReactI18nContext = useContext(I18nContext);
   const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = getHasUsedI18nextProvider()
-    ? useContext(I18nContext) || {}
+    ? ReactI18nContext || {}
     : {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
   if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
