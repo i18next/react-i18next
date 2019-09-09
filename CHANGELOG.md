@@ -1,3 +1,7 @@
+### 10.12.3
+
+- avoid conditional hook call in edge case (wrong setup) [935](https://github.com/i18next/react-i18next/pull/935)
+
 ### 10.12.2
 
 - Trans: do not replace html tags in translation strings that are not in the transKeepBasicHtmlNodesFor array [919](https://github.com/i18next/react-i18next/issues/919)
