@@ -724,10 +724,11 @@
     var {
       i18n: i18nFromProps
     } = props;
+    var ReactI18nContext = React.useContext(I18nContext);
     var {
       i18n: i18nFromContext,
       defaultNS: defaultNSFromContext
-    } = getHasUsedI18nextProvider() ? React.useContext(I18nContext) || {} : {};
+    } = getHasUsedI18nextProvider() ? ReactI18nContext || {} : {};
     var i18n = i18nFromProps || i18nFromContext || getI18n();
     if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
 
