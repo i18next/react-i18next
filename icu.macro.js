@@ -11,26 +11,9 @@ function ICUMacro({ references, state, babel }) {
   // assert we have the react-i18next Trans component imported
   addNeededImports(state, babel);
 
-  // transform Plural
-  Plural.forEach(referencePath => {
+  // transform Plural and SelectOrdinal
+  [...Plural, ...SelectOrdinal].forEach(referencePath => {
     if (referencePath.parentPath.type === 'JSXOpeningElement') {
-      pluralAsJSX(
-        referencePath.parentPath,
-        {
-          attributes: referencePath.parentPath.get('attributes'),
-          children: referencePath.parentPath.parentPath.get('children'),
-        },
-        babel,
-      );
-    } else {
-      // throw a helpful error message or something :)
-    }
-  });
-
-  // transform SelectOrdinal
-  SelectOrdinal.forEach(referencePath => {
-    if (referencePath.parentPath.type === 'JSXOpeningElement') {
-      // selectordinal is a form of plural
       pluralAsJSX(
         referencePath.parentPath,
         {
@@ -85,8 +68,13 @@ function pluralAsJSX(parentPath, { attributes }, babel) {
   // plural or selectordinal
   const nodeName = parentPath.node.name.name.toLocaleLowerCase();
 
-  let componentStartIndex = 0;
+  // will need to merge count attribute with existing values attribute in some cases
+  const existingValuesAttribute = findAttribute('values', attributes);
+  const existingValues = existingValuesAttribute
+    ? existingValuesAttribute.node.value.expression.properties
+    : [];
 
+  let componentStartIndex = 0;
   const extracted = attributes.reduce(
     (mem, attr) => {
       if (attr.node.name.name === 'i18nKey') {
@@ -94,8 +82,19 @@ function pluralAsJSX(parentPath, { attributes }, babel) {
         mem.attributesToCopy.push(attr.node);
       } else if (attr.node.name.name === 'count') {
         // take the count for element
-        mem.values.push(toObjectProperty(attr.node.value.expression.name));
-        mem.defaults = `{${attr.node.value.expression.name}, ${nodeName}, ${mem.defaults}`;
+        let exprName = attr.node.value.expression.name;
+        if (!exprName) {
+          exprName = 'count';
+        }
+        if (exprName === 'count') {
+          // if the prop expression name is also "count", copy it instead: <Plural count={count} --> <Trans count={count}
+          mem.attributesToCopy.push(attr.node);
+        } else {
+          mem.values.unshift(toObjectProperty(exprName));
+        }
+        mem.defaults = `{${exprName}, ${nodeName}, ${mem.defaults}`;
+      } else if (attr.node.name.name === 'values') {
+        // skip the values attribute, as it has already been processed into mem from existingValues
       } else if (attr.node.value.type === 'StringLiteral') {
         // take any string node as plural option
         let pluralForm = attr.node.name.name;
@@ -103,7 +102,7 @@ function pluralAsJSX(parentPath, { attributes }, babel) {
         mem.defaults = `${mem.defaults} ${pluralForm} {${attr.node.value.value}}`;
       } else if (attr.node.value.type === 'JSXExpressionContainer') {
         // convert any Trans component to plural option extracting any values and components
-        const children = attr.node.value.expression.children;
+        const children = attr.node.value.expression.children || [];
         const thisTrans = processTrans(children, babel, componentStartIndex);
 
         let pluralForm = attr.node.name.name;
@@ -111,13 +110,12 @@ function pluralAsJSX(parentPath, { attributes }, babel) {
 
         mem.defaults = `${mem.defaults} ${pluralForm} {${thisTrans.defaults}}`;
         mem.components = mem.components.concat(thisTrans.components);
-        mem.values = mem.values.concat(thisTrans.values);
 
         componentStartIndex += thisTrans.components.length;
       }
       return mem;
     },
-    { attributesToCopy: [], values: [], components: [], defaults: '' },
+    { attributesToCopy: [], values: existingValues, components: [], defaults: '' },
   );
 
   // replace the node with the new Trans
@@ -129,6 +127,12 @@ function selectAsJSX(parentPath, { attributes }, babel) {
   const toObjectProperty = (name, value) =>
     t.objectProperty(t.identifier(name), t.identifier(name), false, !value);
 
+  // will need to merge switch attribute with existing values attribute
+  const existingValuesAttribute = findAttribute('values', attributes);
+  const existingValues = existingValuesAttribute
+    ? existingValuesAttribute.node.value.expression.properties
+    : [];
+
   let componentStartIndex = 0;
 
   const extracted = attributes.reduce(
@@ -137,26 +141,33 @@ function selectAsJSX(parentPath, { attributes }, babel) {
         // copy the i18nKey
         mem.attributesToCopy.push(attr.node);
       } else if (attr.node.name.name === 'switch') {
-        // take the switch for plural element
-        mem.values.push(toObjectProperty(attr.node.value.expression.name));
-        mem.defaults = `{${attr.node.value.expression.name}, select, ${mem.defaults}`;
+        // take the switch for select element
+        let exprName = attr.node.value.expression.name;
+        if (!exprName) {
+          exprName = 'selectKey';
+          mem.values.unshift(t.objectProperty(t.identifier(exprName), attr.node.value.expression));
+        } else {
+          mem.values.unshift(toObjectProperty(exprName));
+        }
+        mem.defaults = `{${exprName}, select, ${mem.defaults}`;
+      } else if (attr.node.name.name === 'values') {
+        // skip the values attribute, as it has already been processed into mem as existingValues
       } else if (attr.node.value.type === 'StringLiteral') {
         // take any string node as select option
         mem.defaults = `${mem.defaults} ${attr.node.name.name} {${attr.node.value.value}}`;
       } else if (attr.node.value.type === 'JSXExpressionContainer') {
         // convert any Trans component to select option extracting any values and components
-        const children = attr.node.value.expression.children;
+        const children = attr.node.value.expression.children || [];
         const thisTrans = processTrans(children, babel, componentStartIndex);
 
         mem.defaults = `${mem.defaults} ${attr.node.name.name} {${thisTrans.defaults}}`;
         mem.components = mem.components.concat(thisTrans.components);
-        mem.values = mem.values.concat(thisTrans.values);
 
         componentStartIndex += thisTrans.components.length;
       }
       return mem;
     },
-    { attributesToCopy: [], values: [], components: [], defaults: '' },
+    { attributesToCopy: [], values: existingValues, components: [], defaults: '' },
   );
 
   // replace the node with the new Trans
@@ -260,6 +271,17 @@ function processTrans(children, babel, componentStartIndex = 0) {
   return res;
 }
 
+// eslint-disable-next-line no-control-regex
+const leadingNewLineAndWhitespace = new RegExp('^\n\\s+', 'g');
+// eslint-disable-next-line no-control-regex
+const trailingNewLineAndWhitespace = new RegExp('\n\\s+$', 'g');
+function trimIndent(text) {
+  const newText = text
+    .replace(leadingNewLineAndWhitespace, '')
+    .replace(trailingNewLineAndWhitespace, '');
+  return newText;
+}
+
 function mergeChildren(children, babel, componentStartIndex = 0) {
   const t = babel.types;
   let componentFoundIndex = componentStartIndex;
@@ -267,8 +289,8 @@ function mergeChildren(children, babel, componentStartIndex = 0) {
   return children.reduce((mem, child) => {
     const ele = child.node ? child.node : child;
 
-    // add text
-    if (t.isJSXText(ele) && ele.value) mem += ele.value;
+    // add text, but trim indentation whitespace
+    if (t.isJSXText(ele) && ele.value) mem += trimIndent(ele.value);
     // add ?!? forgot
     if (ele.expression && ele.expression.value) mem += ele.expression.value;
     // add `{ val }`
@@ -329,14 +351,15 @@ function getComponents(children, babel) {
 
     if (t.isJSXElement(ele)) {
       const clone = t.clone(ele);
-      clone.children = clone.children.reduce((mem, child) => {
-        const ele = child.node ? child.node : child;
+      clone.children = clone.children.reduce((clonedMem, clonedChild) => {
+        const clonedEle = clonedChild.node ? clonedChild.node : clonedChild;
 
         // clean out invalid definitions by replacing `{ catchDate, date, short }` with `{ catchDate }`
-        if (ele.expression && ele.expression.expressions)
-          ele.expression.expressions = [ele.expression.expressions[0]];
+        if (clonedEle.expression && clonedEle.expression.expressions)
+          clonedEle.expression.expressions = [clonedEle.expression.expressions[0]];
 
-        mem.push(child);
+        clonedMem.push(clonedChild);
+        return clonedMem;
       }, []);
 
       mem.push(ele);
