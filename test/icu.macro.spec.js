@@ -154,5 +154,114 @@ pluginTester({
         $0={<Trans>You are <strong>#th in line</strong></Trans>}
       />
     `,
+
+    `
+      import React from 'react'
+      import { useTranslation } from 'react-i18next'
+      import { Plural, Select, SelectOrdinal, Trans } from '../icu.macro'
+      const Link = ({to, children}) => (<a href={to}>{children}</a>)
+      
+      export default function TestPage({count = 1}) {
+        const [t] = useTranslation()
+        const catchDate = Date.now()
+        const completion = 0.75
+        const gender = Math.random() < 0.5 ? 'female' : 'male'
+        return (
+          <>
+            {t('sample.text', 'Some sample text with {word} {gender} {count, number} {catchDate, date} {completion, number, percent}', {word: 'interpolation', gender, count, catchDate, completion})}
+            <Plural i18nKey="plural"
+              count={count}
+              values={{linkPath: "/item/" + count}}
+              $0={<Trans><Link to='/cart'>Your cart</Link> is <strong>empty</strong>.</Trans>}
+              one={<Trans>You have <strong># item</strong> in <Link to='/cart'>your cart</Link>.</Trans>}
+              other={<Trans>You have <strong># items</strong> in <Link to='/cart'>your cart</Link>.</Trans>}
+            />
+            <Select
+              i18nKey="select"
+              switch={gender}
+              female={<Trans>These are <Link to='/items'>her items</Link></Trans>}
+              male={<Trans>These are <Link to='/items'>his items</Link></Trans>}
+              other={<Trans>These are <Link to='/items'>their items</Link></Trans>}
+            />
+            <SelectOrdinal i18nKey="ordinal"
+              count={itemIndex+1}
+              values={{linkPath: "/item/" + itemIndex}}
+              one={<Trans>Your <Link to={linkPath}><strong>#st</strong> item</Link></Trans>}
+              two={<Trans>Your <Link to={linkPath}><strong>#nd</strong> item</Link></Trans>}
+              few={<Trans>Your <Link to={linkPath}><strong>#rd</strong> item</Link></Trans>}
+              other={<Trans>Your <Link to={linkPath}><strong>#th</strong> item</Link></Trans>}
+            />
+            <Trans i18nKey="percent" defaults="You&apos;ve completed <Link to='/tasks'>{completion, number, percent} of your tasks</Link>."/>
+            <Trans i18nKey="date" defaults="Caught on <Link to='/dest'>{ catchDate, date, short }</Link>!"/>
+            <SelectOrdinal
+              i18nKey="ordinal.prettier"
+              count={count}
+              values={{ linkPath: \`/item/\${count}\`, type: 'item', prop }}
+              one={
+                <Trans>
+                  Your{' '}
+                  <Link to={linkPath}>
+                    <strong>#st</strong> {type}
+                  </Link>
+                </Trans>
+              }
+              two={
+                <Trans>
+                  Your{' '}
+                  <Link to={linkPath}>
+                    <strong>#nd</strong> {type}
+                  </Link>
+                </Trans>
+              }
+              few={
+                <Trans>
+                  Your{' '}
+                  <Link to={linkPath}>
+                    <strong>#rd</strong> {type}
+                  </Link>
+                </Trans>
+              }
+              other={
+                <Trans>
+                  Your{' '}
+                  <Link to={linkPath}>
+                    <strong>#th</strong> {type}
+                  </Link>
+                </Trans>
+              }
+            />
+            <Select
+              i18nKey="select.expr.prettier"
+              switch={\`\${gender}Person\`}
+              values={{ linkPath: \`/users/\${number}\`, type: 'bugs' }}
+              malePerson={
+                <Trans>
+                  <Link to={linkPath}>
+                    <strong>He</strong>
+                  </Link>{' '}
+                  avoids {type}.
+                </Trans>
+              }
+              femalePerson={
+                <Trans>
+                  <Link to={linkPath}>
+                    <strong>She</strong>
+                  </Link>{' '}
+                  avoids {type}.
+                </Trans>
+              }
+              other={
+                <Trans>
+                  <Link to={linkPath}>
+                    <strong>They</strong>
+                  </Link>{' '}
+                  avoid {type}.
+                </Trans>
+              }
+            />
+          </>
+        )
+      }
+    `,
   ],
 });
