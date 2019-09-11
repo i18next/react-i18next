@@ -1,3 +1,7 @@
+### 10.12.4
+
+- ICU: Fixes macro to support count prop and expressions better [939](https://github.com/i18next/react-i18next/pull/939)
+
 ### 10.12.3
 
 - avoid conditional hook call in edge case (wrong setup) [935](https://github.com/i18next/react-i18next/pull/935)
