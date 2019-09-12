@@ -69,6 +69,7 @@ export function withSSR(): (
 export interface WithTranslation extends i18next.WithT {
   i18n: i18next.i18n;
   tReady: boolean;
+  T: FunctionComponent<TransProps>;
 }
 export function withTranslation(
   ns?: Namespace,
