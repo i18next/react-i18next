@@ -51,18 +51,17 @@ export function useTranslation(
 ): UseTranslationResponse;
 
 // Need to see usage to improve this
-export function withSSR(): (
-  WrappedComponent: React.ComponentClass<{}, any>,
+export function withSSR(): <Props>(
+  WrappedComponent: React.ComponentType<Props>,
 ) => {
   ({
     initialI18nStore,
     initialLanguage,
     ...rest
   }: {
-    [x: string]: any;
-    initialI18nStore: any;
-    initialLanguage: any;
-  }): React.ComponentElement<{}, React.Component<{}, any, any>>;
+    initialI18nStore: i18next.Resource;
+    initialLanguage: string;
+  } & Props): React.FunctionComponentElement<Props>;
   getInitialProps: (ctx: unknown) => Promise<any>;
 };
 
