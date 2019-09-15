@@ -7,8 +7,6 @@ export type Namespace = string | string[];
 
 export function setDefaults(options: i18next.ReactOptions): void;
 export function getDefaults(): i18next.ReactOptions;
-export function addUsedNamespaces(namespaces: Namespace[]): void;
-export function getUsedNamespaces(): string[];
 export function setI18n(instance: i18next.i18n): void;
 export function getI18n(): i18next.i18n;
 export const initReactI18next: i18next.ThirdPartyModule;
@@ -19,6 +17,17 @@ export function getInitialProps(): {
   };
   initialLanguage: string;
 };
+
+export interface ReportNamespaces {
+  addUsedNamespaces(namespaces: Namespace[]): void;
+  getUsedNamespaces(): string[];
+}
+
+declare module 'i18next' {
+  interface i18n {
+    reportNamespaces: ReportNamespaces;
+  }
+}
 
 export interface TransProps extends Partial<i18next.WithT> {
   children?: React.ReactNode;
