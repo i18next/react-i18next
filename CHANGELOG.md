@@ -1,3 +1,8 @@
+### 10.12.5
+
+- typescript: Update types for reportNamespaces [945](https://github.com/i18next/react-i18next/pull/945)
+- typescript: Improve withSSR type definition [943](https://github.com/i18next/react-i18next/pull/943)
+
 ### 10.12.4
 
 - ICU: Fixes macro to support count prop and expressions better [939](https://github.com/i18next/react-i18next/pull/939)
