@@ -707,9 +707,10 @@
       }
     };
 
-    var combinedTOpts = _objectSpread2({}, tOptions, {}, values, {}, interpolationOverride, {
+    var combinedTOpts = _objectSpread2({}, tOptions, {
+      count
+    }, values, {}, interpolationOverride, {
       defaultValue,
-      count,
       ns: namespaces
     });
 

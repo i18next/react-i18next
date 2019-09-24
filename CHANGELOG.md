@@ -1,3 +1,7 @@
+### 10.13.0
+
+- also use count from `values` object passed to Trans if passed - else use the one on props [947](https://github.com/i18next/react-i18next/pull/947)
+
 ### 10.12.5
 
 - typescript: Update types for reportNamespaces [945](https://github.com/i18next/react-i18next/pull/945)
