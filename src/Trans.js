@@ -234,10 +234,10 @@ export function Trans({
   const interpolationOverride = values ? {} : { interpolation: { prefix: '#$?', suffix: '?$#' } };
   const combinedTOpts = {
     ...tOptions,
+    count,
     ...values,
     ...interpolationOverride,
     defaultValue,
-    count,
     ns: namespaces,
   };
   const translation = key ? t(key, combinedTOpts) : defaultValue;
