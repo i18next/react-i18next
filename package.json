@@ -1,6 +1,6 @@
 {
   "name": "@solomid/react-i18next-fork",
-  "version": "10.13.0",
+  "version": "10.14.0",
   "description": "Internationalization for react done right. Using the i18next i18n ecosystem.",
   "main": "dist/commonjs/index.js",
   "types": "src/index.d.ts",
