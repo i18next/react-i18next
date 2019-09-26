@@ -870,9 +870,10 @@
     var {
       i18n: i18nFromProps
     } = props;
+    var ReactI18nContext = React.useContext(I18nContext);
     var {
       i18n: i18nFromContext
-    } = getHasUsedI18nextProvider() ? React.useContext(I18nContext) : {};
+    } = getHasUsedI18nextProvider() ? ReactI18nContext : {};
     var i18n = i18nFromProps || i18nFromContext || getI18n(); // opt out if is a cloned instance, eg. created by i18next-express-middleware on request
     // -> do not set initial stuff on server side
 
