@@ -4,7 +4,7 @@ import { getI18n, getHasUsedI18nextProvider, I18nContext } from './context';
 export function useSSR(initialI18nStore, initialLanguage, props = {}) {
   const { i18n: i18nFromProps } = props;
   const ReactI18nContext = useContext(I18nContext);
-  const { i18n: i18nFromContext } = getHasUsedI18nextProvider() ? ReactI18nContext : {};
+  const { i18n: i18nFromContext } = getHasUsedI18nextProvider() ? ReactI18nContext || {} : {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
 
   // opt out if is a cloned instance, eg. created by i18next-express-middleware on request

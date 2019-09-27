@@ -1,3 +1,7 @@
+### 10.13.1
+
+- avoid conditional hook call in edge case (was only issue in wrong setup useContext outside I18nextProvider) [951](https://github.com/i18next/react-i18next/pull/951)
+
 ### 10.13.0
 
 - also use count from `values` object passed to Trans if passed - else use the one on props [947](https://github.com/i18next/react-i18next/pull/947)
