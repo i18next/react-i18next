@@ -21,6 +21,10 @@ function MyComponentWithoutChildren() {
 function Page() {
   const { t, i18n } = useTranslation();
 
+  // ensure the i18n here is still exposing original type
+  const language = i18n.language;
+  i18n.languages.join(', ');
+
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
   };

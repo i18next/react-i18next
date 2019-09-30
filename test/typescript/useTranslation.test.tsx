@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import * as i18next from 'i18next';
 
 function defaultObjectUsage() {
   const { t, i18n } = useTranslation();
 
   // ensure the i18n here is still exposing original type
-  const language = i18next.language;
-  i18next.languages.join(', ');
+  const language = i18n.language;
+  i18n.languages.join(', ');
 
   return (
     <div>
