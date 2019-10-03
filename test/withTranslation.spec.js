@@ -12,6 +12,8 @@ describe('withTranslation', () => {
 
     return <div>{t('key1')}</div>;
   }
+  TestComponent.aStaticAttribute = 'aStaticAttribute';
+  TestComponent.aStaticMethod = () => 'aStaticMethod';
 
   it('should export wrapped component', () => {
     const HocElement = withTranslation()(TestComponent);
@@ -23,6 +25,14 @@ describe('withTranslation', () => {
     const wrapper = mount(<HocElement />);
     // console.log(wrapper.debug());
     expect(wrapper.contains(<div>test</div>)).toBe(true);
+  });
+
+  it('should pass over static attributes and methods', () => {
+    const HocElement = withTranslation()(TestComponent);
+    expect(HocElement).toHaveProperty('aStaticAttribute', 'aStaticAttribute');
+    expect(HocElement).toHaveProperty('aStaticMethod');
+    ``;
+    expect(HocElement.aStaticMethod()).toBe('aStaticMethod');
   });
 
   it('should has ref', () => {

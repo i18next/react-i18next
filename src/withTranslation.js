@@ -1,4 +1,5 @@
 import React from 'react';
+import hoistNonReactStatics from 'hoist-non-react-statics';
 import { useTranslation } from './useTranslation';
 import { getDisplayName } from './utils';
 
@@ -25,6 +26,9 @@ export function withTranslation(ns, options = {}) {
 
     I18nextWithTranslation.WrappedComponent = WrappedComponent;
 
-    return options.withRef ? React.forwardRef(I18nextWithTranslation) : I18nextWithTranslation;
+    return hoistNonReactStatics(
+      options.withRef ? React.forwardRef(I18nextWithTranslation) : I18nextWithTranslation,
+      WrappedComponent,
+    );
   };
 }
