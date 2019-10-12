@@ -99,7 +99,7 @@
     "test:watch": "cross-env BABEL_ENV=development jest --no-cache --watch",
     "test:coverage": "cross-env BABEL_ENV=development jest --no-cache --coverage",
     "test:coverageOldEnzymeAdapter": "enzyme-adapter-react-install 16 && cross-env BABEL_ENV=development jest --no-cache --coverage",
-    "test:lint": "./node_modules/.bin/eslint ./src",
+    "test:lint": "eslint ./src ./test",
     "test:typescript": "tslint --project tsconfig.json",
     "test:typescript:noninterop": "tslint --project tsconfig.nonEsModuleInterop.json",
     "contributors:add": "all-contributors add",
