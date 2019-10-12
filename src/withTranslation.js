@@ -4,17 +4,17 @@ import { getDisplayName } from './utils';
 
 export function withTranslation(ns, options = {}) {
   return function Extend(WrappedComponent) {
-    function I18nextWithTranslation(props, ref) {
-      const [t, i18n, ready] = useTranslation(ns, props);
+    function I18nextWithTranslation({ forwardedRef, ...rest }) {
+      const [t, i18n, ready] = useTranslation(ns, rest);
 
       const passDownProps = {
-        ...props,
+        ...rest,
         t,
         i18n,
         tReady: ready,
       };
-      if (options.withRef && ref) {
-        passDownProps.ref = ref;
+      if (options.withRef && forwardedRef) {
+        passDownProps.ref = forwardedRef;
       }
       return React.createElement(WrappedComponent, passDownProps);
     }
@@ -25,6 +25,8 @@ export function withTranslation(ns, options = {}) {
 
     I18nextWithTranslation.WrappedComponent = WrappedComponent;
 
-    return options.withRef ? React.forwardRef(I18nextWithTranslation) : I18nextWithTranslation;
+    return options.withRef
+      ? React.forwardRef((props, ref) => <I18nextWithTranslation {...props} forwardedRef={ref} />)
+      : I18nextWithTranslation;
   };
 }

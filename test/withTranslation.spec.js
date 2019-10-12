@@ -6,11 +6,14 @@ import { withTranslation } from '../src/withTranslation';
 jest.unmock('../src/withTranslation');
 
 describe('withTranslation', () => {
-  function TestComponent({ t, i18n: instance }) {
-    expect(typeof t).toBe('function');
-    expect(instance).toBe(i18n);
+  class TestComponent extends React.Component {
+    render() {
+      const { t, i18n: instance } = this.props;
+      expect(typeof t).toBe('function');
+      expect(instance).toBe(i18n);
 
-    return <div>{t('key1')}</div>;
+      return <div>{t('key1')}</div>;
+    }
   }
 
   it('should export wrapped component', () => {
