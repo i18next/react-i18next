@@ -30,7 +30,7 @@ describe('useTranslation', () => {
   }
 
   it('should render correct content if ready (having all ns)', () => {
-    const wrapper = mount(<TestComponent />, {});
+    mount(<TestComponent />, {});
     // console.log(wrapper.debug());
     expect(i18n.reportNamespaces.getUsedNamespaces()).toEqual(['ns1', 'ns2', 'ns3']);
   });

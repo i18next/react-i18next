@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from './useTranslation';
 
 export function Translation(props) {

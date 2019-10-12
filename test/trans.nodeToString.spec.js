@@ -1,4 +1,3 @@
-import React from 'react';
 import { nodesToString } from '../src/Trans';
 
 describe('trans nodeToString', () => {
