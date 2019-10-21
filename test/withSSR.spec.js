@@ -33,11 +33,11 @@ const mockI18n = {
 
 describe('withSSR', () => {
   function TestComponent() {
-    const { t } = useTranslation('ns1');
+    useTranslation('ns1');
     return <div>SSR</div>;
   }
 
-  TestComponent.getInitialProps = async ctx => ({ foo: 'bar' });
+  TestComponent.getInitialProps = async () => ({ foo: 'bar' });
 
   beforeAll(() => {
     setI18n(mockI18n);

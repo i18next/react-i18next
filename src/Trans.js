@@ -17,18 +17,22 @@ function hasValidReactChildren(children) {
   return children.every(child => React.isValidElement(child));
 }
 
-export function nodesToString(mem, children, index, i18nOptions) {
+function getAsArray(data) {
+  return Array.isArray(data) ? data : [data];
+}
+
+export function nodesToString(startingString, children, index, i18nOptions) {
   if (!children) return '';
-  if (Object.prototype.toString.call(children) !== '[object Array]') children = [children];
+  let stringNode = startingString;
+
+  const childrenArray = getAsArray(children);
   const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
 
-  children.forEach((child, i) => {
-    // const isElement = React.isValidElement(child);
-    // const elementKey = `${index !== 0 ? index + '-' : ''}${i}:${typeof child.type === 'function' ? child.type.name : child.type || 'var'}`;
+  childrenArray.forEach((child, i) => {
     const elementKey = `${i}`;
 
     if (typeof child === 'string') {
-      mem = `${mem}${child}`;
+      stringNode = `${stringNode}${child}`;
     } else if (hasChildren(child)) {
       const elementTag =
         keepArray.indexOf(child.type) > -1 &&
@@ -40,10 +44,10 @@ export function nodesToString(mem, children, index, i18nOptions) {
       if (child.props && child.props.i18nIsDynamicList) {
         // we got a dynamic list like "<ul>{['a', 'b'].map(item => ( <li key={item}>{item}</li> ))}</ul>""
         // the result should be "<0></0>" and not "<0><0>a</0><1>b</1></0>"
-        mem = `${mem}<${elementTag}></${elementTag}>`;
+        stringNode = `${stringNode}<${elementTag}></${elementTag}>`;
       } else {
         // regular case mapping the inner children
-        mem = `${mem}<${elementTag}>${nodesToString(
+        stringNode = `${stringNode}<${elementTag}>${nodesToString(
           '',
           getChildren(child),
           i + 1,
@@ -52,9 +56,9 @@ export function nodesToString(mem, children, index, i18nOptions) {
       }
     } else if (React.isValidElement(child)) {
       if (keepArray.indexOf(child.type) > -1 && Object.keys(child.props).length === 0) {
-        mem = `${mem}<${child.type}/>`;
+        stringNode = `${stringNode}<${child.type}/>`;
       } else {
-        mem = `${mem}<${elementKey}></${elementKey}>`;
+        stringNode = `${stringNode}<${elementKey}></${elementKey}>`;
       }
     } else if (typeof child === 'object') {
       const clone = { ...child };
@@ -63,9 +67,9 @@ export function nodesToString(mem, children, index, i18nOptions) {
 
       const keys = Object.keys(clone);
       if (format && keys.length === 1) {
-        mem = `${mem}{{${keys[0]}, ${format}}}`;
+        stringNode = `${stringNode}{{${keys[0]}, ${format}}}`;
       } else if (keys.length === 1) {
-        mem = `${mem}{{${keys[0]}}}`;
+        stringNode = `${stringNode}{{${keys[0]}}}`;
       } else {
         // not a valid interpolation object (can only contain one value plus format)
         warn(
@@ -81,7 +85,7 @@ export function nodesToString(mem, children, index, i18nOptions) {
     }
   });
 
-  return mem;
+  return stringNode;
 }
 
 function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
@@ -97,17 +101,21 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
 
   // v2 -> interpolates upfront no need for "some <0>{{var}}</0>"" -> will be just "some {{var}}" in translation file
   const data = {};
+
   function getData(childs) {
-    if (Object.prototype.toString.call(childs) !== '[object Array]') childs = [childs];
-    childs.forEach(child => {
+    const childrenArray = getAsArray(childs);
+
+    childrenArray.forEach(child => {
       if (typeof child === 'string') return;
       if (hasChildren(child)) getData(getChildren(child));
       else if (typeof child === 'object' && !React.isValidElement(child))
         Object.assign(data, child);
     });
   }
+
   getData(children);
-  targetString = i18n.services.interpolator.interpolate(
+
+  const interpolatedString = i18n.services.interpolator.interpolate(
     targetString,
     { ...data, ...combinedTOpts },
     i18n.language,
@@ -115,11 +123,11 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
 
   // parse ast from string with additional wrapper tag
   // -> avoids issues in parser removing prepending text nodes
-  const ast = HTML.parse(`<0>${targetString}</0>`);
+  const ast = HTML.parse(`<0>${interpolatedString}</0>`);
 
-  function mapAST(reactNodes, astNodes) {
-    if (Object.prototype.toString.call(reactNodes) !== '[object Array]') reactNodes = [reactNodes];
-    if (Object.prototype.toString.call(astNodes) !== '[object Array]') astNodes = [astNodes];
+  function mapAST(reactNode, astNode) {
+    const reactNodes = getAsArray(reactNode);
+    const astNodes = getAsArray(astNode);
 
     return astNodes.reduce((mem, node, i) => {
       const translationContent = node.children && node.children[0] && node.children[0].content;
@@ -148,7 +156,7 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
           // so we just need to map the inner stuff
           const inner = mapAST(reactNodes /* wrong but we need something */, node.children);
           mem.push(React.cloneElement(child, { ...child.props, key: i }, inner));
-        } else if (isNaN(node.name)) {
+        } else if (Number.isNaN(parseFloat(node.name))) {
           if (i18nOptions.transSupportBasicHtmlNodes && keepArray.indexOf(node.name) > -1) {
             if (node.voidElement) {
               mem.push(React.createElement(node.name, { key: `${node.name}-${i}` }));

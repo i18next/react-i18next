@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import i18n from './i18n';
+import './i18n';
 import { Translation } from '../src/Translation';
 
 jest.unmock('../src/Translation');

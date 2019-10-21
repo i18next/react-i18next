@@ -31,7 +31,7 @@ describe('withTranslation', () => {
   it('should has ref', () => {
     const HocElement = withTranslation('translation', { withRef: true })(TestComponent);
     const hocRef = React.createRef();
-    const parentWrapper = mount(<HocElement ref={hocRef} />);
+    mount(<HocElement ref={hocRef} />);
     expect(hocRef.current).not.toBeNull();
   });
 });

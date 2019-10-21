@@ -1,6 +1,5 @@
 import React from 'react';
-import { shallow, render, mount } from 'enzyme';
-import ifReact from 'enzyme-adapter-react-helper/build/ifReact';
+import { mount } from 'enzyme';
 import i18n from './i18n';
 import { withTranslation } from '../src/withTranslation';
 import { Trans } from '../src/Trans';
@@ -10,15 +9,11 @@ function Link({ to, children }) {
 }
 
 describe('trans simple', () => {
-  const TestElement = ({ t, parent }) => {
-    const count = 10;
-    const name = 'Jan';
-    return (
-      <Trans i18nKey="transTest1" parent={parent}>
-        Open <Link to="/msgs">here</Link>.
-      </Trans>
-    );
-  };
+  const TestElement = ({ parent }) => (
+    <Trans i18nKey="transTest1" parent={parent}>
+      Open <Link to="/msgs">here</Link>.
+    </Trans>
+  );
 
   it('should render correct content', () => {
     const wrapper = mount(<TestElement />);
@@ -76,7 +71,7 @@ describe('trans simple', () => {
 });
 
 describe('trans simple using ns prop', () => {
-  const TestElement = ({ t, parent }) => (
+  const TestElement = ({ parent }) => (
     <Trans i18nKey="transTest1" ns="other" parent={parent}>
       Open <Link to="/msgs">here</Link>.
     </Trans>
@@ -96,19 +91,15 @@ describe('trans simple using ns prop', () => {
 });
 
 describe('trans simple with custom html tag', () => {
-  const TestElement = ({ t, parent }) => (
+  const TestElement = ({ parent }) => (
     <Trans i18nKey="transTest1_customHtml" parent={parent}>
       Open <Link to="/msgs">here</Link>.
     </Trans>
   );
 
-  const TestElement2 = ({ t, parent }) => (
-    <Trans i18nKey="transTest1_customHtml2" parent={parent} />
-  );
+  const TestElement2 = ({ parent }) => <Trans i18nKey="transTest1_customHtml2" parent={parent} />;
 
-  const TestElement3 = ({ t, parent }) => (
-    <Trans i18nKey="transTest1_customHtml3" parent={parent} />
-  );
+  const TestElement3 = ({ parent }) => <Trans i18nKey="transTest1_customHtml3" parent={parent} />;
 
   it('should not skip custom html tags', () => {
     const wrapper = mount(<TestElement />);
@@ -150,7 +141,7 @@ describe('trans simple with custom html tag', () => {
 });
 
 describe('trans testTransKey1 singular', () => {
-  const TestElement = ({ t }) => {
+  const TestElement = () => {
     const numOfItems = 1;
     return (
       <Trans i18nKey="testTransKey1" count={numOfItems}>
@@ -167,7 +158,7 @@ describe('trans testTransKey1 singular', () => {
 });
 
 describe('trans testTransKey1 plural', () => {
-  const TestElement = ({ t }) => {
+  const TestElement = () => {
     const numOfItems = 10;
     return (
       <Trans i18nKey="testTransKey1" count={numOfItems}>
@@ -184,7 +175,7 @@ describe('trans testTransKey1 plural', () => {
 });
 
 describe('trans testTransKey2', () => {
-  const TestElement = ({ t }) => {
+  const TestElement = () => {
     const numOfItems = 10;
     return (
       <Trans i18nKey="testTransKey2" count={numOfItems}>
@@ -207,7 +198,7 @@ describe('trans testTransKey2', () => {
 });
 
 describe('trans testTransKey3', () => {
-  const TestElement = ({ t }) => {
+  const TestElement = () => {
     const numOfItems = 10;
     return (
       <Trans i18nKey="testTransKey3" count={numOfItems}>
@@ -230,7 +221,7 @@ describe('trans testTransKey3', () => {
 });
 
 describe('trans complex', () => {
-  const TestElement = ({ t }) => {
+  const TestElement = () => {
     const count = 10;
     const name = 'Jan';
     // prettier-ignore
@@ -255,7 +246,7 @@ describe('trans complex', () => {
 });
 
 describe('trans complex - count only in props', () => {
-  const TestElement = ({ t }) => {
+  const TestElement = () => {
     const count = 10;
     const name = 'Jan';
     // prettier-ignore
@@ -280,7 +271,7 @@ describe('trans complex - count only in props', () => {
 });
 
 describe('trans complex v2 no extra pseudo elements for interpolation', () => {
-  const TestElement = ({ t }) => {
+  const TestElement = () => {
     const count = 10;
     const name = 'Jan';
     // prettier-ignore
