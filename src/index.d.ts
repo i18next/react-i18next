@@ -40,6 +40,7 @@ export interface TransProps extends Partial<i18next.WithT> {
   parent?: React.ReactNode;
   tOptions?: {};
   values?: {};
+  t?: i18next.TFunction;
 }
 export function Trans(props: TransProps): any;
 
