@@ -1,3 +1,10 @@
+### 11.0.0
+
+- **Breaking** based on i18next changes made in [v18.0.0](https://github.com/i18next/i18next/blob/master/CHANGELOG.md#1800) changing the language should not trigger a Suspense anylonger. The state will be ready and `t` bound to the previous language until `languageChanged` get triggered -> this results in a nicer experience for users (no flickering Suspense while changing the language). Based on issue "Suspence is fired during lang change when useTranslation called in between" [975](https://github.com/i18next/react-i18next/issues/975)
+- the default bindI18n is now `languageChanged` and `languageChanging` was removed from that default
+- Adding `languageChanging` to bindI18n will bring back old behaviour where a language change will trigger a Suspense / ready: false while loading those new translations
+- You can now override the defaults in i18next.options.react for `bindI18n`, `bindI18nStore` and `useSuspense` in the hook by `useTranslation(ns, { bindI18n, bindI18nStore, useSuspense})` or in the HOC by passing those as props.
+
 ### 10.13.2
 
 - typescript: Add t function to TransProps types [969](https://github.com/i18next/react-i18next/pull/969)

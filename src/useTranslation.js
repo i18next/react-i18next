@@ -25,8 +25,9 @@ export function useTranslation(ns, props = {}) {
     retNotReady.ready = false;
     return retNotReady;
   }
-  const i18nOptions = { ...getDefaults(), ...i18n.options.react };
-  const { useSuspense = i18nOptions.useSuspense } = props;
+
+  const i18nOptions = { ...getDefaults(), ...i18n.options.react, ...props };
+  const { useSuspense } = i18nOptions;
 
   // prepare having a namespace
   let namespaces = ns || defaultNSFromContext || (i18n.options && i18n.options.defaultNS);
@@ -38,7 +39,7 @@ export function useTranslation(ns, props = {}) {
   // are we ready? yes if all namespaces in first language are loaded already (either with data or empty object on failed load)
   const ready =
     (i18n.isInitialized || i18n.initializedStoreOnce) &&
-    namespaces.every(n => hasLoadedNamespace(n, i18n));
+    namespaces.every(n => hasLoadedNamespace(n, i18n, i18nOptions));
 
   // binding t function to namespace (acts also as rerender trigger)
   function getT() {

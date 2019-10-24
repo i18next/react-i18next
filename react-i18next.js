@@ -326,7 +326,7 @@
   };
 
   var defaultOptions = {
-    bindI18n: 'languageChanging languageChanged',
+    bindI18n: 'languageChanged',
     bindI18nStore: '',
     // nsMode: 'fallback' // loop through all namespaces given to hook, HOC, render prop for key lookup
     transEmptyNodeValue: '',
@@ -468,6 +468,8 @@
     });
   }
   function hasLoadedNamespace(ns, i18n) {
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
     if (!i18n.languages || !i18n.languages.length) {
       warnOnce('i18n.languages were undefined or empty', i18n.languages);
       return true;
@@ -482,8 +484,12 @@
     var loadNotPending = (l, n) => {
       var loadState = i18n.services.backendConnector.state["".concat(l, "|").concat(n)];
       return loadState === -1 || loadState === 2;
-    }; // loaded -> SUCCESS
+    }; // bound to trigger on event languageChanging
+    // so set ready to false while we are changing the language
+    // and namespace pending (depends on having a backend)
 
+
+    if (options.bindI18n && options.bindI18n.indexOf('languageChanging') > -1 && i18n.services.backendConnector.backend && i18n.isLanguageChangingTo && !loadNotPending(i18n.isLanguageChangingTo, ns)) return false; // loaded -> SUCCESS
 
     if (i18n.hasResourceBundle(lng, ns)) return true; // were not loading at all -> SEMI SUCCESS
 
@@ -765,18 +771,18 @@
       return retNotReady;
     }
 
-    var i18nOptions = _objectSpread2({}, getDefaults(), {}, i18n.options.react);
+    var i18nOptions = _objectSpread2({}, getDefaults(), {}, i18n.options.react, {}, props);
 
     var {
-      useSuspense = i18nOptions.useSuspense
-    } = props; // prepare having a namespace
+      useSuspense
+    } = i18nOptions; // prepare having a namespace
 
     var namespaces = ns || defaultNSFromContext || i18n.options && i18n.options.defaultNS;
     namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation']; // report namespaces as used
 
     if (i18n.reportNamespaces.addUsedNamespaces) i18n.reportNamespaces.addUsedNamespaces(namespaces); // are we ready? yes if all namespaces in first language are loaded already (either with data or empty object on failed load)
 
-    var ready = (i18n.isInitialized || i18n.initializedStoreOnce) && namespaces.every(n => hasLoadedNamespace(n, i18n)); // binding t function to namespace (acts also as rerender trigger)
+    var ready = (i18n.isInitialized || i18n.initializedStoreOnce) && namespaces.every(n => hasLoadedNamespace(n, i18n, i18nOptions)); // binding t function to namespace (acts also as rerender trigger)
 
     function getT() {
       return {

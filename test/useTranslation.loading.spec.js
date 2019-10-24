@@ -56,7 +56,7 @@ describe('useTranslation loading ns', () => {
     });
   });
 
-  const TestElement = ({ useSuspense = undefined }) => {
+  const TestElement = ({ useSuspense = true }) => {
     const [t] = useTranslation('common', { i18n: newI18n, useSuspense });
     return <div>{t('key1')}</div>;
   };

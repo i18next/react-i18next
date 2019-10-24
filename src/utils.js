@@ -40,7 +40,7 @@ export function loadNamespaces(i18n, ns, cb) {
   });
 }
 
-export function hasLoadedNamespace(ns, i18n) {
+export function hasLoadedNamespace(ns, i18n, options = {}) {
   if (!i18n.languages || !i18n.languages.length) {
     warnOnce('i18n.languages were undefined or empty', i18n.languages);
     return true;
@@ -57,6 +57,18 @@ export function hasLoadedNamespace(ns, i18n) {
     const loadState = i18n.services.backendConnector.state[`${l}|${n}`];
     return loadState === -1 || loadState === 2;
   };
+
+  // bound to trigger on event languageChanging
+  // so set ready to false while we are changing the language
+  // and namespace pending (depends on having a backend)
+  if (
+    options.bindI18n &&
+    options.bindI18n.indexOf('languageChanging') > -1 &&
+    i18n.services.backendConnector.backend &&
+    i18n.isLanguageChangingTo &&
+    !loadNotPending(i18n.isLanguageChangingTo, ns)
+  )
+    return false;
 
   // loaded -> SUCCESS
   if (i18n.hasResourceBundle(lng, ns)) return true;
