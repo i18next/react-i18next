@@ -1,3 +1,8 @@
+### 10.13.2
+
+- typescript: Add t function to TransProps types [969](https://github.com/i18next/react-i18next/pull/969)
+- lint: Fix linter errors [966](https://github.com/i18next/react-i18next/pull/966)
+
 ### 10.13.1
 
 - avoid conditional hook call in edge case (was only issue in wrong setup useContext outside I18nextProvider) [951](https://github.com/i18next/react-i18next/pull/951)

@@ -21,6 +21,24 @@
     return obj;
   }
 
+  function _extends() {
+    _extends = Object.assign || function (target) {
+      for (var i = 1; i < arguments.length; i++) {
+        var source = arguments[i];
+
+        for (var key in source) {
+          if (Object.prototype.hasOwnProperty.call(source, key)) {
+            target[key] = source[key];
+          }
+        }
+      }
+
+      return target;
+    };
+
+    return _extends.apply(this, arguments);
+  }
+
   function ownKeys(object, enumerableOnly) {
     var keys = Object.keys(object);
 
@@ -492,33 +510,36 @@
     return children.every(child => React__default.isValidElement(child));
   }
 
-  function nodesToString(mem, children, index, i18nOptions) {
+  function getAsArray(data) {
+    return Array.isArray(data) ? data : [data];
+  }
+
+  function nodesToString(startingString, children, index, i18nOptions) {
     if (!children) return '';
-    if (Object.prototype.toString.call(children) !== '[object Array]') children = [children];
+    var stringNode = startingString;
+    var childrenArray = getAsArray(children);
     var keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
-    children.forEach((child, i) => {
-      // const isElement = React.isValidElement(child);
-      // const elementKey = `${index !== 0 ? index + '-' : ''}${i}:${typeof child.type === 'function' ? child.type.name : child.type || 'var'}`;
+    childrenArray.forEach((child, i) => {
       var elementKey = "".concat(i);
 
       if (typeof child === 'string') {
-        mem = "".concat(mem).concat(child);
+        stringNode = "".concat(stringNode).concat(child);
       } else if (hasChildren(child)) {
         var elementTag = keepArray.indexOf(child.type) > -1 && Object.keys(child.props).length === 1 && typeof hasChildren(child) === 'string' ? child.type : elementKey;
 
         if (child.props && child.props.i18nIsDynamicList) {
           // we got a dynamic list like "<ul>{['a', 'b'].map(item => ( <li key={item}>{item}</li> ))}</ul>""
           // the result should be "<0></0>" and not "<0><0>a</0><1>b</1></0>"
-          mem = "".concat(mem, "<").concat(elementTag, "></").concat(elementTag, ">");
+          stringNode = "".concat(stringNode, "<").concat(elementTag, "></").concat(elementTag, ">");
         } else {
           // regular case mapping the inner children
-          mem = "".concat(mem, "<").concat(elementTag, ">").concat(nodesToString('', getChildren(child), i + 1, i18nOptions), "</").concat(elementTag, ">");
+          stringNode = "".concat(stringNode, "<").concat(elementTag, ">").concat(nodesToString('', getChildren(child), i + 1, i18nOptions), "</").concat(elementTag, ">");
         }
       } else if (React__default.isValidElement(child)) {
         if (keepArray.indexOf(child.type) > -1 && Object.keys(child.props).length === 0) {
-          mem = "".concat(mem, "<").concat(child.type, "/>");
+          stringNode = "".concat(stringNode, "<").concat(child.type, "/>");
         } else {
-          mem = "".concat(mem, "<").concat(elementKey, "></").concat(elementKey, ">");
+          stringNode = "".concat(stringNode, "<").concat(elementKey, "></").concat(elementKey, ">");
         }
       } else if (typeof child === 'object') {
         var clone = _objectSpread2({}, child);
@@ -530,9 +551,9 @@
         var keys = Object.keys(clone);
 
         if (format && keys.length === 1) {
-          mem = "".concat(mem, "{{").concat(keys[0], ", ").concat(format, "}}");
+          stringNode = "".concat(stringNode, "{{").concat(keys[0], ", ").concat(format, "}}");
         } else if (keys.length === 1) {
-          mem = "".concat(mem, "{{").concat(keys[0], "}}");
+          stringNode = "".concat(stringNode, "{{").concat(keys[0], "}}");
         } else {
           // not a valid interpolation object (can only contain one value plus format)
           warn("react-i18next: the passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.", child);
@@ -541,7 +562,7 @@
         warn("Trans: the passed in value is invalid - seems you passed in a variable like {number} - please pass in variables for interpolation as full objects like {{number}}.", child);
       }
     });
-    return mem;
+    return stringNode;
   }
 
   function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
@@ -555,22 +576,22 @@
     var data = {};
 
     function getData(childs) {
-      if (Object.prototype.toString.call(childs) !== '[object Array]') childs = [childs];
-      childs.forEach(child => {
+      var childrenArray = getAsArray(childs);
+      childrenArray.forEach(child => {
         if (typeof child === 'string') return;
         if (hasChildren(child)) getData(getChildren(child));else if (typeof child === 'object' && !React__default.isValidElement(child)) Object.assign(data, child);
       });
     }
 
     getData(children);
-    targetString = i18n.services.interpolator.interpolate(targetString, _objectSpread2({}, data, {}, combinedTOpts), i18n.language); // parse ast from string with additional wrapper tag
+    var interpolatedString = i18n.services.interpolator.interpolate(targetString, _objectSpread2({}, data, {}, combinedTOpts), i18n.language); // parse ast from string with additional wrapper tag
     // -> avoids issues in parser removing prepending text nodes
 
-    var ast = htmlParseStringify2.parse("<0>".concat(targetString, "</0>"));
+    var ast = htmlParseStringify2.parse("<0>".concat(interpolatedString, "</0>"));
 
-    function mapAST(reactNodes, astNodes) {
-      if (Object.prototype.toString.call(reactNodes) !== '[object Array]') reactNodes = [reactNodes];
-      if (Object.prototype.toString.call(astNodes) !== '[object Array]') astNodes = [astNodes];
+    function mapAST(reactNode, astNode) {
+      var reactNodes = getAsArray(reactNode);
+      var astNodes = getAsArray(astNode);
       return astNodes.reduce((mem, node, i) => {
         var translationContent = node.children && node.children[0] && node.children[0].content;
 
@@ -600,7 +621,7 @@
             mem.push(React__default.cloneElement(child, _objectSpread2({}, child.props, {
               key: i
             }), _inner));
-          } else if (isNaN(node.name)) {
+          } else if (Number.isNaN(parseFloat(node.name))) {
             if (i18nOptions.transSupportBasicHtmlNodes && keepArray.indexOf(node.name) > -1) {
               if (node.voidElement) {
                 mem.push(React__default.createElement(node.name, {
@@ -814,17 +835,22 @@
   function withTranslation(ns) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     return function Extend(WrappedComponent) {
-      function I18nextWithTranslation(props, ref) {
-        var [t, i18n, ready] = useTranslation(ns, props);
+      function I18nextWithTranslation(_ref) {
+        var {
+          forwardedRef
+        } = _ref,
+            rest = _objectWithoutProperties(_ref, ["forwardedRef"]);
 
-        var passDownProps = _objectSpread2({}, props, {
+        var [t, i18n, ready] = useTranslation(ns, rest);
+
+        var passDownProps = _objectSpread2({}, rest, {
           t,
           i18n,
           tReady: ready
         });
 
-        if (options.withRef && ref) {
-          passDownProps.ref = ref;
+        if (options.withRef && forwardedRef) {
+          passDownProps.ref = forwardedRef;
         }
 
         return React__default.createElement(WrappedComponent, passDownProps);
@@ -832,7 +858,12 @@
 
       I18nextWithTranslation.displayName = "withI18nextTranslation(".concat(getDisplayName(WrappedComponent), ")");
       I18nextWithTranslation.WrappedComponent = WrappedComponent;
-      return options.withRef ? React__default.forwardRef(I18nextWithTranslation) : I18nextWithTranslation;
+
+      var forwardRef = (props, ref) => React__default.createElement(I18nextWithTranslation, _extends({}, props, {
+        forwardedRef: ref
+      }));
+
+      return options.withRef ? React__default.forwardRef(forwardRef) : I18nextWithTranslation;
     };
   }
 
