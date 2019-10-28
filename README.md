@@ -136,9 +136,19 @@ $ npm install react-i18next
 Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore -->
-| [<img src="https://avatars3.githubusercontent.com/u/977772?v=4" width="100px;"/><br /><sub><b>Jan Mühlemann</b></sub>](http://twitter.com/jamuhl)<br />[💻](https://github.com/i18next/react-i18next/commits?author=jamuhl "Code") [💡](#example-jamuhl "Examples") [📖](https://github.com/i18next/react-i18next/commits?author=jamuhl "Documentation") [💬](#question-jamuhl "Answering Questions") | [<img src="https://avatars0.githubusercontent.com/u/1086194?v=4" width="100px;"/><br /><sub><b>Adriano Raiano</b></sub>](http://twitter.com/#!/adrirai)<br />[💻](https://github.com/i18next/react-i18next/commits?author=adrai "Code") [💡](#example-adrai "Examples") [📖](https://github.com/i18next/react-i18next/commits?author=adrai "Documentation") [💬](#question-adrai "Answering Questions") | [<img src="https://avatars1.githubusercontent.com/u/10575782?v=4" width="100px;"/><br /><sub><b>Isaac Hinman</b></sub>](https://isaachinman.com)<br />[💻](https://github.com/i18next/react-i18next/commits?author=isaachinman "Code") [💡](#example-isaachinman "Examples") [💬](#question-isaachinman "Answering Questions") | [<img src="https://avatars1.githubusercontent.com/u/136564?v=4" width="100px;"/><br /><sub><b>Kevin Ross</b></sub>](http://www.alienfast.com)<br />[💬](#question-rosskevin "Answering Questions") [💻](https://github.com/i18next/react-i18next/commits?author=rosskevin "Code") | [<img src="https://avatars0.githubusercontent.com/u/7825467?v=4" width="100px;"/><br /><sub><b>Matheus Schettino</b></sub>](https://github.com/schettino)<br />[💻](https://github.com/i18next/react-i18next/commits?author=schettino "Code") [💬](#question-schettino "Answering Questions") |
-| :---: | :---: | :---: | :---: | :---: |
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="http://twitter.com/jamuhl"><img src="https://avatars3.githubusercontent.com/u/977772?v=4" width="100px;" alt="Jan Mühlemann"/><br /><sub><b>Jan Mühlemann</b></sub></a><br /><a href="https://github.com/i18next/react-i18next/commits?author=jamuhl" title="Code">💻</a> <a href="#example-jamuhl" title="Examples">💡</a> <a href="https://github.com/i18next/react-i18next/commits?author=jamuhl" title="Documentation">📖</a> <a href="#question-jamuhl" title="Answering Questions">💬</a></td>
+    <td align="center"><a href="http://twitter.com/#!/adrirai"><img src="https://avatars0.githubusercontent.com/u/1086194?v=4" width="100px;" alt="Adriano Raiano"/><br /><sub><b>Adriano Raiano</b></sub></a><br /><a href="https://github.com/i18next/react-i18next/commits?author=adrai" title="Code">💻</a> <a href="#example-adrai" title="Examples">💡</a> <a href="https://github.com/i18next/react-i18next/commits?author=adrai" title="Documentation">📖</a> <a href="#question-adrai" title="Answering Questions">💬</a></td>
+    <td align="center"><a href="https://isaachinman.com"><img src="https://avatars1.githubusercontent.com/u/10575782?v=4" width="100px;" alt="Isaac Hinman"/><br /><sub><b>Isaac Hinman</b></sub></a><br /><a href="https://github.com/i18next/react-i18next/commits?author=isaachinman" title="Code">💻</a> <a href="#example-isaachinman" title="Examples">💡</a> <a href="#question-isaachinman" title="Answering Questions">💬</a></td>
+    <td align="center"><a href="http://www.alienfast.com"><img src="https://avatars1.githubusercontent.com/u/136564?v=4" width="100px;" alt="Kevin Ross"/><br /><sub><b>Kevin Ross</b></sub></a><br /><a href="#question-rosskevin" title="Answering Questions">💬</a> <a href="https://github.com/i18next/react-i18next/commits?author=rosskevin" title="Code">💻</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
