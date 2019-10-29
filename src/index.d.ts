@@ -1,15 +1,15 @@
-import * as i18next from 'i18next';
+import i18next, { ReactOptions, i18n, ThirdPartyModule, WithT, TFunction, Resource } from 'i18next';
 import * as React from 'react';
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
 export type Namespace = string | string[];
 
-export function setDefaults(options: i18next.ReactOptions): void;
-export function getDefaults(): i18next.ReactOptions;
-export function setI18n(instance: i18next.i18n): void;
-export function getI18n(): i18next.i18n;
-export const initReactI18next: i18next.ThirdPartyModule;
+export function setDefaults(options: ReactOptions): void;
+export function getDefaults(): ReactOptions;
+export function setI18n(instance: i18n): void;
+export function getI18n(): i18n;
+export const initReactI18next: ThirdPartyModule;
 export function composeInitialProps(ForComponent: any): (ctx: unknown) => Promise<any>;
 export function getInitialProps(): {
   initialI18nStore: {
@@ -29,30 +29,30 @@ declare module 'i18next' {
   }
 }
 
-export interface TransProps extends Partial<i18next.WithT> {
+export interface TransProps extends Partial<WithT> {
   children?: React.ReactNode;
   components?: React.ReactNode[];
   count?: number;
   defaults?: string;
-  i18n?: i18next.i18n;
+  i18n?: i18n;
   i18nKey?: string;
   ns?: Namespace;
   parent?: React.ReactNode;
   tOptions?: {};
   values?: {};
-  t?: i18next.TFunction;
+  t?: TFunction;
 }
 export function Trans(props: TransProps): any;
 
 export function useSSR(initialI18nStore: any, initialLanguage: any): void;
 
 export interface UseTranslationOptions {
-  i18n?: i18next.i18n;
+  i18n?: i18n;
   useSuspense?: boolean;
 }
-export type UseTranslationResponse = [i18next.TFunction, i18next.i18n, boolean] & {
-  t: i18next.TFunction;
-  i18n: i18next.i18n;
+export type UseTranslationResponse = [TFunction, i18n, boolean] & {
+  t: TFunction;
+  i18n: i18n;
   ready: boolean;
 };
 export function useTranslation(
@@ -69,14 +69,14 @@ export function withSSR(): <Props>(
     initialLanguage,
     ...rest
   }: {
-    initialI18nStore: i18next.Resource;
+    initialI18nStore: Resource;
     initialLanguage: string;
   } & Props): React.FunctionComponentElement<Props>;
   getInitialProps: (ctx: unknown) => Promise<any>;
 };
 
-export interface WithTranslation extends i18next.WithT {
-  i18n: i18next.i18n;
+export interface WithTranslation extends WithT {
+  i18n: i18n;
   tReady: boolean;
 }
 export function withTranslation(
@@ -89,22 +89,22 @@ export function withTranslation(
 ) => React.ComponentType<Omit<P, keyof WithTranslation>>;
 
 export interface I18nextProviderProps {
-  i18n: i18next.i18n;
+  i18n: i18n;
 }
 
 export const I18nextProvider: React.FunctionComponent<I18nextProviderProps>;
-export const I18nContext: React.Context<i18next.i18n>;
+export const I18nContext: React.Context<i18n>;
 
 export interface TranslationProps {
   children: (
-    t: i18next.TFunction,
+    t: TFunction,
     options: {
-      i18n: i18next.i18n;
+      i18n: i18n;
       lng: string;
     },
   ) => React.ReactNode;
   ns?: Namespace;
-  i18n?: i18next.i18n;
+  i18n?: i18n;
 }
 
 export function Translation(props: TranslationProps): any;

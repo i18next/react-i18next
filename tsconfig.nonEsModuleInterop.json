@@ -4,7 +4,5 @@
     // typescript defaults to these
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": false
-  },
-  "include": ["./test/typescript/nonEsModuleInterop/**/*.ts"],
-  "exclude": []
+  }
 }

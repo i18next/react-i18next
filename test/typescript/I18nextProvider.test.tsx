@@ -1,4 +1,4 @@
-import * as i18next from 'i18next';
+import i18next from 'i18next';
 import * as React from 'react';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 
