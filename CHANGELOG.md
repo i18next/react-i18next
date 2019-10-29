@@ -1,3 +1,7 @@
+### 11.0.1
+
+- typescript: Use updated ts export default from i18next [984](https://github.com/i18next/react-i18next/pull/984)
+
 ### 11.0.0
 
 - **Breaking** based on i18next changes made in [v18.0.0](https://github.com/i18next/i18next/blob/master/CHANGELOG.md#1800) changing the language should not trigger a Suspense anylonger. The state will be ready and `t` bound to the previous language until `languageChanged` get triggered -> this results in a nicer experience for users (no flickering Suspense while changing the language). Based on issue "Suspence is fired during lang change when useTranslation called in between" [975](https://github.com/i18next/react-i18next/issues/975)
