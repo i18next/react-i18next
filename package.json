@@ -76,7 +76,7 @@
     "rollup-plugin-terser": "^5.1.1",
     "sinon": "^7.2.3",
     "tslint": "^5.13.1",
-    "typescript": "^3.5.3",
+    "typescript": "^3.6.4",
     "yargs": "13.3.0"
   },
   "peerDependencies": {
