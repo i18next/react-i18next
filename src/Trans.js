@@ -88,13 +88,7 @@ export function nodesToString(startingString, children, index, i18nOptions) {
   return stringNode;
 }
 
-function renderNodes({
-  children,
-  targetString,
-  i18n,
-  i18nOptions,
-  combinedTOpts
-}) {
+function renderNodes({ children, components, targetString, i18n, i18nOptions, combinedTOpts }) {
   if (targetString === '') return [];
 
   // check if contains tags we need to replace from html string to react nodes
@@ -143,6 +137,11 @@ function renderNodes({
 
         if (typeof child === 'string') {
           mem.push(child);
+        } else if (components) {
+          const mappedChildren = mapAST(components, node.children);
+          const inner = mappedChildren.length === 0 ? null : mappedChildren;
+          if (child.dummy) child.children = inner;
+          mem.push(React.cloneElement(child, { ...child.props, key: i }, inner));
         } else if (hasChildren(child)) {
           const childs = getChildren(child);
           const mappedChildren = mapAST(childs, node.children);
@@ -265,11 +264,7 @@ export function Trans({
     combinedTOpts,
   });
 
-  if (!useAsParent) return renderResult
+  if (!useAsParent) return renderResult;
 
-  return React.createElement(
-    useAsParent,
-    additionalProps,
-    renderResult,
-  );
+  return React.createElement(useAsParent, additionalProps, renderResult);
 }

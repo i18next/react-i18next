@@ -372,7 +372,8 @@ describe('trans using no children but props - icu case', () => {
   });
 });
 
-describe('trans using no children but props - nested case', () => {
+// TODO: enable old nested behaviour with flag
+describe.skip('trans using no children but props - nested case', () => {
   const TestElement = () => (
     <Trans
       defaults="<0>hello <1></1> {{what}}</0>"
@@ -385,6 +386,7 @@ describe('trans using no children but props - nested case', () => {
       ]}
     />
   );
+
   it('should render translated string', () => {
     const wrapper = mount(<TestElement />);
     // console.log(wrapper.debug());
@@ -393,6 +395,53 @@ describe('trans using no children but props - nested case', () => {
         <span>
           hello <br /> world
         </span>,
+      ),
+    ).toBe(true);
+  });
+});
+
+describe('trans using no children but props - nested case', () => {
+  const TestElement = () => (
+    <Trans
+      defaults="<0>hello <1></1> {{what}}</0>"
+      values={{ what: 'world' }}
+      components={[<span key="0" />, <br key="1" />]}
+    />
+  );
+
+  it('should render translated string', () => {
+    const wrapper = mount(<TestElement />);
+    // console.log(wrapper.debug());
+    expect(
+      wrapper.contains(
+        <span>
+          hello <br /> world
+        </span>,
+      ),
+    ).toBe(true);
+  });
+});
+
+describe('trans using no children but props - deeply nested case', () => {
+  const TestElement = () => (
+    <Trans
+      defaults="<0>paragraph with <1>italic</1> and <2><1>bold italic</1></2> text</0>"
+      values={{ what: 'world' }}
+      components={[<p key="0" />, <em key="1" />, <strong key="2" />]}
+    />
+  );
+
+  it('should render translated string', () => {
+    const wrapper = mount(<TestElement />);
+    expect(
+      wrapper.contains(
+        <p>
+          paragraph with <em>italic</em> and{' '}
+          <strong>
+            <em>bold italic</em>
+          </strong>{' '}
+          text
+        </p>,
       ),
     ).toBe(true);
   });
@@ -435,7 +484,8 @@ describe('trans should not break on invalid node from translations - part2', () 
 });
 
 describe('Trans should render nested components', () => {
-  it('should render dynamic ul as components property', () => {
+  // TODO: enable old nested behaviour with flag
+  it.skip('should render dynamic ul as components property', () => {
     const list = ['li1', 'li2'];
 
     const TestElement = () => (
