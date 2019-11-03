@@ -88,7 +88,13 @@ export function nodesToString(startingString, children, index, i18nOptions) {
   return stringNode;
 }
 
-function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
+function renderNodes({
+  children,
+  targetString,
+  i18n,
+  i18nOptions,
+  combinedTOpts
+}) {
   if (targetString === '') return [];
 
   // check if contains tags we need to replace from html string to react nodes
@@ -250,18 +256,20 @@ export function Trans({
   };
   const translation = key ? t(key, combinedTOpts) : defaultValue;
 
-  if (!useAsParent)
-    return renderNodes(
-      components || children,
-      translation,
-      i18n,
-      reactI18nextOptions,
-      combinedTOpts,
-    );
+  const renderResult = renderNodes({
+    children: components || children,
+    components,
+    targetString: translation,
+    i18n,
+    i18nOptions: reactI18nextOptions,
+    combinedTOpts,
+  });
+
+  if (!useAsParent) return renderResult
 
   return React.createElement(
     useAsParent,
     additionalProps,
-    renderNodes(components || children, translation, i18n, reactI18nextOptions, combinedTOpts),
+    renderResult,
   );
 }
