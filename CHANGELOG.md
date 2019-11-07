@@ -1,3 +1,7 @@
+### 11.1.0
+
+- Update `rollup.config.js` for IE11 Transpilations [988](https://github.com/i18next/react-i18next/pull/988)
+
 ### 11.0.1
 
 - typescript: Use updated ts export default from i18next [984](https://github.com/i18next/react-i18next/pull/984)
