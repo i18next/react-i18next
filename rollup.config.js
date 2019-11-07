@@ -15,6 +15,7 @@ const babelOptions = {
       {
         targets: {
           esmodules: true,
+          ie: "11"
         },
       },
     ],
