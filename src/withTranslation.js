@@ -26,7 +26,7 @@ export function withTranslation(ns, options = {}) {
 
     I18nextWithTranslation.WrappedComponent = WrappedComponent;
 
-    const forwardRef = (props, ref) => <I18nextWithTranslation {...props} forwardedRef={ref} />;
+    const forwardRef = (props, ref) => React.createElement(I18nextWithTranslation, Object.assign({}, props, { forwardedRef: ref }));
 
     return options.withRef ? React.forwardRef(forwardRef) : I18nextWithTranslation;
   };
