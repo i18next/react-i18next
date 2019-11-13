@@ -9,6 +9,7 @@ export function withTranslation(ns, options = {}) {
 
       const passDownProps = {
         ...rest,
+        forwardedRef,
         t,
         i18n,
         tReady: ready,
