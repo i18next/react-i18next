@@ -1,3 +1,7 @@
+### 11.2.0
+
+- withTranslation allow not only passing a ref with option withRef but also passing a forwardedRef from outside as props (before forwardedRef was only added to wrapped component if the withRef option was set) [992](https://github.com/i18next/react-i18next/pull/992)
+
 ### 11.1.0
 
 - Update `rollup.config.js` for IE11 Transpilations [988](https://github.com/i18next/react-i18next/pull/988)

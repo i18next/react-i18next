@@ -951,6 +951,7 @@
             ready = _useTranslation2[2];
 
         var passDownProps = _objectSpread2({}, rest, {
+          forwardedRef: forwardedRef,
           t: t,
           i18n: i18n,
           tReady: ready
