@@ -57,24 +57,6 @@
     return obj;
   }
 
-  function _extends() {
-    _extends = Object.assign || function (target) {
-      for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i];
-
-        for (var key in source) {
-          if (Object.prototype.hasOwnProperty.call(source, key)) {
-            target[key] = source[key];
-          }
-        }
-      }
-
-      return target;
-    };
-
-    return _extends.apply(this, arguments);
-  }
-
   function ownKeys(object, enumerableOnly) {
     var keys = Object.keys(object);
 
@@ -968,7 +950,7 @@
       I18nextWithTranslation.WrappedComponent = WrappedComponent;
 
       var forwardRef = function forwardRef(props, ref) {
-        return React__default.createElement(I18nextWithTranslation, _extends({}, props, {
+        return React__default.createElement(I18nextWithTranslation, Object.assign({}, props, {
           forwardedRef: ref
         }));
       };
