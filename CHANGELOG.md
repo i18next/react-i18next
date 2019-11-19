@@ -1,3 +1,7 @@
+### 11.2.2
+
+- Only pass forwardedRef to children if options.withRef is false [999](https://github.com/i18next/react-i18next/pull/999)
+
 ### 11.2.1
 
 - remove used jsx in withTranslation to avoid issues while compiling [994](https://github.com/i18next/react-i18next/pull/994)
