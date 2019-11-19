@@ -9,13 +9,14 @@ export function withTranslation(ns, options = {}) {
 
       const passDownProps = {
         ...rest,
-        forwardedRef,
         t,
         i18n,
         tReady: ready,
       };
       if (options.withRef && forwardedRef) {
         passDownProps.ref = forwardedRef;
+      } else if (!options.withRef && forwardedRef) {
+        passDownProps.forwardedRef = forwardedRef;
       }
       return React.createElement(WrappedComponent, passDownProps);
     }
@@ -26,7 +27,8 @@ export function withTranslation(ns, options = {}) {
 
     I18nextWithTranslation.WrappedComponent = WrappedComponent;
 
-    const forwardRef = (props, ref) => React.createElement(I18nextWithTranslation, Object.assign({}, props, { forwardedRef: ref }));
+    const forwardRef = (props, ref) =>
+      React.createElement(I18nextWithTranslation, Object.assign({}, props, { forwardedRef: ref }));
 
     return options.withRef ? React.forwardRef(forwardRef) : I18nextWithTranslation;
   };
