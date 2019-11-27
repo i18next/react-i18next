@@ -1006,6 +1006,7 @@
     if (initialI18nStore && !i18n.initializedStoreOnce) {
       i18n.services.resourceStore.data = initialI18nStore;
       i18n.initializedStoreOnce = true;
+      i18n.isInitialized = true;
     }
 
     if (initialLanguage && !i18n.initializedLanguageOnce) {

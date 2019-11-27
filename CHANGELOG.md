@@ -1,3 +1,7 @@
+### 11.2.3
+
+- Store should be initialized after useSSR [1008](https://github.com/i18next/react-i18next/pull/1008)
+
 ### 11.2.2
 
 - Only pass forwardedRef to children if options.withRef is false [999](https://github.com/i18next/react-i18next/pull/999)
