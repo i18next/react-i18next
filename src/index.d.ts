@@ -79,6 +79,12 @@ export interface WithTranslation extends WithT {
   i18n: i18n;
   tReady: boolean;
 }
+
+export interface WithTranslationProps {
+  i18n?: i18n;
+  useSuspense?: boolean;
+}
+
 export function withTranslation(
   ns?: Namespace,
   options?: {
@@ -86,7 +92,7 @@ export function withTranslation(
   },
 ): <P extends WithTranslation>(
   component: React.ComponentType<P>,
-) => React.ComponentType<Omit<P, keyof WithTranslation>>;
+) => React.ComponentType<Omit<P, keyof WithTranslation> & WithTranslationProps>;
 
 export interface I18nextProviderProps {
   i18n: i18n;
