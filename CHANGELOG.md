@@ -1,3 +1,7 @@
+### 11.2.4
+
+- typescript: Extend withTranslation tests to include optional props [1009](https://github.com/i18next/react-i18next/pull/1009)
+
 ### 11.2.3
 
 - Store should be initialized after useSSR [1008](https://github.com/i18next/react-i18next/pull/1008)
