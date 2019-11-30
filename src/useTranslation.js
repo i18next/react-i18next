@@ -19,8 +19,9 @@ export function useTranslation(ns, props = {}) {
   if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
   if (!i18n) {
     warnOnce('You will need pass in an i18next instance by using initReactI18next');
-    const retNotReady = [k => k, {}, false];
-    retNotReady.t = k => k;
+    const notReadyT = k => (Array.isArray(k) ? k[k.length - 1] : k);
+    const retNotReady = [notReadyT, {}, false];
+    retNotReady.t = notReadyT;
     retNotReady.i18n = {};
     retNotReady.ready = false;
     return retNotReady;

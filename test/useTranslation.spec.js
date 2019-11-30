@@ -59,7 +59,12 @@ describe('useTranslation', () => {
         expect(typeof t).toBe('function');
         expect(i18n).toEqual({});
 
-        return <div>{t('key1')}</div>;
+        return (
+          <>
+            <div>{t('key1')}</div>
+            <div>{t(['doh', 'Human friendly fallback'])}</div>
+          </>
+        );
       }
 
       it('should render content fallback', () => {
@@ -67,6 +72,7 @@ describe('useTranslation', () => {
         const wrapper = mount(<TestComponent />, {});
         // console.log(wrapper.debug());
         expect(wrapper.contains(<div>key1</div>)).toBe(true);
+        expect(wrapper.contains(<div>Human friendly fallback</div>)).toBe(true);
         expect(console.warn).toHaveBeenCalled();
       });
     });
