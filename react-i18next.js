@@ -833,14 +833,13 @@
 
     if (!i18n) {
       warnOnce('You will need pass in an i18next instance by using initReactI18next');
-      var retNotReady = [function (k) {
-        return k;
-      }, {}, false];
 
-      retNotReady.t = function (k) {
-        return k;
+      var notReadyT = function notReadyT(k) {
+        return Array.isArray(k) ? k[k.length - 1] : k;
       };
 
+      var retNotReady = [notReadyT, {}, false];
+      retNotReady.t = notReadyT;
       retNotReady.i18n = {};
       retNotReady.ready = false;
       return retNotReady;
