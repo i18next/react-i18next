@@ -39,7 +39,7 @@ function ns() {
 }
 
 function parent() {
-  return <Trans parent={<div />}>Foo</Trans>;
+  return <Trans parent="div">Foo</Trans>;
 }
 
 function tOptions() {
@@ -53,4 +53,16 @@ function values() {
 function t() {
   const { t } = useTranslation();
   return <Trans t={t}>Foo</Trans>;
+}
+
+function extraDivProps() {
+  return (
+    <>
+      <Trans parent="div" style={{ color: 'green' }}>
+        Foo
+      </Trans>
+      {/* div is the default parent */}
+      <Trans style={{ color: 'green' }}>Foo</Trans>
+    </>
+  );
 }
