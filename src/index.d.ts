@@ -29,7 +29,9 @@ declare module 'i18next' {
   }
 }
 
-export interface TransProps extends Partial<WithT> {
+export interface TransProps<E extends Element = HTMLDivElement>
+  extends React.HTMLProps<E>,
+    Partial<WithT> {
   children?: React.ReactNode;
   components?: React.ReactNode[];
   count?: number;
@@ -37,12 +39,12 @@ export interface TransProps extends Partial<WithT> {
   i18n?: i18n;
   i18nKey?: string;
   ns?: Namespace;
-  parent?: React.ReactNode;
+  parent?: string; // used in React.createElement
   tOptions?: {};
   values?: {};
   t?: TFunction;
 }
-export function Trans(props: TransProps): any;
+export function Trans<E extends Element = HTMLDivElement>(props: TransProps<E>): React.ReactElement;
 
 export function useSSR(initialI18nStore: any, initialLanguage: any): void;
 

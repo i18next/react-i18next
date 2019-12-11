@@ -2,6 +2,10 @@ import * as React from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { default as myI18n } from './i18n';
 
+/**
+ * @see https://react.i18next.com/latest/trans-component
+ */
+
 interface MyComponentProps extends WithTranslation {
   bar: 'baz';
 }
