@@ -1,3 +1,7 @@
+### 11.2.6
+
+- typescript: Allow html props on Trans, fix `parent` prop type [1019](https://github.com/i18next/react-i18next/pull/1019)
+
 ### 11.2.5
 
 - handle array fallback on wrongly configured app ;) [1010](https://github.com/i18next/react-i18next/pull/1010)
