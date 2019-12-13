@@ -55,6 +55,12 @@ function t() {
   return <Trans t={t}>Foo</Trans>;
 }
 
+function CustomRedComponent(props: {children: React.ReactNode}) {
+  return <div style={{color: 'red'}}>
+    {props.children}
+  </div>;
+}
+
 function extraDivProps() {
   return (
     <>
@@ -63,6 +69,8 @@ function extraDivProps() {
       </Trans>
       {/* div is the default parent */}
       <Trans style={{ color: 'green' }}>Foo</Trans>
+      <Trans parent={null}>No parent (overrides the default one)</Trans>
+      <Trans parent={CustomRedComponent}>Use a custom component as parent</Trans>
     </>
   );
 }
