@@ -39,7 +39,7 @@ export interface TransProps<E extends Element = HTMLDivElement>
   i18n?: i18n;
   i18nKey?: string;
   ns?: Namespace;
-  parent?: string; // used in React.createElement
+  parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
   tOptions?: {};
   values?: {};
   t?: TFunction;
