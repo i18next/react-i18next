@@ -6,7 +6,7 @@ import './App.css';
 // use hoc for class based components
 class LegacyWelcomeClass extends Component {
   render() {
-    const { t, i18n } = this.props;
+    const { t } = this.props;
     return <h2>{t('title')}</h2>;
   }
 }
