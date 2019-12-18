@@ -1,3 +1,7 @@
+### 11.2.7
+
+- typescript: Allow ComponentType for Trans' `parent` type [1021](https://github.com/i18next/react-i18next/pull/1021)
+
 ### 11.2.6
 
 - typescript: Allow html props on Trans, fix `parent` prop type [1019](https://github.com/i18next/react-i18next/pull/1019)
