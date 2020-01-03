@@ -29,8 +29,8 @@ i18n
   .init(
     {
       debug: false,
-      preload: ['en', 'de'],
-      ns: ['translations'],
+      preload: ['en', 'de', 'es'],
+      ns: ['translations', 'alternate'],
       defaultNS: 'translations',
       backend: {
         loadPath: `${appSrc}/locales/{{lng}}/{{ns}}.json`,

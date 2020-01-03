@@ -4,7 +4,7 @@ import logo from './react.svg';
 import './Home.css';
 
 function Home() {
-  const [ t ] = useTranslation('translations');
+  const { t, i18n } = useTranslation(['translations', 'alternate']);
 
   return (
     <div className="Home">
@@ -17,6 +17,11 @@ function Home() {
           To get started, edit <code>src/App.js</code> or <code>src/Home.js</code> and save to
           reload.
         </Trans>
+        <div>
+          <button onClick={() => i18n.changeLanguage('en')}>Switch to EN</button>
+          <button onClick={() => i18n.changeLanguage('de')}>Switch to DE</button>
+          <button onClick={() => i18n.changeLanguage('es')}>Switch to ES</button>
+        </div>
       </div>
       <ul className="Home-resources">
         <li>

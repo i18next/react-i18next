@@ -14,6 +14,8 @@ german: [http://localhost:3000/?lng=de](http://localhost:3000/?lng=de)
 
 english: [http://localhost:3000/?lng=en](http://localhost:3000/?lng=en)
 
+spanish: [http://localhost:3000/?lng=es](http://localhost:3000/?lng=es)
+
 ## production
 
 ```bash
