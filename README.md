@@ -25,7 +25,7 @@ $ v10.0.0
 npm i react-i18next
 ```
 
-**react-native: not yet supports hooks (hooks are part of react-native v0.59.0)!!!**
+**react-native: To use hooks within react-native, you must use react-native v0.59.0 or higher**
 
 For the legacy version please use the [v9.x.x Branch](https://github.com/i18next/react-i18next/tree/v9.x.x)
 
