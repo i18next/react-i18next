@@ -17,6 +17,11 @@ function components() {
   return <Trans components={[<div />]}>Foo</Trans>;
 }
 
+function constComponents() {
+  const constArray = [<div />] as const;
+  return <Trans components={constArray}>Foo</Trans>;
+}
+
 function count() {
   return <Trans count={42}>Foo</Trans>;
 }
