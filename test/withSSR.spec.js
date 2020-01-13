@@ -11,6 +11,7 @@ const mockI18n = {
   language: 'en',
   languages: ['en'],
   options: {
+    ns: [],
     defaultNS: 'defaultNS',
     nsMode: 'fallback',
   },
