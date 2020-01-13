@@ -1003,7 +1003,14 @@
     if (i18n.options && i18n.options.isClone) return; // nextjs / SSR: getting data from next.js or other ssr stack
 
     if (initialI18nStore && !i18n.initializedStoreOnce) {
-      i18n.services.resourceStore.data = initialI18nStore;
+      i18n.services.resourceStore.data = initialI18nStore; // add namespaces to the config - so a languageChange call loads all namespaces needed
+
+      i18n.options.ns = Object.values(initialI18nStore).reduce(function (mem, lngResources) {
+        Object.keys(lngResources).forEach(function (ns) {
+          if (mem.indexOf(ns) < -1) mem.push(ns);
+        });
+        return mem;
+      }, i18n.options.ns);
       i18n.initializedStoreOnce = true;
       i18n.isInitialized = true;
     }

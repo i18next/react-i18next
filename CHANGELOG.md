@@ -1,3 +1,8 @@
+### 11.3.0
+
+- useSSR: add namespaces to init options options.ns [1031](https://github.com/i18next/react-i18next/issues/1031)
+- typescript: Fix the type of the components props of Trans [1036](https://github.com/i18next/react-i18next/pull/1036)
+
 ### 11.2.7
 
 - typescript: Allow ComponentType for Trans' `parent` type [1021](https://github.com/i18next/react-i18next/pull/1021)
