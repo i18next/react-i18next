@@ -11,7 +11,8 @@ interface MyComponentProps extends WithTranslation {
 }
 
 const MyComponent = (props: MyComponentProps) => {
-  const { t, i18n } = props;
+  const { t, i18n, tReady } = props;
+  const r: boolean = tReady;
   return <h2>{t('title')}</h2>;
 };
 

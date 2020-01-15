@@ -110,6 +110,7 @@ export interface TranslationProps {
       i18n: i18n;
       lng: string;
     },
+    ready: boolean,
   ) => React.ReactNode;
   ns?: Namespace;
   i18n?: i18n;
