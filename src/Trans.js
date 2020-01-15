@@ -215,8 +215,9 @@ export function Trans({
   t: tFromProps,
   ...additionalProps
 }) {
+  const ReactI18nContext = useContext(I18nContext);
   const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = getHasUsedI18nextProvider()
-    ? useContext(I18nContext) || {}
+    ? ReactI18nContext || {}
     : {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
   if (!i18n) {
