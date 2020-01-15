@@ -8,6 +8,8 @@ import {
 } from './context';
 import { warnOnce, loadNamespaces, hasLoadedNamespace } from './utils';
 
+const notReadyT = k => (Array.isArray(k) ? k[k.length - 1] : k);
+
 export function useTranslation(ns, props = {}) {
   // assert we have the needed i18nInstance
   const { i18n: i18nFromProps } = props;
@@ -17,33 +19,33 @@ export function useTranslation(ns, props = {}) {
     : {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
   if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
-  if (!i18n) {
-    warnOnce('You will need pass in an i18next instance by using initReactI18next');
-    const notReadyT = k => (Array.isArray(k) ? k[k.length - 1] : k);
-    const retNotReady = [notReadyT, {}, false];
-    retNotReady.t = notReadyT;
-    retNotReady.i18n = {};
-    retNotReady.ready = false;
-    return retNotReady;
-  }
 
-  const i18nOptions = { ...getDefaults(), ...i18n.options.react, ...props };
+  const i18nOptions = i18n
+    ? { ...getDefaults(), ...i18n.options.react, ...props }
+    : { ...getDefaults(), ...props };
   const { useSuspense } = i18nOptions;
 
   // prepare having a namespace
-  let namespaces = ns || defaultNSFromContext || (i18n.options && i18n.options.defaultNS);
+  let namespaces = ns || defaultNSFromContext || (i18n && i18n.options && i18n.options.defaultNS);
   namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
 
   // report namespaces as used
-  if (i18n.reportNamespaces.addUsedNamespaces) i18n.reportNamespaces.addUsedNamespaces(namespaces);
+  if (i18n && i18n.reportNamespaces.addUsedNamespaces)
+    i18n.reportNamespaces.addUsedNamespaces(namespaces);
 
   // are we ready? yes if all namespaces in first language are loaded already (either with data or empty object on failed load)
   const ready =
+    i18n &&
     (i18n.isInitialized || i18n.initializedStoreOnce) &&
     namespaces.every(n => hasLoadedNamespace(n, i18n, i18nOptions));
 
   // binding t function to namespace (acts also as rerender trigger)
   function getT() {
+    if (!i18n) {
+      return {
+        t: notReadyT,
+      };
+    }
     return {
       t: i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0]),
     };
@@ -77,7 +79,17 @@ export function useTranslation(ns, props = {}) {
       if (bindI18nStore && i18n)
         bindI18nStore.split(' ').forEach(e => i18n.store.off(e, boundReset));
     };
-  }, [namespaces.join()]); // re-run effect whenever list of namespaces changes
+  }, [i18n, namespaces.join()]); // re-run effect whenever list of namespaces changes
+
+  if (!i18n) {
+    warnOnce('You will need pass in an i18next instance by using initReactI18next');
+
+    const retNotReady = [notReadyT, {}, false];
+    retNotReady.t = notReadyT;
+    retNotReady.i18n = {};
+    retNotReady.ready = false;
+    return retNotReady;
+  }
 
   const ret = [t.t, i18n, ready];
   ret.t = t.t;
