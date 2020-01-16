@@ -1,3 +1,8 @@
+### 11.3.1
+
+- typescript: Translation component's ready parameter is missing in TypeScript definition [1044](https://github.com/i18next/react-i18next/pull/1044)
+- change hook condition in Trans to equal useTranslations implementation
+
 ### 11.3.0
 
 - useSSR: add namespaces to init options options.ns [1031](https://github.com/i18next/react-i18next/issues/1031)

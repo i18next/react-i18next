@@ -775,7 +775,9 @@
         tFromProps = _ref.t,
         additionalProps = _objectWithoutProperties(_ref, ["children", "count", "parent", "i18nKey", "tOptions", "values", "defaults", "components", "ns", "i18n", "t"]);
 
-    var _ref2 = getHasUsedI18nextProvider() ? React.useContext(I18nContext) || {} : {},
+    var ReactI18nContext = React.useContext(I18nContext);
+
+    var _ref2 = getHasUsedI18nextProvider() ? ReactI18nContext || {} : {},
         i18nFromContext = _ref2.i18n,
         defaultNSFromContext = _ref2.defaultNS;
 
