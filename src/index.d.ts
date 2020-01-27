@@ -43,6 +43,7 @@ export interface TransProps<E extends Element = HTMLDivElement>
   tOptions?: {};
   values?: {};
   t?: TFunction;
+  [additionalProps: string]: any;
 }
 export function Trans<E extends Element = HTMLDivElement>(props: TransProps<E>): React.ReactElement;
 
