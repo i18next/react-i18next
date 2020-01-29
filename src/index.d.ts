@@ -1,8 +1,6 @@
 import i18next, { ReactOptions, i18n, ThirdPartyModule, WithT, TFunction, Resource } from 'i18next';
 import * as React from 'react';
 
-type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
-
 export type Namespace = string | string[];
 
 export function setDefaults(options: ReactOptions): void;
@@ -29,9 +27,7 @@ declare module 'i18next' {
   }
 }
 
-export interface TransProps<E extends Element = HTMLDivElement>
-  extends React.HTMLProps<E>,
-    Partial<WithT> {
+export interface TransProps<E extends React.ElementType> extends Partial<WithT> {
   children?: React.ReactNode;
   components?: readonly React.ReactNode[];
   count?: number;
@@ -39,12 +35,14 @@ export interface TransProps<E extends Element = HTMLDivElement>
   i18n?: i18n;
   i18nKey?: string;
   ns?: Namespace;
-  parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
+  parent?: E | null; // used in React.createElement if provided
   tOptions?: {};
   values?: {};
   t?: TFunction;
 }
-export function Trans<E extends Element = HTMLDivElement>(props: TransProps<E>): React.ReactElement;
+export function Trans<E extends React.ElementType>(
+  props: TransProps<E> & Omit<React.ComponentPropsWithoutRef<E>, keyof TransProps<E>>,
+): React.ReactElement;
 
 export function useSSR(initialI18nStore: any, initialLanguage: any): void;
 

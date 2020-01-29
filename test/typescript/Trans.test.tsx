@@ -44,7 +44,41 @@ function ns() {
 }
 
 function parent() {
-  return <Trans parent="div">Foo</Trans>;
+  function CustomParent(props: { someProp: boolean }) {
+    return null;
+  }
+  return (
+    <>
+      <Trans parent="div">Foo</Trans>
+      // $ExpectError
+      <Trans parent="a" href>
+        Foo
+      </Trans>
+      <Trans parent="a" href="">
+        Foo
+      </Trans>
+      // $ExpectError
+      <Trans parent="div" href="">
+        Foo
+      </Trans>
+      <Trans parent="div" className="">
+        Foo
+      </Trans>
+      <Trans parent={CustomParent} someProp>
+        Foo
+      </Trans>
+      // $ExpectError
+      <Trans parent={CustomParent} someProp="">
+        Foo
+      </Trans>
+      // $ExpectError
+      <Trans parent={CustomParent} className="">
+        Foo
+      </Trans>
+      // $ExpectError
+      <Trans parent={CustomParent}>Foo</Trans>
+    </>
+  );
 }
 
 function tOptions() {
@@ -60,10 +94,8 @@ function t() {
   return <Trans t={t}>Foo</Trans>;
 }
 
-function CustomRedComponent(props: {children: React.ReactNode}) {
-  return <div style={{color: 'red'}}>
-    {props.children}
-  </div>;
+function CustomRedComponent(props: { children: React.ReactNode }) {
+  return <div style={{ color: 'red' }}>{props.children}</div>;
 }
 
 function extraDivProps() {
