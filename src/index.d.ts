@@ -98,6 +98,7 @@ export function withTranslation(
 
 export interface I18nextProviderProps {
   i18n: i18n;
+  defaultNS: string;
 }
 
 export const I18nextProvider: React.FunctionComponent<I18nextProviderProps>;
