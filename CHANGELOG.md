@@ -1,3 +1,7 @@
+### 11.3.2
+
+- typescript: Add optional defaultN [1050](https://github.com/i18next/react-i18next/pull/1050)
+
 ### 11.3.1
 
 - typescript: Translation component's ready parameter is missing in TypeScript definition [1044](https://github.com/i18next/react-i18next/pull/1044)
