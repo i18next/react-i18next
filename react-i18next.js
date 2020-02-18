@@ -1009,7 +1009,7 @@
 
       i18n.options.ns = Object.values(initialI18nStore).reduce(function (mem, lngResources) {
         Object.keys(lngResources).forEach(function (ns) {
-          if (mem.indexOf(ns) < -1) mem.push(ns);
+          if (mem.indexOf(ns) < 0) mem.push(ns);
         });
         return mem;
       }, i18n.options.ns);

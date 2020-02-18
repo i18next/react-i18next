@@ -1,3 +1,7 @@
+### 11.3.3
+
+- fixes copying ns in useSSR
+
 ### 11.3.2
 
 - typescript: Add optional defaultN [1050](https://github.com/i18next/react-i18next/pull/1050)
