@@ -46,6 +46,7 @@
     "babel-plugin-macros": "^2.5.0",
     "babel-plugin-tester": "^6.0.0",
     "coveralls": "^3.0.2",
+    "cp-cli": "^2.0.0",
     "cross-env": "^6.0.3",
     "dtslint": "^0.9.1",
     "enzyme": "^3.8.0",
@@ -85,7 +86,7 @@
   },
   "scripts": {
     "clean": "rimraf dist && mkdirp dist",
-    "copy": "cp ./dist/umd/react-i18next.min.js ./react-i18next.min.js && cp ./dist/umd/react-i18next.js ./react-i18next.js",
+    "copy": "cp-cli ./dist/umd/react-i18next.min.js ./react-i18next.min.js && cp-cli ./dist/umd/react-i18next.js ./react-i18next.js",
     "build:es": "cross-env BABEL_ENV=jsnext babel src --out-dir dist/es",
     "build:cjs": "babel src --out-dir dist/commonjs",
     "build:umd": "rollup -c rollup.config.js --format umd && rollup -c rollup.config.js --format umd --uglify",
