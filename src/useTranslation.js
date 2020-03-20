@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import {
   getI18n,
   getDefaults,
@@ -50,20 +50,21 @@ export function useTranslation(ns, props = {}) {
   }
   const [t, setT] = useState(getT()); // seems we can't have functions as value -> wrap it in obj
 
+  const isMounted = useRef(true);
   useEffect(() => {
-    let isMounted = true;
     const { bindI18n, bindI18nStore } = i18nOptions;
+    isMounted.current = true
 
     // if not ready and not using suspense load the namespaces
     // in side effect and do not call resetT if unmounted
     if (!ready && !useSuspense) {
       loadNamespaces(i18n, namespaces, () => {
-        if (isMounted) setT(getT());
+        if (isMounted.current) setT(getT());
       });
     }
 
     function boundReset() {
-      if (isMounted) setT(getT());
+      if (isMounted.current) setT(getT());
     }
 
     // bind events to trigger change, like languageChanged
@@ -72,7 +73,7 @@ export function useTranslation(ns, props = {}) {
 
     // unbinding on unmount
     return () => {
-      isMounted = false;
+      isMounted.current = false;
       if (bindI18n && i18n) bindI18n.split(' ').forEach(e => i18n.off(e, boundReset));
       if (bindI18nStore && i18n)
         bindI18nStore.split(' ').forEach(e => i18n.store.off(e, boundReset));
@@ -93,7 +94,7 @@ export function useTranslation(ns, props = {}) {
   // not yet loaded namespaces -> load them -> and trigger suspense
   throw new Promise(resolve => {
     loadNamespaces(i18n, namespaces, () => {
-      setT(getT());
+      if (isMounted.current) setT(getT());
       resolve();
     });
   });
