@@ -1,3 +1,7 @@
+### 11.3.4
+
+- [useTranslation] Avoid setting the new `t` function if the component is unmounted. (1051)[https://github.com/i18next/react-i18next/pull/1051]
+
 ### 11.3.3
 
 - fixes copying ns in useSSR

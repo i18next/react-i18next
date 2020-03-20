@@ -872,20 +872,21 @@
         setT = _useState2[1]; // seems we can't have functions as value -> wrap it in obj
 
 
+    var isMounted = React.useRef(true);
     React.useEffect(function () {
-      var isMounted = true;
       var bindI18n = i18nOptions.bindI18n,
-          bindI18nStore = i18nOptions.bindI18nStore; // if not ready and not using suspense load the namespaces
+          bindI18nStore = i18nOptions.bindI18nStore;
+      isMounted.current = true; // if not ready and not using suspense load the namespaces
       // in side effect and do not call resetT if unmounted
 
       if (!ready && !useSuspense) {
         loadNamespaces(i18n, namespaces, function () {
-          if (isMounted) setT(getT());
+          if (isMounted.current) setT(getT());
         });
       }
 
       function boundReset() {
-        if (isMounted) setT(getT());
+        if (isMounted.current) setT(getT());
       } // bind events to trigger change, like languageChanged
 
 
@@ -893,7 +894,7 @@
       if (bindI18nStore && i18n) i18n.store.on(bindI18nStore, boundReset); // unbinding on unmount
 
       return function () {
-        isMounted = false;
+        isMounted.current = false;
         if (bindI18n && i18n) bindI18n.split(' ').forEach(function (e) {
           return i18n.off(e, boundReset);
         });
@@ -914,7 +915,7 @@
 
     throw new Promise(function (resolve) {
       loadNamespaces(i18n, namespaces, function () {
-        setT(getT());
+        if (isMounted.current) setT(getT());
         resolve();
       });
     });
