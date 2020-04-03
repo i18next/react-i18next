@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "i18next": "18.0.0",
-    "i18next-browser-languagedetector": "4.0.0",
-    "i18next-xhr-backend": "3.2.0",
-    "react": "16.11.0",
-    "react-dom": "16.11.0",
-    "react-i18next": "11.0.0",
-    "react-scripts": "3.2.0"
+    "i18next": "19.3.4",
+    "i18next-browser-languagedetector": "4.0.2",
+    "i18next-xhr-backend": "3.2.2",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-i18next": "11.3.4",
+    "react-scripts": "3.4.1"
   },
   "scripts": {
     "start": "react-scripts start",
