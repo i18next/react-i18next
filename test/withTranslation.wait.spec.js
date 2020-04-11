@@ -1,6 +1,5 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import i18n from './i18n';
 import { withTranslation } from '../src/withTranslation';
 import * as useTranslationModule from '../src/useTranslation';
 
@@ -9,7 +8,6 @@ jest.unmock('../src/withTranslation');
 describe('withTranslation with wait option', () => {
   class TestComponent extends React.Component {
     render() {
-      const { t, i18n: instance } = this.props;
       return <div>THIS SHOULD NOT BE SHOWN</div>;
     }
   }
