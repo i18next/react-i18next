@@ -3,9 +3,19 @@ import { useTranslation } from './useTranslation';
 import { getDisplayName } from './utils';
 
 export function withTranslation(ns, options = {}) {
+  if (ns && typeof ns !== 'string' && !Array.isArray(ns)) {
+    options = ns;
+    ns = undefined;
+  }
   return function Extend(WrappedComponent) {
     function I18nextWithTranslation({ forwardedRef, ...rest }) {
       const [t, i18n, ready] = useTranslation(ns, rest);
+
+      if (!ready && options.wait) {
+        if (options.wait === true) return null;
+        // if it's a react component
+        return options.wait;
+      }
 
       const passDownProps = {
         ...rest,

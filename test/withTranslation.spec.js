@@ -34,4 +34,11 @@ describe('withTranslation', () => {
     mount(<HocElement ref={hocRef} />);
     expect(hocRef.current).not.toBeNull();
   });
+
+  it('should also only with options', () => {
+    const HocElement = withTranslation({ withRef: true })(TestComponent);
+    const hocRef = React.createRef();
+    mount(<HocElement ref={hocRef} />);
+    expect(hocRef.current).not.toBeNull();
+  });
 });
