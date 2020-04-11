@@ -91,6 +91,7 @@ export function withTranslation(
   ns?: Namespace,
   options?: {
     withRef?: boolean;
+    wait?: boolean | any;
   },
 ): <P extends WithTranslation>(
   component: React.ComponentType<P>,

@@ -50,3 +50,13 @@ function withSuspense() {
   const ExtendedComponent = withTranslation('ns')(MyComponent);
   return <ExtendedComponent bar="baz" useSuspense={false} />;
 }
+
+function waitOption() {
+  const ExtendedComponent = withTranslation('ns', { wait: true })(MyComponent);
+  return <ExtendedComponent bar="baz" />;
+}
+
+function waitOptionComponent() {
+  const ExtendedComponent = withTranslation('ns', { wait: <h1>test</h1> })(MyComponent);
+  return <ExtendedComponent bar="baz" />;
+}
