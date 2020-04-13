@@ -4,10 +4,8 @@ import { getDisplayName } from './utils';
 
 export function withTranslation(ns, options = {}) {
   if (ns && typeof ns !== 'string' && !Array.isArray(ns)) {
-    // eslint-disable-next-line no-param-reassign
-    options = ns;
-    // eslint-disable-next-line no-param-reassign
-    ns = undefined;
+    options = ns; // eslint-disable-line no-param-reassign
+    ns = undefined; // eslint-disable-line no-param-reassign
   }
   return function Extend(WrappedComponent) {
     function I18nextWithTranslation({ forwardedRef, ...rest }) {
@@ -15,16 +13,10 @@ export function withTranslation(ns, options = {}) {
 
       if (!ready && options.wait) {
         if (options.wait === true) return null;
-        // if it's a react component
-        return options.wait;
+        return options.wait; // if it's a react component
       }
 
-      const passDownProps = {
-        ...rest,
-        t,
-        i18n,
-        tReady: ready,
-      };
+      const passDownProps = { ...rest, t, i18n, tReady: ready };
       if (options.withRef && forwardedRef) {
         passDownProps.ref = forwardedRef;
       } else if (!options.withRef && forwardedRef) {
@@ -39,11 +31,8 @@ export function withTranslation(ns, options = {}) {
 
     I18nextWithTranslation.WrappedComponent = WrappedComponent;
 
-    const forwardRef = (
-      props,
-      ref, // eslint-disable-next-line prefer-object-spread
-    ) =>
-      React.createElement(I18nextWithTranslation, Object.assign({}, props, { forwardedRef: ref }));
+    const forwardRef = (props, ref) =>
+      React.createElement(I18nextWithTranslation, Object.assign({}, props, { forwardedRef: ref })); // eslint-disable-line prefer-object-spread
 
     return options.withRef ? React.forwardRef(forwardRef) : I18nextWithTranslation;
   };
