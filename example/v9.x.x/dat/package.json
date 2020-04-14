@@ -6,7 +6,7 @@
     "i18next": "8.4.2",
     "i18next-browser-languagedetector": "2.0.0",
     "i18next-locize-backend": "1.0.0",
-    "i18next-xhr-backend": "1.4.2",
+    "i18next-http-backend": "1.0.0",
     "react": "15.6.1",
     "react-dom": "15.6.1",
     "react-i18next": "4.6.1",
