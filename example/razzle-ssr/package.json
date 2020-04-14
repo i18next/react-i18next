@@ -18,6 +18,6 @@
     "i18next-browser-languagedetector": "3.0.0",
     "i18next-express-middleware": "1.7.1",
     "i18next-node-fs-backend": "2.1.1",
-    "i18next-http-backend": "1.0.0"
+    "i18next-http-backend": "1.0.2"
   }
 }
