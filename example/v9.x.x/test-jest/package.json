@@ -10,7 +10,7 @@
     "i18next-http-backend": "1.0.0",
     "raf": "3.4.0",
     "react": "16.3.2",
-    "react-dom": "16.3.2",
+    "react-dom": "16.13.0",
     "react-i18next": "8.0.6",
     "react-scripts": "1.1.4"
   },
