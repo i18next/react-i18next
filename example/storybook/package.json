@@ -5,7 +5,7 @@
   "dependencies": {
     "i18next": "^15.0.7",
     "i18next-browser-languagedetector": "3.0.0",
-    "i18next-xhr-backend": "2.0.0",
+    "i18next-http-backend": "1.0.0",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-i18next": "^10.5.2",
