@@ -7,7 +7,7 @@
     "enzyme-adapter-react-16": "^1.1.1",
     "i18next": "11.3.2",
     "i18next-browser-languagedetector": "2.2.0",
-    "i18next-http-backend": "1.0.2",
+    "i18next-http-backend": "1.0.3",
     "raf": "3.4.0",
     "react": "16.3.2",
     "react-dom": "16.3.2",
