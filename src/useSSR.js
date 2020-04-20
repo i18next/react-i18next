@@ -7,7 +7,7 @@ export function useSSR(initialI18nStore, initialLanguage, props = {}) {
   const { i18n: i18nFromContext } = getHasUsedI18nextProvider() ? ReactI18nContext || {} : {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
 
-  // opt out if is a cloned instance, eg. created by i18next-express-middleware on request
+  // opt out if is a cloned instance, eg. created by i18next-http-middleware on request
   // -> do not set initial stuff on server side
   if (i18n.options && i18n.options.isClone) return;
 

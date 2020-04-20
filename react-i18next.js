@@ -1000,7 +1000,7 @@
     var _ref = getHasUsedI18nextProvider() ? ReactI18nContext || {} : {},
         i18nFromContext = _ref.i18n;
 
-    var i18n = i18nFromProps || i18nFromContext || getI18n(); // opt out if is a cloned instance, eg. created by i18next-express-middleware on request
+    var i18n = i18nFromProps || i18nFromContext || getI18n(); // opt out if is a cloned instance, eg. created by i18next-http-middleware on request
     // -> do not set initial stuff on server side
 
     if (i18n.options && i18n.options.isClone) return; // nextjs / SSR: getting data from next.js or other ssr stack

@@ -19,7 +19,7 @@ const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 const appSrc = resolveApp('src');
 
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
-const i18nextMiddleware = require('i18next-express-middleware');
+const i18nextMiddleware = require('i18next-http-middleware');
 
 const server = express();
 
