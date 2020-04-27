@@ -1,4 +1,4 @@
-### 11.3.6
+### 11.4.0
 
 - Add sideEffects false to package json to allow tree shaking [1097](https://github.com/i18next/react-i18next/pull/1097)
 
