@@ -1,3 +1,7 @@
+### 11.3.6
+
+- Add sideEffects false to package json to allow tree shaking [1097](https://github.com/i18next/react-i18next/pull/1097)
+
 ### 11.3.5
 
 - fix returning defaultValue for Trans component [1092](https://github.com/i18next/react-i18next/pull/1092)
