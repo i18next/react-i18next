@@ -147,5 +147,6 @@
       "**/react-i18next.min.js"
     ]
   },
-  "lock": false
+  "lock": false,
+  "sideEffects": false
 }
