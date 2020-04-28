@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import i18nInstance from './i18n';
 import { useTranslation } from '../src/useTranslation';
-import { setI18n, usedI18nextProvider } from '../src/context';
+import { setI18n } from '../src/context';
 import { I18nextProvider } from '../src/I18nextProvider';
 
 jest.unmock('../src/useTranslation');
@@ -119,10 +119,6 @@ describe('useTranslation', () => {
 
       return <div>{t('key1')}</div>;
     }
-
-    beforeEach(() => {
-      usedI18nextProvider(false);
-    });
 
     afterEach(() => {
       i18nInstance.reportNamespaces.usedNamespaces = {};

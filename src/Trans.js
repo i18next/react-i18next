@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import HTML from 'html-parse-stringify2';
-import { getI18n, getHasUsedI18nextProvider, I18nContext, getDefaults } from './context';
+import { getI18n, I18nContext, getDefaults } from './context';
 import { warn, warnOnce } from './utils';
 
 function hasChildren(node) {
@@ -215,11 +215,9 @@ export function Trans({
   t: tFromProps,
   ...additionalProps
 }) {
-  const ReactI18nContext = useContext(I18nContext);
-  const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = getHasUsedI18nextProvider()
-    ? ReactI18nContext || {}
-    : {};
+  const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = useContext(I18nContext) || {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
+
   if (!i18n) {
     warnOnce('You will need pass in an i18next instance by using i18nextReactModule');
     return children;

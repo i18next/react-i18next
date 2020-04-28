@@ -1,20 +1,11 @@
 import { useState, useEffect, useContext, useRef } from 'react';
-import {
-  getI18n,
-  getDefaults,
-  ReportNamespaces,
-  getHasUsedI18nextProvider,
-  I18nContext,
-} from './context';
+import { getI18n, getDefaults, ReportNamespaces, I18nContext } from './context';
 import { warnOnce, loadNamespaces, hasLoadedNamespace } from './utils';
 
 export function useTranslation(ns, props = {}) {
   // assert we have the needed i18nInstance
   const { i18n: i18nFromProps } = props;
-  const ReactI18nContext = useContext(I18nContext);
-  const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = getHasUsedI18nextProvider()
-    ? ReactI18nContext || {}
-    : {};
+  const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = useContext(I18nContext) || {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
   if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
   if (!i18n) {
@@ -53,7 +44,7 @@ export function useTranslation(ns, props = {}) {
   const isMounted = useRef(true);
   useEffect(() => {
     const { bindI18n, bindI18nStore } = i18nOptions;
-    isMounted.current = true
+    isMounted.current = true;
 
     // if not ready and not using suspense load the namespaces
     // in side effect and do not call resetT if unmounted
