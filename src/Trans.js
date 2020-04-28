@@ -228,7 +228,6 @@ export function Trans({
   const t = tFromProps || i18n.t.bind(i18n) || (k => k);
 
   const reactI18nextOptions = { ...getDefaults(), ...(i18n.options && i18n.options.react) };
-  const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
 
   // prepare having a namespace
   let namespaces = ns || t.ns || defaultNSFromContext || (i18n.options && i18n.options.defaultNS);
@@ -252,18 +251,17 @@ export function Trans({
   };
   const translation = key ? t(key, combinedTOpts) : defaultValue;
 
-  if (!useAsParent)
-    return renderNodes(
-      components || children,
-      translation,
-      i18n,
-      reactI18nextOptions,
-      combinedTOpts,
-    );
-
-  return React.createElement(
-    useAsParent,
-    additionalProps,
-    renderNodes(components || children, translation, i18n, reactI18nextOptions, combinedTOpts),
+  const content = renderNodes(
+    components || children,
+    translation,
+    i18n,
+    reactI18nextOptions,
+    combinedTOpts,
   );
+
+  // allows user to pass `null` to `parent`
+  // and override `defaultTransParent` if is present
+  const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
+
+  return useAsParent ? React.createElement(useAsParent, additionalProps, content) : content;
 }
