@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import HTML from 'html-parse-stringify2';
+import { useContext, isValidElement, createElement, cloneElement } from 'react';
+import { parse } from 'html-parse-stringify2';
 import { getI18n, I18nContext, getDefaults } from './context';
 import { warn, warnOnce } from './utils';
 
@@ -14,9 +14,10 @@ function getChildren(node) {
 
 function hasValidReactChildren(children) {
   if (Object.prototype.toString.call(children) !== '[object Array]') return false;
-  return children.every(child => React.isValidElement(child));
+  return children.every(child => isValidElement(child));
 }
 
+// React.Children.toArray cannot replace this, will fail at a child of object type
 function getAsArray(data) {
   return Array.isArray(data) ? data : [data];
 }
@@ -24,18 +25,15 @@ function getAsArray(data) {
 export function nodesToString(children, i18nOptions) {
   if (!children) return '';
   let stringNode = '';
-
-  // do not use `React.Children.toArray`, will fail at object children
-  const childrenArray = getAsArray(children);
   const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
 
   // e.g. lorem <br/> ipsum {{ messageCount, format }} dolor <strong>bold</strong> amet
-  childrenArray.forEach((child, childIndex) => {
+  getAsArray(children).forEach((child, childIndex) => {
     if (typeof child === 'string') {
       // actual e.g. lorem
       // expected e.g. lorem
       stringNode += `${child}`;
-    } else if (React.isValidElement(child)) {
+    } else if (isValidElement(child)) {
       const childPropsCount = Object.keys(child.props).length;
       const shouldKeepChild = keepArray.indexOf(child.type) > -1;
       const childChildren = child.props.children;
@@ -88,116 +86,121 @@ export function nodesToString(children, i18nOptions) {
   return stringNode;
 }
 
-function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
+function renderNodes(componentsOrChildren, targetString = '', i18n, i18nOptions, combinedTOpts) {
   if (targetString === '') return [];
 
-  // check if contains tags we need to replace from html string to react nodes
   const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
-  const emptyChildrenButNeedsHandling =
-    targetString && new RegExp(keepArray.join('|')).test(targetString);
+  // check if contains tags we need to replace from html string to react nodes
+  const foundTagNames = new RegExp(keepArray.join('|')).test(targetString);
 
-  // no need to replace tags in the targetstring
-  if (!children && !emptyChildrenButNeedsHandling) return [targetString];
+  // no need to replace tags in the `targetString`
+  if (!componentsOrChildren && !foundTagNames) return [targetString];
 
   // v2 -> interpolates upfront no need for "some <0>{{var}}</0>"" -> will be just "some {{var}}" in translation file
   const data = {};
 
-  function getData(childs) {
-    const childrenArray = getAsArray(childs);
-
-    childrenArray.forEach(child => {
-      if (typeof child === 'string') return;
-      if (hasChildren(child)) getData(getChildren(child));
-      else if (typeof child === 'object' && !React.isValidElement(child))
+  function getData(children = []) {
+    getAsArray(children).forEach(child => {
+      if (isValidElement(child)) {
+        getData(child.props.children);
+      } else if (typeof child === 'object') {
         Object.assign(data, child);
+      }
     });
   }
 
-  getData(children);
+  getData(componentsOrChildren);
 
   const interpolatedString = i18n.services.interpolator.interpolate(
     targetString,
     { ...data, ...combinedTOpts },
     i18n.language,
+    {},
   );
-
-  // parse ast from string with additional wrapper tag
-  // -> avoids issues in parser removing prepending text nodes
-  const ast = HTML.parse(`<0>${interpolatedString}</0>`);
 
   function mapAST(reactNode, astNode) {
     const reactNodes = getAsArray(reactNode);
     const astNodes = getAsArray(astNode);
 
     return astNodes.reduce((mem, node, i) => {
-      const translationContent = node.children && node.children[0] && node.children[0].content;
-      if (node.type === 'tag') {
-        const child = reactNodes[parseInt(node.name, 10)] || {};
-        const isElement = React.isValidElement(child);
+      // we don't use `html-parse-stringify2`, `components` option, get rid of it first
+      if (node.type === 'component') return mem;
+      if (node.type === 'text') {
+        mem.push(node.content);
+        return mem;
+      }
 
-        if (typeof child === 'string') {
-          mem.push(child);
-        } else if (hasChildren(child)) {
-          const childs = getChildren(child);
-          const mappedChildren = mapAST(childs, node.children);
-          const inner =
-            hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
+      /**
+       * node.type === 'tag' left to analyze
+       * https://github.com/rayd/html-parse-stringify2#1-tag
+       */
 
-          if (child.dummy) child.children = inner; // needed on preact!
-          mem.push(React.cloneElement(child, { ...child.props, key: i }, inner));
-        } else if (
-          emptyChildrenButNeedsHandling &&
-          typeof child === 'object' &&
-          child.dummy &&
-          !isElement
-        ) {
-          // we have a empty Trans node (the dummy element) with a targetstring that contains html tags needing
-          // conversion to react nodes
-          // so we just need to map the inner stuff
-          const inner = mapAST(reactNodes /* wrong but we need something */, node.children);
-          mem.push(React.cloneElement(child, { ...child.props, key: i }, inner));
-        } else if (Number.isNaN(parseFloat(node.name))) {
-          if (i18nOptions.transSupportBasicHtmlNodes && keepArray.indexOf(node.name) > -1) {
-            if (node.voidElement) {
-              mem.push(React.createElement(node.name, { key: `${node.name}-${i}` }));
-            } else {
-              const inner = mapAST(reactNodes /* wrong but we need something */, node.children);
+      const translationContent = node.children[0] && node.children[0].content;
+      const child = reactNodes[parseInt(node.name, 10)] || {};
+      const isElement = isValidElement(child);
 
-              mem.push(React.createElement(node.name, { key: `${node.name}-${i}` }, inner));
-            }
-          } else if (node.voidElement) {
-            mem.push(`<${node.name} />`);
+      if (typeof child === 'string') {
+        mem.push(child);
+      } else if (hasChildren(child)) {
+        const children = getChildren(child);
+        const mappedChildren = mapAST(children, node.children);
+        const inner =
+          hasValidReactChildren(children) && mappedChildren.length === 0
+            ? children
+            : mappedChildren;
+
+        if (child.dummy) child.children = inner; // needed on preact!
+        mem.push(cloneElement(child, { ...child.props, key: i }, inner));
+      } else if (foundTagNames && typeof child === 'object' && child.dummy && !isElement) {
+        // we have a empty Trans node (the dummy element) with a targetstring that contains html tags needing
+        // conversion to react nodes
+        // so we just need to map the inner stuff
+        const inner = mapAST(reactNodes /* wrong but we need something */, node.children);
+        mem.push(cloneElement(child, { ...child.props, key: i }, inner));
+      } else if (Number.isNaN(parseFloat(node.name))) {
+        if (i18nOptions.transSupportBasicHtmlNodes && keepArray.indexOf(node.name) > -1) {
+          if (node.voidElement) {
+            mem.push(createElement(node.name, { key: `${node.name}-${i}` }));
           } else {
             const inner = mapAST(reactNodes /* wrong but we need something */, node.children);
 
-            mem.push(`<${node.name}>${inner}</${node.name}>`);
+            mem.push(createElement(node.name, { key: `${node.name}-${i}` }, inner));
           }
-        } else if (typeof child === 'object' && !isElement) {
-          const content = node.children[0] ? translationContent : null;
-
-          // v1
-          // as interpolation was done already we just have a regular content node
-          // in the translation AST while having an object in reactNodes
-          // -> push the content no need to interpolate again
-          if (content) mem.push(content);
-        } else if (node.children.length === 1 && translationContent) {
-          // If component does not have children, but translation - has
-          // with this in component could be components={[<span class='make-beautiful'/>]} and in translation - 'some text <0>some highlighted message</0>'
-          mem.push(React.cloneElement(child, { ...child.props, key: i }, translationContent));
+        } else if (node.voidElement) {
+          mem.push(`<${node.name} />`);
         } else {
-          mem.push(React.cloneElement(child, { ...child.props, key: i }));
+          const inner = mapAST(reactNodes /* wrong but we need something */, node.children);
+
+          mem.push(`<${node.name}>${inner}</${node.name}>`);
         }
-      } else if (node.type === 'text') {
-        mem.push(node.content);
+      } else if (typeof child === 'object' && !isElement) {
+        const content = node.children[0] ? translationContent : null;
+
+        // v1
+        // as interpolation was done already we just have a regular content node
+        // in the translation AST while having an object in reactNodes
+        // -> push the content no need to interpolate again
+        if (content) mem.push(content);
+      } else if (node.children.length === 1 && translationContent) {
+        // If component does not have children, but translation - has
+        // with this in component could be components={[<span class='make-beautiful'/>]} and in translation - 'some text <0>some highlighted message</0>'
+        mem.push(cloneElement(child, { ...child.props, key: i }, translationContent));
+      } else {
+        mem.push(cloneElement(child, { ...child.props, key: i }));
       }
       return mem;
     }, []);
   }
 
   // call mapAST with having react nodes nested into additional node like
-  // we did for the string ast from translation
+  const result = mapAST(
+    [{ dummy: true, children: componentsOrChildren }],
+    // parse ast from string with additional wrapper tag
+    // -> avoids issues in parser removing prepending text nodes
+    parse(`<0>${interpolatedString}</0>`),
+  );
+
   // return the children of that extra node to get expected result
-  const result = mapAST([{ dummy: true, children }], ast);
   return getChildren(result[0]);
 }
 
@@ -261,5 +264,5 @@ export function Trans({
   // and override `defaultTransParent` if is present
   const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
 
-  return useAsParent ? React.createElement(useAsParent, additionalProps, content) : content;
+  return useAsParent ? createElement(useAsParent, additionalProps, content) : content;
 }
