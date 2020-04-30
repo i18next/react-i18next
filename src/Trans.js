@@ -25,51 +25,51 @@ export function nodesToString(startingString, children, index, i18nOptions) {
   if (!children) return '';
   let stringNode = startingString;
 
+  // do not use `React.Children.toArray`, will fail at object children
   const childrenArray = getAsArray(children);
   const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
 
-  childrenArray.forEach((child, i) => {
-    const elementKey = `${i}`;
-
+  // e.g. lorem <br/> ipsum {{ messageCount, format }} dolor <strong>bold</strong> amet
+  childrenArray.forEach((child, childIndex) => {
     if (typeof child === 'string') {
-      stringNode = `${stringNode}${child}`;
-    } else if (hasChildren(child)) {
-      const elementTag =
-        keepArray.indexOf(child.type) > -1 &&
-        Object.keys(child.props).length === 1 &&
-        typeof hasChildren(child) === 'string'
-          ? child.type
-          : elementKey;
+      // actual e.g. lorem
+      // expected e.g. lorem
+      stringNode += `${child}`;
+    } else if (React.isValidElement(child)) {
+      const childPropsCount = Object.keys(child.props).length;
+      const shouldKeepChild = keepArray.indexOf(child.type) > -1;
+      const childChildren = child.props.children;
 
-      if (child.props && child.props.i18nIsDynamicList) {
-        // we got a dynamic list like "<ul>{['a', 'b'].map(item => ( <li key={item}>{item}</li> ))}</ul>""
-        // the result should be "<0></0>" and not "<0><0>a</0><1>b</1></0>"
-        stringNode = `${stringNode}<${elementTag}></${elementTag}>`;
+      if (!childChildren && shouldKeepChild && childPropsCount === 0) {
+        // actual e.g. lorem <br/> ipsum
+        // expected e.g. lorem <br/> ipsum
+        stringNode += `<${child.type}/>`;
+      } else if (!childChildren && (!shouldKeepChild || childPropsCount !== 0)) {
+        // actual e.g. lorem <hr className="test" /> ipsum
+        // expected e.g. lorem <0></0> ipsum
+        stringNode += `<${childIndex}></${childIndex}>`;
+      } else if (child.props.i18nIsDynamicList) {
+        // we got a dynamic list like
+        // e.g. <ul i18nIsDynamicList>{['a', 'b'].map(item => ( <li key={item}>{item}</li> ))}</ul>
+        // expected e.g. "<0></0>", not e.g. "<0><0>a</0><1>b</1></0>"
+        stringNode += `<${childIndex}></${childIndex}>`;
+      } else if (shouldKeepChild && childPropsCount === 1 && typeof childChildren === 'string') {
+        // actual e.g. dolor <strong>bold</strong> amet
+        // expected e.g. dolor <strong>bold</strong> amet
+        stringNode += `<${child.type}>${childChildren}</${child.type}>`;
       } else {
         // regular case mapping the inner children
-        stringNode = `${stringNode}<${elementTag}>${nodesToString(
-          '',
-          getChildren(child),
-          i + 1,
-          i18nOptions,
-        )}</${elementTag}>`;
-      }
-    } else if (React.isValidElement(child)) {
-      if (keepArray.indexOf(child.type) > -1 && Object.keys(child.props).length === 0) {
-        stringNode = `${stringNode}<${child.type}/>`;
-      } else {
-        stringNode = `${stringNode}<${elementKey}></${elementKey}>`;
+        const content = nodesToString('', childChildren, childIndex + 1, i18nOptions);
+        stringNode += `<${childIndex}>${content}</${childIndex}>`;
       }
     } else if (typeof child === 'object') {
-      const clone = { ...child };
-      const { format } = clone;
-      delete clone.format;
-
+      // e.g. lorem {{ value, format }} ipsum
+      const { format, ...clone } = child;
       const keys = Object.keys(clone);
-      if (format && keys.length === 1) {
-        stringNode = `${stringNode}{{${keys[0]}, ${format}}}`;
-      } else if (keys.length === 1) {
-        stringNode = `${stringNode}{{${keys[0]}}}`;
+
+      if (keys.length === 1) {
+        const value = format ? `${keys[0]}, ${format}` : keys[0];
+        stringNode += `{{${value}}}`;
       } else {
         // not a valid interpolation object (can only contain one value plus format)
         warn(
