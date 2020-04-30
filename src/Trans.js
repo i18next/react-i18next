@@ -21,9 +21,9 @@ function getAsArray(data) {
   return Array.isArray(data) ? data : [data];
 }
 
-export function nodesToString(startingString, children, index, i18nOptions) {
+export function nodesToString(children, i18nOptions) {
   if (!children) return '';
-  let stringNode = startingString;
+  let stringNode = '';
 
   // do not use `React.Children.toArray`, will fail at object children
   const childrenArray = getAsArray(children);
@@ -59,7 +59,7 @@ export function nodesToString(startingString, children, index, i18nOptions) {
         stringNode += `<${child.type}>${childChildren}</${child.type}>`;
       } else {
         // regular case mapping the inner children
-        const content = nodesToString('', childChildren, childIndex + 1, i18nOptions);
+        const content = nodesToString(childChildren, i18nOptions);
         stringNode += `<${childIndex}>${content}</${childIndex}>`;
       }
     } else if (typeof child === 'object') {
@@ -233,7 +233,7 @@ export function Trans({
 
   const defaultValue =
     defaults ||
-    nodesToString('', children, 0, reactI18nextOptions) ||
+    nodesToString(children, reactI18nextOptions) ||
     reactI18nextOptions.transEmptyNodeValue ||
     i18nKey;
   const { hashTransKey } = reactI18nextOptions;

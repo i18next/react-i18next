@@ -11,7 +11,7 @@ describe('trans nodeToString', () => {
       );
       const expected = 'lorem <1></1> ipsum';
       const transKeepBasicHtmlNodesFor = [];
-      const actual = nodesToString('', fragment.props.children, 0, { transKeepBasicHtmlNodesFor });
+      const actual = nodesToString(fragment.props.children, { transKeepBasicHtmlNodesFor });
       expect(actual).toEqual(expected);
     });
 
@@ -23,7 +23,7 @@ describe('trans nodeToString', () => {
       );
       const expected = 'lorem <1>bold</1> ipsum';
       const transKeepBasicHtmlNodesFor = [];
-      const actual = nodesToString('', fragment.props.children, 0, { transKeepBasicHtmlNodesFor });
+      const actual = nodesToString(fragment.props.children, { transKeepBasicHtmlNodesFor });
       expect(actual).toEqual(expected);
     });
   });
@@ -37,7 +37,7 @@ describe('trans nodeToString', () => {
       );
       const expected = 'lorem <br/> ipsum';
       const transKeepBasicHtmlNodesFor = ['br', 'strong', 'i'];
-      const actual = nodesToString('', fragment.props.children, 0, { transKeepBasicHtmlNodesFor });
+      const actual = nodesToString(fragment.props.children, { transKeepBasicHtmlNodesFor });
       expect(actual).toEqual(expected);
     });
 
@@ -49,7 +49,7 @@ describe('trans nodeToString', () => {
       );
       const expected = 'lorem <strong>bold</strong> ipsum';
       const transKeepBasicHtmlNodesFor = ['br', 'strong', 'i'];
-      const actual = nodesToString('', fragment.props.children, 0, { transKeepBasicHtmlNodesFor });
+      const actual = nodesToString(fragment.props.children, { transKeepBasicHtmlNodesFor });
       expect(actual).toEqual(expected);
     });
   });
@@ -63,7 +63,7 @@ describe('trans nodeToString', () => {
       );
       const expected = 'lorem <1></1> ipsum';
       const transKeepBasicHtmlNodesFor = ['br', 'strong', 'i'];
-      const actual = nodesToString('', fragment.props.children, 0, { transKeepBasicHtmlNodesFor });
+      const actual = nodesToString(fragment.props.children, { transKeepBasicHtmlNodesFor });
       expect(actual).toEqual(expected);
     });
 
@@ -75,7 +75,7 @@ describe('trans nodeToString', () => {
       );
       const expected = 'lorem <1>bold</1> ipsum';
       const transKeepBasicHtmlNodesFor = ['br', 'strong', 'i'];
-      const actual = nodesToString('', fragment.props.children, 0, { transKeepBasicHtmlNodesFor });
+      const actual = nodesToString(fragment.props.children, { transKeepBasicHtmlNodesFor });
       expect(actual).toEqual(expected);
     });
   });
@@ -93,7 +93,7 @@ describe('trans nodeToString', () => {
         </>
       );
       const expected = 'lorem <1><0>a</0><1>b</1></1> ipsum';
-      const actual = nodesToString('', fragment.props.children, 0, {});
+      const actual = nodesToString(fragment.props.children, {});
       expect(actual).toEqual(expected);
     });
 
@@ -109,7 +109,7 @@ describe('trans nodeToString', () => {
         </>
       );
       const expected = 'lorem <1></1> ipsum';
-      const actual = nodesToString('', fragment.props.children, 0, {});
+      const actual = nodesToString(fragment.props.children, {});
       expect(actual).toEqual(expected);
     });
   });
