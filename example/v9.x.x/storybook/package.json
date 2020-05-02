@@ -5,7 +5,7 @@
   "dependencies": {
     "i18next": "11.3.2",
     "i18next-browser-languagedetector": "2.2.0",
-    "i18next-locize-backend": "1.4.2",
+    "i18next-locize-backend": "4.0.7",
     "locize-editor": "1.3.0",
     "react": "16.3.2",
     "react-dom": "16.3.2",

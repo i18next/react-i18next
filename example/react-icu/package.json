@@ -9,7 +9,7 @@
     "i18next": "^19.3.3",
     "i18next-browser-languagedetector": "^4.0.2",
     "i18next-icu": "^1.3.0",
-    "i18next-http-backend": "1.0.3",
+    "i18next-http-backend": "1.0.8",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-i18next": "^11.3.4",
