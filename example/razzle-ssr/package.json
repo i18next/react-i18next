@@ -16,7 +16,7 @@
     "react-i18next": "10.1.2",
     "i18next": "15.0.4",
     "i18next-browser-languagedetector": "3.0.0",
-    "i18next-http-middleware": "1.0.1",
+    "i18next-http-middleware": "1.0.2",
     "i18next-fs-backend": "1.0.2",
     "i18next-http-backend": "1.0.8"
   }
