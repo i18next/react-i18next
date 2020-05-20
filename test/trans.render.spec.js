@@ -103,7 +103,27 @@ describe('trans using translation prop', () => {
     expect(
       wrapper.contains(
         <div>
-          Result should be a clickable link <a href="https://www.google.com">Google</a>.
+          Result should be a clickable link <a href="https://www.google.com">Google</a>
+        </div>,
+      ),
+    ).toBe(true);
+  });
+});
+
+describe('trans overwrites translation prop', () => {
+  const TestElement = ({ parent }) => (
+    <Trans i18nKey="transTest3_overwrite" parent={parent}>
+      <a href="https://www.bing.com"></a>
+    </Trans>
+  );
+
+  it('should render correct content', () => {
+    const wrapper = mount(<TestElement />);
+    console.log(wrapper.debug());
+    expect(
+      wrapper.contains(
+        <div>
+          Result should be a clickable link <a href="https://www.bing.com">Google</a>
         </div>,
       ),
     ).toBe(true);
