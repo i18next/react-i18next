@@ -72,7 +72,27 @@ describe('trans simple', () => {
 
 describe('trans simple using ns prop', () => {
   const TestElement = ({ parent }) => (
-    <Trans i18nKey="transTest1" ns="other" parent={parent}>
+    <Trans i18nKey="transTest1" parent={parent}>
+      <a>here</a>.
+    </Trans>
+  );
+
+  it('should render correct content', () => {
+    const wrapper = mount(<TestElement />);
+    // console.log(wrapper.debug());
+    expect(
+      wrapper.contains(
+        <div>
+		  Result should be a clickable link <a href="https://www.google.com">Google</a>.
+        </div>,
+      ),
+    ).toBe(true);
+  });
+});
+
+describe('trans using translation prop', () => {
+  const TestElement = ({ parent }) => (
+    <Trans i18nKey="transTest3" ns="other" parent={parent}>
       Open <Link to="/msgs">here</Link>.
     </Trans>
   );
