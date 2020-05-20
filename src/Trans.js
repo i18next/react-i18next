@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import HTML from 'html-parse-stringify2';
-import merge from 'lodash.merge';
 import { getI18n, I18nContext, getDefaults } from './context';
 import { warn, warnOnce } from './utils';
 
@@ -23,10 +22,10 @@ function getAsArray(data) {
 }
 
 function mergeProps(source, target){
-  let new_target = {...target};
+  const newTarget = {...target};
   // overwrite source.props when target.props already set
-  new_target.props = Object.assign(source.props, target.props);
-  return new_target;
+  newTarget.props = Object.assign(source.props, target.props);
+  return newTarget;
 }
 
 export function nodesToString(children, i18nOptions) {
