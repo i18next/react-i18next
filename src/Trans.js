@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import HTML from 'html-parse-stringify2';
+import _ from 'lodash';
 import { getI18n, I18nContext, getDefaults } from './context';
 import { warn, warnOnce } from './utils';
 
@@ -132,7 +133,9 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
     return astNodes.reduce((mem, node, i) => {
       const translationContent = node.children && node.children[0] && node.children[0].content;
       if (node.type === 'tag') {
-        const child = reactNodes[parseInt(node.name, 10)] || {};
+        const tmp = reactNodes[parseInt(node.name, 10)] || {};
+        const child = Object.keys(node.attrs).length != 0 ? _.merge({props: node.attrs}, tmp) : tmp;
+
         const isElement = React.isValidElement(child);
 
         if (typeof child === 'string') {
