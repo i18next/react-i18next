@@ -99,7 +99,7 @@ describe('trans using translation prop', () => {
 
   it('should render correct content', () => {
     const wrapper = mount(<TestElement />);
-    console.log(wrapper.debug());
+    // console.log(wrapper.debug());
     expect(
       wrapper.contains(
         <div>
@@ -119,7 +119,7 @@ describe('trans overwrites translation prop', () => {
 
   it('should render correct content', () => {
     const wrapper = mount(<TestElement />);
-    console.log(wrapper.debug());
+    // console.log(wrapper.debug());
     expect(
       wrapper.contains(
         <div>
