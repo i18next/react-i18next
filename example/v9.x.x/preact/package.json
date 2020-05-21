@@ -6,7 +6,7 @@
     "@just-boris/preact-scripts": "1.0.7",
     "i18next": "8.4.3",
     "i18next-browser-languagedetector": "2.0.0",
-    "i18next-http-backend": "1.0.8",
+    "i18next-http-backend": "1.0.12",
     "preact": "8.2.1",
     "preact-compat": "3.16.0",
     "react-i18next": "8.0.6"
