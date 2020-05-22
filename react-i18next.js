@@ -7,6 +7,8 @@
   var React__default = 'default' in React ? React['default'] : React;
 
   function _typeof(obj) {
+    "@babel/helpers - typeof";
+
     if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
       _typeof = function (obj) {
         return typeof obj;
@@ -76,13 +78,13 @@
       var source = arguments[i] != null ? arguments[i] : {};
 
       if (i % 2) {
-        ownKeys(source, true).forEach(function (key) {
+        ownKeys(Object(source), true).forEach(function (key) {
           _defineProperty(target, key, source[key]);
         });
       } else if (Object.getOwnPropertyDescriptors) {
         Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
       } else {
-        ownKeys(source).forEach(function (key) {
+        ownKeys(Object(source)).forEach(function (key) {
           Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
         });
       }
@@ -128,7 +130,7 @@
   }
 
   function _slicedToArray(arr, i) {
-    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
+    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
   }
 
   function _arrayWithHoles(arr) {
@@ -136,10 +138,7 @@
   }
 
   function _iterableToArrayLimit(arr, i) {
-    if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) {
-      return;
-    }
-
+    if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
     var _arr = [];
     var _n = true;
     var _d = false;
@@ -165,8 +164,25 @@
     return _arr;
   }
 
+  function _unsupportedIterableToArray(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(n);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+  }
+
+  function _arrayLikeToArray(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+
+    for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+    return arr2;
+  }
+
   function _nonIterableRest() {
-    throw new TypeError("Invalid attempt to destructure non-iterable instance");
+    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
 
   /**
@@ -396,14 +412,7 @@
     useSuspense: true
   };
   var i18nInstance;
-  var hasUsedI18nextProvider;
   var I18nContext = React__default.createContext();
-  function usedI18nextProvider(used) {
-    hasUsedI18nextProvider = used;
-  }
-  function getHasUsedI18nextProvider() {
-    return hasUsedI18nextProvider;
-  }
   function setDefaults() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     defaultOptions = _objectSpread2({}, defaultOptions, {}, options);
@@ -411,9 +420,7 @@
   function getDefaults() {
     return defaultOptions;
   }
-  var ReportNamespaces =
-  /*#__PURE__*/
-  function () {
+  var ReportNamespaces = /*#__PURE__*/function () {
     function ReportNamespaces() {
       _classCallCheck(this, ReportNamespaces);
 
@@ -596,44 +603,63 @@
     return Array.isArray(data) ? data : [data];
   }
 
-  function nodesToString(startingString, children, index, i18nOptions) {
+  function mergeProps(source, target) {
+    var newTarget = _objectSpread2({}, target); // overwrite source.props when target.props already set
+
+
+    newTarget.props = Object.assign(source.props, target.props);
+    return newTarget;
+  }
+
+  function nodesToString(children, i18nOptions) {
     if (!children) return '';
-    var stringNode = startingString;
+    var stringNode = ''; // do not use `React.Children.toArray`, will fail at object children
+
     var childrenArray = getAsArray(children);
-    var keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
-    childrenArray.forEach(function (child, i) {
-      var elementKey = "".concat(i);
+    var keepArray = i18nOptions.transKeepBasicHtmlNodesFor || []; // e.g. lorem <br/> ipsum {{ messageCount, format }} dolor <strong>bold</strong> amet
 
+    childrenArray.forEach(function (child, childIndex) {
       if (typeof child === 'string') {
-        stringNode = "".concat(stringNode).concat(child);
-      } else if (hasChildren(child)) {
-        var elementTag = keepArray.indexOf(child.type) > -1 && Object.keys(child.props).length === 1 && typeof hasChildren(child) === 'string' ? child.type : elementKey;
+        // actual e.g. lorem
+        // expected e.g. lorem
+        stringNode += "".concat(child);
+      } else if (React__default.isValidElement(child)) {
+        var childPropsCount = Object.keys(child.props).length;
+        var shouldKeepChild = keepArray.indexOf(child.type) > -1;
+        var childChildren = child.props.children;
 
-        if (child.props && child.props.i18nIsDynamicList) {
-          // we got a dynamic list like "<ul>{['a', 'b'].map(item => ( <li key={item}>{item}</li> ))}</ul>""
-          // the result should be "<0></0>" and not "<0><0>a</0><1>b</1></0>"
-          stringNode = "".concat(stringNode, "<").concat(elementTag, "></").concat(elementTag, ">");
+        if (!childChildren && shouldKeepChild && childPropsCount === 0) {
+          // actual e.g. lorem <br/> ipsum
+          // expected e.g. lorem <br/> ipsum
+          stringNode += "<".concat(child.type, "/>");
+        } else if (!childChildren && (!shouldKeepChild || childPropsCount !== 0)) {
+          // actual e.g. lorem <hr className="test" /> ipsum
+          // expected e.g. lorem <0></0> ipsum
+          stringNode += "<".concat(childIndex, "></").concat(childIndex, ">");
+        } else if (child.props.i18nIsDynamicList) {
+          // we got a dynamic list like
+          // e.g. <ul i18nIsDynamicList>{['a', 'b'].map(item => ( <li key={item}>{item}</li> ))}</ul>
+          // expected e.g. "<0></0>", not e.g. "<0><0>a</0><1>b</1></0>"
+          stringNode += "<".concat(childIndex, "></").concat(childIndex, ">");
+        } else if (shouldKeepChild && childPropsCount === 1 && typeof childChildren === 'string') {
+          // actual e.g. dolor <strong>bold</strong> amet
+          // expected e.g. dolor <strong>bold</strong> amet
+          stringNode += "<".concat(child.type, ">").concat(childChildren, "</").concat(child.type, ">");
         } else {
           // regular case mapping the inner children
-          stringNode = "".concat(stringNode, "<").concat(elementTag, ">").concat(nodesToString('', getChildren(child), i + 1, i18nOptions), "</").concat(elementTag, ">");
-        }
-      } else if (React__default.isValidElement(child)) {
-        if (keepArray.indexOf(child.type) > -1 && Object.keys(child.props).length === 0) {
-          stringNode = "".concat(stringNode, "<").concat(child.type, "/>");
-        } else {
-          stringNode = "".concat(stringNode, "<").concat(elementKey, "></").concat(elementKey, ">");
+          var content = nodesToString(childChildren, i18nOptions);
+          stringNode += "<".concat(childIndex, ">").concat(content, "</").concat(childIndex, ">");
         }
       } else if (_typeof(child) === 'object') {
-        var clone = _objectSpread2({}, child);
+        // e.g. lorem {{ value, format }} ipsum
+        var format = child.format,
+            clone = _objectWithoutProperties(child, ["format"]);
 
-        var format = clone.format;
-        delete clone.format;
         var keys = Object.keys(clone);
 
-        if (format && keys.length === 1) {
-          stringNode = "".concat(stringNode, "{{").concat(keys[0], ", ").concat(format, "}}");
-        } else if (keys.length === 1) {
-          stringNode = "".concat(stringNode, "{{").concat(keys[0], "}}");
+        if (keys.length === 1) {
+          var value = format ? "".concat(keys[0], ", ").concat(format) : keys[0];
+          stringNode += "{{".concat(value, "}}");
         } else {
           // not a valid interpolation object (can only contain one value plus format)
           warn("react-i18next: the passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.", child);
@@ -676,7 +702,10 @@
         var translationContent = node.children && node.children[0] && node.children[0].content;
 
         if (node.type === 'tag') {
-          var child = reactNodes[parseInt(node.name, 10)] || {};
+          var tmp = reactNodes[parseInt(node.name, 10)] || {};
+          var child = Object.keys(node.attrs).length !== 0 ? mergeProps({
+            props: node.attrs
+          }, tmp) : tmp;
           var isElement = React__default.isValidElement(child);
 
           if (typeof child === 'string') {
@@ -775,9 +804,7 @@
         tFromProps = _ref.t,
         additionalProps = _objectWithoutProperties(_ref, ["children", "count", "parent", "i18nKey", "tOptions", "values", "defaults", "components", "ns", "i18n", "t"]);
 
-    var ReactI18nContext = React.useContext(I18nContext);
-
-    var _ref2 = getHasUsedI18nextProvider() ? ReactI18nContext || {} : {},
+    var _ref2 = React.useContext(I18nContext) || {},
         i18nFromContext = _ref2.i18n,
         defaultNSFromContext = _ref2.defaultNS;
 
@@ -792,13 +819,12 @@
       return k;
     };
 
-    var reactI18nextOptions = _objectSpread2({}, getDefaults(), {}, i18n.options && i18n.options.react);
+    var reactI18nextOptions = _objectSpread2({}, getDefaults(), {}, i18n.options && i18n.options.react); // prepare having a namespace
 
-    var useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent; // prepare having a namespace
 
     var namespaces = ns || t.ns || defaultNSFromContext || i18n.options && i18n.options.defaultNS;
     namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
-    var defaultValue = defaults || nodesToString('', children, 0, reactI18nextOptions) || reactI18nextOptions.transEmptyNodeValue || i18nKey;
+    var defaultValue = defaults || nodesToString(children, reactI18nextOptions) || reactI18nextOptions.transEmptyNodeValue || i18nKey;
     var hashTransKey = reactI18nextOptions.hashTransKey;
     var key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
     var interpolationOverride = values ? {} : {
@@ -816,17 +842,19 @@
     });
 
     var translation = key ? t(key, combinedTOpts) : defaultValue;
-    if (!useAsParent) return renderNodes(components || children, translation, i18n, reactI18nextOptions, combinedTOpts);
-    return React__default.createElement(useAsParent, additionalProps, renderNodes(components || children, translation, i18n, reactI18nextOptions, combinedTOpts));
+    var content = renderNodes(components || children, translation, i18n, reactI18nextOptions, combinedTOpts); // allows user to pass `null` to `parent`
+    // and override `defaultTransParent` if is present
+
+    var useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
+    return useAsParent ? React__default.createElement(useAsParent, additionalProps, content) : content;
   }
 
   function useTranslation(ns) {
     var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     // assert we have the needed i18nInstance
     var i18nFromProps = props.i18n;
-    var ReactI18nContext = React.useContext(I18nContext);
 
-    var _ref = getHasUsedI18nextProvider() ? ReactI18nContext || {} : {},
+    var _ref = React.useContext(I18nContext) || {},
         i18nFromContext = _ref.i18n,
         defaultNSFromContext = _ref.defaultNS;
 
@@ -983,8 +1011,7 @@
     var i18n = _ref.i18n,
         defaultNS = _ref.defaultNS,
         children = _ref.children;
-    usedI18nextProvider(true);
-    return React__default.createElement(I18nContext.Provider, {
+    return React.createElement(I18nContext.Provider, {
       value: {
         i18n: i18n,
         defaultNS: defaultNS
@@ -995,9 +1022,8 @@
   function useSSR(initialI18nStore, initialLanguage) {
     var props = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     var i18nFromProps = props.i18n;
-    var ReactI18nContext = React.useContext(I18nContext);
 
-    var _ref = getHasUsedI18nextProvider() ? ReactI18nContext || {} : {},
+    var _ref = React.useContext(I18nContext) || {},
         i18nFromContext = _ref.i18n;
 
     var i18n = i18nFromProps || i18nFromContext || getI18n(); // opt out if is a cloned instance, eg. created by i18next-http-middleware on request
