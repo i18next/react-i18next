@@ -46,7 +46,7 @@ export interface TransProps<E extends Element = HTMLDivElement>
 }
 export function Trans<E extends Element = HTMLDivElement>(props: TransProps<E>): React.ReactElement;
 
-export function useSSR(initialI18nStore: any, initialLanguage: any): void;
+export function useSSR(initialI18nStore: Resource, initialLanguage: string): void;
 
 export interface UseTranslationOptions {
   i18n?: i18n;
