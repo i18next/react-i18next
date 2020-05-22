@@ -1,3 +1,7 @@
+### 11.5.0
+
+- Trans: merge option in mapAST [1120](https://github.com/i18next/react-i18next/pull/1120)
+
 ### 11.4.0
 
 - Add sideEffects false to package json to allow tree shaking [1097](https://github.com/i18next/react-i18next/pull/1097)
