@@ -21,6 +21,13 @@ function getAsArray(data) {
   return Array.isArray(data) ? data : [data];
 }
 
+function mergeProps(source, target){
+  const newTarget = {...target};
+  // overwrite source.props when target.props already set
+  newTarget.props = Object.assign(source.props, target.props);
+  return newTarget;
+}
+
 export function nodesToString(children, i18nOptions) {
   if (!children) return '';
   let stringNode = '';
@@ -132,7 +139,9 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
     return astNodes.reduce((mem, node, i) => {
       const translationContent = node.children && node.children[0] && node.children[0].content;
       if (node.type === 'tag') {
-        const child = reactNodes[parseInt(node.name, 10)] || {};
+        const tmp = reactNodes[parseInt(node.name, 10)] || {};
+        const child = Object.keys(node.attrs).length !== 0 ? mergeProps({props: node.attrs}, tmp) : tmp;
+
         const isElement = React.isValidElement(child);
 
         if (typeof child === 'string') {
