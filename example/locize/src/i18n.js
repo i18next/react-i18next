@@ -10,8 +10,8 @@ import Editor from 'locize-editor';
 // 2) create a new project
 // 3) copy/paste your projectId, apiKey below
 // 4) add de as additional language
-// 5a) import en from: http://api.locize.io/ce0cf818-32e5-44a5-b7f0-4ea9e840d962/latest/en/translation
-// 5b) import de from: http://api.locize.io/ce0cf818-32e5-44a5-b7f0-4ea9e840d962/latest/de/translation
+// 5a) import en from: http://api.locize.app/ce0cf818-32e5-44a5-b7f0-4ea9e840d962/latest/en/translation
+// 5b) import de from: http://api.locize.app/ce0cf818-32e5-44a5-b7f0-4ea9e840d962/latest/de/translation
 const locizeOptions = {
   projectId: 'ce0cf818-32e5-44a5-b7f0-4ea9e840d962',
   apiKey: '89bf4422-eb05-493c-8116-feff73450552', // YOU should not expose your apps API key to production!!!
