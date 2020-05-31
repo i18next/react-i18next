@@ -21,8 +21,8 @@ function getAsArray(data) {
   return Array.isArray(data) ? data : [data];
 }
 
-function mergeProps(source, target){
-  const newTarget = {...target};
+function mergeProps(source, target) {
+  const newTarget = { ...target };
   // overwrite source.props when target.props already set
   newTarget.props = Object.assign(source.props, target.props);
   return newTarget;
@@ -140,7 +140,8 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
       const translationContent = node.children && node.children[0] && node.children[0].content;
       if (node.type === 'tag') {
         const tmp = reactNodes[parseInt(node.name, 10)] || {};
-        const child = Object.keys(node.attrs).length !== 0 ? mergeProps({props: node.attrs}, tmp) : tmp;
+        const child =
+          Object.keys(node.attrs).length !== 0 ? mergeProps({ props: node.attrs }, tmp) : tmp;
 
         const isElement = React.isValidElement(child);
 
@@ -233,6 +234,11 @@ export function Trans({
   }
 
   const t = tFromProps || i18n.t.bind(i18n) || (k => k);
+
+  if (typeof tOptions !== 'object' && i18n.options.overloadTranslationOptionHandler) {
+    // eslint-disable-next-line no-param-reassign
+    tOptions = i18n.options.overloadTranslationOptionHandler([]);
+  }
 
   const reactI18nextOptions = { ...getDefaults(), ...(i18n.options && i18n.options.react) };
 
