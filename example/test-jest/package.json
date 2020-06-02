@@ -8,7 +8,6 @@
     "i18next": "14.1.1",
     "i18next-browser-languagedetector": "2.2.4",
     "i18next-http-backend": "1.0.15",
-    "raf": "3.4.1",
     "react": "16.8.1",
     "react-dom": "16.8.1",
     "react-i18next": "10.0.1",
