@@ -6,7 +6,7 @@
     "i18next": "11.2.2",
     "i18next-browser-languagedetector": "2.1.0",
     "i18next-icu": "0.3.0",
-    "i18next-http-backend": "1.0.14",
+    "i18next-http-backend": "1.0.15",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-i18next": "8.0.6",
