@@ -53,6 +53,7 @@ function ICUMacro({ references, state, babel }) {
           children: referencePath.parentPath.parentPath.get('children'),
         },
         babel,
+        state,
       );
     } else {
       // throw a helpful error message or something :)
@@ -174,7 +175,7 @@ function selectAsJSX(parentPath, { attributes }, babel) {
   parentPath.replaceWith(buildTransElement(extracted, extracted.attributesToCopy, t, true));
 }
 
-function transAsJSX(parentPath, { attributes, children }, babel) {
+function transAsJSX(parentPath, { attributes, children }, babel, { filename }) {
   const defaultsAttr = findAttribute('defaults', attributes);
   const componentsAttr = findAttribute('components', attributes);
   // if there is "defaults" attribute and no "components" attribute, parse defaults and extract from the parsed defaults instead of children
@@ -186,6 +187,7 @@ function transAsJSX(parentPath, { attributes, children }, babel) {
     const defaultsExpression = defaultsAttr.node.value.value;
     const parsed = babel.parse(`<>${defaultsExpression}</>`, {
       presets: ['@babel/react'],
+      filename,
     }).program.body[0].expression.children;
 
     extracted = processTrans(parsed, babel);
