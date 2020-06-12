@@ -1,3 +1,7 @@
+### 11.5.1
+
+- providing filename when running babel.parse in icu.macro [1133](https://github.com/i18next/react-i18next/pull/1133)
+
 ### 11.5.0
 
 - Trans: merge option in mapAST [1120](https://github.com/i18next/react-i18next/pull/1120)
