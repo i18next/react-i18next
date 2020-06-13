@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense } from 'react';
 import { withTranslation, Trans } from 'react-i18next';
 import logo from './logo.svg';
 import './App.css';
 
 import ComponentUseTranslation from './UseTranslation';
 
-class App extends Component {
+class AppPage extends Component {
   render() {
     const { t, i18n } = this.props;
 
@@ -32,4 +32,13 @@ class App extends Component {
   }
 }
 
-export default withTranslation('translations')(App);
+const Page = withTranslation('translations')(AppPage);
+
+// here app catches the suspense from page in case translations are not yet loaded
+export default function App() {
+  return (
+    <Suspense fallback={<div>loading...</div>}>
+      <Page />
+    </Suspense>
+  );
+}
