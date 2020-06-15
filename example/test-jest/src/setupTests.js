@@ -1,6 +1,7 @@
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
+// without stubbing do this:
 // import i18n from 'i18next';
 // import { initReactI18next } from 'react-i18next';
 
