@@ -2,9 +2,17 @@ import React, { useContext } from 'react';
 import HTML from 'html-parse-stringify2';
 import { getI18n, I18nContext, getDefaults } from './context';
 import { warn, warnOnce } from './utils';
+import { check } from 'prettier';
 
-function hasChildren(node) {
-  return node && (node.children || (node.props && node.props.children));
+function hasChildren(node, checkLength) {
+  if (!node) return false;
+  const base = node.props ? node.props.children : node.children;
+  if (checkLength) return base.length > 0;
+  return !!base;
+}
+
+function nodeOnlyChildIsTextNode(node) {
+  return node && node.children && node.children.length === 1 && node.children[0].type === 'text';
 }
 
 function getChildren(node) {
@@ -21,8 +29,8 @@ function getAsArray(data) {
   return Array.isArray(data) ? data : [data];
 }
 
-function mergeProps(source, target){
-  const newTarget = {...target};
+function mergeProps(source, target) {
+  const newTarget = { ...target };
   // overwrite source.props when target.props already set
   newTarget.props = Object.assign(source.props, target.props);
   return newTarget;
@@ -132,23 +140,36 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
   // -> avoids issues in parser removing prepending text nodes
   const ast = HTML.parse(`<0>${interpolatedString}</0>`);
 
-  function mapAST(reactNode, astNode) {
+  // reactNode (the jsx root element or child)
+  // astNode (the translation string as html ast)
+  // rootReactNode (the most outer jsx children array or trans components prop)
+  function mapAST(reactNode, astNode, rootReactNode) {
     const reactNodes = getAsArray(reactNode);
     const astNodes = getAsArray(astNode);
 
     return astNodes.reduce((mem, node, i) => {
       const translationContent = node.children && node.children[0] && node.children[0].content;
       if (node.type === 'tag') {
-        const tmp = reactNodes[parseInt(node.name, 10)] || {};
-        const child = Object.keys(node.attrs).length !== 0 ? mergeProps({props: node.attrs}, tmp) : tmp;
+        let tmp = reactNodes[parseInt(node.name, 10)]; // regular array (components or children)
+        if (!tmp && rootReactNode.length === 1 && rootReactNode[0][node.name])
+          tmp = rootReactNode[0][node.name]; // trans components is an object
+        if (!tmp) tmp = {};
+        //  console.warn('TMP', node.name, parseInt(node.name, 10), tmp, reactNodes);
+        const child =
+          Object.keys(node.attrs).length !== 0 ? mergeProps({ props: node.attrs }, tmp) : tmp;
 
         const isElement = React.isValidElement(child);
+        // console.warn('CHILD', node.name, node, isElement, child);
 
         if (typeof child === 'string') {
           mem.push(child);
-        } else if (hasChildren(child)) {
+        } else if (
+          hasChildren(child) || // the jsx element has children -> loop
+          (isElement && hasChildren(node, true) && !node.voidElement) // valid jsx element with no children but the translation has -> loop
+        ) {
           const childs = getChildren(child);
-          const mappedChildren = mapAST(childs, node.children);
+          const mappedChildren = mapAST(childs, node.children, rootReactNode);
+          // console.warn('INNER', node.name, node, child, childs, node.children, mappedChildren);
           const inner =
             hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
 
@@ -163,21 +184,33 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
           // we have a empty Trans node (the dummy element) with a targetstring that contains html tags needing
           // conversion to react nodes
           // so we just need to map the inner stuff
-          const inner = mapAST(reactNodes /* wrong but we need something */, node.children);
+          const inner = mapAST(
+            reactNodes /* wrong but we need something */,
+            node.children,
+            rootReactNode,
+          );
           mem.push(React.cloneElement(child, { ...child.props, key: i }, inner));
         } else if (Number.isNaN(parseFloat(node.name))) {
           if (i18nOptions.transSupportBasicHtmlNodes && keepArray.indexOf(node.name) > -1) {
             if (node.voidElement) {
               mem.push(React.createElement(node.name, { key: `${node.name}-${i}` }));
             } else {
-              const inner = mapAST(reactNodes /* wrong but we need something */, node.children);
+              const inner = mapAST(
+                reactNodes /* wrong but we need something */,
+                node.children,
+                rootReactNode,
+              );
 
               mem.push(React.createElement(node.name, { key: `${node.name}-${i}` }, inner));
             }
           } else if (node.voidElement) {
             mem.push(`<${node.name} />`);
           } else {
-            const inner = mapAST(reactNodes /* wrong but we need something */, node.children);
+            const inner = mapAST(
+              reactNodes /* wrong but we need something */,
+              node.children,
+              rootReactNode,
+            );
 
             mem.push(`<${node.name}>${inner}</${node.name}>`);
           }
@@ -206,7 +239,7 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
   // call mapAST with having react nodes nested into additional node like
   // we did for the string ast from translation
   // return the children of that extra node to get expected result
-  const result = mapAST([{ dummy: true, children }], ast);
+  const result = mapAST([{ dummy: true, children }], ast, getAsArray(children || []));
   return getChildren(result[0]);
 }
 

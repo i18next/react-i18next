@@ -1,3 +1,7 @@
+### next
+
+- Trans allow components props to be an object containing named interpolation elements
+
 ### 11.5.1
 
 - providing filename when running babel.parse in icu.macro [1133](https://github.com/i18next/react-i18next/pull/1133)
