@@ -522,8 +522,11 @@
     return Component.displayName || Component.name || (typeof Component === 'string' && Component.length > 0 ? Component : 'Unknown');
   }
 
-  function hasChildren(node) {
-    return node && (node.children || node.props && node.props.children);
+  function hasChildren(node, checkLength) {
+    if (!node) return false;
+    var base = node.props ? node.props.children : node.children;
+    if (checkLength) return base.length > 0;
+    return !!base;
   }
 
   function getChildren(node) {
@@ -612,14 +615,16 @@
     var interpolatedString = i18n.services.interpolator.interpolate(targetString, _objectSpread2({}, data, {}, combinedTOpts), i18n.language);
     var ast = htmlParseStringify2.parse("<0>".concat(interpolatedString, "</0>"));
 
-    function mapAST(reactNode, astNode) {
+    function mapAST(reactNode, astNode, rootReactNode) {
       var reactNodes = getAsArray(reactNode);
       var astNodes = getAsArray(astNode);
       return astNodes.reduce(function (mem, node, i) {
         var translationContent = node.children && node.children[0] && node.children[0].content;
 
         if (node.type === 'tag') {
-          var tmp = reactNodes[parseInt(node.name, 10)] || {};
+          var tmp = reactNodes[parseInt(node.name, 10)];
+          if (!tmp && rootReactNode.length === 1 && rootReactNode[0][node.name]) tmp = rootReactNode[0][node.name];
+          if (!tmp) tmp = {};
           var child = Object.keys(node.attrs).length !== 0 ? mergeProps({
             props: node.attrs
           }, tmp) : tmp;
@@ -627,16 +632,16 @@
 
           if (typeof child === 'string') {
             mem.push(child);
-          } else if (hasChildren(child)) {
-            var childs = getChildren(child);
-            var mappedChildren = mapAST(childs, node.children);
-            var inner = hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
-            if (child.dummy) child.children = inner;
-            mem.push(React__default.cloneElement(child, _objectSpread2({}, child.props, {
-              key: i
-            }), inner));
-          } else if (emptyChildrenButNeedsHandling && _typeof(child) === 'object' && child.dummy && !isElement) {
-            var _inner = mapAST(reactNodes, node.children);
+          } else if (hasChildren(child) || isElement && hasChildren(node, true) && !node.voidElement) {
+              var childs = getChildren(child);
+              var mappedChildren = mapAST(childs, node.children, rootReactNode);
+              var inner = hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
+              if (child.dummy) child.children = inner;
+              mem.push(React__default.cloneElement(child, _objectSpread2({}, child.props, {
+                key: i
+              }), inner));
+            } else if (emptyChildrenButNeedsHandling && _typeof(child) === 'object' && child.dummy && !isElement) {
+            var _inner = mapAST(reactNodes, node.children, rootReactNode);
 
             mem.push(React__default.cloneElement(child, _objectSpread2({}, child.props, {
               key: i
@@ -648,7 +653,7 @@
                   key: "".concat(node.name, "-").concat(i)
                 }));
               } else {
-                var _inner2 = mapAST(reactNodes, node.children);
+                var _inner2 = mapAST(reactNodes, node.children, rootReactNode);
 
                 mem.push(React__default.createElement(node.name, {
                   key: "".concat(node.name, "-").concat(i)
@@ -657,7 +662,7 @@
             } else if (node.voidElement) {
               mem.push("<".concat(node.name, " />"));
             } else {
-              var _inner3 = mapAST(reactNodes, node.children);
+              var _inner3 = mapAST(reactNodes, node.children, rootReactNode);
 
               mem.push("<".concat(node.name, ">").concat(_inner3, "</").concat(node.name, ">"));
             }
@@ -684,7 +689,7 @@
     var result = mapAST([{
       dummy: true,
       children: children
-    }], ast);
+    }], ast, getAsArray(children || []));
     return getChildren(result[0]);
   }
 

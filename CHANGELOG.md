@@ -1,4 +1,4 @@
-### next
+### 11.6.0
 
 - Trans allow components props to be an object containing named interpolation elements
 
