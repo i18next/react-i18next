@@ -2,17 +2,12 @@ import React, { useContext } from 'react';
 import HTML from 'html-parse-stringify2';
 import { getI18n, I18nContext, getDefaults } from './context';
 import { warn, warnOnce } from './utils';
-import { check } from 'prettier';
 
 function hasChildren(node, checkLength) {
   if (!node) return false;
   const base = node.props ? node.props.children : node.children;
   if (checkLength) return base.length > 0;
   return !!base;
-}
-
-function nodeOnlyChildIsTextNode(node) {
-  return node && node.children && node.children.length === 1 && node.children[0].type === 'text';
 }
 
 function getChildren(node) {
