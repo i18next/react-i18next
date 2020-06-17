@@ -41,6 +41,28 @@ export function loadNamespaces(i18n, ns, cb) {
 }
 
 export function hasLoadedNamespace(ns, i18n, options = {}) {
+  /*
+
+  IN I18NEXT > v19.4.5 WE CAN (INTRODUCED JUNE 2020)
+
+  return i18n.hasLoadedNamespace(ns, {
+    precheck: (i18nInstance, loadNotPending) => {
+      if (
+        options.bindI18n &&
+        options.bindI18n.indexOf('languageChanging') > -1 &&
+        i18n.services.backendConnector.backend &&
+        i18n.isLanguageChangingTo &&
+        !loadNotPending(i18n.isLanguageChangingTo, ns)
+      )
+        return false;
+    }
+  })
+
+  // WILL BE BREAKING AS DEPENDS ON SPECIFIC I18NEXT VERSION
+  // WAIT A LITTLE FOR I18NEXT BEING UPDATED IN THE WILD
+
+  */
+
   if (!i18n.languages || !i18n.languages.length) {
     warnOnce('i18n.languages were undefined or empty', i18n.languages);
     return true;
