@@ -115,3 +115,51 @@ describe('trans using no children but components (object) - use more than once (
     ).toBe(true);
   });
 });
+
+describe('trans using no children but components (object) - using self closing tag', () => {
+  const Button = () => <button type="button">click me</button>;
+  const TestElement = () => (
+    <Trans defaults="hello <ClickMe />" components={{ ClickMe: <Button /> }} />
+  );
+  it('should render translated string', () => {
+    const wrapper = mount(<TestElement />);
+    // console.log(wrapper.debug());
+    expect(wrapper.contains(<button type="button">click me</button>)).toBe(true);
+  });
+});
+
+describe('trans using no children but components (object) - empty content', () => {
+  const Button = () => <button type="button">click me</button>;
+  const TestElement = () => (
+    <Trans defaults="hello <ClickMe></ClickMe>" components={{ ClickMe: <Button /> }} />
+  );
+  it('should render translated string', () => {
+    const wrapper = mount(<TestElement />);
+    // console.log(wrapper.debug());
+    expect(wrapper.contains(<button type="button">click me</button>)).toBe(true);
+  });
+});
+
+describe('trans using children but components (object) - self closing tag', () => {
+  const Button = () => <button type="button">click me</button>;
+  const TestElement = () => (
+    <Trans components={{ ClickMe: <Button /> }}>{'hello <ClickMe/>'}</Trans>
+  );
+  it('should render translated string', () => {
+    const wrapper = mount(<TestElement />);
+    // console.log(wrapper.debug());
+    expect(wrapper.contains(<button type="button">click me</button>)).toBe(true);
+  });
+});
+
+describe('trans using no children but components (object) - interpolated component with children', () => {
+  const Button = ({ children }) => <button type="button">{children}</button>;
+  const TestElement = () => (
+    <Trans defaults="hello <ClickMe>Test</ClickMe>" components={{ ClickMe: <Button /> }} />
+  );
+  it('should render translated string', () => {
+    const wrapper = mount(<TestElement />);
+    // console.log(wrapper.debug());
+    expect(wrapper.contains(<button type="button">Test</button>)).toBe(true);
+  });
+});
