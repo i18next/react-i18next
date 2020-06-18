@@ -135,13 +135,14 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
   // -> avoids issues in parser removing prepending text nodes
   const ast = HTML.parse(`<0>${interpolatedString}</0>`);
 
-  function pushTranslatedJSX(child, node, rootReactNode, mem, i) {
+  function renderInner(child, node, rootReactNode) {
     const childs = getChildren(child);
     const mappedChildren = mapAST(childs, node.children, rootReactNode);
     // console.warn('INNER', node.name, node, child, childs, node.children, mappedChildren);
-    const inner =
-      hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
+    return hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
+  }
 
+  function pushTranslatedJSX(child, inner, mem, i) {
     if (child.dummy) child.children = inner; // needed on preact!
     mem.push(React.cloneElement(child, { ...child.props, key: i }, inner));
   }
@@ -184,7 +185,8 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
           hasChildren(child) || // the jsx element has children -> loop
           isValidTranslationWithChildren // valid jsx element with no children but the translation has -> loop
         ) {
-          pushTranslatedJSX(child, node, rootReactNode, mem, i);
+          const inner = renderInner(child, node, rootReactNode);
+          pushTranslatedJSX(child, inner, mem, i);
         } else if (isEmptyTransWithHTML) {
           // we have a empty Trans node (the dummy element) with a targetstring that contains html tags needing
           // conversion to react nodes
@@ -197,7 +199,8 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
           mem.push(React.cloneElement(child, { ...child.props, key: i }, inner));
         } else if (Number.isNaN(parseFloat(node.name))) {
           if (isKnownComponent) {
-            pushTranslatedJSX(child, node, rootReactNode, mem, i);
+            const inner = renderInner(child, node, rootReactNode);
+            pushTranslatedJSX(child, inner, mem, i);
           } else if (i18nOptions.transSupportBasicHtmlNodes && keepArray.indexOf(node.name) > -1) {
             if (node.voidElement) {
               mem.push(React.createElement(node.name, { key: `${node.name}-${i}` }));
