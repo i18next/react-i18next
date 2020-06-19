@@ -6,7 +6,7 @@
     "enzyme": "3.11.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "i18next": "19.5.0",
-    "i18next-browser-languagedetector": "4.2.0",
+    "i18next-browser-languagedetector": "5.0.0",
     "i18next-http-backend": "1.0.15",
     "react": "16.13.1",
     "react-dom": "16.13.1",

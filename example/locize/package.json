@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "i18next": "19.5.0",
-    "i18next-browser-languagedetector": "4.2.0",
+    "i18next-browser-languagedetector": "5.0.0",
     "i18next-locize-backend": "4.0.12",
     "locize-editor": "3.0.0",
     "locize-lastused": "3.0.8",
