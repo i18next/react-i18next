@@ -22,6 +22,10 @@ function constComponents() {
   return <Trans components={constArray}>Foo</Trans>;
 }
 
+function objectComponents() {
+  return <Trans components={{ Btn: <button /> }} defaults="Hello <Btn />" />;
+}
+
 function count() {
   return <Trans count={42}>Foo</Trans>;
 }
@@ -60,10 +64,8 @@ function t() {
   return <Trans t={t}>Foo</Trans>;
 }
 
-function CustomRedComponent(props: {children: React.ReactNode}) {
-  return <div style={{color: 'red'}}>
-    {props.children}
-  </div>;
+function CustomRedComponent(props: { children: React.ReactNode }) {
+  return <div style={{ color: 'red' }}>{props.children}</div>;
 }
 
 function extraDivProps() {

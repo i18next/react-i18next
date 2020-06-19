@@ -135,6 +135,18 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
   // -> avoids issues in parser removing prepending text nodes
   const ast = HTML.parse(`<0>${interpolatedString}</0>`);
 
+  function renderInner(child, node, rootReactNode) {
+    const childs = getChildren(child);
+    const mappedChildren = mapAST(childs, node.children, rootReactNode);
+    // console.warn('INNER', node.name, node, child, childs, node.children, mappedChildren);
+    return hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
+  }
+
+  function pushTranslatedJSX(child, inner, mem, i) {
+    if (child.dummy) child.children = inner; // needed on preact!
+    mem.push(React.cloneElement(child, { ...child.props, key: i }, inner));
+  }
+
   // reactNode (the jsx root element or child)
   // astNode (the translation string as html ast)
   // rootReactNode (the most outer jsx children array or trans components prop)
@@ -154,28 +166,28 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
           Object.keys(node.attrs).length !== 0 ? mergeProps({ props: node.attrs }, tmp) : tmp;
 
         const isElement = React.isValidElement(child);
+
+        const isValidTranslationWithChildren =
+          isElement && hasChildren(node, true) && !node.voidElement;
+
+        const isEmptyTransWithHTML =
+          emptyChildrenButNeedsHandling && typeof child === 'object' && child.dummy && !isElement;
+
+        const isKnownComponent =
+          typeof children === 'object' &&
+          children !== null &&
+          Object.hasOwnProperty.call(children, node.name);
         // console.warn('CHILD', node.name, node, isElement, child);
 
         if (typeof child === 'string') {
           mem.push(child);
         } else if (
           hasChildren(child) || // the jsx element has children -> loop
-          (isElement && hasChildren(node, true) && !node.voidElement) // valid jsx element with no children but the translation has -> loop
+          isValidTranslationWithChildren // valid jsx element with no children but the translation has -> loop
         ) {
-          const childs = getChildren(child);
-          const mappedChildren = mapAST(childs, node.children, rootReactNode);
-          // console.warn('INNER', node.name, node, child, childs, node.children, mappedChildren);
-          const inner =
-            hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
-
-          if (child.dummy) child.children = inner; // needed on preact!
-          mem.push(React.cloneElement(child, { ...child.props, key: i }, inner));
-        } else if (
-          emptyChildrenButNeedsHandling &&
-          typeof child === 'object' &&
-          child.dummy &&
-          !isElement
-        ) {
+          const inner = renderInner(child, node, rootReactNode);
+          pushTranslatedJSX(child, inner, mem, i);
+        } else if (isEmptyTransWithHTML) {
           // we have a empty Trans node (the dummy element) with a targetstring that contains html tags needing
           // conversion to react nodes
           // so we just need to map the inner stuff
@@ -186,7 +198,10 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
           );
           mem.push(React.cloneElement(child, { ...child.props, key: i }, inner));
         } else if (Number.isNaN(parseFloat(node.name))) {
-          if (i18nOptions.transSupportBasicHtmlNodes && keepArray.indexOf(node.name) > -1) {
+          if (isKnownComponent) {
+            const inner = renderInner(child, node, rootReactNode);
+            pushTranslatedJSX(child, inner, mem, i);
+          } else if (i18nOptions.transSupportBasicHtmlNodes && keepArray.indexOf(node.name) > -1) {
             if (node.voidElement) {
               mem.push(React.createElement(node.name, { key: `${node.name}-${i}` }));
             } else {
