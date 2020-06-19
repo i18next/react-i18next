@@ -14,7 +14,7 @@
     "react-dom": "16.13.1",
     "react-router-dom": "5.2.0",
     "react-i18next": "11.4.0",
-    "i18next": "19.4.4",
+    "i18next": "19.5.0",
     "i18next-browser-languagedetector": "4.1.1",
     "i18next-http-middleware": "1.1.0",
     "i18next-fs-backend": "1.0.3",
