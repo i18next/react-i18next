@@ -66,6 +66,27 @@ describe('trans using no children but components (object) - using names', () => 
   });
 });
 
+describe('trans using no children but components (object) - using names with no lowercase', () => {
+  const TestElement = () => (
+    <Trans
+      defaults="hello <italicCase>beautiful</italicCase> <BoldCase>{{what}}</BoldCase>"
+      values={{ what: 'world' }}
+      components={{ italicCase: <i>just dummy</i>, BoldCase: <strong>univers</strong> }}
+    />
+  );
+  it('should render translated string', () => {
+    const wrapper = mount(<TestElement />);
+    // console.log(wrapper.debug());
+    expect(
+      wrapper.contains(
+        <div>
+          hello <i>beautiful</i> <strong>world</strong>
+        </div>,
+      ),
+    ).toBe(true);
+  });
+});
+
 describe('trans using no children but components (object) - use more than once', () => {
   const TestElement = () => (
     <Trans

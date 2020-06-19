@@ -1,3 +1,7 @@
+### 11.7.0
+
+- Trans interpolating self-closing tags in components prop(object) [1140](https://github.com/i18next/react-i18next/pull/1140)
+
 ### 11.6.0
 
 - Trans allow components props to be an object containing named interpolation elements
