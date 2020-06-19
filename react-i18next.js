@@ -615,6 +615,19 @@
     var interpolatedString = i18n.services.interpolator.interpolate(targetString, _objectSpread2({}, data, {}, combinedTOpts), i18n.language);
     var ast = htmlParseStringify2.parse("<0>".concat(interpolatedString, "</0>"));
 
+    function renderInner(child, node, rootReactNode) {
+      var childs = getChildren(child);
+      var mappedChildren = mapAST(childs, node.children, rootReactNode);
+      return hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
+    }
+
+    function pushTranslatedJSX(child, inner, mem, i) {
+      if (child.dummy) child.children = inner;
+      mem.push(React__default.cloneElement(child, _objectSpread2({}, child.props, {
+        key: i
+      }), inner));
+    }
+
     function mapAST(reactNode, astNode, rootReactNode) {
       var reactNodes = getAsArray(reactNode);
       var astNodes = getAsArray(astNode);
@@ -629,42 +642,44 @@
             props: node.attrs
           }, tmp) : tmp;
           var isElement = React__default.isValidElement(child);
+          var isValidTranslationWithChildren = isElement && hasChildren(node, true) && !node.voidElement;
+          var isEmptyTransWithHTML = emptyChildrenButNeedsHandling && _typeof(child) === 'object' && child.dummy && !isElement;
+          var isKnownComponent = _typeof(children) === 'object' && children !== null && Object.hasOwnProperty.call(children, node.name);
 
           if (typeof child === 'string') {
             mem.push(child);
-          } else if (hasChildren(child) || isElement && hasChildren(node, true) && !node.voidElement) {
-              var childs = getChildren(child);
-              var mappedChildren = mapAST(childs, node.children, rootReactNode);
-              var inner = hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
-              if (child.dummy) child.children = inner;
-              mem.push(React__default.cloneElement(child, _objectSpread2({}, child.props, {
-                key: i
-              }), inner));
-            } else if (emptyChildrenButNeedsHandling && _typeof(child) === 'object' && child.dummy && !isElement) {
+          } else if (hasChildren(child) || isValidTranslationWithChildren) {
+              var inner = renderInner(child, node, rootReactNode);
+              pushTranslatedJSX(child, inner, mem, i);
+            } else if (isEmptyTransWithHTML) {
             var _inner = mapAST(reactNodes, node.children, rootReactNode);
 
             mem.push(React__default.cloneElement(child, _objectSpread2({}, child.props, {
               key: i
             }), _inner));
           } else if (Number.isNaN(parseFloat(node.name))) {
-            if (i18nOptions.transSupportBasicHtmlNodes && keepArray.indexOf(node.name) > -1) {
+            if (isKnownComponent) {
+              var _inner2 = renderInner(child, node, rootReactNode);
+
+              pushTranslatedJSX(child, _inner2, mem, i);
+            } else if (i18nOptions.transSupportBasicHtmlNodes && keepArray.indexOf(node.name) > -1) {
               if (node.voidElement) {
                 mem.push(React__default.createElement(node.name, {
                   key: "".concat(node.name, "-").concat(i)
                 }));
               } else {
-                var _inner2 = mapAST(reactNodes, node.children, rootReactNode);
+                var _inner3 = mapAST(reactNodes, node.children, rootReactNode);
 
                 mem.push(React__default.createElement(node.name, {
                   key: "".concat(node.name, "-").concat(i)
-                }, _inner2));
+                }, _inner3));
               }
             } else if (node.voidElement) {
               mem.push("<".concat(node.name, " />"));
             } else {
-              var _inner3 = mapAST(reactNodes, node.children, rootReactNode);
+              var _inner4 = mapAST(reactNodes, node.children, rootReactNode);
 
-              mem.push("<".concat(node.name, ">").concat(_inner3, "</").concat(node.name, ">"));
+              mem.push("<".concat(node.name, ">").concat(_inner4, "</").concat(node.name, ">"));
             }
           } else if (_typeof(child) === 'object' && !isElement) {
             var content = node.children[0] ? translationContent : null;
