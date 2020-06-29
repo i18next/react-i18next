@@ -18,17 +18,6 @@ export function getInitialProps(): {
   initialLanguage: string;
 };
 
-export interface ReportNamespaces {
-  addUsedNamespaces(namespaces: Namespace[]): void;
-  getUsedNamespaces(): string[];
-}
-
-declare module 'i18next' {
-  interface i18n {
-    reportNamespaces: ReportNamespaces;
-  }
-}
-
 export interface TransProps<E extends Element = HTMLDivElement>
   extends React.HTMLProps<E>,
     Partial<WithT> {
