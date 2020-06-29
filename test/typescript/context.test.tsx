@@ -34,6 +34,3 @@ i18n.setDefaultNamespace;
 i18n.store;
 i18n.t;
 i18n.use;
-// To be reviewed: No reference found in official documentation.
-// i18next.reportNamespaces.addUsedNamespaces(['translation']);
-// i18next.reportNamespaces.getUsedNamespaces();
