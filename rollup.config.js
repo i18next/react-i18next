@@ -15,13 +15,14 @@ const babelOptions = {
       {
         targets: {
           esmodules: true,
-          ie: "11"
+          ie: '11',
         },
       },
     ],
     '@babel/react',
   ],
   babelrc: false,
+  comments: false,
 };
 
 const file = {

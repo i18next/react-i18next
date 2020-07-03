@@ -1,5 +1,5 @@
 const i18n = require('i18next');
-const XHR = require('i18next-xhr-backend');
+const Backend = require('i18next-http-backend');
 const LanguageDetector = require('i18next-browser-languagedetector');
 
 const options = {
@@ -28,10 +28,10 @@ const options = {
   wait: process && !process.release,
 };
 
-// for browser use xhr backend to load translations and browser lng detector
+// for browser use http backend to load translations and browser lng detector
 if (process && !process.release) {
   i18n
-    .use(XHR)
+    .use(Backend)
     // .use(Cache)
     .use(LanguageDetector);
 }

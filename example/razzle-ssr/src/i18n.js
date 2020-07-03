@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import XHR from 'i18next-xhr-backend';
+import Backend from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
 const options = {
@@ -24,12 +24,12 @@ const options = {
   wait: process && !process.release,
 };
 
-// for browser use xhr backend to load translations and browser lng detector
+// for browser use http backend to load translations and browser lng detector
 if (process && !process.release) {
   i18n
-    .use(XHR)
+    .use(Backend)
     .use(initReactI18next)
-    .use(LanguageDetector)
+    .use(LanguageDetector);
 }
 
 // initialize if not already initialized

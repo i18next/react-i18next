@@ -1,3 +1,27 @@
+### 11.7.0
+
+- Trans interpolating self-closing tags in components prop(object) [1140](https://github.com/i18next/react-i18next/pull/1140)
+
+### 11.6.0
+
+- Trans allow components props to be an object containing named interpolation elements
+
+### 11.5.1
+
+- providing filename when running babel.parse in icu.macro [1133](https://github.com/i18next/react-i18next/pull/1133)
+
+### 11.5.0
+
+- Trans: merge option in mapAST [1120](https://github.com/i18next/react-i18next/pull/1120)
+
+### 11.4.0
+
+- Add sideEffects false to package json to allow tree shaking [1097](https://github.com/i18next/react-i18next/pull/1097)
+
+### 11.3.5
+
+- fix returning defaultValue for Trans component [1092](https://github.com/i18next/react-i18next/pull/1092)
+
 ### 11.3.4
 
 - [useTranslation] Avoid setting the new `t` function if the component is unmounted. (1051)[https://github.com/i18next/react-i18next/pull/1051]

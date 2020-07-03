@@ -8,7 +8,7 @@ import fs from 'fs';
 import { renderToString } from 'react-dom/server';
 
 import { I18nextProvider } from 'react-i18next'; // has no proper import yet
-import Backend from 'i18next-node-fs-backend';
+import Backend from 'i18next-fs-backend';
 import App from './App';
 import i18n from './i18n';
 
@@ -19,7 +19,7 @@ const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 const appSrc = resolveApp('src');
 
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
-const i18nextMiddleware = require('i18next-express-middleware');
+const i18nextMiddleware = require('i18next-http-middleware');
 
 const server = express();
 
