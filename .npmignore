@@ -10,3 +10,4 @@ bin/
 bower.json
 gulpfile.js
 karma.conf.js
+.github
