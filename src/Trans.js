@@ -271,7 +271,7 @@ export function Trans({
   const i18n = i18nFromProps || i18nFromContext || getI18n();
 
   if (!i18n) {
-    warnOnce('You will need pass in an i18next instance by using i18nextReactModule');
+    warnOnce('You will need to pass in an i18next instance by using i18nextReactModule');
     return children;
   }
 
