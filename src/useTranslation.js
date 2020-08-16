@@ -9,7 +9,7 @@ export function useTranslation(ns, props = {}) {
   const i18n = i18nFromProps || i18nFromContext || getI18n();
   if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
   if (!i18n) {
-    warnOnce('You will need pass in an i18next instance by using initReactI18next');
+    warnOnce('You will need to pass in an i18next instance by using initReactI18next');
     const notReadyT = k => (Array.isArray(k) ? k[k.length - 1] : k);
     const retNotReady = [notReadyT, {}, false];
     retNotReady.t = notReadyT;
