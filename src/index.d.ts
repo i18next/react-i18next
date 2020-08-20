@@ -102,7 +102,7 @@ export interface I18nextProviderProps {
 }
 
 export const I18nextProvider: React.FunctionComponent<I18nextProviderProps>;
-export const I18nContext: React.Context<i18n>;
+export const I18nContext: React.Context<{ i18n: i18n }>;
 
 export interface TranslationProps {
   children: (
