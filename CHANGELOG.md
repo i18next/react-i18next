@@ -1,3 +1,7 @@
+### 11.7.1
+
+- typescript: fix: typescript definition of context object [1160](https://github.com/i18next/react-i18next/pull/1160)
+
 ### 11.7.0
 
 - Trans interpolating self-closing tags in components prop(object) [1140](https://github.com/i18next/react-i18next/pull/1140)

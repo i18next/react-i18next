@@ -7,6 +7,8 @@
   var React__default = 'default' in React ? React['default'] : React;
 
   function _typeof(obj) {
+    "@babel/helpers - typeof";
+
     if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
       _typeof = function (obj) {
         return typeof obj;
@@ -76,13 +78,13 @@
       var source = arguments[i] != null ? arguments[i] : {};
 
       if (i % 2) {
-        ownKeys(source, true).forEach(function (key) {
+        ownKeys(Object(source), true).forEach(function (key) {
           _defineProperty(target, key, source[key]);
         });
       } else if (Object.getOwnPropertyDescriptors) {
         Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
       } else {
-        ownKeys(source).forEach(function (key) {
+        ownKeys(Object(source)).forEach(function (key) {
           Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
         });
       }
@@ -128,7 +130,7 @@
   }
 
   function _slicedToArray(arr, i) {
-    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
+    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
   }
 
   function _arrayWithHoles(arr) {
@@ -136,10 +138,7 @@
   }
 
   function _iterableToArrayLimit(arr, i) {
-    if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) {
-      return;
-    }
-
+    if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
     var _arr = [];
     var _n = true;
     var _d = false;
@@ -165,8 +164,25 @@
     return _arr;
   }
 
+  function _unsupportedIterableToArray(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(o);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+  }
+
+  function _arrayLikeToArray(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+
+    for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+    return arr2;
+  }
+
   function _nonIterableRest() {
-    throw new TypeError("Invalid attempt to destructure non-iterable instance");
+    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
 
   var voidElements = {
@@ -381,7 +397,7 @@
   var I18nContext = React__default.createContext();
   function setDefaults() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    defaultOptions = _objectSpread2({}, defaultOptions, {}, options);
+    defaultOptions = _objectSpread2(_objectSpread2({}, defaultOptions), options);
   }
   function getDefaults() {
     return defaultOptions;
@@ -431,7 +447,7 @@
 
         if (ForComponent.getInitialProps) {
           ForComponent.getInitialProps(ctx).then(function (componentsInitialProps) {
-            resolve(_objectSpread2({}, componentsInitialProps, {}, i18nInitialProps));
+            resolve(_objectSpread2(_objectSpread2({}, componentsInitialProps), i18nInitialProps));
           });
         } else {
           resolve(i18nInitialProps);
@@ -612,7 +628,7 @@
     }
 
     getData(children);
-    var interpolatedString = i18n.services.interpolator.interpolate(targetString, _objectSpread2({}, data, {}, combinedTOpts), i18n.language);
+    var interpolatedString = i18n.services.interpolator.interpolate(targetString, _objectSpread2(_objectSpread2({}, data), combinedTOpts), i18n.language);
     var ast = htmlParseStringify2.parse("<0>".concat(interpolatedString, "</0>"));
 
     function renderInner(child, node, rootReactNode) {
@@ -623,7 +639,7 @@
 
     function pushTranslatedJSX(child, inner, mem, i) {
       if (child.dummy) child.children = inner;
-      mem.push(React__default.cloneElement(child, _objectSpread2({}, child.props, {
+      mem.push(React__default.cloneElement(child, _objectSpread2(_objectSpread2({}, child.props), {}, {
         key: i
       }), inner));
     }
@@ -654,7 +670,7 @@
             } else if (isEmptyTransWithHTML) {
             var _inner = mapAST(reactNodes, node.children, rootReactNode);
 
-            mem.push(React__default.cloneElement(child, _objectSpread2({}, child.props, {
+            mem.push(React__default.cloneElement(child, _objectSpread2(_objectSpread2({}, child.props), {}, {
               key: i
             }), _inner));
           } else if (Number.isNaN(parseFloat(node.name))) {
@@ -685,11 +701,11 @@
             var content = node.children[0] ? translationContent : null;
             if (content) mem.push(content);
           } else if (node.children.length === 1 && translationContent) {
-            mem.push(React__default.cloneElement(child, _objectSpread2({}, child.props, {
+            mem.push(React__default.cloneElement(child, _objectSpread2(_objectSpread2({}, child.props), {}, {
               key: i
             }), translationContent));
           } else {
-            mem.push(React__default.cloneElement(child, _objectSpread2({}, child.props, {
+            mem.push(React__default.cloneElement(child, _objectSpread2(_objectSpread2({}, child.props), {}, {
               key: i
             })));
           }
@@ -737,7 +753,7 @@
       return k;
     };
 
-    var reactI18nextOptions = _objectSpread2({}, getDefaults(), {}, i18n.options && i18n.options.react);
+    var reactI18nextOptions = _objectSpread2(_objectSpread2({}, getDefaults()), i18n.options && i18n.options.react);
 
     var namespaces = ns || t.ns || defaultNSFromContext || i18n.options && i18n.options.defaultNS;
     namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
@@ -751,9 +767,9 @@
       }
     };
 
-    var combinedTOpts = _objectSpread2({}, tOptions, {
+    var combinedTOpts = _objectSpread2(_objectSpread2(_objectSpread2(_objectSpread2({}, tOptions), {}, {
       count: count
-    }, values, {}, interpolationOverride, {
+    }, values), interpolationOverride), {}, {
       defaultValue: defaultValue,
       ns: namespaces
     });
@@ -789,7 +805,7 @@
       return retNotReady;
     }
 
-    var i18nOptions = _objectSpread2({}, getDefaults(), {}, i18n.options.react, {}, props);
+    var i18nOptions = _objectSpread2(_objectSpread2(_objectSpread2({}, getDefaults()), i18n.options.react), props);
 
     var useSuspense = i18nOptions.useSuspense;
     var namespaces = ns || defaultNSFromContext || i18n.options && i18n.options.defaultNS;
@@ -865,7 +881,7 @@
             i18n = _useTranslation2[1],
             ready = _useTranslation2[2];
 
-        var passDownProps = _objectSpread2({}, rest, {
+        var passDownProps = _objectSpread2(_objectSpread2({}, rest), {}, {
           t: t,
           i18n: i18n,
           tReady: ready
