@@ -85,7 +85,6 @@ export function useTranslation(ns, props = {}) {
   // not yet loaded namespaces -> load them -> and trigger suspense
   throw new Promise(resolve => {
     loadNamespaces(i18n, namespaces, () => {
-      if (isMounted.current) setT(getT());
       resolve();
     });
   });
