@@ -862,7 +862,6 @@
     if (!ready && !useSuspense) return ret;
     throw new Promise(function (resolve) {
       loadNamespaces(i18n, namespaces, function () {
-        if (isMounted.current) setT(getT());
         resolve();
       });
     });

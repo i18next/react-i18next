@@ -1,3 +1,7 @@
+### 11.7.2
+
+- Avoid setState while react is rendering [1165](https://github.com/i18next/react-i18next/pull/1165)
+
 ### 11.7.1
 
 - typescript: fix: typescript definition of context object [1160](https://github.com/i18next/react-i18next/pull/1160)
