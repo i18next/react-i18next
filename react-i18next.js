@@ -929,11 +929,14 @@
     var i18n = _ref.i18n,
         defaultNS = _ref.defaultNS,
         children = _ref.children;
-    return React.createElement(I18nContext.Provider, {
-      value: {
+    var value = React.useMemo(function () {
+      return {
         i18n: i18n,
         defaultNS: defaultNS
-      }
+      };
+    }, [i18n, defaultNS]);
+    return React.createElement(I18nContext.Provider, {
+      value: value
     }, children);
   }
 

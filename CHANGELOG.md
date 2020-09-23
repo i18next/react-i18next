@@ -1,3 +1,7 @@
+### 11.7.3
+
+- Avoid redundant re-rendering in I18nextProvider [1174](https://github.com/i18next/react-i18next/pull/1174)
+
 ### 11.7.2
 
 - Avoid setState while react is rendering [1165](https://github.com/i18next/react-i18next/pull/1165)
