@@ -25,16 +25,16 @@ const instance = {
 };
 
 describe('I18nextProvider', () => {
-  function TestComponent() {
-    const { t, i18n } = useTranslation('translation');
-
-    expect(typeof t).toBe('function');
-    expect(i18n).toBe(instance);
-
-    return <div>{t('key1')}</div>;
-  }
-
   it('should render correct content', () => {
+    function TestComponent() {
+      const { t, i18n } = useTranslation('translation');
+
+      expect(typeof t).toBe('function');
+      expect(i18n).toBe(instance);
+
+      return <div>{t('key1')}</div>;
+    }
+
     const wrapper = mount(
       <I18nextProvider i18n={instance}>
         <TestComponent />
@@ -43,5 +43,24 @@ describe('I18nextProvider', () => {
     );
     // console.log(wrapper.debug());
     expect(wrapper.contains(<div>key1</div>)).toBe(true);
+  });
+
+  it('should not rerender if value is not changed', () => {
+    let count = 0;
+    const TestComponent = React.memo(function TestComponent() {
+      const { t } = useTranslation('translation');
+      count += 1;
+      return <div>{t('key1')}</div>;
+    });
+
+    const wrapper = mount(
+      <I18nextProvider i18n={instance}>
+        <TestComponent />
+      </I18nextProvider>,
+      {},
+    );
+    expect(count).toBe(1);
+    wrapper.setProps({ i18n: instance });
+    expect(count).toBe(1);
   });
 });
