@@ -118,7 +118,7 @@ export function Trans<N extends Namespace, K extends TFuncKey<N>, E extends Elem
   props: TransProps<N, K, E>
 ): React.ReactElement;
 
-export function useSSR(initialI18nStore: any, initialLanguage: any): void;
+export function useSSR(initialI18nStore: Resource, initialLanguage: string): void;
 
 export interface UseTranslationOptions {
   i18n?: i18n;
@@ -178,7 +178,7 @@ export interface I18nextProviderProps {
 }
 
 export const I18nextProvider: React.FunctionComponent<I18nextProviderProps>;
-export const I18nContext: React.Context<i18n>;
+export const I18nContext: React.Context<{ i18n: i18n }>;
 
 export interface TranslationProps<N extends Namespace> {
   children: (
