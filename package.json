@@ -7,7 +7,7 @@
   "typesVersions": {
     ">=4.1": {
       "*": [
-        "src/ts4.1/*"
+        "src/ts4.1/index.d.ts"
       ]
     }
   },
