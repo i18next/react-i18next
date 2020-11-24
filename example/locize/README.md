@@ -2,7 +2,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 [![video](video_sample.png)](https://www.youtube.com/watch?v=9NOzJhgmyQE)
 
-[watch the video](https://www.youtube.com/watch?v=9NOzJhgmyQE)
+[watch the video (old client)](https://www.youtube.com/watch?v=9NOzJhgmyQE)
 
 ## using with locize
 
@@ -10,7 +10,8 @@ We added our translation management [locize.com](http://locize.com).
 
 InContext Editing:
 
-- [locize-editor](https://github.com/locize/locize-editor)
+- [locize](https://github.com/locize/locize)
+- [locize-editor](https://github.com/locize/locize-editor) (old client)
 
 i18next Backend: loading translations, save new segments during runtime
 
@@ -29,5 +30,9 @@ Set projectId and apiKey in `/src/i18n.js`.
 ```bash
 # npm start
 ```
+
+insert `http://localhost:3000` in the locize client to open your application with the locize incontext editor.
+
+### for old locize client:
 
 open `http://localhost:3000?locize=true` to open your application with the locize incontext editor.
