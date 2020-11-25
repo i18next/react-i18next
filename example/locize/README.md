@@ -1,7 +1,9 @@
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
-[![video](video_sample.png)](https://www.youtube.com/watch?v=9NOzJhgmyQE)
+[![video](video_sample.png)](https://youtu.be/osScyaGMVqo)
+[watch the video](https://youtu.be/osScyaGMVqo)
 
+[![video](video_sample_old.png)](https://www.youtube.com/watch?v=9NOzJhgmyQE)
 [watch the video (old client)](https://www.youtube.com/watch?v=9NOzJhgmyQE)
 
 ## using with locize
