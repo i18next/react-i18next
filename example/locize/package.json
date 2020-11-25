@@ -6,7 +6,7 @@
     "i18next": "19.8.4",
     "i18next-browser-languagedetector": "6.0.1",
     "i18next-locize-backend": "4.1.8",
-    "locize": "2.2.2",
+    "locize": "2.2.3",
     "locize-editor": "3.1.0",
     "locize-lastused": "3.0.10",
     "react": "17.0.1",
