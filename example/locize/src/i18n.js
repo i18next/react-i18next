@@ -15,7 +15,7 @@ import Editor from 'locize-editor'; // old locize editor (will be removed in fut
 // 5b) import de from: http://api.locize.app/ce0cf818-32e5-44a5-b7f0-4ea9e840d962/latest/de/translation
 const locizeOptions = {
   projectId: 'ce0cf818-32e5-44a5-b7f0-4ea9e840d962',
-  apiKey: '89bf4422-eb05-493c-8116-feff73450552', // YOU should not expose your apps API key to production!!!
+  apiKey: '5c2bbc21-027d-4f41-995a-e8beb451cdef', // YOU should not expose your apps API key to production!!!
   referenceLng: 'en',
 };
 
@@ -47,7 +47,7 @@ i18n
     fallbackLng: 'en',
     debug: true,
     saveMissing: true,
-    keySeparator: false,
+    // keySeparator: false,
 
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
