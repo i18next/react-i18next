@@ -298,6 +298,7 @@ export function Trans({
     ...interpolationOverride,
     defaultValue,
     ns: namespaces,
+    ...tOptions?.interpolation,
   };
   const translation = key ? t(key, combinedTOpts) : defaultValue;
 
