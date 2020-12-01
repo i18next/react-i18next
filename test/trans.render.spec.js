@@ -408,3 +408,18 @@ describe('trans should not break on invalid node from translations - part2', () 
     expect(wrapper.contains(<div>&lt;hello&gt;</div>)).toBe(true);
   });
 });
+
+describe('trans getting passed tOptions.interpolation should override tOptions.interpolation', () => {
+  const stringWithHTMLTags = '<no>Hello';
+  const TestElement = () => (
+    <Trans tOptions={{ interpolation: { escapeValue: true } }}>
+      <div> {stringWithHTMLTags} </div>
+    </Trans>
+  );
+
+  it('should render and HTML tags should be escaped properly', () => {
+    const wrapper = mount(<TestElement />);
+    // console.log(wrapper.debug());
+    expect(wrapper.contains(<div>{stringWithHTMLTags}</div>)).toBe(true);
+  });
+});

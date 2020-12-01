@@ -290,7 +290,9 @@ export function Trans({
     i18nKey;
   const { hashTransKey } = reactI18nextOptions;
   const key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
-  const interpolationOverride = values ? {} : { interpolation: { prefix: '#$?', suffix: '?$#' } };
+  const interpolationOverride = values
+    ? tOptions?.interpolation
+    : { interpolation: { ...tOptions?.interpolation, prefix: '#$?', suffix: '?$#' } };
   const combinedTOpts = {
     ...tOptions,
     count,
@@ -298,7 +300,6 @@ export function Trans({
     ...interpolationOverride,
     defaultValue,
     ns: namespaces,
-    ...tOptions?.interpolation,
   };
   const translation = key ? t(key, combinedTOpts) : defaultValue;
 
