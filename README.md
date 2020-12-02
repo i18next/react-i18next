@@ -168,7 +168,7 @@ This project follows the [all-contributors](https://github.com/kentcdodds/all-co
 
 **localization as a service - locize.com**
 
-Needing a translation management? Want to edit your translations with an InContext Editor? Use the orginal provided to you by the maintainers of i18next!
+Needing a translation management? Want to edit your translations with an InContext Editor? Use the original provided to you by the maintainers of i18next!
 
 ![locize](https://locize.com/img/ads/github_locize.png)
 
