@@ -1,3 +1,7 @@
+### 11.7.4
+
+- fixes passing interpolations options via Trans components tOptions prop [1204](https://github.com/i18next/react-i18next/pull/1204)
+
 ### 11.7.3
 
 - Avoid redundant re-rendering in I18nextProvider [1174](https://github.com/i18next/react-i18next/pull/1174)

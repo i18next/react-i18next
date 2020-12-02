@@ -729,7 +729,8 @@
         count = _ref.count,
         parent = _ref.parent,
         i18nKey = _ref.i18nKey,
-        tOptions = _ref.tOptions,
+        _ref$tOptions = _ref.tOptions,
+        tOptions = _ref$tOptions === void 0 ? {} : _ref$tOptions,
         values = _ref.values,
         defaults = _ref.defaults,
         components = _ref.components,
@@ -760,11 +761,11 @@
     var defaultValue = defaults || nodesToString(children, reactI18nextOptions) || reactI18nextOptions.transEmptyNodeValue || i18nKey;
     var hashTransKey = reactI18nextOptions.hashTransKey;
     var key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
-    var interpolationOverride = values ? {} : {
-      interpolation: {
+    var interpolationOverride = values ? tOptions.interpolation : {
+      interpolation: _objectSpread2(_objectSpread2({}, tOptions.interpolation), {}, {
         prefix: '#$?',
         suffix: '?$#'
-      }
+      })
     };
 
     var combinedTOpts = _objectSpread2(_objectSpread2(_objectSpread2(_objectSpread2({}, tOptions), {}, {
