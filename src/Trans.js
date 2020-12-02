@@ -258,7 +258,7 @@ export function Trans({
   count,
   parent,
   i18nKey,
-  tOptions,
+  tOptions = {},
   values,
   defaults,
   components,
@@ -290,7 +290,9 @@ export function Trans({
     i18nKey;
   const { hashTransKey } = reactI18nextOptions;
   const key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
-  const interpolationOverride = values ? {} : { interpolation: { prefix: '#$?', suffix: '?$#' } };
+  const interpolationOverride = values
+    ? tOptions.interpolation
+    : { interpolation: { ...tOptions.interpolation, prefix: '#$?', suffix: '?$#' } };
   const combinedTOpts = {
     ...tOptions,
     count,
