@@ -408,3 +408,28 @@ describe('trans should not break on invalid node from translations - part2', () 
     expect(wrapper.contains(<div>&lt;hello&gt;</div>)).toBe(true);
   });
 });
+
+describe('trans should work with misleading overloaded empty elements in components', () => {
+  const TestElement = () => (
+    <Trans
+      i18nKey="someKey"
+      defaults="Hi {{ firstName }},<br/>and <bold>welcome</bold>"
+      values={{ firstName: 'Fritz' }}
+      components={{ br: <br />, bold: <strong /> }}
+      tOptions={{ interpolation: { escapeValue: true } }}
+    />
+  );
+  it('should render translated string', () => {
+    const wrapper = mount(<TestElement />);
+    // console.log(wrapper.debug());
+    expect(
+      wrapper.contains(
+        <div>
+          Hi Fritz,
+          <br />
+          and <strong>welcome</strong>
+        </div>,
+      ),
+    ).toBe(true);
+  });
+});

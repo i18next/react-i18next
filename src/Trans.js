@@ -142,9 +142,9 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
     return hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
   }
 
-  function pushTranslatedJSX(child, inner, mem, i) {
+  function pushTranslatedJSX(child, inner, mem, i, isVoid) {
     if (child.dummy) child.children = inner; // needed on preact!
-    mem.push(React.cloneElement(child, { ...child.props, key: i }, inner));
+    mem.push(React.cloneElement(child, { ...child.props, key: i }, isVoid ? undefined : inner));
   }
 
   // reactNode (the jsx root element or child)
@@ -200,7 +200,7 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
         } else if (Number.isNaN(parseFloat(node.name))) {
           if (isKnownComponent) {
             const inner = renderInner(child, node, rootReactNode);
-            pushTranslatedJSX(child, inner, mem, i);
+            pushTranslatedJSX(child, inner, mem, i, node.voidElement);
           } else if (i18nOptions.transSupportBasicHtmlNodes && keepArray.indexOf(node.name) > -1) {
             if (node.voidElement) {
               mem.push(React.createElement(node.name, { key: `${node.name}-${i}` }));
