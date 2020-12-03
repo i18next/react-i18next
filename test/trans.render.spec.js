@@ -416,7 +416,6 @@ describe('trans should work with misleading overloaded empty elements in compone
       defaults="Hi {{ firstName }},<br/>and <bold>welcome</bold>"
       values={{ firstName: 'Fritz' }}
       components={{ br: <br />, bold: <strong /> }}
-      tOptions={{ interpolation: { escapeValue: true } }}
     />
   );
   it('should render translated string', () => {
