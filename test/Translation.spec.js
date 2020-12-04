@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 import './i18n';
 import { Translation } from '../src/Translation';
 
@@ -11,8 +11,12 @@ describe('Translation', () => {
   }
 
   it('should render correct content', () => {
-    const wrapper = mount(<TestComponent />);
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<div>test</div>)).toBe(true);
+    const { container } = render(<TestComponent />);
+    // screen.debug()
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        test
+      </div>
+    `);
   });
 });
