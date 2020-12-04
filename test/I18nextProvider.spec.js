@@ -40,7 +40,6 @@ describe('I18nextProvider', () => {
       <I18nextProvider i18n={instance}>
         <TestComponent />
       </I18nextProvider>,
-      {},
     );
 
     // screen.debug()
