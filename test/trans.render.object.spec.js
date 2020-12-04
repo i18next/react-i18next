@@ -1,5 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 import './i18n';
 import { Trans } from '../src/Trans';
 
@@ -12,15 +13,20 @@ describe('trans using no children but components (object) - base case using arra
     />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          hello <i>beautiful</i> <strong>world</strong>
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <i>
+          beautiful
+        </i>
+         
+        <strong>
+          world
+        </strong>
+      </div>
+    `);
   });
 });
 
@@ -33,15 +39,20 @@ describe('trans using no children but components (object) - using index', () => 
     />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          hello <i>beautiful</i> <strong>world</strong>
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <i>
+          beautiful
+        </i>
+         
+        <strong>
+          world
+        </strong>
+      </div>
+    `);
   });
 });
 
@@ -54,15 +65,20 @@ describe('trans using no children but components (object) - using names', () => 
     />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          hello <i>beautiful</i> <strong>world</strong>
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <i>
+          beautiful
+        </i>
+         
+        <strong>
+          world
+        </strong>
+      </div>
+    `);
   });
 });
 
@@ -75,15 +91,20 @@ describe('trans using no children but components (object) - using names with no 
     />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          hello <i>beautiful</i> <strong>world</strong>
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <i>
+          beautiful
+        </i>
+         
+        <strong>
+          world
+        </strong>
+      </div>
+    `);
   });
 });
 
@@ -95,20 +116,26 @@ describe('trans using no children but components (object) - use more than once',
     />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          hello
-          <ul>
-            <li>A</li>,<li>B</li>
-            and
-            <li>C</li>
-          </ul>
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello
+        <ul>
+          <li>
+            A
+          </li>
+          ,
+          <li>
+            B
+          </li>
+          and
+          <li>
+            C
+          </li>
+        </ul>
+      </div>
+    `);
   });
 });
 
@@ -120,20 +147,26 @@ describe('trans using no children but components (object) - use more than once (
     />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          hello
-          <ul>
-            <li>A</li>,<li>B</li>
-            and
-            <li>C</li>
-          </ul>
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello
+        <ul>
+          <li>
+            A
+          </li>
+          ,
+          <li>
+            B
+          </li>
+          and
+          <li>
+            C
+          </li>
+        </ul>
+      </div>
+    `);
   });
 });
 
@@ -143,9 +176,18 @@ describe('trans using no children but components (object) - using self closing t
     <Trans defaults="hello <ClickMe />" components={{ ClickMe: <Button /> }} />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<button type="button">click me</button>)).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <button
+          type="button"
+        >
+          click me
+        </button>
+      </div>
+    `);
   });
 });
 
@@ -155,9 +197,18 @@ describe('trans using no children but components (object) - empty content', () =
     <Trans defaults="hello <ClickMe></ClickMe>" components={{ ClickMe: <Button /> }} />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<button type="button">click me</button>)).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <button
+          type="button"
+        >
+          click me
+        </button>
+      </div>
+    `);
   });
 });
 
@@ -167,9 +218,18 @@ describe('trans using children but components (object) - self closing tag', () =
     <Trans components={{ ClickMe: <Button /> }}>{'hello <ClickMe/>'}</Trans>
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<button type="button">click me</button>)).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <button
+          type="button"
+        >
+          click me
+        </button>
+      </div>
+    `);
   });
 });
 
@@ -179,8 +239,17 @@ describe('trans using no children but components (object) - interpolated compone
     <Trans defaults="hello <ClickMe>Test</ClickMe>" components={{ ClickMe: <Button /> }} />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<button type="button">Test</button>)).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <button
+          type="button"
+        >
+          Test
+        </button>
+      </div>
+    `);
   });
 });
