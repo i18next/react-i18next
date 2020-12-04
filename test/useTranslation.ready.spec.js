@@ -1,5 +1,6 @@
 import React from 'react';
-import { mount } from 'enzyme';
+
+import { render } from '@testing-library/react';
 import { useTranslation } from '../src/useTranslation';
 
 jest.unmock('../src/useTranslation');
@@ -19,6 +20,7 @@ const instance = {
   hasResourceBundle: (lng, ns) => ns === 'alreadyLoadedNS',
   loadNamespaces: () => {},
   on: () => {},
+  off: () => {},
   options: {},
 };
 
@@ -39,7 +41,7 @@ describe('useTranslation', () => {
     expect(() => {
       console.error = jest.fn(); // silent down the error boundary error from react-dom
 
-      mount(<TestComponentNotReady i18n={instance} />, {});
+      render(<TestComponentNotReady i18n={instance} />);
     }).toThrow(
       'TestComponentNotReady suspended while rendering, but no fallback UI was specified.',
     );
@@ -47,25 +49,37 @@ describe('useTranslation', () => {
   });
 
   it('should render correct content if ready (having all ns)', () => {
-    const wrapper = mount(<TestComponent i18n={instance} />, {});
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<div>keyOne</div>)).toBe(true);
+    const { container } = render(<TestComponent i18n={instance} />);
+
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        keyOne
+      </div>
+    `);
   });
 
   it('should ignore suspense if no backend defined', () => {
     const instance2 = { ...instance };
     instance2.services.backendConnector = { backend: false };
-    const wrapper = mount(<TestComponentNotReady i18n={instance2} />, {});
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<div>keyOne</div>)).toBe(true);
+    const { container } = render(<TestComponentNotReady i18n={instance2} />);
+
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        keyOne
+      </div>
+    `);
   });
 
   it('should ignore suspense if failed loading ns and no fallback lng is defined', () => {
     const instance2 = { ...instance };
     instance2.services.options = { fallbackLng: false };
-    const wrapper = mount(<TestComponentNotReady i18n={instance2} />, {});
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<div>keyOne</div>)).toBe(true);
+    const { container } = render(<TestComponentNotReady i18n={instance2} />);
+
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        keyOne
+      </div>
+    `);
   });
 
   it('should ignore suspense if failed loading ns but has fallback loaded', () => {
@@ -74,9 +88,13 @@ describe('useTranslation', () => {
       backend: {},
       state: { 'en|notLoadedNS': -1, 'fr|notLoadedNS': 2 },
     };
-    const wrapper = mount(<TestComponentNotReady i18n={instance2} />, {});
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<div>keyOne</div>)).toBe(true);
+    const { container } = render(<TestComponentNotReady i18n={instance2} />);
+
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        keyOne
+      </div>
+    `);
   });
 
   it('should ignore suspense if failed loading ns and has fallback failing too', () => {
@@ -85,9 +103,13 @@ describe('useTranslation', () => {
       backend: {},
       state: { 'en|notLoadedNS': -1, 'fr|notLoadedNS': -1 },
     };
-    const wrapper = mount(<TestComponentNotReady i18n={instance2} />, {});
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<div>keyOne</div>)).toBe(true);
+    const { container } = render(<TestComponentNotReady i18n={instance2} />);
+
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        keyOne
+      </div>
+    `);
   });
 
   it('should ignore suspense if set useSuspense to false', () => {
@@ -97,8 +119,12 @@ describe('useTranslation', () => {
       backend: {},
       state: { 'en|notLoadedNS': 1, 'fr|notLoadedNS': 1 },
     };
-    const wrapper = mount(<TestComponentNotReady i18n={instance2} />, {});
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<div>keyOne</div>)).toBe(true);
+    const { container } = render(<TestComponentNotReady i18n={instance2} />);
+
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        keyOne
+      </div>
+    `);
   });
 });
