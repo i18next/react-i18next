@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import './i18n';
 import { Trans } from '../src/Trans';
 
@@ -19,16 +19,21 @@ describe('Trans should render nested components', () => {
         ]}
       />
     );
-    const wrapper = mount(<TestElement />);
+    const { container } = render(<TestElement />);
 
-    expect(
-      wrapper.contains(
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Result should be a list: 
         <ul>
-          <li>li1</li>
-          <li>li2</li>
-        </ul>,
-      ),
-    ).toBe(true);
+          <li>
+            li1
+          </li>
+          <li>
+            li2
+          </li>
+        </ul>
+      </div>
+    `);
   });
 
   it('should render dynamic ul as components property when pass as a children', () => {
@@ -44,14 +49,19 @@ describe('Trans should render nested components', () => {
         </ul>
       </Trans>
     );
-    const wrapper = mount(<TestElement />);
-    expect(
-      wrapper.contains(
+    const { container } = render(<TestElement />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Result should be a list: 
         <ul>
-          <li>li1</li>
-          <li>li2</li>
-        </ul>,
-      ),
-    ).toBe(true);
+          <li>
+            li1
+          </li>
+          <li>
+            li2
+          </li>
+        </ul>
+      </div>
+    `);
   });
 });
