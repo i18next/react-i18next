@@ -15,7 +15,14 @@ describe('trans using no children but props - icu case', () => {
     const { container } = render(<TestElement />);
     // screen.debug()
 
-    expect(container).toContainHTML('hello <strong>world</strong>');
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <strong>
+          world
+        </strong>
+      </div>
+    `);
   });
 });
 
@@ -36,7 +43,15 @@ describe('trans using no children but props - nested case', () => {
     const { container } = render(<TestElement />);
     // screen.debug()
 
-    expect(container).toContainHTML('hello <br> world');
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        <span>
+          hello 
+          <br />
+           world
+        </span>
+      </div>
+    `);
   });
 });
 
@@ -47,7 +62,13 @@ describe('trans using no children but props - self closing case', () => {
   it('should render translated string', () => {
     const { container } = render(<TestElement />);
     // screen.debug()
-    expect(container).toContainHTML('hello <br>world');
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <br />
+        world
+      </div>
+    `);
   });
 });
 
@@ -64,7 +85,16 @@ describe('Trans should use value from translation', () => {
     );
 
     const { container } = render(<TestElement />);
-    expect(container).toContainHTML('<span class="awesome-styles">dragonfly</span>');
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Result should be rendered within tag 
+        <span
+          class="awesome-styles"
+        >
+          dragonfly
+        </span>
+      </div>
+    `);
   });
 
   it('should use value from translation if dummy data provided in component', () => {
@@ -79,6 +109,15 @@ describe('Trans should use value from translation', () => {
     );
 
     const { container } = render(<TestElement />);
-    expect(container).toContainHTML('<span class="awesome-styles">dragonfly</span>');
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Result should be rendered within tag 
+        <span
+          class="awesome-styles"
+        >
+          dragonfly
+        </span>
+      </div>
+    `);
   });
 });
