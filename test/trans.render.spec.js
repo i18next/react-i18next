@@ -1,6 +1,6 @@
 import React from 'react';
-import { mount } from 'enzyme';
 import i18n from './i18n';
+import { render } from '@testing-library/react';
 import { withTranslation } from '../src/withTranslation';
 import { Trans } from '../src/Trans';
 
@@ -16,57 +16,35 @@ describe('trans simple', () => {
   );
 
   it('should render correct content', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          Go <Link to="/msgs">there</Link>.
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Go 
+        <a
+          href="/msgs"
+        >
+          there
+        </a>
+        .
+      </div>
+    `);
   });
 
-  // ifReact('>= 16', describe, describe.skip)(
-  //   'trans simple - setting back default behaviour of no parent',
-  //   () => {
-  //     // we set in ./i18n react.defaultTransParent so all tests run backwards compatible
-  //     // and this tests new default bahaviour of just returning children
-  //     const TestElement = ({ t, parent }) => {
-  //       const count = 10;
-  //       const name = 'Jan';
-  //       return (
-  //         <Trans i18nKey="transTest1_noParent" parent={false}>
-  //           <span>
-  //             Open <Link to="/msgs">here</Link>.
-  //           </span>
-  //         </Trans>
-  //       );
-  //     };
-
-  //     it('should render correct content', () => {
-  //       const wrapper = mount(<TestElement />);
-  //       // console.log(wrapper.debug());
-  //       expect(
-  //         wrapper.contains(
-  //           <span>
-  //             Go <Link to="/msgs">there</Link>.
-  //           </span>
-  //         )
-  //       ).toBe(true);
-  //     });
-  //   }
-  // );
-
   it('can use a different parent element', () => {
-    const wrapper = mount(<TestElement parent="span" />);
-    expect(
-      wrapper.contains(
-        <span>
-          Go <Link to="/msgs">there</Link>.
-        </span>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement parent="span" />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <span>
+        Go 
+        <a
+          href="/msgs"
+        >
+          there
+        </a>
+        .
+      </span>
+    `);
   });
 });
 
@@ -78,15 +56,19 @@ describe('trans simple using ns prop', () => {
   );
 
   it('should render correct content', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          Another go <Link to="/msgs">there</Link>.
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Another go 
+        <a
+          href="/msgs"
+        >
+          there
+        </a>
+        .
+      </div>
+    `);
   });
 });
 
@@ -98,15 +80,18 @@ describe('trans using translation prop', () => {
   );
 
   it('should render correct content', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          Result should be a clickable link <a href="https://www.google.com">Google</a>
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Result should be a clickable link 
+        <a
+          href="https://www.google.com"
+        >
+          Google
+        </a>
+      </div>
+    `);
   });
 });
 
@@ -118,15 +103,18 @@ describe('trans overwrites translation prop', () => {
   );
 
   it('should render correct content', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          Result should be a clickable link <a href="https://www.bing.com">Google</a>
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Result should be a clickable link 
+        <a
+          href="https://www.bing.com"
+        >
+          Google
+        </a>
+      </div>
+    `);
   });
 });
 
@@ -142,41 +130,53 @@ describe('trans simple with custom html tag', () => {
   const TestElement3 = ({ parent }) => <Trans i18nKey="transTest1_customHtml3" parent={parent} />;
 
   it('should not skip custom html tags', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          <strong>Go</strong> <br />
-          <Link to="/msgs">there</Link>.
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        <strong>
+          Go
+        </strong>
+         
+        <br />
+        <a
+          href="/msgs"
+        >
+          there
+        </a>
+        .
+      </div>
+    `);
   });
 
   it('should not skip custom html tags - empty node', () => {
-    const wrapper = mount(<TestElement2 />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          <strong>Go</strong> <br /> there.
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement2 />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        <strong>
+          Go
+        </strong>
+         
+        <br />
+         there.
+      </div>
+    `);
   });
 
   it('should skip custom html tags not listed in transKeepBasicHtmlNodesFor', () => {
-    const wrapper = mount(<TestElement3 />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          <strong>Go</strong>&lt;video
-          /&gt;&lt;script&gt;console.warn(&quot;test&quot;)&lt;/script&gt; there.
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement3 />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        <strong>
+          Go
+        </strong>
+        &lt;video /&gt;
+        &lt;script&gt;console.warn("test")&lt;/script&gt;
+         there.
+      </div>
+    `);
   });
 });
 
@@ -191,9 +191,14 @@ describe('trans testTransKey1 singular', () => {
   };
 
   it('should render correct content', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<div>1 item matched.</div>)).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        1
+         item matched.
+      </div>
+    `);
   });
 });
 
@@ -208,9 +213,14 @@ describe('trans testTransKey1 plural', () => {
   };
 
   it('should render correct content', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<div>10 items matched.</div>)).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        10
+         items matched.
+      </div>
+    `);
   });
 });
 
@@ -225,15 +235,18 @@ describe('trans testTransKey2', () => {
   };
 
   it('should render correct content', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          <span className="matchCount">10</span> items matched.
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        <span
+          class="matchCount"
+        >
+          10
+        </span>
+         items matched.
+      </div>
+    `);
   });
 });
 
@@ -248,15 +261,19 @@ describe('trans testTransKey3', () => {
   };
 
   it('should render correct content', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          Result: <span className="matchCount">10</span> items matched.
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug()
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Result: 
+        <span
+          class="matchCount"
+        >
+          10
+        </span>
+         items matched.
+      </div>
+    `);
   });
 });
 
@@ -273,15 +290,25 @@ describe('trans complex', () => {
   };
 
   it('should render correct content', () => {
-    const wrapper = mount(<TestElement />);
-    // console.warn(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          Hello <strong>Jan</strong>, you have 10 messages. Open <Link to="/msgs">here</Link>.
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug()
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Hello 
+        <strong>
+          Jan
+        </strong>
+        , you have 
+        10
+         messages. Open 
+        <a
+          href="/msgs"
+        >
+          here
+        </a>
+        .
+      </div>
+    `);
   });
 });
 
@@ -298,15 +325,25 @@ describe('trans complex - count only in props', () => {
   };
 
   it('should render correct content', () => {
-    const wrapper = mount(<TestElement />);
-    // console.warn(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          Hello <strong>Jan</strong>, you have 10 messages. Open <Link to="/msgs">here</Link>.
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug();
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Hello 
+        <strong>
+          Jan
+        </strong>
+        , you have 
+        10
+         messages. Open 
+        <a
+          href="/msgs"
+        >
+          here
+        </a>
+        .
+      </div>
+    `);
   });
 });
 
@@ -323,15 +360,23 @@ describe('trans complex v2 no extra pseudo elements for interpolation', () => {
   };
 
   it('should render correct content', () => {
-    const wrapper = mount(<TestElement />);
-    // console.warn(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          Hello <strong>Jan</strong>, you have 10 messages. Open <Link to="/msgs">here</Link>.
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug()
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Hello 
+        <strong>
+          Jan
+        </strong>
+        , you have 10 messages. Open 
+        <a
+          href="/msgs"
+        >
+          here
+        </a>
+        .
+      </div>
+    `);
   });
 });
 
@@ -356,56 +401,72 @@ describe('trans with t as prop', () => {
 
     const HocElement = withTranslation(['translation'], {})(TestElement);
 
-    mount(<HocElement cb={cb} />);
+    render(<HocElement cb={cb} />);
     expect(usedCustomT).toBe(true);
   });
 
   it('should not pass t to HTML element', () => {
     const HocElement = withTranslation(['translation'], {})(TestElement);
 
-    const wrapper = mount(<HocElement i18n={i18n} />);
-    expect(
-      wrapper.contains(
-        <div>
-          Go <Link to="/msgs">there</Link>.
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<HocElement i18n={i18n} />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Go 
+        <a
+          href="/msgs"
+        >
+          there
+        </a>
+        .
+      </div>
+    `);
   });
 });
 
 describe('trans with empty content', () => {
   const TestElement = () => <Trans />;
   it('should render an empty string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<div />)).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug()
+    expect(container.firstChild).toMatchInlineSnapshot(`<div />`);
   });
 });
 
 describe('trans with only content from translation file - no children', () => {
   const TestElement = () => <Trans i18nKey="key1" />;
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    expect(wrapper.contains(<div>test</div>)).toBe(true);
+    const { container } = render(<TestElement />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        test
+      </div>
+    `);
   });
 });
 
 describe('trans should not break on invalid node from translations', () => {
   const TestElement = () => <Trans i18nKey="testInvalidHtml" />;
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<div>&lt;hello</div>)).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug()
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        &lt;hello
+      </div>
+    `);
   });
 });
 
 describe('trans should not break on invalid node from translations - part2', () => {
   const TestElement = () => <Trans i18nKey="testInvalidHtml2" />;
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<div>&lt;hello&gt;</div>)).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug()
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        &lt;hello&gt;
+      </div>
+    `);
   });
 });
 
@@ -419,16 +480,17 @@ describe('trans should work with misleading overloaded empty elements in compone
     />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          Hi Fritz,
-          <br />
-          and <strong>welcome</strong>
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestElement />);
+    // screen.debug()
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Hi Fritz,
+        <br />
+        and 
+        <strong>
+          welcome
+        </strong>
+      </div>
+    `);
   });
 });
