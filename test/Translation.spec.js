@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import './i18n';
 import { Translation } from '../src/Translation';
 
@@ -12,7 +12,6 @@ describe('Translation', () => {
 
   it('should render correct content', () => {
     const { container } = render(<TestComponent />);
-    // screen.debug()
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         test

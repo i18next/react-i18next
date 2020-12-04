@@ -24,7 +24,6 @@ describe('withTranslation', () => {
   it('should render correct content', () => {
     const HocElement = withTranslation()(TestComponent);
     const { container } = render(<HocElement />);
-    // screen.debug();
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         <div>
