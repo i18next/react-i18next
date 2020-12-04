@@ -12,10 +12,10 @@ describe('trans using no children but props - icu case', () => {
     />
   );
   it('should render translated string', () => {
-    const wrapper = render(<TestElement />);
+    const { container } = render(<TestElement />);
     // screen.debug()
 
-    expect(wrapper.container).toContainHTML('hello <strong>world</strong>');
+    expect(container).toContainHTML('hello <strong>world</strong>');
   });
 });
 
@@ -33,10 +33,10 @@ describe('trans using no children but props - nested case', () => {
     />
   );
   it('should render translated string', () => {
-    const wrapper = render(<TestElement />);
+    const { container } = render(<TestElement />);
     // screen.debug()
 
-    expect(wrapper.container).toContainHTML('hello <br> world');
+    expect(container).toContainHTML('hello <br> world');
   });
 });
 
@@ -45,9 +45,9 @@ describe('trans using no children but props - self closing case', () => {
     <Trans defaults="hello <0/>{{what}}" values={{ what: 'world' }} components={[<br />]} />
   );
   it('should render translated string', () => {
-    const wrapper = render(<TestElement />);
+    const { container } = render(<TestElement />);
     // screen.debug()
-    expect(wrapper.container).toContainHTML('hello <br>world');
+    expect(container).toContainHTML('hello <br>world');
   });
 });
 
@@ -63,8 +63,8 @@ describe('Trans should use value from translation', () => {
       />
     );
 
-    const wrapper = render(<TestElement />);
-    expect(wrapper.container).toContainHTML('<span class="awesome-styles">dragonfly</span>');
+    const { container } = render(<TestElement />);
+    expect(container).toContainHTML('<span class="awesome-styles">dragonfly</span>');
   });
 
   it('should use value from translation if dummy data provided in component', () => {
@@ -78,7 +78,7 @@ describe('Trans should use value from translation', () => {
       />
     );
 
-    const wrapper = render(<TestElement />);
-    expect(wrapper.container).toContainHTML('<span class="awesome-styles">dragonfly</span>');
+    const { container } = render(<TestElement />);
+    expect(container).toContainHTML('<span class="awesome-styles">dragonfly</span>');
   });
 });

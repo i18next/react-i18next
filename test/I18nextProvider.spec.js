@@ -36,7 +36,7 @@ describe('I18nextProvider', () => {
       return <div>{t('key1')}</div>;
     }
 
-    const wrapper = render(
+    render(
       <I18nextProvider i18n={instance}>
         <TestComponent />
       </I18nextProvider>,
@@ -55,13 +55,13 @@ describe('I18nextProvider', () => {
       return <div>{t('key1')}</div>;
     });
 
-    const wrapper = render(
+    const { rerender } = render(
       <I18nextProvider i18n={instance}>
         <TestComponent />
       </I18nextProvider>,
     );
     expect(count).toBe(1);
-    wrapper.rerender(
+    rerender(
       <I18nextProvider i18n={instance}>
         <TestComponent />
       </I18nextProvider>,
