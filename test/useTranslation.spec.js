@@ -1,6 +1,6 @@
 import React from 'react';
-import { mount } from 'enzyme';
 import i18nInstance from './i18n';
+import { render } from '@testing-library/react';
 import { useTranslation } from '../src/useTranslation';
 import { setI18n } from '../src/context';
 import { I18nextProvider } from '../src/I18nextProvider';
@@ -20,9 +20,13 @@ describe('useTranslation', () => {
     }
 
     it('should render correct content', () => {
-      const wrapper = mount(<TestComponent />, {});
-      // console.log(wrapper.debug());
-      expect(wrapper.contains(<div>test</div>)).toBe(true);
+      const { container } = render(<TestComponent />);
+      // screen.debug();
+      expect(container.firstChild).toMatchInlineSnapshot(`
+        <div>
+          test
+        </div>
+      `);
     });
   });
 
@@ -37,9 +41,13 @@ describe('useTranslation', () => {
     }
 
     it('should render correct content', () => {
-      const wrapper = mount(<TestComponent />, {});
-      // console.log(wrapper.debug());
-      expect(wrapper.contains(<div>test</div>)).toBe(true);
+      const { container } = render(<TestComponent />);
+      // screen.debug();
+      expect(container.firstChild).toMatchInlineSnapshot(`
+        <div>
+          test
+        </div>
+      `);
     });
   });
 
@@ -69,10 +77,18 @@ describe('useTranslation', () => {
 
       it('should render content fallback', () => {
         console.warn = jest.fn();
-        const wrapper = mount(<TestComponent />, {});
-        // console.log(wrapper.debug());
-        expect(wrapper.contains(<div>key1</div>)).toBe(true);
-        expect(wrapper.contains(<div>Human friendly fallback</div>)).toBe(true);
+        const { container } = render(<TestComponent />);
+        // screen.debug();
+        expect(container).toMatchInlineSnapshot(`
+          <div>
+            <div>
+              key1
+            </div>
+            <div>
+              Human friendly fallback
+            </div>
+          </div>
+        `);
         expect(console.warn).toHaveBeenCalled();
       });
     });
@@ -98,16 +114,24 @@ describe('useTranslation', () => {
       });
 
       it('should render correct content', () => {
-        const wrapper = mount(<TestComponent />, {});
-        // console.log(wrapper.debug());
-        expect(wrapper.contains(<div>test</div>)).toBe(true);
+        const { container } = render(<TestComponent />);
+        // screen.debug()
+        expect(container.firstChild).toMatchInlineSnapshot(`
+          <div>
+            test
+          </div>
+        `);
       });
     });
 
     it('should render content fallback', () => {
-      const wrapper = mount(<TestComponent />, {});
-      // console.log(wrapper.debug());
-      expect(wrapper.contains(<div>key1</div>)).toBe(true);
+      const { container } = render(<TestComponent />);
+      // screen.debug()
+      expect(container.firstChild).toMatchInlineSnapshot(`
+        <div>
+          key1
+        </div>
+      `);
     });
   });
 
@@ -126,14 +150,18 @@ describe('useTranslation', () => {
 
     it('should render content fallback', () => {
       const namespace = 'sampleNS';
-      const wrapper = mount(
+      const { container } = render(
         <I18nextProvider defaultNS={namespace} i18={i18nInstance}>
           <TestComponent />
         </I18nextProvider>,
         {},
       );
 
-      expect(wrapper.contains(<div>key1</div>)).toBe(true);
+      expect(container.firstChild).toMatchInlineSnapshot(`
+        <div>
+          key1
+        </div>
+      `);
       expect(i18nInstance.reportNamespaces.getUsedNamespaces()).toContain(namespace);
     });
   });
