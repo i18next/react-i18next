@@ -26,9 +26,7 @@ describe('withTranslation', () => {
     const { container } = render(<HocElement />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
-        <div>
-          test
-        </div>
+        test
       </div>
     `);
   });
