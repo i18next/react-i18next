@@ -6,8 +6,6 @@ import * as React from 'react';
  */
 export interface Resources {}
 
-type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
-
 type ResourcesKey<T = keyof Resources> = [T] extends [never] ? string : T;
 
 export type Namespace = ResourcesKey | ResourcesKey[];
