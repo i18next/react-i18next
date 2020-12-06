@@ -1,6 +1,6 @@
 import React from 'react';
 import i18nInstance from './i18n';
-import { render } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
 import { useTranslation } from '../src/useTranslation';
 import { setI18n } from '../src/context';
 import { I18nextProvider } from '../src/I18nextProvider';
@@ -10,44 +10,20 @@ jest.unmock('../src/I18nextProvider');
 
 describe('useTranslation', () => {
   describe('object', () => {
-    function TestComponent() {
-      const { t, i18n } = useTranslation('translation', { i18n: i18nInstance });
-
-      expect(typeof t).toBe('function');
-      expect(i18nInstance).toBe(i18n);
-
-      return <div>{t('key1')}</div>;
-    }
-
     it('should render correct content', () => {
-      const { container } = render(<TestComponent />);
-      // screen.debug();
-      expect(container.firstChild).toMatchInlineSnapshot(`
-        <div>
-          test
-        </div>
-      `);
+      const { result } = renderHook(() => useTranslation('translation', { i18n: i18nInstance }));
+      const { t, i18n } = result.current;
+      expect(t('key1')).toBe('test');
+      expect(i18nInstance).toBe(i18n);
     });
   });
 
   describe('array', () => {
-    function TestComponent() {
-      const [t, instance] = useTranslation('translation', { i18nInstance });
-
-      expect(typeof t).toBe('function');
-      expect(instance).toBe(i18nInstance);
-
-      return <div>{t('key1')}</div>;
-    }
-
     it('should render correct content', () => {
-      const { container } = render(<TestComponent />);
-      // screen.debug();
-      expect(container.firstChild).toMatchInlineSnapshot(`
-        <div>
-          test
-        </div>
-      `);
+      const { result } = renderHook(() => useTranslation('translation', { i18n: i18nInstance }));
+      const [t, i18n] = result.current;
+      expect(t('key1')).toBe('test');
+      expect(i18n).toBe(i18nInstance);
     });
   });
 
@@ -61,34 +37,16 @@ describe('useTranslation', () => {
     });
 
     describe('handling gracefully', () => {
-      function TestComponent() {
-        const { t, i18n } = useTranslation('translation', { i18n: undefined });
-
-        expect(typeof t).toBe('function');
-        expect(i18n).toEqual({});
-
-        return (
-          <>
-            <div>{t('key1')}</div>
-            <div>{t(['doh', 'Human friendly fallback'])}</div>
-          </>
-        );
-      }
-
       it('should render content fallback', () => {
         console.warn = jest.fn();
-        const { container } = render(<TestComponent />);
-        // screen.debug();
-        expect(container).toMatchInlineSnapshot(`
-          <div>
-            <div>
-              key1
-            </div>
-            <div>
-              Human friendly fallback
-            </div>
-          </div>
-        `);
+
+        const { result } = renderHook(() => useTranslation('translation', { i18n: undefined }));
+        const { t, i18n } = result.current;
+
+        expect(t('key1')).toBe('key1');
+        expect(t(['doh', 'Human friendly fallback'])).toBe('Human friendly fallback');
+        expect(i18n).toEqual({});
+
         expect(console.warn).toHaveBeenCalled();
       });
     });
@@ -114,54 +72,45 @@ describe('useTranslation', () => {
       });
 
       it('should render correct content', () => {
-        const { container } = render(<TestComponent />);
-        // screen.debug()
-        expect(container.firstChild).toMatchInlineSnapshot(`
-          <div>
-            test
-          </div>
-        `);
+        const { result } = renderHook(() =>
+          useTranslation(['other', 'translation'], { i18n: i18nInstance }),
+        );
+        const { t } = result.current;
+
+        expect(t('key1')).toBe('test');
       });
     });
 
     it('should render content fallback', () => {
-      const { container } = render(<TestComponent />);
-      // screen.debug()
-      expect(container.firstChild).toMatchInlineSnapshot(`
-        <div>
-          key1
-        </div>
-      `);
+      const { result } = renderHook(() =>
+        useTranslation(['other', 'translation'], { i18n: i18nInstance }),
+      );
+      const { t } = result.current;
+
+      expect(t('key1')).toBe('key1');
     });
   });
 
   describe('default namespace from context', () => {
-    function TestComponent() {
-      const { t } = useTranslation();
-
-      expect(typeof t).toBe('function');
-
-      return <div>{t('key1')}</div>;
-    }
-
     afterEach(() => {
       i18nInstance.reportNamespaces.usedNamespaces = {};
     });
 
-    it('should render content fallback', () => {
-      const namespace = 'sampleNS';
-      const { container } = render(
+    const namespace = 'sampleNS';
+    const wrapper = ({ children }) => {
+      return (
         <I18nextProvider defaultNS={namespace} i18={i18nInstance}>
-          <TestComponent />
-        </I18nextProvider>,
-        {},
+          {children}
+        </I18nextProvider>
       );
+    };
 
-      expect(container.firstChild).toMatchInlineSnapshot(`
-        <div>
-          key1
-        </div>
-      `);
+    it('should render content fallback', () => {
+      const { result } = renderHook(() => useTranslation(), { wrapper });
+      const { t } = result.current;
+
+      expect(t('key1')).toBe('key1');
+
       expect(i18nInstance.reportNamespaces.getUsedNamespaces()).toContain(namespace);
     });
   });

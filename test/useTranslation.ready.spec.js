@@ -1,5 +1,4 @@
 import React from 'react';
-
 import i18nInstance from './i18n';
 import { render } from '@testing-library/react';
 import { useTranslation } from '../src/useTranslation';
