@@ -101,7 +101,7 @@ export interface TFunction<N extends Namespace> {
 export interface TransProps<N extends Namespace, K extends TFuncKey<N>, E extends Element = HTMLDivElement>
   extends React.HTMLProps<E> {
   children?: React.ReactNode;
-  components?: readonly React.ReactNode[] | { [tagName: string]: React.ReactNode };
+  components?: React.ReactNode[] | { [tagName: string]: React.ReactNode };
   count?: number;
   defaults?: string;
   i18n?: i18n;
