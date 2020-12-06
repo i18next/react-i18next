@@ -71,6 +71,10 @@ describe('useTranslation', () => {
 
   it('should ignore suspense if failed loading ns and no fallback lng is defined', () => {
     const instance2 = { ...instance };
+    instance2.services.backendConnector = {
+      backend: {},
+      state: { 'en|notLoadedNS': -1 },
+    };
     instance2.services.options = { fallbackLng: false };
     const { result } = renderHook(() =>
       useTranslation(['notLoadedNS', 'alreadyLoadedNS'], { i18n: instance2 }),
