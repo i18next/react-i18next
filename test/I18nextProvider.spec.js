@@ -42,7 +42,6 @@ describe('I18nextProvider', () => {
       </I18nextProvider>,
     );
 
-    // screen.debug()
     expect(screen.getByText('key1')).toBeInTheDocument();
   });
 
