@@ -4,7 +4,7 @@ import './i18n';
 import { Trans } from '../src/Trans';
 
 describe('trans using no children but props - icu case', () => {
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans
       defaults="hello <0>{{what}}</0>"
       values={{ what: 'world' }}
@@ -12,7 +12,7 @@ describe('trans using no children but props - icu case', () => {
     />
   );
   it('should render translated string', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
 
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
@@ -26,7 +26,7 @@ describe('trans using no children but props - icu case', () => {
 });
 
 describe('trans using no children but props - nested case', () => {
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans
       defaults="<0>hello <1></1> {{what}}</0>"
       values={{ what: 'world' }}
@@ -39,7 +39,7 @@ describe('trans using no children but props - nested case', () => {
     />
   );
   it('should render translated string', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
 
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
@@ -54,11 +54,11 @@ describe('trans using no children but props - nested case', () => {
 });
 
 describe('trans using no children but props - self closing case', () => {
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans defaults="hello <0/>{{what}}" values={{ what: 'world' }} components={[<br />]} />
   );
   it('should render translated string', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello 
@@ -71,7 +71,7 @@ describe('trans using no children but props - self closing case', () => {
 
 describe('Trans should use value from translation', () => {
   it('should use value from translation if no data provided in component', () => {
-    const TestElement = () => (
+    const TestComponent = () => (
       <Trans
         i18nKey="testTrans5KeyWithValue"
         values={{
@@ -81,7 +81,7 @@ describe('Trans should use value from translation', () => {
       />
     );
 
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         Result should be rendered within tag 
@@ -95,7 +95,7 @@ describe('Trans should use value from translation', () => {
   });
 
   it('should use value from translation if dummy data provided in component', () => {
-    const TestElement = () => (
+    const TestComponent = () => (
       <Trans
         i18nKey="testTrans5KeyWithValue"
         values={{
@@ -105,7 +105,7 @@ describe('Trans should use value from translation', () => {
       />
     );
 
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         Result should be rendered within tag 

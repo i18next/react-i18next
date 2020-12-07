@@ -9,14 +9,14 @@ function Link({ to, children }) {
 }
 
 describe('trans simple', () => {
-  const TestElement = ({ parent }) => (
+  const TestComponent = ({ parent }) => (
     <Trans i18nKey="transTest1" parent={parent}>
       Open <Link to="/msgs">here</Link>.
     </Trans>
   );
 
   it('should render correct content', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         Go 
@@ -31,7 +31,7 @@ describe('trans simple', () => {
   });
 
   it('can use a different parent element', () => {
-    const { container } = render(<TestElement parent="span" />);
+    const { container } = render(<TestComponent parent="span" />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <span>
         Go 
@@ -47,14 +47,14 @@ describe('trans simple', () => {
 });
 
 describe('trans simple using ns prop', () => {
-  const TestElement = ({ parent }) => (
+  const TestComponent = ({ parent }) => (
     <Trans i18nKey="transTest1" ns="other" parent={parent}>
       Open <Link to="/msgs">here</Link>.
     </Trans>
   );
 
   it('should render correct content', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         Another go 
@@ -70,14 +70,14 @@ describe('trans simple using ns prop', () => {
 });
 
 describe('trans using translation prop', () => {
-  const TestElement = ({ parent }) => (
+  const TestComponent = ({ parent }) => (
     <Trans i18nKey="transTest3" parent={parent}>
       <a />
     </Trans>
   );
 
   it('should render correct content', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         Result should be a clickable link 
@@ -92,14 +92,14 @@ describe('trans using translation prop', () => {
 });
 
 describe('trans overwrites translation prop', () => {
-  const TestElement = ({ parent }) => (
+  const TestComponent = ({ parent }) => (
     <Trans i18nKey="transTest3_overwrite" parent={parent}>
       <a href="https://www.bing.com" />
     </Trans>
   );
 
   it('should render correct content', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         Result should be a clickable link 
@@ -114,18 +114,18 @@ describe('trans overwrites translation prop', () => {
 });
 
 describe('trans simple with custom html tag', () => {
-  const TestElement = ({ parent }) => (
+  const TestComponent = ({ parent }) => (
     <Trans i18nKey="transTest1_customHtml" parent={parent}>
       Open <Link to="/msgs">here</Link>.
     </Trans>
   );
 
-  const TestElement2 = ({ parent }) => <Trans i18nKey="transTest1_customHtml2" parent={parent} />;
+  const TestComponent2 = ({ parent }) => <Trans i18nKey="transTest1_customHtml2" parent={parent} />;
 
-  const TestElement3 = ({ parent }) => <Trans i18nKey="transTest1_customHtml3" parent={parent} />;
+  const TestComponent3 = ({ parent }) => <Trans i18nKey="transTest1_customHtml3" parent={parent} />;
 
   it('should not skip custom html tags', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         <strong>
@@ -144,7 +144,7 @@ describe('trans simple with custom html tag', () => {
   });
 
   it('should not skip custom html tags - empty node', () => {
-    const { container } = render(<TestElement2 />);
+    const { container } = render(<TestComponent2 />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         <strong>
@@ -158,7 +158,7 @@ describe('trans simple with custom html tag', () => {
   });
 
   it('should skip custom html tags not listed in transKeepBasicHtmlNodesFor', () => {
-    const { container } = render(<TestElement3 />);
+    const { container } = render(<TestComponent3 />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         <strong>
@@ -173,7 +173,7 @@ describe('trans simple with custom html tag', () => {
 });
 
 describe('trans testTransKey1 singular', () => {
-  const TestElement = () => {
+  const TestComponent = () => {
     const numOfItems = 1;
     return (
       <Trans i18nKey="testTransKey1" count={numOfItems}>
@@ -183,7 +183,7 @@ describe('trans testTransKey1 singular', () => {
   };
 
   it('should render correct content', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         1
@@ -194,7 +194,7 @@ describe('trans testTransKey1 singular', () => {
 });
 
 describe('trans testTransKey1 plural', () => {
-  const TestElement = () => {
+  const TestComponent = () => {
     const numOfItems = 10;
     return (
       <Trans i18nKey="testTransKey1" count={numOfItems}>
@@ -204,7 +204,7 @@ describe('trans testTransKey1 plural', () => {
   };
 
   it('should render correct content', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         10
@@ -215,7 +215,7 @@ describe('trans testTransKey1 plural', () => {
 });
 
 describe('trans testTransKey2', () => {
-  const TestElement = () => {
+  const TestComponent = () => {
     const numOfItems = 10;
     return (
       <Trans i18nKey="testTransKey2" count={numOfItems}>
@@ -225,7 +225,7 @@ describe('trans testTransKey2', () => {
   };
 
   it('should render correct content', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         <span
@@ -240,7 +240,7 @@ describe('trans testTransKey2', () => {
 });
 
 describe('trans testTransKey3', () => {
-  const TestElement = () => {
+  const TestComponent = () => {
     const numOfItems = 10;
     return (
       <Trans i18nKey="testTransKey3" count={numOfItems}>
@@ -250,7 +250,7 @@ describe('trans testTransKey3', () => {
   };
 
   it('should render correct content', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         Result: 
@@ -266,7 +266,7 @@ describe('trans testTransKey3', () => {
 });
 
 describe('trans complex', () => {
-  const TestElement = () => {
+  const TestComponent = () => {
     const count = 10;
     const name = 'Jan';
     // prettier-ignore
@@ -278,7 +278,7 @@ describe('trans complex', () => {
   };
 
   it('should render correct content', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         Hello 
@@ -300,7 +300,7 @@ describe('trans complex', () => {
 });
 
 describe('trans complex - count only in props', () => {
-  const TestElement = () => {
+  const TestComponent = () => {
     const count = 10;
     const name = 'Jan';
     // prettier-ignore
@@ -312,7 +312,7 @@ describe('trans complex - count only in props', () => {
   };
 
   it('should render correct content', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         Hello 
@@ -334,7 +334,7 @@ describe('trans complex - count only in props', () => {
 });
 
 describe('trans complex v2 no extra pseudo elements for interpolation', () => {
-  const TestElement = () => {
+  const TestComponent = () => {
     const count = 10;
     const name = 'Jan';
     // prettier-ignore
@@ -346,7 +346,7 @@ describe('trans complex v2 no extra pseudo elements for interpolation', () => {
   };
 
   it('should render correct content', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         Hello 
@@ -366,7 +366,7 @@ describe('trans complex v2 no extra pseudo elements for interpolation', () => {
 });
 
 describe('trans with t as prop', () => {
-  const TestElement = ({ t, cb }) => {
+  const TestComponent = ({ t, cb }) => {
     const customT = (...args) => {
       if (cb) cb();
       return t(...args);
@@ -384,14 +384,14 @@ describe('trans with t as prop', () => {
       usedCustomT = true;
     };
 
-    const HocElement = withTranslation(['translation'], {})(TestElement);
+    const HocElement = withTranslation(['translation'], {})(TestComponent);
 
     render(<HocElement cb={cb} />);
     expect(usedCustomT).toBe(true);
   });
 
   it('should not pass t to HTML element', () => {
-    const HocElement = withTranslation(['translation'], {})(TestElement);
+    const HocElement = withTranslation(['translation'], {})(TestComponent);
 
     const { container } = render(<HocElement i18n={i18n} />);
     expect(container.firstChild).toMatchInlineSnapshot(`
@@ -409,17 +409,17 @@ describe('trans with t as prop', () => {
 });
 
 describe('trans with empty content', () => {
-  const TestElement = () => <Trans />;
+  const TestComponent = () => <Trans />;
   it('should render an empty string', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`<div />`);
   });
 });
 
 describe('trans with only content from translation file - no children', () => {
-  const TestElement = () => <Trans i18nKey="key1" />;
+  const TestComponent = () => <Trans i18nKey="key1" />;
   it('should render translated string', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         test
@@ -429,9 +429,9 @@ describe('trans with only content from translation file - no children', () => {
 });
 
 describe('trans should not break on invalid node from translations', () => {
-  const TestElement = () => <Trans i18nKey="testInvalidHtml" />;
+  const TestComponent = () => <Trans i18nKey="testInvalidHtml" />;
   it('should render translated string', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         &lt;hello
@@ -441,9 +441,9 @@ describe('trans should not break on invalid node from translations', () => {
 });
 
 describe('trans should not break on invalid node from translations - part2', () => {
-  const TestElement = () => <Trans i18nKey="testInvalidHtml2" />;
+  const TestComponent = () => <Trans i18nKey="testInvalidHtml2" />;
   it('should render translated string', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         &lt;hello&gt;
@@ -453,7 +453,7 @@ describe('trans should not break on invalid node from translations - part2', () 
 });
 
 describe('trans should work with misleading overloaded empty elements in components', () => {
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans
       i18nKey="someKey"
       defaults="Hi {{ firstName }},<br/>and <bold>welcome</bold>"
@@ -462,7 +462,7 @@ describe('trans should work with misleading overloaded empty elements in compone
     />
   );
   it('should render translated string', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         Hi Fritz,

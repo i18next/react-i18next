@@ -4,7 +4,7 @@ import './i18n';
 import { Trans } from '../src/Trans';
 
 describe('trans using no children but components (object) - base case using array not object', () => {
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans
       defaults="hello <0>beautiful</0> <1>{{what}}</1>"
       values={{ what: 'world' }}
@@ -12,7 +12,7 @@ describe('trans using no children but components (object) - base case using arra
     />
   );
   it('should render translated string', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello 
@@ -29,7 +29,7 @@ describe('trans using no children but components (object) - base case using arra
 });
 
 describe('trans using no children but components (object) - using index', () => {
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans
       defaults="hello <1>beautiful</1> <2>{{what}}</2>"
       values={{ what: 'world' }}
@@ -37,7 +37,7 @@ describe('trans using no children but components (object) - using index', () => 
     />
   );
   it('should render translated string', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello 
@@ -54,7 +54,7 @@ describe('trans using no children but components (object) - using index', () => 
 });
 
 describe('trans using no children but components (object) - using names', () => {
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans
       defaults="hello <italic>beautiful</italic> <bold>{{what}}</bold>"
       values={{ what: 'world' }}
@@ -62,7 +62,7 @@ describe('trans using no children but components (object) - using names', () => 
     />
   );
   it('should render translated string', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello 
@@ -79,7 +79,7 @@ describe('trans using no children but components (object) - using names', () => 
 });
 
 describe('trans using no children but components (object) - using names with no lowercase', () => {
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans
       defaults="hello <italicCase>beautiful</italicCase> <BoldCase>{{what}}</BoldCase>"
       values={{ what: 'world' }}
@@ -87,7 +87,7 @@ describe('trans using no children but components (object) - using names with no 
     />
   );
   it('should render translated string', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello 
@@ -104,14 +104,14 @@ describe('trans using no children but components (object) - using names with no 
 });
 
 describe('trans using no children but components (object) - use more than once', () => {
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans
       defaults="hello<list><listitem>A</listitem>,<listitem>B</listitem>and<listitem>C</listitem></list>"
       components={{ list: <ul>a</ul>, listitem: <li>b</li> }}
     />
   );
   it('should render translated string', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello
@@ -134,14 +134,14 @@ describe('trans using no children but components (object) - use more than once',
 });
 
 describe('trans using no children but components (object) - use more than once (empty)', () => {
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans
       defaults="hello<list><listitem>A</listitem>,<listitem>B</listitem>and<listitem>C</listitem></list>"
       components={{ list: <ul />, listitem: <li /> }}
     />
   );
   it('should render translated string', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello
@@ -165,11 +165,11 @@ describe('trans using no children but components (object) - use more than once (
 
 describe('trans using no children but components (object) - using self closing tag', () => {
   const Button = () => <button type="button">click me</button>;
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans defaults="hello <ClickMe />" components={{ ClickMe: <Button /> }} />
   );
   it('should render translated string', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello 
@@ -185,11 +185,11 @@ describe('trans using no children but components (object) - using self closing t
 
 describe('trans using no children but components (object) - empty content', () => {
   const Button = () => <button type="button">click me</button>;
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans defaults="hello <ClickMe></ClickMe>" components={{ ClickMe: <Button /> }} />
   );
   it('should render translated string', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello 
@@ -205,11 +205,11 @@ describe('trans using no children but components (object) - empty content', () =
 
 describe('trans using children but components (object) - self closing tag', () => {
   const Button = () => <button type="button">click me</button>;
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans components={{ ClickMe: <Button /> }}>{'hello <ClickMe/>'}</Trans>
   );
   it('should render translated string', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello 
@@ -225,11 +225,11 @@ describe('trans using children but components (object) - self closing tag', () =
 
 describe('trans using no children but components (object) - interpolated component with children', () => {
   const Button = ({ children }) => <button type="button">{children}</button>;
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans defaults="hello <ClickMe>Test</ClickMe>" components={{ ClickMe: <Button /> }} />
   );
   it('should render translated string', () => {
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello 
