@@ -21,7 +21,7 @@ describe('useTranslation loading ns', () => {
     });
   });
 
-  it('should wait for correct translation RTL', async () => {
+  it('should wait for correct translation with suspense', async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
       useTranslation('common', { i18n: newI18n, useSuspense: true }),
     );
@@ -32,7 +32,7 @@ describe('useTranslation loading ns', () => {
     expect(t('key1')).toBe('test');
   });
 
-  it('should wait for correct translation RTL', async () => {
+  it('should wait for correct translation without suspense', async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
       useTranslation('common', { i18n: newI18n, useSuspense: false }),
     );
