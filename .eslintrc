@@ -22,7 +22,6 @@
     "jest": true
   },
   "rules": {
-    "import/no-cycle": ["error", { "maxDepth": "∞" }],
     "no-debugger": 0,
     "no-alert": 0,
     "no-unused-vars": [
