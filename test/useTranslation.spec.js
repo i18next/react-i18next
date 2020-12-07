@@ -53,14 +53,15 @@ describe('useTranslation', () => {
   });
 
   describe('few namespaces', () => {
-    function TestComponent() {
-      const { t, i18n } = useTranslation(['other', 'translation'], { i18n: i18nInstance });
-
+    it('hook destructured values are expected types', () => {
+      const { result } = renderHook(() =>
+        useTranslation(['other', 'translation'], { i18n: i18nInstance }),
+      );
+      const { t, i18n } = result.current;
       expect(typeof t).toBe('function');
       expect(i18n).toEqual(i18nInstance);
-
-      return <div>{t('key1')}</div>;
-    }
+      expect(<div>{t('key1')}</div>).toEqual(<div>key1</div>);
+    });
 
     describe('fallback mode', () => {
       beforeAll(() => {
