@@ -1,6 +1,6 @@
 import React from 'react';
-import i18nInstance from './i18n';
 import { renderHook } from '@testing-library/react-hooks';
+import i18nInstance from './i18n';
 import { useTranslation } from '../src/useTranslation';
 import { setI18n } from '../src/context';
 import { I18nextProvider } from '../src/I18nextProvider';
@@ -53,14 +53,15 @@ describe('useTranslation', () => {
   });
 
   describe('few namespaces', () => {
-    function TestComponent() {
-      const { t, i18n } = useTranslation(['other', 'translation'], { i18n: i18nInstance });
-
+    it('hook destructured values are expected types', () => {
+      const { result } = renderHook(() =>
+        useTranslation(['other', 'translation'], { i18n: i18nInstance }),
+      );
+      const { t, i18n } = result.current;
       expect(typeof t).toBe('function');
       expect(i18n).toEqual(i18nInstance);
-
-      return <div>{t('key1')}</div>;
-    }
+      expect(t('key1')).toEqual('key1');
+    });
 
     describe('fallback mode', () => {
       beforeAll(() => {
@@ -97,13 +98,11 @@ describe('useTranslation', () => {
     });
 
     const namespace = 'sampleNS';
-    const wrapper = ({ children }) => {
-      return (
-        <I18nextProvider defaultNS={namespace} i18={i18nInstance}>
-          {children}
-        </I18nextProvider>
-      );
-    };
+    const wrapper = ({ children }) => (
+      <I18nextProvider defaultNS={namespace} i18={i18nInstance}>
+        {children}
+      </I18nextProvider>
+    );
 
     it('should render content fallback', () => {
       const { result } = renderHook(() => useTranslation(), { wrapper });
