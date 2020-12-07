@@ -7,7 +7,7 @@ describe('Trans should render nested components', () => {
   it('should render dynamic ul as components property', () => {
     const list = ['li1', 'li2'];
 
-    const TestElement = () => (
+    const TestComponent = () => (
       <Trans
         i18nKey="testTrans4KeyWithNestedComponent"
         components={[
@@ -19,7 +19,7 @@ describe('Trans should render nested components', () => {
         ]}
       />
     );
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
 
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
@@ -39,7 +39,7 @@ describe('Trans should render nested components', () => {
   it('should render dynamic ul as components property when pass as a children', () => {
     const list = ['li1', 'li2'];
 
-    const TestElement = () => (
+    const TestComponent = () => (
       <Trans i18nKey="testTrans5KeyWithNestedComponent">
         My list:
         <ul>
@@ -49,7 +49,7 @@ describe('Trans should render nested components', () => {
         </ul>
       </Trans>
     );
-    const { container } = render(<TestElement />);
+    const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         Result should be a list: 
