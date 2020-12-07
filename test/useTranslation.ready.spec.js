@@ -28,12 +28,6 @@ describe('useTranslation', () => {
     };
   });
 
-  function TestComponent({ i18n }) {
-    const [t] = useTranslation('alreadyLoadedNS', { i18n });
-
-    return <div>{t('keyOne')}</div>;
-  }
-
   function TestComponentNotReady({ i18n }) {
     const { t } = useTranslation(['notLoadedNS', 'alreadyLoadedNS'], { i18n });
 
