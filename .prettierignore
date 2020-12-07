@@ -1,0 +1,4 @@
+# Prettier does not support typescript 4.1 syntax yet.
+# Once they support it, we can remove this line.
+# https://github.com/prettier/prettier/issues/9234
+src/ts4.1/index.d.ts
