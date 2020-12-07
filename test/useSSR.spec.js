@@ -1,4 +1,3 @@
-import React from 'react';
 import { renderHook } from '@testing-library/react-hooks';
 import i18n from './i18n';
 import { setI18n } from '../src/context';

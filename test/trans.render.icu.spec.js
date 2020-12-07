@@ -13,7 +13,6 @@ describe('trans using no children but props - icu case', () => {
   );
   it('should render translated string', () => {
     const { container } = render(<TestElement />);
-    // screen.debug()
 
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
@@ -41,7 +40,6 @@ describe('trans using no children but props - nested case', () => {
   );
   it('should render translated string', () => {
     const { container } = render(<TestElement />);
-    // screen.debug()
 
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
@@ -61,7 +59,6 @@ describe('trans using no children but props - self closing case', () => {
   );
   it('should render translated string', () => {
     const { container } = render(<TestElement />);
-    // screen.debug()
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import './i18n';
 import { Trans } from '../src/Trans';
 
@@ -13,7 +13,6 @@ describe('trans using no children but components (object) - base case using arra
   );
   it('should render translated string', () => {
     const { container } = render(<TestElement />);
-    // screen.debug();
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello 
@@ -39,7 +38,6 @@ describe('trans using no children but components (object) - using index', () => 
   );
   it('should render translated string', () => {
     const { container } = render(<TestElement />);
-    // screen.debug();
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello 
@@ -65,7 +63,6 @@ describe('trans using no children but components (object) - using names', () => 
   );
   it('should render translated string', () => {
     const { container } = render(<TestElement />);
-    // screen.debug();
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello 
@@ -91,7 +88,6 @@ describe('trans using no children but components (object) - using names with no 
   );
   it('should render translated string', () => {
     const { container } = render(<TestElement />);
-    // screen.debug();
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello 
@@ -116,7 +112,6 @@ describe('trans using no children but components (object) - use more than once',
   );
   it('should render translated string', () => {
     const { container } = render(<TestElement />);
-    // screen.debug();
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello
@@ -147,7 +142,6 @@ describe('trans using no children but components (object) - use more than once (
   );
   it('should render translated string', () => {
     const { container } = render(<TestElement />);
-    // screen.debug();
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello
@@ -176,7 +170,6 @@ describe('trans using no children but components (object) - using self closing t
   );
   it('should render translated string', () => {
     const { container } = render(<TestElement />);
-    // screen.debug();
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello 
@@ -197,7 +190,6 @@ describe('trans using no children but components (object) - empty content', () =
   );
   it('should render translated string', () => {
     const { container } = render(<TestElement />);
-    // screen.debug();
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello 
@@ -218,7 +210,6 @@ describe('trans using children but components (object) - self closing tag', () =
   );
   it('should render translated string', () => {
     const { container } = render(<TestElement />);
-    // screen.debug();
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello 
@@ -239,7 +230,6 @@ describe('trans using no children but components (object) - interpolated compone
   );
   it('should render translated string', () => {
     const { container } = render(<TestElement />);
-    // screen.debug();
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         hello 

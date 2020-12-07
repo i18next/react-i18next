@@ -1,6 +1,6 @@
 import React from 'react';
-import i18nInstance from './i18n';
 import { renderHook } from '@testing-library/react-hooks';
+import i18nInstance from './i18n';
 import { useTranslation } from '../src/useTranslation';
 import { setI18n } from '../src/context';
 import { I18nextProvider } from '../src/I18nextProvider';
@@ -97,13 +97,11 @@ describe('useTranslation', () => {
     });
 
     const namespace = 'sampleNS';
-    const wrapper = ({ children }) => {
-      return (
-        <I18nextProvider defaultNS={namespace} i18={i18nInstance}>
-          {children}
-        </I18nextProvider>
-      );
-    };
+    const wrapper = ({ children }) => (
+      <I18nextProvider defaultNS={namespace} i18={i18nInstance}>
+        {children}
+      </I18nextProvider>
+    );
 
     it('should render content fallback', () => {
       const { result } = renderHook(() => useTranslation(), { wrapper });

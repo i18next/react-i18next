@@ -1,6 +1,6 @@
 import React from 'react';
-import i18n from './i18n';
 import { render } from '@testing-library/react';
+import i18n from './i18n';
 import { withTranslation } from '../src/withTranslation';
 import { Trans } from '../src/Trans';
 
@@ -72,7 +72,7 @@ describe('trans simple using ns prop', () => {
 describe('trans using translation prop', () => {
   const TestElement = ({ parent }) => (
     <Trans i18nKey="transTest3" parent={parent}>
-      <a></a>
+      <a />
     </Trans>
   );
 
@@ -94,7 +94,7 @@ describe('trans using translation prop', () => {
 describe('trans overwrites translation prop', () => {
   const TestElement = ({ parent }) => (
     <Trans i18nKey="transTest3_overwrite" parent={parent}>
-      <a href="https://www.bing.com"></a>
+      <a href="https://www.bing.com" />
     </Trans>
   );
 

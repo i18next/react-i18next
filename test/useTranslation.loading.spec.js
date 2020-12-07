@@ -1,7 +1,7 @@
+import { renderHook } from '@testing-library/react-hooks';
 import i18n from './i18n';
 import BackendMock from './backendMock';
 import { useTranslation } from '../src/useTranslation';
-import { renderHook } from '@testing-library/react-hooks';
 
 jest.unmock('../src/useTranslation');
 

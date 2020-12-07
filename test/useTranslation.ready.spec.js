@@ -1,7 +1,7 @@
 import React from 'react';
+import { renderHook } from '@testing-library/react-hooks';
 import { render } from '@testing-library/react';
 import { useTranslation } from '../src/useTranslation';
-import { renderHook } from '@testing-library/react-hooks';
 
 jest.unmock('../src/useTranslation');
 
