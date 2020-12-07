@@ -60,7 +60,7 @@ describe('useTranslation', () => {
       const { t, i18n } = result.current;
       expect(typeof t).toBe('function');
       expect(i18n).toEqual(i18nInstance);
-      expect(<div>{t('key1')}</div>).toEqual(<div>key1</div>);
+      expect(t('key1')).toEqual('key1');
     });
 
     describe('fallback mode', () => {
