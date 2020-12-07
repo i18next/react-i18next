@@ -25,7 +25,7 @@ describe('useTranslation loading ns', () => {
     const { result, waitForNextUpdate } = renderHook(() =>
       useTranslation('common', { i18n: newI18n, useSuspense: true }),
     );
-    expect(result.current).toBe(null);
+    expect(result.all).toHaveLength(0);
     backend.flush();
     await waitForNextUpdate();
     const { t } = result.current;
