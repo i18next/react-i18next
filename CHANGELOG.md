@@ -1,3 +1,7 @@
+### 11.8.1
+
+- fix: typescript definitions for t function without namespaces [1214](https://github.com/i18next/react-i18next/pull/1214)
+
 ### 11.8.0
 
 - typescript: Make the translation function fully type-safe [1193](https://github.com/i18next/react-i18next/pull/1193)
