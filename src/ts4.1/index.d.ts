@@ -1,4 +1,11 @@
-import i18next, { ReactOptions, i18n, ThirdPartyModule, Resource, TOptions, StringMap } from 'i18next';
+import i18next, {
+  ReactOptions,
+  i18n,
+  ThirdPartyModule,
+  Resource,
+  TOptions,
+  StringMap,
+} from 'i18next';
 import * as React from 'react';
 
 /**
@@ -39,20 +46,16 @@ type OmitArrayProps<T> = Exclude<T, keyof any[]>;
 type AppendKeys<K1, K2> = `${K1 & string}.${OmitArrayProps<K2> & string}`;
 type Normalize2<T, K = keyof T> = K extends keyof T
   ? T[K] extends object
-  ? AppendKeys<K, keyof T[K]> | AppendKeys<K, Normalize2<T[K]>>
-  : never
+    ? AppendKeys<K, keyof T[K]> | AppendKeys<K, Normalize2<T[K]>>
+    : never
   : never;
 type Normalize<T> = keyof T | Normalize2<T>;
 
 // Normalize multiple namespaces
-type UnionToIntersection<U> = (U extends any
-  ? (k: U) => void
-  : never) extends (k: infer I) => void
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void
   ? I
   : never;
-type LastOf<T> = UnionToIntersection<
-  T extends any ? () => T : never
-> extends () => infer R
+type LastOf<T> = UnionToIntersection<T extends any ? () => T : never> extends () => infer R
   ? R
   : never;
 type AppendNS<N, K> = `${N & string}:${K & string}`;
@@ -62,16 +65,16 @@ type NormalizeMulti<T, U extends keyof T, L = LastOf<U>> = L extends U
 
 type NormalizeReturn<T, V> = V extends `${infer K}.${infer R}`
   ? K extends keyof T
-  ? NormalizeReturn<T[K], R>
-  : never
+    ? NormalizeReturn<T[K], R>
+    : never
   : V extends keyof T
   ? T[V]
   : never;
 
 type NormalizeMultiReturn<T, V> = V extends `${infer N}:${infer R}`
   ? N extends keyof T
-  ? NormalizeReturn<T[N], R>
-  : never
+    ? NormalizeReturn<T[N], R>
+    : never
   : never;
 
 export type TFuncKey<N, T = Resources> = N extends (keyof T)[]
@@ -86,7 +89,7 @@ export type TFuncReturn<N, P, T = Resources> = N extends (keyof T)[]
   ? NormalizeReturn<T[N], P>
   : string;
 
-export interface TFunction<N extends Namespace> {
+export interface TFunction<N extends Namespace = DefaultNamespace> {
   <K extends TFuncKey<N>, TInterpolationMap extends object = StringMap>(
     key: K,
     options?: TOptions<TInterpolationMap> | string,
@@ -98,8 +101,11 @@ export interface TFunction<N extends Namespace> {
   ): TFuncReturn<N, K>;
 }
 
-export interface TransProps<N extends Namespace, K extends TFuncKey<N>, E extends Element = HTMLDivElement>
-  extends React.HTMLProps<E> {
+export interface TransProps<
+  K extends TFuncKey<N>,
+  N extends Namespace = DefaultNamespace,
+  E extends Element = HTMLDivElement
+> extends React.HTMLProps<E> {
   children?: React.ReactNode;
   components?: React.ReactNode[] | { [tagName: string]: React.ReactNode };
   count?: number;
@@ -112,9 +118,11 @@ export interface TransProps<N extends Namespace, K extends TFuncKey<N>, E extend
   values?: {};
   t?: TFunction<N>;
 }
-export function Trans<N extends Namespace, K extends TFuncKey<N>, E extends Element = HTMLDivElement>(
-  props: TransProps<N, K, E>
-): React.ReactElement;
+export function Trans<
+  K extends TFuncKey<N>,
+  N extends Namespace = DefaultNamespace,
+  E extends Element = HTMLDivElement
+>(props: TransProps<K, N, E>): React.ReactElement;
 
 export function useSSR(initialI18nStore: Resource, initialLanguage: string): void;
 
@@ -128,11 +136,12 @@ type UseTranslationResponse<N extends Namespace> = [TFunction<N>, i18n, boolean]
   i18n: i18n;
   ready: boolean;
 };
-export function useTranslation<
-  N extends Namespace = Extract<ResourcesKey, 'translation'>
->(
+
+type DefaultNamespace<T = 'translation'> = ResourcesKey extends T ? T : string;
+
+export function useTranslation<N extends Namespace = DefaultNamespace>(
   ns?: N,
-  options?: UseTranslationOptions
+  options?: UseTranslationOptions,
 ): UseTranslationResponse<N>;
 
 // Need to see usage to improve this
@@ -150,7 +159,7 @@ export function withSSR(): <Props>(
   getInitialProps: (ctx: unknown) => Promise<any>;
 };
 
-export interface WithTranslation<N extends Namespace> {
+export interface WithTranslation<N extends Namespace = DefaultNamespace> {
   t: TFunction<N>;
   i18n: i18n;
   tReady: boolean;
@@ -161,7 +170,7 @@ export interface WithTranslationProps {
   useSuspense?: boolean;
 }
 
-export function withTranslation<N extends Namespace>(
+export function withTranslation<N extends Namespace = DefaultNamespace>(
   ns?: N,
   options?: {
     withRef?: boolean;
@@ -178,7 +187,7 @@ export interface I18nextProviderProps {
 export const I18nextProvider: React.FunctionComponent<I18nextProviderProps>;
 export const I18nContext: React.Context<{ i18n: i18n }>;
 
-export interface TranslationProps<N extends Namespace> {
+export interface TranslationProps<N extends Namespace = DefaultNamespace> {
   children: (
     t: TFunction<N>,
     options: {
@@ -191,4 +200,6 @@ export interface TranslationProps<N extends Namespace> {
   i18n?: i18n;
 }
 
-export function Translation<N extends Namespace>(props: TranslationProps<N>): any;
+export function Translation<N extends Namespace = DefaultNamespace>(
+  props: TranslationProps<N>,
+): any;
