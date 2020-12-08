@@ -25,8 +25,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.3.1",
-    "html-parse-stringify2": "2.0.1",
-    "react-test-renderer": "^17.0.1"
+    "html-parse-stringify2": "2.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
@@ -70,6 +69,7 @@
     "prettier": "1.18.2",
     "react": "^16.14.0",
     "react-dom": "^16.10.2",
+    "react-test-renderer": "^17.0.1",
     "rimraf": "2.6.3",
     "rollup": "1.19.4",
     "rollup-plugin-babel": "^4.3.2",
