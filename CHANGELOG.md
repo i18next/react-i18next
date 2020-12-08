@@ -1,3 +1,12 @@
+### 11.8.1
+
+- fix: typescript definitions for t function without namespaces [1214](https://github.com/i18next/react-i18next/pull/1214)
+
+### 11.8.0
+
+- typescript: Make the translation function fully type-safe [1193](https://github.com/i18next/react-i18next/pull/1193)
+- trans should work with misleading overloaded empty elements in components [1206](https://github.com/i18next/react-i18next/pull/1206)
+
 ### 11.7.4
 
 - fixes passing interpolations options via Trans components tOptions prop [1204](https://github.com/i18next/react-i18next/pull/1204)

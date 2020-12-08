@@ -637,11 +637,11 @@
       return hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
     }
 
-    function pushTranslatedJSX(child, inner, mem, i) {
+    function pushTranslatedJSX(child, inner, mem, i, isVoid) {
       if (child.dummy) child.children = inner;
       mem.push(React__default.cloneElement(child, _objectSpread2(_objectSpread2({}, child.props), {}, {
         key: i
-      }), inner));
+      }), isVoid ? undefined : inner));
     }
 
     function mapAST(reactNode, astNode, rootReactNode) {
@@ -677,7 +677,7 @@
             if (isKnownComponent) {
               var _inner2 = renderInner(child, node, rootReactNode);
 
-              pushTranslatedJSX(child, _inner2, mem, i);
+              pushTranslatedJSX(child, _inner2, mem, i, node.voidElement);
             } else if (i18nOptions.transSupportBasicHtmlNodes && keepArray.indexOf(node.name) > -1) {
               if (node.voidElement) {
                 mem.push(React__default.createElement(node.name, {

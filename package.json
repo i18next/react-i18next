@@ -1,9 +1,16 @@
 {
   "name": "react-i18next",
-  "version": "11.7.4",
+  "version": "11.8.1",
   "description": "Internationalization for react done right. Using the i18next i18n ecosystem.",
   "main": "dist/commonjs/index.js",
   "types": "src/index.d.ts",
+  "typesVersions": {
+    ">=4.1": {
+      "*": [
+        "src/ts4.1/index.d.ts"
+      ]
+    }
+  },
   "jsnext:main": "dist/es/index.js",
   "module": "dist/es/index.js",
   "keywords": [
@@ -66,8 +73,8 @@
     "jest-cli": "24.8.0",
     "lint-staged": "^8.1.3",
     "mkdirp": "0.5.1",
-    "prettier": "1.18.2",
-    "react": "^16.14.0",
+    "prettier": "2.2.1",
+    "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-test-renderer": "^17.0.1",
     "rimraf": "2.6.3",
