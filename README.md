@@ -105,6 +105,7 @@ $ npm install react-i18next
 ### Examples
 
 - [Example react](https://github.com/i18next/react-i18next/tree/master/example/react)
+- [Example react with Typescript 4.1+](https://github.com/i18next/react-i18next/tree/master/example/react-typescript4.1)
 
 #### v9 samples
 
