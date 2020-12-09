@@ -1,31 +1,32 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 import './i18n';
 import { Trans } from '../src/Trans';
 
 describe('trans using no children but props - icu case', () => {
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans
       defaults="hello <0>{{what}}</0>"
       values={{ what: 'world' }}
-      components={[<strong>univers</strong>]}
+      components={[<strong>universe</strong>]}
     />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          hello <strong>world</strong>
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestComponent />);
+
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <strong>
+          world
+        </strong>
+      </div>
+    `);
   });
 });
 
 describe('trans using no children but props - nested case', () => {
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans
       defaults="<0>hello <1></1> {{what}}</0>"
       values={{ what: 'world' }}
@@ -38,39 +39,39 @@ describe('trans using no children but props - nested case', () => {
     />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
+    const { container } = render(<TestComponent />);
+
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
         <span>
-          hello <br /> world
-        </span>,
-      ),
-    ).toBe(true);
+          hello 
+          <br />
+           world
+        </span>
+      </div>
+    `);
   });
 });
 
 describe('trans using no children but props - self closing case', () => {
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans defaults="hello <0/>{{what}}" values={{ what: 'world' }} components={[<br />]} />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          hello <br />
-          world
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <br />
+        world
+      </div>
+    `);
   });
 });
 
 describe('Trans should use value from translation', () => {
   it('should use value from translation if no data provided in component', () => {
-    const TestElement = () => (
+    const TestComponent = () => (
       <Trans
         i18nKey="testTrans5KeyWithValue"
         values={{
@@ -80,12 +81,21 @@ describe('Trans should use value from translation', () => {
       />
     );
 
-    const wrapper = mount(<TestElement />);
-    expect(wrapper.contains(<span className="awesome-styles">dragonfly</span>)).toBe(true);
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Result should be rendered within tag 
+        <span
+          class="awesome-styles"
+        >
+          dragonfly
+        </span>
+      </div>
+    `);
   });
 
   it('should use value from translation if dummy data provided in component', () => {
-    const TestElement = () => (
+    const TestComponent = () => (
       <Trans
         i18nKey="testTrans5KeyWithValue"
         values={{
@@ -95,7 +105,16 @@ describe('Trans should use value from translation', () => {
       />
     );
 
-    const wrapper = mount(<TestElement />);
-    expect(wrapper.contains(<span className="awesome-styles">dragonfly</span>)).toBe(true);
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Result should be rendered within tag 
+        <span
+          class="awesome-styles"
+        >
+          dragonfly
+        </span>
+      </div>
+    `);
   });
 });

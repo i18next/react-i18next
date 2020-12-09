@@ -1,10 +1,10 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import './i18n';
 import { Trans } from '../src/Trans';
 
 describe('trans using no children but components (object) - base case using array not object', () => {
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans
       defaults="hello <0>beautiful</0> <1>{{what}}</1>"
       values={{ what: 'world' }}
@@ -12,20 +12,24 @@ describe('trans using no children but components (object) - base case using arra
     />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          hello <i>beautiful</i> <strong>world</strong>
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <i>
+          beautiful
+        </i>
+         
+        <strong>
+          world
+        </strong>
+      </div>
+    `);
   });
 });
 
 describe('trans using no children but components (object) - using index', () => {
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans
       defaults="hello <1>beautiful</1> <2>{{what}}</2>"
       values={{ what: 'world' }}
@@ -33,20 +37,24 @@ describe('trans using no children but components (object) - using index', () => 
     />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          hello <i>beautiful</i> <strong>world</strong>
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <i>
+          beautiful
+        </i>
+         
+        <strong>
+          world
+        </strong>
+      </div>
+    `);
   });
 });
 
 describe('trans using no children but components (object) - using names', () => {
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans
       defaults="hello <italic>beautiful</italic> <bold>{{what}}</bold>"
       values={{ what: 'world' }}
@@ -54,20 +62,24 @@ describe('trans using no children but components (object) - using names', () => 
     />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          hello <i>beautiful</i> <strong>world</strong>
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <i>
+          beautiful
+        </i>
+         
+        <strong>
+          world
+        </strong>
+      </div>
+    `);
   });
 });
 
 describe('trans using no children but components (object) - using names with no lowercase', () => {
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans
       defaults="hello <italicCase>beautiful</italicCase> <BoldCase>{{what}}</BoldCase>"
       values={{ what: 'world' }}
@@ -75,112 +87,158 @@ describe('trans using no children but components (object) - using names with no 
     />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          hello <i>beautiful</i> <strong>world</strong>
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <i>
+          beautiful
+        </i>
+         
+        <strong>
+          world
+        </strong>
+      </div>
+    `);
   });
 });
 
 describe('trans using no children but components (object) - use more than once', () => {
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans
       defaults="hello<list><listitem>A</listitem>,<listitem>B</listitem>and<listitem>C</listitem></list>"
       components={{ list: <ul>a</ul>, listitem: <li>b</li> }}
     />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          hello
-          <ul>
-            <li>A</li>,<li>B</li>
-            and
-            <li>C</li>
-          </ul>
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello
+        <ul>
+          <li>
+            A
+          </li>
+          ,
+          <li>
+            B
+          </li>
+          and
+          <li>
+            C
+          </li>
+        </ul>
+      </div>
+    `);
   });
 });
 
 describe('trans using no children but components (object) - use more than once (empty)', () => {
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans
       defaults="hello<list><listitem>A</listitem>,<listitem>B</listitem>and<listitem>C</listitem></list>"
       components={{ list: <ul />, listitem: <li /> }}
     />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(
-      wrapper.contains(
-        <div>
-          hello
-          <ul>
-            <li>A</li>,<li>B</li>
-            and
-            <li>C</li>
-          </ul>
-        </div>,
-      ),
-    ).toBe(true);
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello
+        <ul>
+          <li>
+            A
+          </li>
+          ,
+          <li>
+            B
+          </li>
+          and
+          <li>
+            C
+          </li>
+        </ul>
+      </div>
+    `);
   });
 });
 
 describe('trans using no children but components (object) - using self closing tag', () => {
   const Button = () => <button type="button">click me</button>;
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans defaults="hello <ClickMe />" components={{ ClickMe: <Button /> }} />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<button type="button">click me</button>)).toBe(true);
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <button
+          type="button"
+        >
+          click me
+        </button>
+      </div>
+    `);
   });
 });
 
 describe('trans using no children but components (object) - empty content', () => {
   const Button = () => <button type="button">click me</button>;
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans defaults="hello <ClickMe></ClickMe>" components={{ ClickMe: <Button /> }} />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<button type="button">click me</button>)).toBe(true);
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <button
+          type="button"
+        >
+          click me
+        </button>
+      </div>
+    `);
   });
 });
 
 describe('trans using children but components (object) - self closing tag', () => {
   const Button = () => <button type="button">click me</button>;
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans components={{ ClickMe: <Button /> }}>{'hello <ClickMe/>'}</Trans>
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<button type="button">click me</button>)).toBe(true);
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <button
+          type="button"
+        >
+          click me
+        </button>
+      </div>
+    `);
   });
 });
 
 describe('trans using no children but components (object) - interpolated component with children', () => {
   const Button = ({ children }) => <button type="button">{children}</button>;
-  const TestElement = () => (
+  const TestComponent = () => (
     <Trans defaults="hello <ClickMe>Test</ClickMe>" components={{ ClickMe: <Button /> }} />
   );
   it('should render translated string', () => {
-    const wrapper = mount(<TestElement />);
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<button type="button">Test</button>)).toBe(true);
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <button
+          type="button"
+        >
+          Test
+        </button>
+      </div>
+    `);
   });
 });

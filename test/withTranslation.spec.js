@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import i18n from './i18n';
 import { withTranslation } from '../src/withTranslation';
 
@@ -23,15 +23,18 @@ describe('withTranslation', () => {
 
   it('should render correct content', () => {
     const HocElement = withTranslation()(TestComponent);
-    const wrapper = mount(<HocElement />);
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<div>test</div>)).toBe(true);
+    const { container } = render(<HocElement />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        test
+      </div>
+    `);
   });
 
   it('should has ref', () => {
     const HocElement = withTranslation('translation', { withRef: true })(TestComponent);
     const hocRef = React.createRef();
-    mount(<HocElement ref={hocRef} />);
+    render(<HocElement ref={hocRef} />);
     expect(hocRef.current).not.toBeNull();
   });
 });

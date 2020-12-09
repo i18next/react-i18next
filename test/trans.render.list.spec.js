@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import './i18n';
 import { Trans } from '../src/Trans';
 
@@ -7,7 +7,7 @@ describe('Trans should render nested components', () => {
   it('should render dynamic ul as components property', () => {
     const list = ['li1', 'li2'];
 
-    const TestElement = () => (
+    const TestComponent = () => (
       <Trans
         i18nKey="testTrans4KeyWithNestedComponent"
         components={[
@@ -19,22 +19,27 @@ describe('Trans should render nested components', () => {
         ]}
       />
     );
-    const wrapper = mount(<TestElement />);
+    const { container } = render(<TestComponent />);
 
-    expect(
-      wrapper.contains(
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Result should be a list: 
         <ul>
-          <li>li1</li>
-          <li>li2</li>
-        </ul>,
-      ),
-    ).toBe(true);
+          <li>
+            li1
+          </li>
+          <li>
+            li2
+          </li>
+        </ul>
+      </div>
+    `);
   });
 
   it('should render dynamic ul as components property when pass as a children', () => {
     const list = ['li1', 'li2'];
 
-    const TestElement = () => (
+    const TestComponent = () => (
       <Trans i18nKey="testTrans5KeyWithNestedComponent">
         My list:
         <ul>
@@ -44,14 +49,19 @@ describe('Trans should render nested components', () => {
         </ul>
       </Trans>
     );
-    const wrapper = mount(<TestElement />);
-    expect(
-      wrapper.contains(
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Result should be a list: 
         <ul>
-          <li>li1</li>
-          <li>li2</li>
-        </ul>,
-      ),
-    ).toBe(true);
+          <li>
+            li1
+          </li>
+          <li>
+            li2
+          </li>
+        </ul>
+      </div>
+    `);
   });
 });

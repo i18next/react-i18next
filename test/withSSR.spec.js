@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import i18n from './i18n';
 import { setI18n } from '../src/context';
 import { withSSR } from '../src/withSSR';
@@ -30,6 +30,7 @@ const mockI18n = {
   getResourceBundle: (lng, ns) => ({ lng, ns }),
   loadNamespaces: () => {},
   on: () => {},
+  off: () => {},
 };
 
 describe('withSSR', () => {
@@ -55,9 +56,14 @@ describe('withSSR', () => {
 
   it('should set values', () => {
     const HocElement = withSSR()(TestComponent);
-    const wrapper = mount(<HocElement initialI18nStore={{ foo: 'bar' }} initialLanguage="de" />);
-    // console.log(wrapper.debug());
-    expect(wrapper.contains(<div>SSR</div>)).toBe(true);
+    const { container } = render(
+      <HocElement initialI18nStore={{ foo: 'bar' }} initialLanguage="de" />,
+    );
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        SSR
+      </div>
+    `);
     expect(mockI18n.language).toBe('de');
     expect(mockI18n.services.resourceStore.data).toEqual({ foo: 'bar' });
   });

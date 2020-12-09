@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { renderHook } from '@testing-library/react-hooks';
 import i18nInstance from './i18n';
 import { useTranslation } from '../src/useTranslation';
 import { setI18n } from '../src/context';
@@ -10,36 +10,20 @@ jest.unmock('../src/I18nextProvider');
 
 describe('useTranslation', () => {
   describe('object', () => {
-    function TestComponent() {
-      const { t, i18n } = useTranslation('translation', { i18n: i18nInstance });
-
-      expect(typeof t).toBe('function');
-      expect(i18nInstance).toBe(i18n);
-
-      return <div>{t('key1')}</div>;
-    }
-
     it('should render correct content', () => {
-      const wrapper = mount(<TestComponent />, {});
-      // console.log(wrapper.debug());
-      expect(wrapper.contains(<div>test</div>)).toBe(true);
+      const { result } = renderHook(() => useTranslation('translation', { i18n: i18nInstance }));
+      const { t, i18n } = result.current;
+      expect(t('key1')).toBe('test');
+      expect(i18nInstance).toBe(i18n);
     });
   });
 
   describe('array', () => {
-    function TestComponent() {
-      const [t, instance] = useTranslation('translation', { i18nInstance });
-
-      expect(typeof t).toBe('function');
-      expect(instance).toBe(i18nInstance);
-
-      return <div>{t('key1')}</div>;
-    }
-
     it('should render correct content', () => {
-      const wrapper = mount(<TestComponent />, {});
-      // console.log(wrapper.debug());
-      expect(wrapper.contains(<div>test</div>)).toBe(true);
+      const { result } = renderHook(() => useTranslation('translation', { i18n: i18nInstance }));
+      const [t, i18n] = result.current;
+      expect(t('key1')).toBe('test');
+      expect(i18n).toBe(i18nInstance);
     });
   });
 
@@ -53,40 +37,31 @@ describe('useTranslation', () => {
     });
 
     describe('handling gracefully', () => {
-      function TestComponent() {
-        const { t, i18n } = useTranslation('translation', { i18n: undefined });
-
-        expect(typeof t).toBe('function');
-        expect(i18n).toEqual({});
-
-        return (
-          <>
-            <div>{t('key1')}</div>
-            <div>{t(['doh', 'Human friendly fallback'])}</div>
-          </>
-        );
-      }
-
       it('should render content fallback', () => {
         console.warn = jest.fn();
-        const wrapper = mount(<TestComponent />, {});
-        // console.log(wrapper.debug());
-        expect(wrapper.contains(<div>key1</div>)).toBe(true);
-        expect(wrapper.contains(<div>Human friendly fallback</div>)).toBe(true);
+
+        const { result } = renderHook(() => useTranslation('translation', { i18n: undefined }));
+        const { t, i18n } = result.current;
+
+        expect(t('key1')).toBe('key1');
+        expect(t(['doh', 'Human friendly fallback'])).toBe('Human friendly fallback');
+        expect(i18n).toEqual({});
+
         expect(console.warn).toHaveBeenCalled();
       });
     });
   });
 
   describe('few namespaces', () => {
-    function TestComponent() {
-      const { t, i18n } = useTranslation(['other', 'translation'], { i18n: i18nInstance });
-
+    it('hook destructured values are expected types', () => {
+      const { result } = renderHook(() =>
+        useTranslation(['other', 'translation'], { i18n: i18nInstance }),
+      );
+      const { t, i18n } = result.current;
       expect(typeof t).toBe('function');
       expect(i18n).toEqual(i18nInstance);
-
-      return <div>{t('key1')}</div>;
-    }
+      expect(t('key1')).toEqual('key1');
+    });
 
     describe('fallback mode', () => {
       beforeAll(() => {
@@ -98,42 +73,43 @@ describe('useTranslation', () => {
       });
 
       it('should render correct content', () => {
-        const wrapper = mount(<TestComponent />, {});
-        // console.log(wrapper.debug());
-        expect(wrapper.contains(<div>test</div>)).toBe(true);
+        const { result } = renderHook(() =>
+          useTranslation(['other', 'translation'], { i18n: i18nInstance }),
+        );
+        const { t } = result.current;
+
+        expect(t('key1')).toBe('test');
       });
     });
 
     it('should render content fallback', () => {
-      const wrapper = mount(<TestComponent />, {});
-      // console.log(wrapper.debug());
-      expect(wrapper.contains(<div>key1</div>)).toBe(true);
+      const { result } = renderHook(() =>
+        useTranslation(['other', 'translation'], { i18n: i18nInstance }),
+      );
+      const { t } = result.current;
+
+      expect(t('key1')).toBe('key1');
     });
   });
 
   describe('default namespace from context', () => {
-    function TestComponent() {
-      const { t } = useTranslation();
-
-      expect(typeof t).toBe('function');
-
-      return <div>{t('key1')}</div>;
-    }
-
     afterEach(() => {
       i18nInstance.reportNamespaces.usedNamespaces = {};
     });
 
-    it('should render content fallback', () => {
-      const namespace = 'sampleNS';
-      const wrapper = mount(
-        <I18nextProvider defaultNS={namespace} i18={i18nInstance}>
-          <TestComponent />
-        </I18nextProvider>,
-        {},
-      );
+    const namespace = 'sampleNS';
+    const wrapper = ({ children }) => (
+      <I18nextProvider defaultNS={namespace} i18={i18nInstance}>
+        {children}
+      </I18nextProvider>
+    );
 
-      expect(wrapper.contains(<div>key1</div>)).toBe(true);
+    it('should render content fallback', () => {
+      const { result } = renderHook(() => useTranslation(), { wrapper });
+      const { t } = result.current;
+
+      expect(t('key1')).toBe('key1');
+
       expect(i18nInstance.reportNamespaces.getUsedNamespaces()).toContain(namespace);
     });
   });
