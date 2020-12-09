@@ -91,15 +91,23 @@ export type TFuncReturn<N, P, T = Resources> = N extends (keyof T)[]
   : TFunctionResult;
 
 export interface TFunction<N extends Namespace = DefaultNamespace> {
-  <K extends TFuncKey<N> | TemplateStringsArray, I extends object = StringMap>(
+  <
+    K extends TFuncKey<N> | TemplateStringsArray,
+    R extends TFuncReturn<N, K>,
+    I extends object = StringMap
+  >(
     key: K | K[],
     options?: TOptions<I> | string,
-  ): TFuncReturn<N, K>;
-  <K extends TFuncKey<N> | TemplateStringsArray, I extends object = StringMap>(
+  ): R;
+  <
+    K extends TFuncKey<N> | TemplateStringsArray,
+    R extends TFuncReturn<N, K>,
+    I extends object = StringMap
+  >(
     key: K | K[],
     defaultValue?: string,
     options?: TOptions<I> | string,
-  ): TFuncReturn<N, K>;
+  ): R;
 }
 
 export interface TransProps<
