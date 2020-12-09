@@ -1,3 +1,7 @@
+### 11.8.2
+
+- fix: type definitions for typescript 4.1 [1220](https://github.com/i18next/react-i18next/pull/1220)
+
 ### 11.8.1
 
 - fix: typescript definitions for t function without namespaces [1214](https://github.com/i18next/react-i18next/pull/1214)

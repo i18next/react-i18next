@@ -34,25 +34,16 @@
       ]
     },
     {
-      "login": "isaachinman",
-      "name": "Isaac Hinman",
-      "avatar_url": "https://avatars1.githubusercontent.com/u/10575782?v=4",
-      "profile": "https://isaachinman.com",
-      "contributions": [
-        "code",
-        "example",
-        "question"
-      ]
-    },
-    {
-      "login": "rosskevin",
-      "name": "Kevin Ross",
-      "avatar_url": "https://avatars1.githubusercontent.com/u/136564?v=4",
-      "profile": "http://www.alienfast.com",
+      "login": "tigerabrodi",
+      "name": "Tiger Abrodi",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/49603590?v=4",
+      "profile": "https://tigerabrodi.dev/",
       "contributions": [
         "question",
-        "code"
+        "code",
+        "review"
       ]
     }
-  ]
+  ],
+  "commitConvention": "none"
 }
