@@ -90,14 +90,14 @@ export type TFuncReturn<N, P, T = Resources> = N extends (keyof T)[]
   : string;
 
 export interface TFunction<N extends Namespace = DefaultNamespace> {
-  <K extends TFuncKey<N> | TemplateStringsArray, TInterpolationMap extends object = StringMap>(
-    key: K,
-    options?: TOptions<TInterpolationMap> | string,
+  <K extends TFuncKey<N> | TemplateStringsArray, I extends object = StringMap>(
+    key: K | K[],
+    options?: TOptions<I> | string,
   ): TFuncReturn<N, K>;
-  <K extends TFuncKey<N> | TemplateStringsArray, TInterpolationMap extends object = StringMap>(
-    key: K,
+  <K extends TFuncKey<N> | TemplateStringsArray, I extends object = StringMap>(
+    key: K | K[],
     defaultValue?: string,
-    options?: TOptions<TInterpolationMap> | string,
+    options?: TOptions<I> | string,
   ): TFuncReturn<N, K>;
 }
 
