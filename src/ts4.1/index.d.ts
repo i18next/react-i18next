@@ -5,6 +5,7 @@ import i18next, {
   Resource,
   TOptions,
   StringMap,
+  TFunctionResult,
 } from 'i18next';
 import * as React from 'react';
 
@@ -87,7 +88,7 @@ export type TFuncReturn<N, P, T = Resources> = N extends (keyof T)[]
   ? NormalizeMultiReturn<T, P>
   : N extends keyof T
   ? NormalizeReturn<T[N], P>
-  : string;
+  : TFunctionResult;
 
 export interface TFunction<N extends Namespace = DefaultNamespace> {
   <K extends TFuncKey<N> | TemplateStringsArray, I extends object = StringMap>(
