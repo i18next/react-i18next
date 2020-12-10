@@ -1,3 +1,7 @@
+### 11.8.3
+
+- Fix: Return type inference for t function (typescript 4.1) [1221](https://github.com/i18next/react-i18next/pull/1221)
+
 ### 11.8.2
 
 - fix: type definitions for typescript 4.1 [1220](https://github.com/i18next/react-i18next/pull/1220)
