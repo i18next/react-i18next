@@ -84,22 +84,32 @@ export type TFuncKey<N, T = Resources> = N extends (keyof T)[]
   ? Normalize<T[N]>
   : string;
 
-export type TFuncReturn<N, P, T = Resources> = N extends (keyof T)[]
-  ? NormalizeMultiReturn<T, P>
+export type TFuncReturn<N, TKeys, TDefaultResult, T = Resources> = [keyof Resources] extends [never]
+  ? TDefaultResult
+  : N extends (keyof T)[]
+  ? NormalizeMultiReturn<T, TKeys>
   : N extends keyof T
-  ? NormalizeReturn<T[N], P>
-  : TFunctionResult;
+  ? NormalizeReturn<T[N], TKeys>
+  : string;
 
 export interface TFunction<N extends Namespace = DefaultNamespace> {
-  <K extends TFuncKey<N> | TemplateStringsArray, I extends object = StringMap>(
-    key: K | K[],
-    options?: TOptions<I> | string,
-  ): TFuncReturn<N, K>;
-  <K extends TFuncKey<N> | TemplateStringsArray, I extends object = StringMap>(
-    key: K | K[],
+  <
+    TKeys extends TFuncKey<N> | TemplateStringsArray,
+    TDefaultResult extends TFunctionResult = string,
+    TInterpolationMap extends object = StringMap
+  >(
+    key: TKeys | TKeys[],
+    options?: TOptions<TInterpolationMap> | string,
+  ): TFuncReturn<N, TKeys, TDefaultResult>;
+  <
+    TKeys extends TFuncKey<N> | TemplateStringsArray,
+    TDefaultResult extends TFunctionResult = string,
+    TInterpolationMap extends object = StringMap
+  >(
+    key: TKeys | TKeys[],
     defaultValue?: string,
-    options?: TOptions<I> | string,
-  ): TFuncReturn<N, K>;
+    options?: TOptions<TInterpolationMap> | string,
+  ): TFuncReturn<N, TKeys, TDefaultResult>;
 }
 
 export interface TransProps<
