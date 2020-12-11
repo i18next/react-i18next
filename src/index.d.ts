@@ -2,6 +2,7 @@ import i18next, { ReactOptions, i18n, ThirdPartyModule, WithT, TFunction, Resour
 import * as React from 'react';
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
+type Subtract<T extends K, K> = Omit<T, keyof K>;
 
 export type Namespace = string | string[];
 
@@ -92,9 +93,15 @@ export function withTranslation(
   options?: {
     withRef?: boolean;
   },
-): <P extends WithTranslation>(
-  component: React.ComponentType<P>,
-) => React.ComponentType<Omit<P, keyof WithTranslation> & WithTranslationProps>;
+): <
+  C extends React.ComponentType<React.ComponentProps<C> & WithTranslationProps>,
+  ResolvedProps = JSX.LibraryManagedAttributes<
+    C,
+    Subtract<React.ComponentProps<C>, WithTranslationProps>
+  >
+>(
+  component: C,
+) => React.ComponentType<Omit<ResolvedProps, keyof WithTranslation> & WithTranslationProps>;
 
 export interface I18nextProviderProps {
   i18n: i18n;
