@@ -26,6 +26,13 @@ function objectComponents() {
   return <Trans components={{ Btn: <button /> }} defaults="Hello <Btn />" />;
 }
 
+function constObjectComponents() {
+  const constObject = {
+    Btn: <button />,
+  } as const;
+  return <Trans components={constObject} defaults="Hello <Btn />" />;
+}
+
 function count() {
   return <Trans count={42}>Foo</Trans>;
 }
