@@ -12,7 +12,7 @@ import * as React from 'react';
 /**
  * Due to a limitation/bug on typescript 4.1 (https://github.com/microsoft/TypeScript/issues/41406), we added
  * "extends infer A ? A : never" in a few places to suppress the error "Type instantiation is excessively deep and possibly infinite."
- * on cases where users have more than 22 namespaces. Once the issue is fixed, we can remove all instances of workaround used.
+ * on cases where users have more than 22 namespaces. Once the issue is fixed, we can remove all instances of the workaround used.
  *
  * Reference of the bug reported: https://github.com/i18next/react-i18next/issues/1222
  */
