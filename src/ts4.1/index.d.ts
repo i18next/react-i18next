@@ -10,6 +10,14 @@ import i18next, {
 import * as React from 'react';
 
 /**
+ * Due to a limitation/bug on typescript 4.1 (https://github.com/microsoft/TypeScript/issues/41406), we added
+ * "extends infer A ? A : never" in a few places to suppress the error "Type instantiation is excessively deep and possibly infinite."
+ * on cases where users have more than 22 namespaces. Once the issue is fixed, we can remove all instances of workaround used.
+ *
+ * Reference of the bug reported: https://github.com/i18next/react-i18next/issues/1222
+ */
+
+/**
  * This interface can be augmented by users to add types to `react-i18next` default resources.
  */
 export interface Resources {}
@@ -94,7 +102,7 @@ export type TFuncReturn<N, TKeys, TDefaultResult, T = Resources> = [keyof Resour
 
 export interface TFunction<N extends Namespace = DefaultNamespace> {
   <
-    TKeys extends TFuncKey<N> | TemplateStringsArray,
+    TKeys extends TFuncKey<N> | TemplateStringsArray extends infer A ? A : never,
     TDefaultResult extends TFunctionResult = string,
     TInterpolationMap extends object = StringMap
   >(
@@ -102,7 +110,7 @@ export interface TFunction<N extends Namespace = DefaultNamespace> {
     options?: TOptions<TInterpolationMap> | string,
   ): TFuncReturn<N, TKeys, TDefaultResult>;
   <
-    TKeys extends TFuncKey<N> | TemplateStringsArray,
+    TKeys extends TFuncKey<N> | TemplateStringsArray extends infer A ? A : never,
     TDefaultResult extends TFunctionResult = string,
     TInterpolationMap extends object = StringMap
   >(
@@ -113,7 +121,7 @@ export interface TFunction<N extends Namespace = DefaultNamespace> {
 }
 
 export interface TransProps<
-  K extends TFuncKey<N>,
+  K extends TFuncKey<N> extends infer A ? A : never,
   N extends Namespace = DefaultNamespace,
   E extends Element = HTMLDivElement
 > extends React.HTMLProps<E> {
@@ -130,7 +138,7 @@ export interface TransProps<
   t?: TFunction<N>;
 }
 export function Trans<
-  K extends TFuncKey<N>,
+  K extends TFuncKey<N> extends infer A ? A : never,
   N extends Namespace = DefaultNamespace,
   E extends Element = HTMLDivElement
 >(props: TransProps<K, N, E>): React.ReactElement;
