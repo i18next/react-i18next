@@ -22,9 +22,9 @@ import * as React from 'react';
  */
 export interface Resources {}
 
-type ResourcesKey<T = keyof Resources> = [T] extends [never] ? string : T;
+type Fallback<F, T = keyof Resources> = [T] extends [never] ? F : T;
 
-export type Namespace = ResourcesKey | ResourcesKey[];
+export type Namespace<F = Fallback<string>> = F | F[];
 
 export function setDefaults(options: ReactOptions): void;
 export function getDefaults(): ReactOptions;
@@ -92,13 +92,11 @@ export type TFuncKey<N, T = Resources> = N extends (keyof T)[]
   ? Normalize<T[N]>
   : string;
 
-export type TFuncReturn<N, TKeys, TDefaultResult, T = Resources> = [keyof Resources] extends [never]
-  ? TDefaultResult
-  : N extends (keyof T)[]
+export type TFuncReturn<N, TKeys, TDefaultResult, T = Resources> = N extends (keyof T)[]
   ? NormalizeMultiReturn<T, TKeys>
   : N extends keyof T
   ? NormalizeReturn<T[N], TKeys>
-  : string;
+  : Fallback<TDefaultResult>;
 
 export interface TFunction<N extends Namespace = DefaultNamespace> {
   <
@@ -156,7 +154,7 @@ type UseTranslationResponse<N extends Namespace> = [TFunction<N>, i18n, boolean]
   ready: boolean;
 };
 
-type DefaultNamespace<T = 'translation'> = ResourcesKey extends T ? T : string;
+type DefaultNamespace<T = 'translation'> = Fallback<string> extends T ? T : string;
 
 export function useTranslation<N extends Namespace = DefaultNamespace>(
   ns?: N,
