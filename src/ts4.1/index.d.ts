@@ -9,6 +9,8 @@ import i18next, {
 } from 'i18next';
 import * as React from 'react';
 
+type Subtract<T extends K, K> = Omit<T, keyof K>;
+
 /**
  * This interface can be augmented by users to add types to `react-i18next` default resources.
  */
@@ -176,9 +178,15 @@ export function withTranslation<N extends Namespace = DefaultNamespace>(
   options?: {
     withRef?: boolean;
   },
-): <P extends WithTranslation<N>>(
-  component: React.ComponentType<P>,
-) => React.ComponentType<Omit<P, keyof WithTranslation<N>> & WithTranslationProps>;
+): <
+  C extends React.ComponentType<React.ComponentProps<C> & WithTranslationProps>,
+  ResolvedProps = JSX.LibraryManagedAttributes<
+    C,
+    Subtract<React.ComponentProps<C>, WithTranslationProps>
+  >
+>(
+  component: C,
+) => React.ComponentType<Omit<ResolvedProps, keyof WithTranslation<N>> & WithTranslationProps>;
 
 export interface I18nextProviderProps {
   i18n: i18n;
