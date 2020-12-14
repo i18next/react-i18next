@@ -10,16 +10,27 @@ interface MyComponentProps extends WithTranslation {
   bar: 'baz';
 }
 
+const defaultProps: Partial<MyComponentProps> = {
+  bar: 'baz',
+};
+
 const MyComponent = (props: MyComponentProps) => {
   const { t, i18n, tReady } = props;
   const r: boolean = tReady;
   return <h2>{t('title')}</h2>;
 };
 
+MyComponent.defaultProps = defaultProps;
+
 // page uses the hook
 function defaultUsage() {
   const ExtendedComponent = withTranslation()(MyComponent);
   return <ExtendedComponent bar="baz" />;
+}
+
+function defaultUsageWithDefaultProps() {
+  const ExtendedComponent = withTranslation()(MyComponent);
+  return <ExtendedComponent />;
 }
 
 /**

@@ -9,6 +9,8 @@ import i18next, {
 } from 'i18next';
 import * as React from 'react';
 
+type Subtract<T extends K, K> = Omit<T, keyof K>;
+
 /**
  * Due to a limitation/bug on typescript 4.1 (https://github.com/microsoft/TypeScript/issues/41406), we added
  * "extends infer A ? A : never" in a few places to suppress the error "Type instantiation is excessively deep and possibly infinite."
@@ -192,9 +194,15 @@ export function withTranslation<N extends Namespace = DefaultNamespace>(
   options?: {
     withRef?: boolean;
   },
-): <P extends WithTranslation<N>>(
-  component: React.ComponentType<P>,
-) => React.ComponentType<Omit<P, keyof WithTranslation<N>> & WithTranslationProps>;
+): <
+  C extends React.ComponentType<React.ComponentProps<C> & WithTranslationProps>,
+  ResolvedProps = JSX.LibraryManagedAttributes<
+    C,
+    Subtract<React.ComponentProps<C>, WithTranslationProps>
+  >
+>(
+  component: C,
+) => React.ComponentType<Omit<ResolvedProps, keyof WithTranslation<N>> & WithTranslationProps>;
 
 export interface I18nextProviderProps {
   i18n: i18n;
