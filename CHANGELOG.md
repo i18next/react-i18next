@@ -1,3 +1,9 @@
+### 11.8.4
+
+- typescript: Add workaround to suppress infinite instantiation warning [1227](https://github.com/i18next/react-i18next/pull/1227)
+- typescript: withTranslation() typing fix for defaultProps [1226](https://github.com/i18next/react-i18next/pull/1226)
+- typescript: Accept const components prop for Trans [1224](https://github.com/i18next/react-i18next/pull/1224)
+
 ### 11.8.3
 
 - Fix: Return type inference for t function (typescript 4.1) [1221](https://github.com/i18next/react-i18next/pull/1221)
