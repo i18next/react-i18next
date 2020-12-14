@@ -118,7 +118,7 @@ export interface TransProps<
   E extends Element = HTMLDivElement
 > extends React.HTMLProps<E> {
   children?: React.ReactNode;
-  components?: React.ReactNode[] | { [tagName: string]: React.ReactNode };
+  components?: readonly React.ReactNode[] | { readonly [tagName: string]: React.ReactNode };
   count?: number;
   defaults?: string;
   i18n?: i18n;
