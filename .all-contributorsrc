@@ -43,6 +43,16 @@
         "code",
         "review"
       ]
+    },
+    {
+      "login": "pedrodurek",
+      "name": "Pedro Durek",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/12190482?v=4",
+      "profile": "https://github.com/pedrodurek",
+      "contributions": [
+        "code",
+        "example"
+      ]
     }
   ],
   "commitConvention": "none"

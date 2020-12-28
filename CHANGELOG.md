@@ -1,3 +1,7 @@
+### 11.8.5
+
+- typescript: fix: Inference for specific keys ts 4.1 [1230](https://github.com/i18next/react-i18next/pull/1230)
+
 ### 11.8.4
 
 - typescript: Add workaround to suppress infinite instantiation warning [1227](https://github.com/i18next/react-i18next/pull/1227)
