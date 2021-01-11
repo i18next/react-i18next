@@ -475,3 +475,20 @@ describe('trans should work with misleading overloaded empty elements in compone
     `);
   });
 });
+
+describe('trans should not interpret HTML-like structures in values', () => {
+  const TestComponent = () => (
+    <Trans
+      i18nKey="someKey"
+      defaults="A <strong>{{htmlElement}}</strong> B"
+      values={{ htmlElement: '<head>' }}
+    />
+  );
+
+  it('should render translated string', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.innerHTML).toMatchInlineSnapshot(
+      `"<div>A <strong>&lt;head&gt;</strong> B</div>"`,
+    );
+  });
+});
