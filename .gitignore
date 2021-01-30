@@ -8,6 +8,7 @@ npm-debug.log.*
 *.dat
 .idea
 .vscode
+.eslintcache
 
 # Ignore various temporary files
 *~

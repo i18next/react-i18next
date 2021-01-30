@@ -25,7 +25,7 @@ function MyComponent() {
 function Page() {
   const { t, i18n } = useTranslation();
 
-  const changeLanguage = lng => {
+  const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
   };
 
@@ -34,8 +34,12 @@ function Page() {
       <div className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <Welcome />
-        <button onClick={() => changeLanguage('de')}>de</button>
-        <button onClick={() => changeLanguage('en')}>en</button>
+        <button type="button" onClick={() => changeLanguage('de')}>
+          de
+        </button>
+        <button type="button" onClick={() => changeLanguage('en')}>
+          en
+        </button>
       </div>
       <div className="App-intro">
         <MyComponent />
