@@ -228,5 +228,5 @@ export interface TranslationProps<N extends Namespace = DefaultNamespace> {
 }
 
 export function Translation<N extends Namespace = DefaultNamespace>(
-  props: TranslationProps<N>,
+  props: TranslationProps<N> & { useSuspense?: boolean },
 ): any;
