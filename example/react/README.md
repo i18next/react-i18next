@@ -6,6 +6,13 @@ Needing a translation management? Want to edit your translations with an InConte
 
 With using [locize](http://locize.com/?utm_source=react_i18next_readme&utm_medium=github) you directly support the future of i18next and react-i18next.
 
+## Here you find a react example for locize:
+
+[EXAMPLE](https://github.com/i18next/react-i18next/tree/master/example/locize)
+
+[![video](video_sample.png)](https://youtu.be/osScyaGMVqo)
+[watch the video](https://youtu.be/osScyaGMVqo)
+
 ---
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
