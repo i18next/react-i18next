@@ -8,9 +8,9 @@ With using [locize](http://locize.com/?utm_source=react_i18next_readme&utm_mediu
 
 ## Here you find a react example for locize:
 
-[EXAMPLE](https://github.com/i18next/react-i18next/tree/master/example/locize)
+[EXAMPLE](../locize)
 
-[![video](video_sample.png)](https://youtu.be/osScyaGMVqo)
+[![video](../locize/video_sample.png)](https://youtu.be/osScyaGMVqo)
 [watch the video](https://youtu.be/osScyaGMVqo)
 
 ---
