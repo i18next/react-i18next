@@ -225,8 +225,9 @@ export interface TranslationProps<N extends Namespace = DefaultNamespace> {
   ) => React.ReactNode;
   ns?: N;
   i18n?: i18n;
+  useSuspense?: boolean;
 }
 
 export function Translation<N extends Namespace = DefaultNamespace>(
-  props: TranslationProps<N> & { useSuspense?: boolean },
+  props: TranslationProps<N>,
 ): any;
