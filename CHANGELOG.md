@@ -1,3 +1,7 @@
+### 11.8.6
+
+- typescript: Updated TS definitions (adding useSuspense option in TranslationProps) [1247](https://github.com/i18next/react-i18next/pull/1247)
+
 ### 11.8.5
 
 - typescript: fix: Inference for specific keys ts 4.1 [1230](https://github.com/i18next/react-i18next/pull/1230)
