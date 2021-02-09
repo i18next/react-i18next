@@ -122,6 +122,7 @@ export interface TranslationProps {
   ) => React.ReactNode;
   ns?: Namespace;
   i18n?: i18n;
+  useSuspense?: boolean;
 }
 
 export function Translation(props: TranslationProps): any;
