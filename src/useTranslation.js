@@ -18,6 +18,9 @@ export function useTranslation(ns, props = {}) {
     return retNotReady;
   }
 
+  if (i18n.options.react && i18n.options.react.wait !== undefined)
+    warnOnce('It seems you are still using the old wait option, you may migrate to the new useSuspense behaviour.');
+
   const i18nOptions = { ...getDefaults(), ...i18n.options.react, ...props };
   const { useSuspense } = i18nOptions;
 
