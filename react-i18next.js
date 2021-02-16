@@ -806,6 +806,8 @@
       return retNotReady;
     }
 
+    if (i18n.options.react && i18n.options.react.wait !== undefined) warnOnce('It seems you are still using the old wait option, you may migrate to the new useSuspense behaviour.');
+
     var i18nOptions = _objectSpread2(_objectSpread2(_objectSpread2({}, getDefaults()), i18n.options.react), props);
 
     var useSuspense = i18nOptions.useSuspense;

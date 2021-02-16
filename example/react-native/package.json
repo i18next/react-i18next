@@ -7,7 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "i18next": "^15.0.4",
+    "i18next": "^19.8.8",
     "react": "16.8.1",
     "react-i18next": "^10.1.2",
     "react-native": "0.59.0-rc.2"

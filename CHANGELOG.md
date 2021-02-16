@@ -1,3 +1,7 @@
+### 11.8.7
+
+- warning for old wait usage
+
 ### 11.8.6
 
 - typescript: Updated TS definitions (adding useSuspense option in TranslationProps) [1247](https://github.com/i18next/react-i18next/pull/1247)
