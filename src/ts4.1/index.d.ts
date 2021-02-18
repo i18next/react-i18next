@@ -90,7 +90,7 @@ type NormalizeMultiReturn<T, V> = V extends `${infer N}:${infer R}`
     : never
   : never;
 
-export type TFuncKey<N, T = Resources> = N extends (keyof T)[]
+export type TFuncKey<N extends Namespace = DefaultNamespace, T = Resources> = N extends (keyof T)[]
   ? NormalizeMulti<T, N[number]>
   : N extends keyof T
   ? Normalize<T[N]>
