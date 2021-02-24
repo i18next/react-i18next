@@ -22,6 +22,5 @@ coverage/**/*
 example/build/**/*
 dist/**/*
 .next
-package-lock.json
 yarn.lock
 out

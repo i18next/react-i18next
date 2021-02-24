@@ -1,3 +1,7 @@
+### 11.8.8
+
+- typescript: Allow `TFuncKey` to be used without specifying the namespace, in the same way TFunction and useTranslation work [1262](https://github.com/i18next/react-i18next/pull/1262)
+
 ### 11.8.7
 
 - warning for old wait usage
