@@ -113,4 +113,29 @@ describe('useTranslation', () => {
       expect(i18nInstance.reportNamespaces.getUsedNamespaces()).toContain(namespace);
     });
   });
+
+  describe('replacing i18n instance in provider', () => {
+    i18nInstance.addResource('fr', 'translation', 'key1', 'test2');
+    const i18nInstanceClone = i18nInstance.cloneInstance({ lng: 'fr' });
+    const wrapper = ({ children, i18n }) => (
+      <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+    );
+
+    it('should render correct content', () => {
+      const { result, rerender } = renderHook(() => useTranslation(), {
+        wrapper,
+        initialProps: {
+          i18n: i18nInstance,
+        },
+      });
+
+      const { t: t1 } = result.current;
+      expect(t1('key1')).toBe('test');
+
+      rerender({ i18n: i18nInstanceClone });
+
+      const { t: t2 } = result.current;
+      expect(t2('key1')).toBe('test2');
+    });
+  });
 });
