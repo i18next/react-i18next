@@ -76,13 +76,15 @@ export function useTranslation(ns, props = {}) {
     };
   }, [namespaces.join()]); // re-run effect whenever list of namespaces changes
 
+  // t is correctly initialized by useState hook. We only neet to update it after i18n
+  // instance was replaced (for example in the provider).
   const isInitial = useRef(true);
   useEffect(() => {
     if (isMounted.current && !isInitial.current) {
       setT(getT());
     }
     isInitial.current = false;
-  }, [i18n]);
+  }, [i18n]); // re-run when i18n instance was replaced
 
   const ret = [t.t, i18n, ready];
   ret.t = t.t;
