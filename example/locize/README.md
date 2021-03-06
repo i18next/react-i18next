@@ -1,3 +1,5 @@
+**A step by step tutorial can also be found [here](https://github.com/locize/react-tutorial).**
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 [![video](video_sample.png)](https://youtu.be/osScyaGMVqo)
