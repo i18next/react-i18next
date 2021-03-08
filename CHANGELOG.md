@@ -1,3 +1,7 @@
+### 11.8.9
+
+- Fix allow to replace i18n in provider with useTranslation hook [1273](https://github.com/i18next/react-i18next/pull/1273)
+
 ### 11.8.8
 
 - typescript: Allow `TFuncKey` to be used without specifying the namespace, in the same way TFunction and useTranslation work [1262](https://github.com/i18next/react-i18next/pull/1262)

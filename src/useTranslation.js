@@ -74,7 +74,7 @@ export function useTranslation(ns, props = {}) {
       if (bindI18nStore && i18n)
         bindI18nStore.split(' ').forEach((e) => i18n.store.off(e, boundReset));
     };
-  }, [namespaces.join()]); // re-run effect whenever list of namespaces changes
+  }, [i18n, namespaces.join()]); // re-run effect whenever list of namespaces changes
 
   // t is correctly initialized by useState hook. We only need to update it after i18n
   // instance was replaced (for example in the provider).

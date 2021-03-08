@@ -856,7 +856,15 @@
           return i18n.store.off(e, boundReset);
         });
       };
-    }, [namespaces.join()]);
+    }, [i18n, namespaces.join()]);
+    var isInitial = React.useRef(true);
+    React.useEffect(function () {
+      if (isMounted.current && !isInitial.current) {
+        setT(getT());
+      }
+
+      isInitial.current = false;
+    }, [i18n]);
     var ret = [t.t, i18n, ready];
     ret.t = t.t;
     ret.i18n = i18n;
