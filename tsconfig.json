@@ -9,7 +9,7 @@
     "strict": true,
     "noEmit": true,
     "baseUrl": ".",
-    "paths": { "react-i18next": ["./src"] },
+    "paths": { "react-i18next": ["./"] },
 
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true
