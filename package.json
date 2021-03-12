@@ -3,11 +3,11 @@
   "version": "11.8.9",
   "description": "Internationalization for react done right. Using the i18next i18n ecosystem.",
   "main": "dist/commonjs/index.js",
-  "types": "src/index.d.ts",
+  "types": "./index.d.ts",
   "typesVersions": {
     ">=4.1": {
       "*": [
-        "src/ts4.1/index.d.ts"
+        "ts4.1/*"
       ]
     }
   },
