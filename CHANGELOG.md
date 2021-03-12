@@ -1,3 +1,7 @@
+### 11.8.10
+
+- typescript: Move type definition files [1276](https://github.com/i18next/react-i18next/pull/1276)
+
 ### 11.8.9
 
 - Fix allow to replace i18n in provider with useTranslation hook [1273](https://github.com/i18next/react-i18next/pull/1273)
