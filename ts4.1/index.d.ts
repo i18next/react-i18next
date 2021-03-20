@@ -158,7 +158,7 @@ type UseTranslationResponse<N extends Namespace> = [TFunction<N>, i18n, boolean]
   ready: boolean;
 };
 
-type DefaultNamespace<T = 'translation'> = Fallback<string> extends T ? T : string;
+type DefaultNamespace<T = 'translation'> = T extends Fallback<string> ? T : string;
 
 export function useTranslation<N extends Namespace = DefaultNamespace>(
   ns?: N,
