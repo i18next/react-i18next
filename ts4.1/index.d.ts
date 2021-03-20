@@ -132,7 +132,7 @@ export interface TransProps<
   count?: number;
   defaults?: string;
   i18n?: i18n;
-  i18nKey?: K;
+  i18nKey?: K | K[];
   ns?: N;
   parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
   tOptions?: {};
