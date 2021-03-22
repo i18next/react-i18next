@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "i18next": "^19.8.8",
+    "i18next": "20.0.0",
     "i18next-browser-languagedetector": "3.0.0",
     "i18next-http-backend": "1.0.15",
     "react": "^16.8.4",
