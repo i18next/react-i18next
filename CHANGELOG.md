@@ -1,3 +1,7 @@
+### 11.8.11
+
+- typescript: Bug fixes [1284](https://github.com/i18next/react-i18next/pull/1284)
+
 ### 11.8.10
 
 - typescript: Move type definition files [1276](https://github.com/i18next/react-i18next/pull/1276)
