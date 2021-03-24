@@ -132,7 +132,7 @@ export interface TransProps<
   count?: number;
   defaults?: string;
   i18n?: i18n;
-  i18nKey?: K;
+  i18nKey?: K | K[];
   ns?: N;
   parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
   tOptions?: {};
@@ -158,7 +158,7 @@ type UseTranslationResponse<N extends Namespace> = [TFunction<N>, i18n, boolean]
   ready: boolean;
 };
 
-type DefaultNamespace<T = 'translation'> = Fallback<string> extends T ? T : string;
+type DefaultNamespace<T = 'translation'> = T extends Fallback<string> ? T : string;
 
 export function useTranslation<N extends Namespace = DefaultNamespace>(
   ns?: N,
