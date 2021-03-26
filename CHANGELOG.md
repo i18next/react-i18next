@@ -1,3 +1,7 @@
+### 11.8.12
+
+- refactor: remove unneeded object [1286](https://github.com/i18next/react-i18next/pull/1286)
+
 ### 11.8.11
 
 - typescript: Bug fixes [1284](https://github.com/i18next/react-i18next/pull/1284)

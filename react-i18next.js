@@ -819,12 +819,10 @@
     });
 
     function getT() {
-      return {
-        t: i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0])
-      };
+      return i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0]);
     }
 
-    var _useState = React.useState(getT()),
+    var _useState = React.useState(getT),
         _useState2 = _slicedToArray(_useState, 2),
         t = _useState2[0],
         setT = _useState2[1];
@@ -837,12 +835,12 @@
 
       if (!ready && !useSuspense) {
         loadNamespaces(i18n, namespaces, function () {
-          if (isMounted.current) setT(getT());
+          if (isMounted.current) setT(getT);
         });
       }
 
       function boundReset() {
-        if (isMounted.current) setT(getT());
+        if (isMounted.current) setT(getT);
       }
 
       if (bindI18n && i18n) i18n.on(bindI18n, boundReset);
@@ -860,13 +858,13 @@
     var isInitial = React.useRef(true);
     React.useEffect(function () {
       if (isMounted.current && !isInitial.current) {
-        setT(getT());
+        setT(getT);
       }
 
       isInitial.current = false;
     }, [i18n]);
-    var ret = [t.t, i18n, ready];
-    ret.t = t.t;
+    var ret = [t, i18n, ready];
+    ret.t = t;
     ret.i18n = i18n;
     ret.ready = ready;
     if (ready) return ret;
