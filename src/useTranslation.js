@@ -40,11 +40,9 @@ export function useTranslation(ns, props = {}) {
 
   // binding t function to namespace (acts also as rerender trigger)
   function getT() {
-    return {
-      t: i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0]),
-    };
+    return i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0]);
   }
-  const [t, setT] = useState(getT()); // seems we can't have functions as value -> wrap it in obj
+  const [t, setT] = useState(getT);
 
   const isMounted = useRef(true);
   useEffect(() => {
@@ -55,12 +53,12 @@ export function useTranslation(ns, props = {}) {
     // in side effect and do not call resetT if unmounted
     if (!ready && !useSuspense) {
       loadNamespaces(i18n, namespaces, () => {
-        if (isMounted.current) setT(getT());
+        if (isMounted.current) setT(getT);
       });
     }
 
     function boundReset() {
-      if (isMounted.current) setT(getT());
+      if (isMounted.current) setT(getT);
     }
 
     // bind events to trigger change, like languageChanged
@@ -81,13 +79,13 @@ export function useTranslation(ns, props = {}) {
   const isInitial = useRef(true);
   useEffect(() => {
     if (isMounted.current && !isInitial.current) {
-      setT(getT());
+      setT(getT);
     }
     isInitial.current = false;
   }, [i18n]); // re-run when i18n instance was replaced
 
-  const ret = [t.t, i18n, ready];
-  ret.t = t.t;
+  const ret = [t, i18n, ready];
+  ret.t = t;
   ret.i18n = i18n;
   ret.ready = ready;
 
