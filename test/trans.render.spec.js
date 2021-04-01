@@ -131,7 +131,6 @@ describe('trans simple with custom html tag', () => {
         <strong>
           Go
         </strong>
-         
         <br />
         <a
           href="/msgs"
@@ -150,7 +149,6 @@ describe('trans simple with custom html tag', () => {
         <strong>
           Go
         </strong>
-         
         <br />
          there.
       </div>
