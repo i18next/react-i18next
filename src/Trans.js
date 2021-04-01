@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import HTML from 'html-parse-stringify2';
+import HTML from 'html-parse-stringify';
 import { getI18n, I18nContext, getDefaults } from './context';
 import { warn, warnOnce } from './utils';
 
