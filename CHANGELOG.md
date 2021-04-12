@@ -1,3 +1,7 @@
+### 11.8.13
+
+- Replace html-parse-stringify2 with html-parse-stringify [1283](https://github.com/i18next/react-i18next/pull/1283) to prevent [CVE-2021-23346](https://github.com/i18next/react-i18next/issues/1275)
+
 ### 11.8.12
 
 - refactor: remove unneeded object [1286](https://github.com/i18next/react-i18next/pull/1286)
