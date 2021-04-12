@@ -194,9 +194,7 @@
     "hr": true,
     "img": true,
     "input": true,
-    "keygen": true,
     "link": true,
-    "menuitem": true,
     "meta": true,
     "param": true,
     "source": true,
@@ -204,185 +202,115 @@
     "wbr": true
   };
 
-  var attrRE = /([\w-]+)|=|(['"])([.\s\S]*?)\2/g;
+  var t = /\s([^'"/\s><]+?)[\s/>]|([^\s=]+)=\s?(".*?"|'.*?')/g;
 
-
-
-  var parseTag = function (tag) {
-    var i = 0;
-    var key;
-    var expectingValueAfterEquals = true;
-    var res = {
-      type: 'tag',
-      name: '',
-      voidElement: false,
+  function n(n) {
+    var r = {
+      type: "tag",
+      name: "",
+      voidElement: !1,
       attrs: {},
       children: []
-    };
-    tag.replace(attrRE, function (match) {
-      if (match === '=') {
-        expectingValueAfterEquals = true;
-        i++;
-        return;
-      }
+    },
+        i = n.match(/<\/?([^\s]+?)[/\s>]/);
 
-      if (!expectingValueAfterEquals) {
-        if (key) {
-          res.attrs[key] = key;
-        }
+    if (i && (r.name = i[1], (voidElements[i[1].toLowerCase()] || "/" === n.charAt(n.length - 2)) && (r.voidElement = !0), r.name.startsWith("!--"))) {
+      var s = n.indexOf("--\x3e");
+      return {
+        type: "comment",
+        comment: -1 !== s ? n.slice(4, s) : ""
+      };
+    }
 
-        key = match;
-      } else {
-        if (i === 0) {
-          if (voidElements[match] || tag.charAt(tag.length - 2) === '/') {
-            res.voidElement = true;
+    for (var a = new RegExp(t), c = null; null !== (c = a.exec(n));) {
+      if (c[0].trim()) if (c[1]) {
+        var o = c[1].trim(),
+            l = [o, ""];
+        o.indexOf("=") > -1 && (l = o.split("=")), r.attrs[l[0]] = l[1], a.lastIndex--;
+      } else c[2] && (r.attrs[c[2]] = c[3].trim().substring(1, c[3].length - 1));
+    }
+
+    return r;
+  }
+
+  var r = /<[a-zA-Z0-9\-\!\/](?:"[^"]*"|'[^']*'|[^'">])*>/g,
+      i = /^\s*$/,
+      s = Object.create(null);
+
+  function a(e, t) {
+    switch (t.type) {
+      case "text":
+        return e + t.content;
+
+      case "tag":
+        return e += "<" + t.name + (t.attrs ? function (e) {
+          var t = [];
+
+          for (var n in e) {
+            t.push(n + '="' + e[n] + '"');
           }
 
-          res.name = match;
-        } else {
-          res.attrs[key] = match.replace(/^['"]|['"]$/g, '');
-          key = undefined;
-        }
-      }
+          return t.length ? " " + t.join(" ") : "";
+        }(t.attrs) : "") + (t.voidElement ? "/>" : ">"), t.voidElement ? e : e + t.children.reduce(a, "") + "</" + t.name + ">";
 
-      i++;
-      expectingValueAfterEquals = false;
-    });
-    return res;
-  };
-
-  var tagRE = /(?:<!--[\S\s]*?-->|<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>)/g;
-
-
-
-  var empty = Object.create ? Object.create(null) : {};
-
-  function pushTextNode(list, html, level, start, ignoreWhitespace) {
-    var end = html.indexOf('<', start);
-    var content = html.slice(start, end === -1 ? undefined : end);
-
-    if (/^\s*$/.test(content)) {
-      content = ' ';
-    }
-
-    if (!ignoreWhitespace && end > -1 && level + list.length >= 0 || content !== ' ') {
-      list.push({
-        type: 'text',
-        content: content
-      });
+      case "comment":
+        return e + "\x3c!--" + t.comment + "--\x3e";
     }
   }
 
-  var parse = function parse(html, options) {
-    options || (options = {});
-    options.components || (options.components = empty);
-    var result = [];
-    var current;
-    var level = -1;
-    var arr = [];
-    var byTag = {};
-    var inComponent = false;
-    html.replace(tagRE, function (tag, index) {
-      if (inComponent) {
-        if (tag !== '</' + current.name + '>') {
-          return;
-        } else {
-          inComponent = false;
-        }
+  var c = {
+    parse: function parse(e, t) {
+      t || (t = {}), t.components || (t.components = s);
+      var a,
+          c = [],
+          o = [],
+          l = -1,
+          m = !1;
+
+      if (0 !== e.indexOf("<")) {
+        var u = e.indexOf("<");
+        c.push({
+          type: "text",
+          content: -1 === u ? e : e.substring(0, u)
+        });
       }
 
-      var isOpen = tag.charAt(1) !== '/';
-      var isComment = tag.indexOf('<!--') === 0;
-      var start = index + tag.length;
-      var nextChar = html.charAt(start);
-      var parent;
-
-      if (isOpen && !isComment) {
-        level++;
-        current = parseTag(tag);
-
-        if (current.type === 'tag' && options.components[current.name]) {
-          current.type = 'component';
-          inComponent = true;
+      return e.replace(r, function (r, s) {
+        if (m) {
+          if (r !== "</" + a.name + ">") return;
+          m = !1;
         }
 
-        if (!current.voidElement && !inComponent && nextChar && nextChar !== '<') {
-          pushTextNode(current.children, html, level, start, options.ignoreWhitespace);
+        var u,
+            f = "/" !== r.charAt(1),
+            h = r.startsWith("\x3c!--"),
+            p = s + r.length,
+            d = e.charAt(p);
+
+        if (h) {
+          var v = n(r);
+          return l < 0 ? (c.push(v), c) : ((u = o[l]).children.push(v), c);
         }
 
-        byTag[current.tagName] = current;
-
-        if (level === 0) {
-          result.push(current);
+        if (f && (l++, "tag" === (a = n(r)).type && t.components[a.name] && (a.type = "component", m = !0), a.voidElement || m || !d || "<" === d || a.children.push({
+          type: "text",
+          content: e.slice(p, e.indexOf("<", p))
+        }), 0 === l && c.push(a), (u = o[l - 1]) && u.children.push(a), o[l] = a), (!f || a.voidElement) && (l > -1 && (a.voidElement || a.name === r.slice(2, -1)) && (l--, a = -1 === l ? c : o[l]), !m && "<" !== d && d)) {
+          u = -1 === l ? c : o[l].children;
+          var x = e.indexOf("<", p),
+              g = e.slice(p, -1 === x ? void 0 : x);
+          i.test(g) && (g = " "), (x > -1 && l + u.length >= 0 || " " !== g) && u.push({
+            type: "text",
+            content: g
+          });
         }
-
-        parent = arr[level - 1];
-
-        if (parent) {
-          parent.children.push(current);
-        }
-
-        arr[level] = current;
-      }
-
-      if (isComment || !isOpen || current.voidElement) {
-        if (!isComment) {
-          level--;
-        }
-
-        if (!inComponent && nextChar !== '<' && nextChar) {
-          parent = level === -1 ? result : arr[level].children;
-          pushTextNode(parent, html, level, start, options.ignoreWhitespace);
-        }
-      }
-    });
-
-    if (!result.length && html.length) {
-      pushTextNode(result, html, 0, 0, options.ignoreWhitespace);
+      }), c;
+    },
+    stringify: function stringify(e) {
+      return e.reduce(function (e, t) {
+        return e + a("", t);
+      }, "");
     }
-
-    return result;
-  };
-
-  function attrString(attrs) {
-    var buff = [];
-
-    for (var key in attrs) {
-      buff.push(key + '="' + attrs[key] + '"');
-    }
-
-    if (!buff.length) {
-      return '';
-    }
-
-    return ' ' + buff.join(' ');
-  }
-
-  function stringify(buff, doc) {
-    switch (doc.type) {
-      case 'text':
-        return buff + doc.content;
-
-      case 'tag':
-        buff += '<' + doc.name + (doc.attrs ? attrString(doc.attrs) : '') + (doc.voidElement ? '/>' : '>');
-
-        if (doc.voidElement) {
-          return buff;
-        }
-
-        return buff + doc.children.reduce(stringify, '') + '</' + doc.name + '>';
-    }
-  }
-
-  var stringify_1 = function (doc) {
-    return doc.reduce(function (token, rootEl) {
-      return token + stringify('', rootEl);
-    }, '');
-  };
-
-  var htmlParseStringify2 = {
-    parse: parse,
-    stringify: stringify_1
   };
 
   var defaultOptions = {
@@ -629,7 +557,7 @@
 
     getData(children);
     var interpolatedString = i18n.services.interpolator.interpolate(targetString, _objectSpread2(_objectSpread2({}, data), combinedTOpts), i18n.language);
-    var ast = htmlParseStringify2.parse("<0>".concat(interpolatedString, "</0>"));
+    var ast = c.parse("<0>".concat(interpolatedString, "</0>"));
 
     function renderInner(child, node, rootReactNode) {
       var childs = getChildren(child);
