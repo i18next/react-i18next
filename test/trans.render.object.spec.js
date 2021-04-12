@@ -19,6 +19,7 @@ describe('trans using no children but components (object) - base case using arra
         <i>
           beautiful
         </i>
+         
         <strong>
           world
         </strong>
@@ -43,6 +44,7 @@ describe('trans using no children but components (object) - using index', () => 
         <i>
           beautiful
         </i>
+         
         <strong>
           world
         </strong>
@@ -67,6 +69,7 @@ describe('trans using no children but components (object) - using names', () => 
         <i>
           beautiful
         </i>
+         
         <strong>
           world
         </strong>
@@ -91,6 +94,7 @@ describe('trans using no children but components (object) - using names with no 
         <i>
           beautiful
         </i>
+         
         <strong>
           world
         </strong>
