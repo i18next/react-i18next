@@ -214,7 +214,7 @@
     },
         i = n.match(/<\/?([^\s]+?)[/\s>]/);
 
-    if (i && (r.name = i[1], (voidElements[i[1].toLowerCase()] || "/" === n.charAt(n.length - 2)) && (r.voidElement = !0), r.name.startsWith("!--"))) {
+    if (i && (r.name = i[1], (voidElements[i[1]] || "/" === n.charAt(n.length - 2)) && (r.voidElement = !0), r.name.startsWith("!--"))) {
       var s = n.indexOf("--\x3e");
       return {
         type: "comment",

@@ -475,3 +475,51 @@ describe('trans should work with misleading overloaded empty elements in compone
     `);
   });
 });
+
+describe('trans should work with lowercase elements in components', () => {
+  const TestComponent = () => (
+    <Trans
+      i18nKey="someKeyWithLowercaseComp"
+      defaults="click <whatever>here</whatever> for more"
+      components={{ whatever: <a href="/foo">dummy</a> }}
+    />
+  );
+  it('should render translated string', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        click 
+        <a
+          href="/foo"
+        >
+          here
+        </a>
+         for more
+      </div>
+    `);
+  });
+});
+
+describe('trans should work with uppercase elements in components', () => {
+  const TestComponent = () => (
+    <Trans
+      i18nKey="someKeyWithUppercaseComp"
+      defaults="click <Link>here</Link> for more"
+      components={{ Link: <a href="/foo">dummy</a> }}
+    />
+  );
+  it('should render translated string', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        click 
+        <a
+          href="/foo"
+        >
+          here
+        </a>
+         for more
+      </div>
+    `);
+  });
+});

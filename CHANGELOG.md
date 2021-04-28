@@ -1,3 +1,7 @@
+### 11.8.14
+
+- update html-parse-stringify to fix uppercase elements in Trans component [1304](https://github.com/i18next/react-i18next/issues/1304)
+
 ### 11.8.13
 
 - Replace html-parse-stringify2 with html-parse-stringify [1283](https://github.com/i18next/react-i18next/pull/1283) to prevent [CVE-2021-23346](https://github.com/i18next/react-i18next/issues/1275)
