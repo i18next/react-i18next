@@ -3,6 +3,24 @@ import HTML from 'html-parse-stringify';
 import { getI18n, I18nContext, getDefaults } from './context';
 import { warn, warnOnce } from './utils';
 
+function getAllComponents(components, wrappers) {
+  if (!wrappers) {
+    return components;
+  }
+
+  let allComponents;
+
+  if (typeof components === 'object') {
+    allComponents = { ...(allComponents || {}), ...components };
+  }
+
+  if (typeof wrappers === 'object') {
+    allComponents = { ...(allComponents || {}), ...wrappers };
+  }
+
+  return allComponents;
+}
+
 function hasChildren(node, checkLength) {
   if (!node) return false;
   const base = node.props ? node.props.children : node.children;
@@ -17,7 +35,7 @@ function getChildren(node) {
 
 function hasValidReactChildren(children) {
   if (Object.prototype.toString.call(children) !== '[object Array]') return false;
-  return children.every(child => React.isValidElement(child));
+  return children.every((child) => React.isValidElement(child));
 }
 
 function getAsArray(data) {
@@ -115,7 +133,7 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
   function getData(childs) {
     const childrenArray = getAsArray(childs);
 
-    childrenArray.forEach(child => {
+    childrenArray.forEach((child) => {
       if (typeof child === 'string') return;
       if (hasChildren(child)) getData(getChildren(child));
       else if (typeof child === 'object' && !React.isValidElement(child))
@@ -262,11 +280,14 @@ export function Trans({
   values,
   defaults,
   components,
+  wrappers,
   ns,
   i18n: i18nFromProps,
   t: tFromProps,
   ...additionalProps
 }) {
+  const allComponents = getAllComponents(components, wrappers);
+
   const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = useContext(I18nContext) || {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
 
@@ -275,7 +296,7 @@ export function Trans({
     return children;
   }
 
-  const t = tFromProps || i18n.t.bind(i18n) || (k => k);
+  const t = tFromProps || i18n.t.bind(i18n) || ((k) => k);
 
   const reactI18nextOptions = { ...getDefaults(), ...(i18n.options && i18n.options.react) };
 
@@ -301,10 +322,42 @@ export function Trans({
     defaultValue,
     ns: namespaces,
   };
+
+  const { lng } = i18n.options;
+  const originalResource = i18n.getResource(lng, namespaces, key);
+  let resourceHasChanged = false;
+
+  if (wrappers) {
+    console.log(reactI18nextOptions);
+    const prefix = i18n.options.interpolation.prefix || '{{';
+    const suffix = i18n.options.interpolation.suffix || '}}';
+    const wrapperKeys = Object.keys(wrappers);
+    let resource = originalResource;
+
+    // Add tag around every key in resource value, skip if the tag already exists
+    wrapperKeys.forEach((wrapperKey) => {
+      const tag = `<${wrapperKey}>`;
+      const closeTag = `</${wrapperKey}>`;
+      if (!resource.includes(tag)) {
+        const wrapperKeyPattern = new RegExp(prefix + wrapperKey + suffix, 'g');
+        resourceHasChanged = true;
+        resource = resource.replace(
+          wrapperKeyPattern,
+          tag + prefix + wrapperKey + suffix + closeTag,
+        );
+      }
+    });
+
+    // Change the resource so it includes the tags
+    if (resourceHasChanged) {
+      i18n.addResource(lng, namespaces, key, resource);
+    }
+  }
+
   const translation = key ? t(key, combinedTOpts) : defaultValue;
 
   const content = renderNodes(
-    components || children,
+    allComponents || children,
     translation,
     i18n,
     reactI18nextOptions,
@@ -314,6 +367,11 @@ export function Trans({
   // allows user to pass `null` to `parent`
   // and override `defaultTransParent` if is present
   const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
+
+  // Revert back the resource to the original one when we are done
+  if (resourceHasChanged) {
+    i18n.addResource(lng, namespaces, key, originalResource);
+  }
 
   return useAsParent ? React.createElement(useAsParent, additionalProps, content) : content;
 }
