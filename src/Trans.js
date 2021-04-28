@@ -17,7 +17,7 @@ function getChildren(node) {
 
 function hasValidReactChildren(children) {
   if (Object.prototype.toString.call(children) !== '[object Array]') return false;
-  return children.every(child => React.isValidElement(child));
+  return children.every((child) => React.isValidElement(child));
 }
 
 function getAsArray(data) {
@@ -72,6 +72,8 @@ export function nodesToString(children, i18nOptions) {
         const content = nodesToString(childChildren, i18nOptions);
         stringNode += `<${childIndex}>${content}</${childIndex}>`;
       }
+    } else if (child === null) {
+      warn(`Trans: the passed in value is invalid - seems you passed in a null child.`);
     } else if (typeof child === 'object') {
       // e.g. lorem {{ value, format }} ipsum
       const { format, ...clone } = child;
@@ -115,7 +117,7 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
   function getData(childs) {
     const childrenArray = getAsArray(childs);
 
-    childrenArray.forEach(child => {
+    childrenArray.forEach((child) => {
       if (typeof child === 'string') return;
       if (hasChildren(child)) getData(getChildren(child));
       else if (typeof child === 'object' && !React.isValidElement(child))
@@ -275,7 +277,7 @@ export function Trans({
     return children;
   }
 
-  const t = tFromProps || i18n.t.bind(i18n) || (k => k);
+  const t = tFromProps || i18n.t.bind(i18n) || ((k) => k);
 
   const reactI18nextOptions = { ...getDefaults(), ...(i18n.options && i18n.options.react) };
 
