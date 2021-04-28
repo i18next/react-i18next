@@ -528,26 +528,8 @@ describe('trans should work with wrappers', () => {
   const TestComponent = () => (
     <Trans
       i18nKey="testTransWithWrappers"
-      defaults="My name is not {{name}}"
       values={{ name: 'Christian' }}
       wrappers={{ name: <span /> }}
-    />
-  );
-
-  const TestComponentWithClass = () => (
-    <Trans
-      i18nKey="testTransWithWrappers"
-      defaults="My name is not {{name}}"
-      values={{ name: 'Christian' }}
-      wrappers={{ name: <span className="myspan" /> }}
-    />
-  );
-
-  const TestComponentWithoutWrappers = () => (
-    <Trans
-      i18nKey="testTransWithWrappers"
-      defaults="My name is not {{name}}"
-      values={{ name: 'Christian' }}
     />
   );
 
@@ -563,6 +545,14 @@ describe('trans should work with wrappers', () => {
     `);
   });
 
+  const TestComponentWithClass = () => (
+    <Trans
+      i18nKey="testTransWithWrappers"
+      values={{ name: 'Christian' }}
+      wrappers={{ name: <span className="myspan" /> }}
+    />
+  );
+
   it('should render translated string with span around name again, this time with a class on it', () => {
     const { container } = render(<TestComponentWithClass />);
     expect(container.firstChild).toMatchInlineSnapshot(`
@@ -577,11 +567,44 @@ describe('trans should work with wrappers', () => {
     `);
   });
 
+  const TestComponentWithoutWrappers = () => (
+    <Trans i18nKey="testTransWithWrappers" values={{ name: 'Christian' }} />
+  );
+
   it('should render translated string without span when using the same key with no wrappers', () => {
     const { container } = render(<TestComponentWithoutWrappers />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         My name is Christian
+      </div>
+    `);
+  });
+
+  const TestComponentWithoutMixedWrappersAndComponents = () => (
+    <Trans
+      defaults="My <custom>name</custom> is {{name}}"
+      values={{ name: 'Christian' }}
+      components={{ custom: <span className="highlight" /> }}
+      wrappers={{ name: <span className="myspan" /> }}
+    />
+  );
+
+  it('should render translated string with two spans, one with components and one with wrappers', () => {
+    const { container } = render(<TestComponentWithoutMixedWrappersAndComponents />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        My 
+        <span
+          class="highlight"
+        >
+          name
+        </span>
+         is 
+        <span
+          class="myspan"
+        >
+          Christian
+        </span>
       </div>
     `);
   });

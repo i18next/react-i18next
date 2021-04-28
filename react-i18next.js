@@ -138,14 +138,17 @@
   }
 
   function _iterableToArrayLimit(arr, i) {
-    if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+    var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]);
+
+    if (_i == null) return;
     var _arr = [];
     var _n = true;
     var _d = false;
-    var _e = undefined;
+
+    var _s, _e;
 
     try {
-      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
         _arr.push(_s.value);
 
         if (i && _arr.length === i) break;
@@ -466,6 +469,24 @@
     return Component.displayName || Component.name || (typeof Component === 'string' && Component.length > 0 ? Component : 'Unknown');
   }
 
+  function getAllComponents(components, wrappers) {
+    if (!wrappers) {
+      return components;
+    }
+
+    var allComponents;
+
+    if (_typeof(components) === 'object') {
+      allComponents = _objectSpread2(_objectSpread2({}, allComponents || {}), components);
+    }
+
+    if (_typeof(wrappers) === 'object') {
+      allComponents = _objectSpread2(_objectSpread2({}, allComponents || {}), wrappers);
+    }
+
+    return allComponents;
+  }
+
   function hasChildren(node, checkLength) {
     if (!node) return false;
     var base = node.props ? node.props.children : node.children;
@@ -662,10 +683,13 @@
         values = _ref.values,
         defaults = _ref.defaults,
         components = _ref.components,
+        wrappers = _ref.wrappers,
         ns = _ref.ns,
         i18nFromProps = _ref.i18n,
         tFromProps = _ref.t,
-        additionalProps = _objectWithoutProperties(_ref, ["children", "count", "parent", "i18nKey", "tOptions", "values", "defaults", "components", "ns", "i18n", "t"]);
+        additionalProps = _objectWithoutProperties(_ref, ["children", "count", "parent", "i18nKey", "tOptions", "values", "defaults", "components", "wrappers", "ns", "i18n", "t"]);
+
+    var allComponents = getAllComponents(components, wrappers);
 
     var _ref2 = React.useContext(I18nContext) || {},
         i18nFromContext = _ref2.i18n,
@@ -703,9 +727,40 @@
       ns: namespaces
     });
 
+    var lng = i18n.options.lng;
+    var originalResource = i18n.getResource(lng, namespaces, key);
+    var resourceHasChanged = false;
+
+    if (wrappers) {
+      console.log(reactI18nextOptions);
+      var prefix = i18n.options.interpolation.prefix || '{{';
+      var suffix = i18n.options.interpolation.suffix || '}}';
+      var wrapperKeys = Object.keys(wrappers);
+      var resource = originalResource;
+      wrapperKeys.forEach(function (wrapperKey) {
+        var tag = "<".concat(wrapperKey, ">");
+        var closeTag = "</".concat(wrapperKey, ">");
+
+        if (!resource.includes(tag)) {
+          var wrapperKeyPattern = new RegExp(prefix + wrapperKey + suffix, 'g');
+          resourceHasChanged = true;
+          resource = resource.replace(wrapperKeyPattern, tag + prefix + wrapperKey + suffix + closeTag);
+        }
+      });
+
+      if (resourceHasChanged) {
+        i18n.addResource(lng, namespaces, key, resource);
+      }
+    }
+
     var translation = key ? t(key, combinedTOpts) : defaultValue;
-    var content = renderNodes(components || children, translation, i18n, reactI18nextOptions, combinedTOpts);
+    var content = renderNodes(allComponents || children, translation, i18n, reactI18nextOptions, combinedTOpts);
     var useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
+
+    if (resourceHasChanged) {
+      i18n.addResource(lng, namespaces, key, originalResource);
+    }
+
     return useAsParent ? React__default.createElement(useAsParent, additionalProps, content) : content;
   }
 

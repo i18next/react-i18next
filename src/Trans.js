@@ -304,13 +304,46 @@ export function Trans({
   let namespaces = ns || t.ns || defaultNSFromContext || (i18n.options && i18n.options.defaultNS);
   namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
 
-  const defaultValue =
+  let defaultValue =
     defaults ||
     nodesToString(children, reactI18nextOptions) ||
     reactI18nextOptions.transEmptyNodeValue ||
     i18nKey;
+
   const { hashTransKey } = reactI18nextOptions;
   const key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
+
+  const { lng } = i18n.options;
+  const originalResource = i18n.getResource(lng, namespaces, key);
+  let valueHasChanged = false;
+
+  if (wrappers) {
+    const prefix = i18n.options.interpolation.prefix || '{{';
+    const suffix = i18n.options.interpolation.suffix || '}}';
+    const wrapperKeys = Object.keys(wrappers);
+    let value = originalResource || defaultValue;
+
+    // Add tag around every key in resource value, skip if the tag already exists
+    wrapperKeys.forEach((wrapperKey) => {
+      const tag = `<${wrapperKey}>`;
+      const closeTag = `</${wrapperKey}>`;
+      if (!value.includes(tag)) {
+        const wrapperKeyPattern = new RegExp(prefix + wrapperKey + suffix, 'g');
+        valueHasChanged = true;
+        value = value.replace(wrapperKeyPattern, tag + prefix + wrapperKey + suffix + closeTag);
+      }
+    });
+
+    // Change the resource or defaultValue so it includes the tags
+    if (valueHasChanged) {
+      if (originalResource) {
+        i18n.addResource(lng, namespaces, key, value);
+      } else {
+        defaultValue = value;
+      }
+    }
+  }
+
   const interpolationOverride = values
     ? tOptions.interpolation
     : { interpolation: { ...tOptions.interpolation, prefix: '#$?', suffix: '?$#' } };
@@ -322,37 +355,6 @@ export function Trans({
     defaultValue,
     ns: namespaces,
   };
-
-  const { lng } = i18n.options;
-  const originalResource = i18n.getResource(lng, namespaces, key);
-  let resourceHasChanged = false;
-
-  if (wrappers) {
-    console.log(reactI18nextOptions);
-    const prefix = i18n.options.interpolation.prefix || '{{';
-    const suffix = i18n.options.interpolation.suffix || '}}';
-    const wrapperKeys = Object.keys(wrappers);
-    let resource = originalResource;
-
-    // Add tag around every key in resource value, skip if the tag already exists
-    wrapperKeys.forEach((wrapperKey) => {
-      const tag = `<${wrapperKey}>`;
-      const closeTag = `</${wrapperKey}>`;
-      if (!resource.includes(tag)) {
-        const wrapperKeyPattern = new RegExp(prefix + wrapperKey + suffix, 'g');
-        resourceHasChanged = true;
-        resource = resource.replace(
-          wrapperKeyPattern,
-          tag + prefix + wrapperKey + suffix + closeTag,
-        );
-      }
-    });
-
-    // Change the resource so it includes the tags
-    if (resourceHasChanged) {
-      i18n.addResource(lng, namespaces, key, resource);
-    }
-  }
 
   const translation = key ? t(key, combinedTOpts) : defaultValue;
 
@@ -369,7 +371,7 @@ export function Trans({
   const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
 
   // Revert back the resource to the original one when we are done
-  if (resourceHasChanged) {
+  if (valueHasChanged && originalResource) {
     i18n.addResource(lng, namespaces, key, originalResource);
   }
 
