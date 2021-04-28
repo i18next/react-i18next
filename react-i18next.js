@@ -521,6 +521,8 @@
           var content = nodesToString(childChildren, i18nOptions);
           stringNode += "<".concat(childIndex, ">").concat(content, "</").concat(childIndex, ">");
         }
+      } else if (child === null) {
+        warn("Trans: the passed in value is invalid - seems you passed in a null child.");
       } else if (_typeof(child) === 'object') {
         var format = child.format,
             clone = _objectWithoutProperties(child, ["format"]);
