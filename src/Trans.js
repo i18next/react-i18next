@@ -12,7 +12,9 @@ function getAllComponents(components, wrappers) {
   if (isObject(wrappers)) {
     if (!components) {
       return wrappers;
-    } else if (isObject(components)) {
+    }
+
+    if (isObject(components)) {
       return { ...components, ...wrappers };
     }
   }
