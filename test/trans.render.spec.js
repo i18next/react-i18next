@@ -523,3 +523,26 @@ describe('trans should work with uppercase elements in components', () => {
     `);
   });
 });
+
+describe('trans with null child', () => {
+  const TestComponent = () => (
+    <Trans i18nKey="transTest1">
+      Open <Link to="/msgs">here</Link>.{null}
+    </Trans>
+  );
+
+  it('should ignore the null child and render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Go 
+        <a
+          href="/msgs"
+        >
+          there
+        </a>
+        .
+      </div>
+    `);
+  });
+});
