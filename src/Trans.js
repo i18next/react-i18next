@@ -3,22 +3,21 @@ import HTML from 'html-parse-stringify';
 import { getI18n, I18nContext, getDefaults } from './context';
 import { warn, warnOnce } from './utils';
 
+function isObject(value) {
+  return Object.prototype.toString.call(value) === '[object Object]';
+}
+
 function getAllComponents(components, wrappers) {
-  if (!wrappers) {
-    return components;
+  // Only include wrappers if there is no components or if components is a object
+  if (isObject(wrappers)) {
+    if (!components) {
+      return wrappers;
+    } else if (isObject(components)) {
+      return { ...components, ...wrappers };
+    }
   }
 
-  let allComponents;
-
-  if (typeof components === 'object') {
-    allComponents = { ...(allComponents || {}), ...components };
-  }
-
-  if (typeof wrappers === 'object') {
-    allComponents = { ...(allComponents || {}), ...wrappers };
-  }
-
-  return allComponents;
+  return components;
 }
 
 function hasChildren(node, checkLength) {
@@ -317,13 +316,15 @@ export function Trans({
   const originalResource = i18n.getResource(lng, namespaces, key);
   let valueHasChanged = false;
 
-  if (wrappers) {
+  // Only do wrapper stuff if components and wrappers are object, it doesn't support arrays
+  if (wrappers && isObject(allComponents)) {
+    // We need to change the resource or default value if we have wrappers
     const prefix = i18n.options.interpolation.prefix || '{{';
     const suffix = i18n.options.interpolation.suffix || '}}';
     const wrapperKeys = Object.keys(wrappers);
     let value = originalResource || defaultValue;
 
-    // Add tag around every key in resource value, skip if the tag already exists
+    // Add tag around every key in resource, skip if the tag already exists
     wrapperKeys.forEach((wrapperKey) => {
       const tag = `<${wrapperKey}>`;
       const closeTag = `</${wrapperKey}>`;
@@ -334,13 +335,14 @@ export function Trans({
       }
     });
 
-    // Change the resource or defaultValue so it includes the tags
-    if (valueHasChanged) {
-      if (originalResource) {
-        i18n.addResource(lng, namespaces, key, value);
-      } else {
-        defaultValue = value;
-      }
+    // Change the resource so it includes the tags
+    if (originalResource && originalResource !== value) {
+      i18n.addResource(lng, namespaces, key, value);
+    }
+
+    // If we don't have a resource change the defaultValue so it includes the tags
+    if (!originalResource && defaultValue !== value) {
+      defaultValue = value;
     }
   }
 
@@ -370,7 +372,7 @@ export function Trans({
   // and override `defaultTransParent` if is present
   const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
 
-  // Revert back the resource to the original one when we are done
+  // Revert back the resource to the original one if it has been changed
   if (valueHasChanged && originalResource) {
     i18n.addResource(lng, namespaces, key, originalResource);
   }

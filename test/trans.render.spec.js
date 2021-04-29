@@ -580,7 +580,7 @@ describe('trans should work with wrappers', () => {
     `);
   });
 
-  const TestComponentWithoutMixedWrappersAndComponents = () => (
+  const TestComponentWithMixedWrappersAndComponents = () => (
     <Trans
       defaults="My <custom>name</custom> is {{name}}"
       values={{ name: 'Christian' }}
@@ -590,7 +590,7 @@ describe('trans should work with wrappers', () => {
   );
 
   it('should render translated string with two spans, one with components and one with wrappers', () => {
-    const { container } = render(<TestComponentWithoutMixedWrappersAndComponents />);
+    const { container } = render(<TestComponentWithMixedWrappersAndComponents />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         My 
@@ -605,6 +605,28 @@ describe('trans should work with wrappers', () => {
         >
           Christian
         </span>
+      </div>
+    `);
+  });
+
+  const TestComponentWithWrongMixOfWrappersAndComponents = () => (
+    <Trans
+      defaults="My <0>name</0> is {{name}}"
+      values={{ name: 'Christian' }}
+      components={[<span />]}
+      wrappers={{ name: <span /> }}
+    />
+  );
+
+  it('should render translated string with a highlight class but not a span around Christian', () => {
+    const { container } = render(<TestComponentWithWrongMixOfWrappersAndComponents />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        My 
+        <span>
+          name
+        </span>
+         is Christian
       </div>
     `);
   });
