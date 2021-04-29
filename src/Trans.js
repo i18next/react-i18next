@@ -14,7 +14,9 @@ function getAllComponents(components, wrappers) {
       return { ...components, ...wrappers };
     }
 
-    return wrappers;
+    if (!Array.isArray(components)) {
+      return wrappers;
+    }
   }
 
   return components;
