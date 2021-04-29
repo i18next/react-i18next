@@ -10,13 +10,11 @@ function isObject(value) {
 function getAllComponents(components, wrappers) {
   // Only include wrappers if there is no components or if components is a object
   if (isObject(wrappers)) {
-    if (!components) {
-      return wrappers;
-    }
-
     if (isObject(components)) {
       return { ...components, ...wrappers };
     }
+
+    return wrappers;
   }
 
   return components;
