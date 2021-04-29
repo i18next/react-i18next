@@ -7,15 +7,15 @@ function isObject(value) {
   return Object.prototype.toString.call(value) === '[object Object]';
 }
 
-function getAllComponents(components, wrappers) {
-  // Only include wrappers if there is no components or if components is a object
-  if (isObject(wrappers)) {
+function getAllComponents(components, keyComponents) {
+  // Only include keyComponents if there is no components or if components is a object
+  if (isObject(keyComponents)) {
     if (isObject(components)) {
-      return { ...components, ...wrappers };
+      return { ...components, ...keyComponents };
     }
 
     if (!Array.isArray(components)) {
-      return wrappers;
+      return keyComponents;
     }
   }
 
@@ -91,6 +91,8 @@ export function nodesToString(children, i18nOptions) {
         const content = nodesToString(childChildren, i18nOptions);
         stringNode += `<${childIndex}>${content}</${childIndex}>`;
       }
+    } else if (child === null) {
+      warn(`Trans: the passed in value is invalid - seems you passed in a null child.`);
     } else if (typeof child === 'object') {
       // e.g. lorem {{ value, format }} ipsum
       const { format, ...clone } = child;
@@ -281,13 +283,13 @@ export function Trans({
   values,
   defaults,
   components,
-  wrappers,
+  keyComponents,
   ns,
   i18n: i18nFromProps,
   t: tFromProps,
   ...additionalProps
 }) {
-  const allComponents = getAllComponents(components, wrappers);
+  const allComponents = getAllComponents(components, keyComponents);
 
   const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = useContext(I18nContext) || {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
@@ -318,22 +320,22 @@ export function Trans({
   const originalResource = i18n.getResource(lng, namespaces, key);
   let valueHasChanged = false;
 
-  // Only do wrapper stuff if components and wrappers are object, it doesn't support arrays
-  if (wrappers && isObject(allComponents)) {
-    // We need to change the resource or default value if we have wrappers
+  // Only support keyComponents if both components and keyComponents are objects, it doesn't support arrays
+  if (isObject(keyComponents) && isObject(allComponents)) {
+    // We need to change the resource or default value if we have keyComponents
     const prefix = i18n.options.interpolation.prefix || '{{';
     const suffix = i18n.options.interpolation.suffix || '}}';
-    const wrapperKeys = Object.keys(wrappers);
+    const keysIds = Object.keys(keyComponents);
     let value = originalResource || defaultValue;
 
     // Add tag around every key in resource, skip if the tag already exists
-    wrapperKeys.forEach((wrapperKey) => {
-      const tag = `<${wrapperKey}>`;
-      const closeTag = `</${wrapperKey}>`;
+    keysIds.forEach((keyId) => {
+      const tag = `<${keyId}>`;
+      const closeTag = `</${keyId}>`;
       if (!value.includes(tag)) {
-        const wrapperKeyPattern = new RegExp(prefix + wrapperKey + suffix, 'g');
+        const wrapperKeyPattern = new RegExp(prefix + keyId + suffix, 'g');
         valueHasChanged = true;
-        value = value.replace(wrapperKeyPattern, tag + prefix + wrapperKey + suffix + closeTag);
+        value = value.replace(wrapperKeyPattern, tag + prefix + keyId + suffix + closeTag);
       }
     });
 

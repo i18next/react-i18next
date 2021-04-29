@@ -473,14 +473,14 @@
     return Object.prototype.toString.call(value) === '[object Object]';
   }
 
-  function getAllComponents(components, wrappers) {
-    if (isObject(wrappers)) {
+  function getAllComponents(components, keyComponents) {
+    if (isObject(keyComponents)) {
       if (isObject(components)) {
-        return _objectSpread2(_objectSpread2({}, components), wrappers);
+        return _objectSpread2(_objectSpread2({}, components), keyComponents);
       }
 
       if (!Array.isArray(components)) {
-        return wrappers;
+        return keyComponents;
       }
     }
 
@@ -542,6 +542,8 @@
           var content = nodesToString(childChildren, i18nOptions);
           stringNode += "<".concat(childIndex, ">").concat(content, "</").concat(childIndex, ">");
         }
+      } else if (child === null) {
+        warn("Trans: the passed in value is invalid - seems you passed in a null child.");
       } else if (_typeof(child) === 'object') {
         var format = child.format,
             clone = _objectWithoutProperties(child, ["format"]);
@@ -683,13 +685,13 @@
         values = _ref.values,
         defaults = _ref.defaults,
         components = _ref.components,
-        wrappers = _ref.wrappers,
+        keyComponents = _ref.keyComponents,
         ns = _ref.ns,
         i18nFromProps = _ref.i18n,
         tFromProps = _ref.t,
-        additionalProps = _objectWithoutProperties(_ref, ["children", "count", "parent", "i18nKey", "tOptions", "values", "defaults", "components", "wrappers", "ns", "i18n", "t"]);
+        additionalProps = _objectWithoutProperties(_ref, ["children", "count", "parent", "i18nKey", "tOptions", "values", "defaults", "components", "keyComponents", "ns", "i18n", "t"]);
 
-    var allComponents = getAllComponents(components, wrappers);
+    var allComponents = getAllComponents(components, keyComponents);
 
     var _ref2 = React.useContext(I18nContext) || {},
         i18nFromContext = _ref2.i18n,
@@ -717,19 +719,19 @@
     var originalResource = i18n.getResource(lng, namespaces, key);
     var valueHasChanged = false;
 
-    if (wrappers && isObject(allComponents)) {
+    if (isObject(keyComponents) && isObject(allComponents)) {
       var prefix = i18n.options.interpolation.prefix || '{{';
       var suffix = i18n.options.interpolation.suffix || '}}';
-      var wrapperKeys = Object.keys(wrappers);
+      var keysIds = Object.keys(keyComponents);
       var value = originalResource || defaultValue;
-      wrapperKeys.forEach(function (wrapperKey) {
-        var tag = "<".concat(wrapperKey, ">");
-        var closeTag = "</".concat(wrapperKey, ">");
+      keysIds.forEach(function (keyId) {
+        var tag = "<".concat(keyId, ">");
+        var closeTag = "</".concat(keyId, ">");
 
         if (!value.includes(tag)) {
-          var wrapperKeyPattern = new RegExp(prefix + wrapperKey + suffix, 'g');
+          var wrapperKeyPattern = new RegExp(prefix + keyId + suffix, 'g');
           valueHasChanged = true;
-          value = value.replace(wrapperKeyPattern, tag + prefix + wrapperKey + suffix + closeTag);
+          value = value.replace(wrapperKeyPattern, tag + prefix + keyId + suffix + closeTag);
         }
       });
 

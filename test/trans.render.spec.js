@@ -524,16 +524,39 @@ describe('trans should work with uppercase elements in components', () => {
   });
 });
 
-describe('trans should work with wrappers', () => {
+describe('trans with null child', () => {
+  const TestComponent = () => (
+    <Trans i18nKey="transTest1">
+      Open <Link to="/msgs">here</Link>.{null}
+    </Trans>
+  );
+
+  it('should ignore the null child and render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Go 
+        <a
+          href="/msgs"
+        >
+          there
+        </a>
+        .
+      </div>
+    `);
+  });
+});
+
+describe('trans should work with keyComponents', () => {
   const TestComponent = () => (
     <Trans
-      i18nKey="testTransWithWrappers"
+      i18nKey="testTransWithKeyComponents"
       values={{ name: 'Christian' }}
-      wrappers={{ name: <span /> }}
+      keyComponents={{ name: <span /> }}
     />
   );
 
-  it('should render translated string with span around name when using wrapper', () => {
+  it('should render translated string with span around name when using keyComponents', () => {
     const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
@@ -547,9 +570,9 @@ describe('trans should work with wrappers', () => {
 
   const TestComponentWithClass = () => (
     <Trans
-      i18nKey="testTransWithWrappers"
+      i18nKey="testTransWithKeyComponents"
       values={{ name: 'Christian' }}
-      wrappers={{ name: <span className="myspan" /> }}
+      keyComponents={{ name: <span className="myspan" /> }}
     />
   );
 
@@ -567,12 +590,12 @@ describe('trans should work with wrappers', () => {
     `);
   });
 
-  const TestComponentWithoutWrappers = () => (
-    <Trans i18nKey="testTransWithWrappers" values={{ name: 'Christian' }} />
+  const TestComponentWithoutKeyComponents = () => (
+    <Trans i18nKey="testTransWithKeyComponents" values={{ name: 'Christian' }} />
   );
 
-  it('should render translated string without span when using the same key with no wrappers', () => {
-    const { container } = render(<TestComponentWithoutWrappers />);
+  it('should render translated string without span when using the same key with no keyComponents', () => {
+    const { container } = render(<TestComponentWithoutKeyComponents />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         My name is Christian
@@ -580,17 +603,17 @@ describe('trans should work with wrappers', () => {
     `);
   });
 
-  const TestComponentWithMixedWrappersAndComponents = () => (
+  const TestComponentWithMixedKeyComponentsAndComponents = () => (
     <Trans
       defaults="My <custom>name</custom> is {{name}}"
       values={{ name: 'Christian' }}
       components={{ custom: <span className="highlight" /> }}
-      wrappers={{ name: <span className="myspan" /> }}
+      keyComponents={{ name: <span className="myspan" /> }}
     />
   );
 
-  it('should render translated string with two spans, one with components and one with wrappers', () => {
-    const { container } = render(<TestComponentWithMixedWrappersAndComponents />);
+  it('should render translated string with two spans, one with components and one with keyComponents', () => {
+    const { container } = render(<TestComponentWithMixedKeyComponentsAndComponents />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         My 
@@ -609,17 +632,17 @@ describe('trans should work with wrappers', () => {
     `);
   });
 
-  const TestComponentWithWrongMixOfWrappersAndComponents = () => (
+  const TestComponentWithWrongMixOfKeyComponentsAndComponents = () => (
     <Trans
       defaults="My <0>name</0> is {{name}}"
       values={{ name: 'Christian' }}
       components={[<span />]}
-      wrappers={{ name: <span /> }}
+      keyComponents={{ name: <span /> }}
     />
   );
 
   it('should render translated string with a span around name but not a span around Christian', () => {
-    const { container } = render(<TestComponentWithWrongMixOfWrappersAndComponents />);
+    const { container } = render(<TestComponentWithWrongMixOfKeyComponentsAndComponents />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         My 
@@ -631,17 +654,17 @@ describe('trans should work with wrappers', () => {
     `);
   });
 
-  const TestComponentWithWrongMixOfWrappersAndComponents2 = () => (
+  const TestComponentWithWrongMixOfKeyComponentsAndComponents2 = () => (
     <Trans
       defaults="My <0>name</0> is {{name}}"
       values={{ name: 'Christian' }}
       components={null}
-      wrappers={{ name: <span /> }}
+      keyComponents={{ name: <span /> }}
     />
   );
 
   it('should render translated string with a span around Christian but not a span around name', () => {
-    const { container } = render(<TestComponentWithWrongMixOfWrappersAndComponents2 />);
+    const { container } = render(<TestComponentWithWrongMixOfKeyComponentsAndComponents2 />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         My 

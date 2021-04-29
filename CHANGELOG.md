@@ -1,3 +1,11 @@
+### 11.8.16
+
+- added support for wrappers in Trans component [1308](https://github.com/i18next/react-i18next/issues/1308)
+
+### 11.8.15
+
+- ignore null children in Trans component [1307](https://github.com/i18next/react-i18next/issues/1307)
+
 ### 11.8.14
 
 - update html-parse-stringify to fix uppercase elements in Trans component [1304](https://github.com/i18next/react-i18next/issues/1304)

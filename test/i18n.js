@@ -38,7 +38,7 @@ i18n.init({
         testInvalidHtml2: '<hello>',
         testTrans4KeyWithNestedComponent: 'Result should be a list: <0></0>',
         testTrans5KeyWithNestedComponent: 'Result should be a list: <1></1>',
-        testTransWithWrappers: 'My name is {{name}}',
+        testTransWithKeyComponents: 'My name is {{name}}',
         testTrans5KeyWithValue: 'Result should be rendered within tag <0>{{testValue}}</0>',
         transTest3: 'Result should be a clickable link <0 href="https://www.google.com">Google</0>',
         transTest3_overwrite:
