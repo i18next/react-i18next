@@ -469,22 +469,22 @@
     return Component.displayName || Component.name || (typeof Component === 'string' && Component.length > 0 ? Component : 'Unknown');
   }
 
+  function isObject(value) {
+    return Object.prototype.toString.call(value) === '[object Object]';
+  }
+
   function getAllComponents(components, wrappers) {
-    if (!wrappers) {
-      return components;
+    if (isObject(wrappers)) {
+      if (isObject(components)) {
+        return _objectSpread2(_objectSpread2({}, components), wrappers);
+      }
+
+      if (!Array.isArray(components)) {
+        return wrappers;
+      }
     }
 
-    var allComponents;
-
-    if (_typeof(components) === 'object') {
-      allComponents = _objectSpread2(_objectSpread2({}, allComponents || {}), components);
-    }
-
-    if (_typeof(wrappers) === 'object') {
-      allComponents = _objectSpread2(_objectSpread2({}, allComponents || {}), wrappers);
-    }
-
-    return allComponents;
+    return components;
   }
 
   function hasChildren(node, checkLength) {
@@ -713,6 +713,35 @@
     var defaultValue = defaults || nodesToString(children, reactI18nextOptions) || reactI18nextOptions.transEmptyNodeValue || i18nKey;
     var hashTransKey = reactI18nextOptions.hashTransKey;
     var key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
+    var lng = i18n.options.lng;
+    var originalResource = i18n.getResource(lng, namespaces, key);
+    var valueHasChanged = false;
+
+    if (wrappers && isObject(allComponents)) {
+      var prefix = i18n.options.interpolation.prefix || '{{';
+      var suffix = i18n.options.interpolation.suffix || '}}';
+      var wrapperKeys = Object.keys(wrappers);
+      var value = originalResource || defaultValue;
+      wrapperKeys.forEach(function (wrapperKey) {
+        var tag = "<".concat(wrapperKey, ">");
+        var closeTag = "</".concat(wrapperKey, ">");
+
+        if (!value.includes(tag)) {
+          var wrapperKeyPattern = new RegExp(prefix + wrapperKey + suffix, 'g');
+          valueHasChanged = true;
+          value = value.replace(wrapperKeyPattern, tag + prefix + wrapperKey + suffix + closeTag);
+        }
+      });
+
+      if (originalResource && originalResource !== value) {
+        i18n.addResource(lng, namespaces, key, value);
+      }
+
+      if (!originalResource && defaultValue !== value) {
+        defaultValue = value;
+      }
+    }
+
     var interpolationOverride = values ? tOptions.interpolation : {
       interpolation: _objectSpread2(_objectSpread2({}, tOptions.interpolation), {}, {
         prefix: '#$?',
@@ -727,37 +756,11 @@
       ns: namespaces
     });
 
-    var lng = i18n.options.lng;
-    var originalResource = i18n.getResource(lng, namespaces, key);
-    var resourceHasChanged = false;
-
-    if (wrappers) {
-      console.log(reactI18nextOptions);
-      var prefix = i18n.options.interpolation.prefix || '{{';
-      var suffix = i18n.options.interpolation.suffix || '}}';
-      var wrapperKeys = Object.keys(wrappers);
-      var resource = originalResource;
-      wrapperKeys.forEach(function (wrapperKey) {
-        var tag = "<".concat(wrapperKey, ">");
-        var closeTag = "</".concat(wrapperKey, ">");
-
-        if (!resource.includes(tag)) {
-          var wrapperKeyPattern = new RegExp(prefix + wrapperKey + suffix, 'g');
-          resourceHasChanged = true;
-          resource = resource.replace(wrapperKeyPattern, tag + prefix + wrapperKey + suffix + closeTag);
-        }
-      });
-
-      if (resourceHasChanged) {
-        i18n.addResource(lng, namespaces, key, resource);
-      }
-    }
-
     var translation = key ? t(key, combinedTOpts) : defaultValue;
     var content = renderNodes(allComponents || children, translation, i18n, reactI18nextOptions, combinedTOpts);
     var useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
 
-    if (resourceHasChanged) {
+    if (valueHasChanged && originalResource) {
       i18n.addResource(lng, namespaces, key, originalResource);
     }
 
