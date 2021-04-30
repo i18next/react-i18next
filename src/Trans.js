@@ -22,6 +22,10 @@ function getAllComponents(components, keyComponents) {
   return components;
 }
 
+function getResourceKey(key, options) {
+  return key && key.includes(options.nsSeparator) ? key.split(options.nsSeparator)[1] : key;
+}
+
 function hasChildren(node, checkLength) {
   if (!node) return false;
   const base = node.props ? node.props.children : node.children;
@@ -315,13 +319,14 @@ export function Trans({
 
   const { hashTransKey } = reactI18nextOptions;
   const key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
-
+  const resourceKey = getResourceKey(key, i18n.options);
   const { lng } = i18n.options;
-  const originalResource = i18n.getResource(lng, namespaces, key);
+  const originalResource = i18n.getResource(lng, namespaces, resourceKey);
   let valueHasChanged = false;
 
   // Only support keyComponents if both components and keyComponents are objects, it doesn't support arrays
   if (isObject(keyComponents) && isObject(allComponents)) {
+    console.log('originalResource', originalResource);
     // We need to change the resource or default value if we have keyComponents
     const prefix = i18n.options.interpolation.prefix || '{{';
     const suffix = i18n.options.interpolation.suffix || '}}';
@@ -341,7 +346,7 @@ export function Trans({
 
     // Change the resource so it includes the tags
     if (originalResource && originalResource !== value) {
-      i18n.addResource(lng, namespaces, key, value);
+      i18n.addResource(lng, namespaces, resourceKey, value);
     }
 
     // If we don't have a resource change the defaultValue so it includes the tags
@@ -378,7 +383,7 @@ export function Trans({
 
   // Revert back the resource to the original one if it has been changed
   if (valueHasChanged && originalResource) {
-    i18n.addResource(lng, namespaces, key, originalResource);
+    i18n.addResource(lng, namespaces, resourceKey, originalResource);
   }
 
   return useAsParent ? React.createElement(useAsParent, additionalProps, content) : content;

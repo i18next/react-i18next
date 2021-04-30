@@ -570,7 +570,7 @@ describe('trans should work with keyComponents', () => {
 
   const TestComponentWithClass = () => (
     <Trans
-      i18nKey="testTransWithKeyComponents"
+      i18nKey="translation:testTransWithKeyComponents"
       values={{ name: 'Christian' }}
       keyComponents={{ name: <span className="myspan" /> }}
     />
