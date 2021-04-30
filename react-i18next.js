@@ -487,6 +487,10 @@
     return components;
   }
 
+  function getResourceKey(key, options) {
+    return key && key.includes(options.nsSeparator) ? key.split(options.nsSeparator)[1] : key;
+  }
+
   function hasChildren(node, checkLength) {
     if (!node) return false;
     var base = node.props ? node.props.children : node.children;
@@ -715,11 +719,13 @@
     var defaultValue = defaults || nodesToString(children, reactI18nextOptions) || reactI18nextOptions.transEmptyNodeValue || i18nKey;
     var hashTransKey = reactI18nextOptions.hashTransKey;
     var key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
+    var resourceKey = getResourceKey(key, i18n.options);
     var lng = i18n.options.lng;
-    var originalResource = i18n.getResource(lng, namespaces, key);
+    var originalResource = i18n.getResource(lng, namespaces, resourceKey);
     var valueHasChanged = false;
 
     if (isObject(keyComponents) && isObject(allComponents)) {
+      console.log('originalResource', originalResource);
       var prefix = i18n.options.interpolation.prefix || '{{';
       var suffix = i18n.options.interpolation.suffix || '}}';
       var keysIds = Object.keys(keyComponents);
@@ -736,7 +742,7 @@
       });
 
       if (originalResource && originalResource !== value) {
-        i18n.addResource(lng, namespaces, key, value);
+        i18n.addResource(lng, namespaces, resourceKey, value);
       }
 
       if (!originalResource && defaultValue !== value) {
@@ -763,7 +769,7 @@
     var useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
 
     if (valueHasChanged && originalResource) {
-      i18n.addResource(lng, namespaces, key, originalResource);
+      i18n.addResource(lng, namespaces, resourceKey, originalResource);
     }
 
     return useAsParent ? React__default.createElement(useAsParent, additionalProps, content) : content;
