@@ -263,5 +263,30 @@ pluginTester({
         )
       }
     `,
+    `
+      import React from "react"
+      import { Trans, number, date, time, plural, select, selectOrdinal } from "../icu.macro";
+
+      function Component({ children, style }) {
+        return <div style={style}>{children}</div>
+      }
+
+      const count = 2;
+      const numbers = 34;
+      const selectInput = "thing"
+      const now = new Date()
+      const x = (
+        <Trans i18nKey="key">
+          <strong>exciting!</strong>
+          {plural\`\${count},
+          =0 { hi there \${<strong>friend</strong>} }
+          other { woweee even supports nested \${number\`\${numbers}\`} } \`} and
+          {select\`\${selectInput},
+           thing { another nested \${<Component style={{ color: "red" }}>
+             with regular text and a date: <pre>{date\`\${now}\`}</pre>
+           </Component>}} \`}
+        </Trans>
+      );
+    `,
   ],
 });

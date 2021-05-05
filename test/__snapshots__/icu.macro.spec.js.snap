@@ -494,3 +494,58 @@ export default function TestPage({
 }
 "
 `;
+
+exports[`macros 20. macros: 20. macros 1`] = `
+"
+import React from \\"react\\"
+import { Trans, number, date, time, plural, select, selectOrdinal } from \\"../icu.macro\\";
+
+function Component({ children, style }) {
+  return <div style={style}>{children}</div>
+}
+
+const count = 2;
+const numbers = 34;
+const selectInput = \\"thing\\"
+const now = new Date()
+const x = (
+  <Trans i18nKey=\\"key\\">
+    <strong>exciting!</strong>
+    {plural\`\${count},
+    =0 { hi there \${<strong>friend</strong>} }
+    other { woweee even supports nested \${number\`\${numbers}\`} } \`} and
+    {select\`\${selectInput},
+     thing { another nested \${<Component style={{ color: \\"red\\" }}>
+       with regular text and a date: <pre>{date\`\${now}\`}</pre>
+     </Component>}} \`}
+  </Trans>
+);
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from \\"react-i18next\\";
+import React from \\"react\\";
+
+function Component({
+  children,
+  style
+}) {
+  return <div style={style}>{children}</div>;
+}
+
+const count = 2;
+const numbers = 34;
+const selectInput = \\"thing\\";
+const now = new Date();
+const x = <Trans i18nKey=\\"key\\" defaults=\\"<0>exciting!</0>{count, plural, =0 { hi there <1>friend</1> } other { woweee even supports nested {numbers, number} } } and{selectInput, select, thing { another nested <2>with regular text and a date: <0>{now, date}</0></2>} }\\" components={[<strong>exciting!</strong>, <strong>friend</strong>, <Component style={{
+  color: \\"red\\"
+}}>
+       with regular text and a date: <pre>{date\`\${now}\`}</pre>
+     </Component>]} values={{
+  count,
+  numbers,
+  selectInput,
+  now
+}} />;
+"
+`;
