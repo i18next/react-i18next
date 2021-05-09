@@ -1,10 +1,8 @@
-declare module 'react-i18next/icu.macro' {
-  type Namespace = import('.').Namespace;
-  type DefaultNamespace = import('.').DefaultNamespace;
-  type Resources = import('.').Resources;
-  type TFuncKey<N extends Namespace = DefaultNamespace, T = Resources> = import('.').TFuncKey<N, T>;
-  type i18n = import('i18next').i18n;
+import { Namespace, DefaultNamespace, TFuncKey, Trans } from '.';
 
+export { Trans };
+
+declare module 'react-i18next/icu.macro' {
   export interface PluralSubProps<
     K extends TFuncKey<N> extends infer A ? A : never,
     N extends Namespace = DefaultNamespace
@@ -42,11 +40,14 @@ declare module 'react-i18next/icu.macro' {
     [key: string]: string | React.ReactElement;
   }
 
+  interface NoChildren {
+    children?: never;
+  }
+
   interface SelectRequiredProps<
     K extends TFuncKey<N> extends infer A ? A : never,
     N extends Namespace = DefaultNamespace
-  > {
-    children?: never;
+  > extends NoChildren {
     i18nKey?: K;
     i18n?: i18n;
     ns?: N;
@@ -60,26 +61,20 @@ declare module 'react-i18next/icu.macro' {
     N extends Namespace = DefaultNamespace
   > = SelectSubProps & SelectRequiredProps<K, N>;
 
-  export function Plural<
+  function Plural<
     T,
     K extends TFuncKey<N> extends infer A ? A : never,
     N extends Namespace = DefaultNamespace
-  >(props: PluralProps<T, K, N>): React.ReactElement;
+  >(props: PluralProps<T, K, N> & NoChildren): React.ReactElement;
 
-  export function SelectOrdinal<
+  function SelectOrdinal<
     T,
     K extends TFuncKey<N> extends infer A ? A : never,
     N extends Namespace = DefaultNamespace
-  >(props: PluralProps<T, K, N>): React.ReactElement;
+  >(props: PluralProps<T, K, N> & NoChildren): React.ReactElement;
 
-  export function Select<
+  function Select<
     K extends TFuncKey<N> extends infer A ? A : never,
     N extends Namespace = DefaultNamespace
   >(props: SelectProps<K, N>): React.ReactElement;
-
-  export function Trans<
-    K extends TFuncKey<N> extends infer A ? A : never,
-    N extends Namespace = DefaultNamespace,
-    E extends Element = HTMLDivElement
-  >(props: import('.').TransProps<K, N, E>): React.ReactElement;
 }
