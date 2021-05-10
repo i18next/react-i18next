@@ -348,6 +348,20 @@ function mergeChildren(children, babel, componentStartIndex = 0) {
   }, '');
 }
 
+const extractTaggedTemplateValues = (ele, babel, toObjectProperty) => {
+  // date`${variable}` and so on
+  if (ele.expression && ele.expression.type === 'TaggedTemplateExpression') {
+    const [variables] = getTextAndInterpolatedVariables(
+      ele.expression.tag.name,
+      ele.expression,
+      0,
+      babel,
+    );
+    return variables.map((vari) => toObjectProperty(vari));
+  }
+  return [];
+};
+
 /**
  * Extract the names of interpolated value as object properties to pass to Trans
  */
@@ -371,15 +385,7 @@ function getValues(children, babel) {
     if (ele.expression && ele.expression.properties)
       result = result.concat(ele.expression.properties);
     // date`${variable}` and so on
-    if (ele.expression && ele.expression.type === 'TaggedTemplateExpression') {
-      const [variables] = getTextAndInterpolatedVariables(
-        ele.expression.tag.name,
-        ele.expression,
-        0,
-        babel,
-      );
-      result = result.concat(variables.map((vari) => toObjectProperty(vari)));
-    }
+    result = result.concat(extractTaggedTemplateValues(ele, babel, toObjectProperty));
     // recursive add inner elements stuff to values
     if (t.isJSXElement(ele)) {
       result = result.concat(getValues(ele.children, babel));
@@ -601,7 +607,7 @@ function getTextAndInterpolatedVariables(type, primaryNode, index, babel) {
     // sort by the order they appear in the source code
     .sort((a, b) => {
       if (a.start > b.start) return 1;
-      if (b.start < a.start) return -1;
+      if (b.start > a.start) return -1;
       return 0;
     })
     .reduce(extractNestedTemplatesAndComponents, {
