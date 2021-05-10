@@ -607,8 +607,7 @@ function getTextAndInterpolatedVariables(type, primaryNode, index, babel) {
     // sort by the order they appear in the source code
     .sort((a, b) => {
       if (a.start > b.start) return 1;
-      if (b.start > a.start) return -1;
-      return 0;
+      return -1;
     })
     .reduce(extractNestedTemplatesAndComponents, {
       babel,
