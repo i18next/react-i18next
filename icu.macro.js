@@ -639,6 +639,14 @@ const extractVariableNamesFromQuasiNodes = (primaryNode, babel) => {
   return { text, interpolatedVariableNames };
 };
 
+const throwOnInvalidType = (type, primaryNode) => {
+  if (!['date', 'time', 'number', 'plural', 'select', 'selectOrdinal'].includes(type)) {
+    throw new Error(
+      `Unsupported tagged template literal "${type}", must be one of date, time, number, plural, select, selectOrdinal in "${primaryNode.loc.filename}" on line ${primaryNode.loc.start.line}`,
+    );
+  }
+};
+
 /**
  * Retrieve the new text to use, and any interpolated variables
  *
@@ -652,11 +660,7 @@ const extractVariableNamesFromQuasiNodes = (primaryNode, babel) => {
  * @param {*} babel
  */
 function getTextAndInterpolatedVariables(type, primaryNode, index, babel) {
-  if (!['date', 'time', 'number', 'plural', 'select', 'selectOrdinal'].includes(type)) {
-    throw new Error(
-      `Unsupported tagged template literal "${type}", must be one of date, time, number, plural, select, selectOrdinal in "${primaryNode.loc.filename}" on line ${primaryNode.loc.start.line}`,
-    );
-  }
+  throwOnInvalidType(type, primaryNode);
   const componentFoundIndex = index;
   const { text, interpolatedVariableNames } = extractVariableNamesFromQuasiNodes(
     primaryNode,
