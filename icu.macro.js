@@ -591,36 +591,44 @@ const filterNodes = (node) => {
   return false;
 };
 
+const errorOnInvalidQuasiNodes = (primaryNode) => {
+  const noInterpolationError = !primaryNode.quasi.expressions.length;
+  const wrongOrderError = primaryNode.quasi.quasis[0].value.raw.length;
+  const message = `${primaryNode.tag.name} argument must be interpolated ${
+    noInterpolationError ? 'in' : 'at the beginning of'
+  } "${primaryNode.tag.name}\`\`" in "${primaryNode.loc.filename}" on line ${
+    primaryNode.loc.start.line
+  }`;
+  if (noInterpolationError || wrongOrderError) {
+    throw new Error(message);
+  }
+};
+
+const extractNodeVariableNames = (varNode, babel) => {
+  const interpolatedVariableNames = [];
+  if (varNode.type === 'JSXElement') {
+    // extract inner interpolated variables and add to the list
+    interpolatedVariableNames.push(
+      ...getValues(varNode.children, babel).map((value) => value.value.name),
+    );
+  } else if (varNode.type === 'Identifier') {
+    // the name of the interpolated variable
+    interpolatedVariableNames.push(varNode.name);
+  }
+  return interpolatedVariableNames;
+};
+
 const extractVariableNamesFromQuasiNodes = (primaryNode, babel) => {
+  errorOnInvalidQuasiNodes(primaryNode);
   // this will contain all the nodes to convert to the ICU messageformat text
   // at first they are unsorted, but will be ordered correctly at the end of the function
   const text = [];
   // the variable names. These are converted to object references as required for the Trans values
   // in getValues() (toObjectProperty helper function)
   const interpolatedVariableNames = [];
-  if (!primaryNode.quasi.expressions.length) {
-    throw new Error(
-      `${primaryNode.tag.name} argument must be interpolated in "${primaryNode.tag.name}\`\`" in "${primaryNode.loc.filename}" on line ${primaryNode.loc.start.line}`,
-    );
-  }
-  if (primaryNode.quasi.quasis[0].value.raw.length) {
-    throw new Error(
-      `${primaryNode.tag.name} argument must be interpolated at the beginning of "${primaryNode.tag.name}\`\`" in "${primaryNode.loc.filename}" on line ${primaryNode.loc.start.line}`,
-    );
-  }
   primaryNode.quasi.expressions.forEach((varNode) => {
     text.push(varNode);
-    if (varNode.type === 'JSXElement') {
-      // extract inner interpolated variables and add to the list
-      interpolatedVariableNames.push(
-        ...getValues(varNode.children, babel).map((value) => value.value.name),
-      );
-      return;
-    }
-    if (varNode.type === 'Identifier') {
-      // the name of the interpolated variable
-      interpolatedVariableNames.push(varNode.name);
-    }
+    interpolatedVariableNames.push(...extractNodeVariableNames(varNode, babel));
   });
   primaryNode.quasi.quasis.forEach((quasiNode) => {
     // these are the text surrounding the variable interpolation
