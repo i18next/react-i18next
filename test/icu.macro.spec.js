@@ -288,5 +288,116 @@ pluginTester({
         </Trans>
       );
     `,
+    {
+      code: `
+        import React from "react"
+        import { Trans, number } from "../icu.macro";
+
+        const count = 2;
+        const outside = number\`\${count}\`;
+      `,
+      snapshot: false,
+      error: /"number``" can only be used inside <Trans> in "[^"]+" on line 5/,
+    },
+    {
+      code: `
+        import React from "react"
+        import { Trans, date } from "../icu.macro";
+
+        const d = new Date;
+        const outside = date\`\${d}\`;
+      `,
+      snapshot: false,
+      error: /"date``" can only be used inside <Trans> in "[^"]+" on line 5/,
+    },
+    {
+      code: `
+        import React from "react"
+        import { Trans, time } from "../icu.macro";
+
+        const d = new Date;
+        const outside = time\`\${d}\`;
+      `,
+      snapshot: false,
+      error: /"time``" can only be used inside <Trans> in "[^"]+" on line 5/,
+    },
+    {
+      code: `
+        import React from "react"
+        import { Trans, select } from "../icu.macro";
+
+        const d = "f";
+        const outside = select\`\${d}, f { chose f } other { chose something else }\`;
+      `,
+      snapshot: false,
+      error: /"select``" can only be used inside <Trans> in "[^"]+" on line 5/,
+    },
+    {
+      code: `
+        import React from "react"
+        import { Trans, selectOrdinal } from "../icu.macro";
+
+        const d = 1;
+        const outside = selectOrdinal\`\${d}, =0 { # } other { chose # }\`;
+      `,
+      snapshot: false,
+      error: /"selectOrdinal``" can only be used inside <Trans> in "[^"]+" on line 5/,
+    },
+    {
+      code: `
+        import React from "react"
+        import { Trans, plural } from "../icu.macro";
+
+        const d = 1;
+        const outside = plural\`\${d}, =0 { # } other { chose # }\`;
+      `,
+      snapshot: false,
+      error: /"plural``" can only be used inside <Trans> in "[^"]+" on line 5/,
+    },
+    {
+      code: `
+        import React from "react"
+        import { Trans, plural } from "../icu.macro";
+
+        const d = 1;
+        const x = (
+          <Trans i18nKey="key">
+           this will {fail\`hard\`}
+          </Trans>
+        );
+      `,
+      snapshot: false,
+      error: /Unsupported tagged template literal "fail", must be one of date, time, number, plural, select, selectOrdinal in "[^"]+" on line 7/,
+    },
+    {
+      code: `
+        import React from "react"
+        import { Trans, date } from "../icu.macro";
+
+        const d = 1;
+        const x = (
+          <Trans i18nKey="key">
+           this will {date\`fail\`}
+          </Trans>
+        );
+      `,
+      snapshot: false,
+      error: /date argument must be interpolated in "date``" in "[^"]+" on line 7/,
+    },
+    {
+      code: `
+        import React from "react"
+        import { Trans, date } from "../icu.macro";
+
+        const tooLate = new Date();
+        const x = (
+          <Trans i18nKey="key">
+           this will {date\`fail\${tooLate}\`}
+          </Trans>
+        );
+      `,
+      snapshot: false,
+      error: /date argument must be interpolated at the beginning of "date``" in "[^"]+" on line 7/,
+    },
   ],
 });

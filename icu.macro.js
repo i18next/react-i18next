@@ -5,7 +5,18 @@ const { createMacro } = require('babel-plugin-macros');
 module.exports = createMacro(ICUMacro);
 
 function ICUMacro({ references, state, babel }) {
-  const { Trans = [], Plural = [], Select = [], SelectOrdinal = [] } = references;
+  const {
+    Trans = [],
+    Plural = [],
+    Select = [],
+    SelectOrdinal = [],
+    number = [],
+    date = [],
+    select = [],
+    selectOrdinal = [],
+    plural = [],
+    time = [],
+  } = references;
 
   // assert we have the react-i18next Trans component imported
   addNeededImports(state, babel);
@@ -57,6 +68,32 @@ function ICUMacro({ references, state, babel }) {
     } else {
       // throw a helpful error message or something :)
     }
+  });
+
+  // check for number`` and others outside of <Trans>
+  Object.entries({
+    number,
+    date,
+    time,
+    select,
+    plural,
+    selectOrdinal,
+  }).forEach(([name, node]) => {
+    node.forEach((item) => {
+      let f = item.parentPath;
+      while (f) {
+        if (babel.types.isJSXElement(f)) {
+          if (f.node.openingElement.name.name === 'Trans') {
+            // this is a valid use of number/date/time/etc.
+            return;
+          }
+        }
+        f = f.parentPath;
+      }
+      throw new Error(
+        `"${name}\`\`" can only be used inside <Trans> in "${item.node.loc.filename}" on line ${item.node.loc.start.line}`,
+      );
+    });
   });
 }
 
@@ -561,6 +598,16 @@ const extractVariableNamesFromQuasiNodes = (primaryNode, babel) => {
   // the variable names. These are converted to object references as required for the Trans values
   // in getValues() (toObjectProperty helper function)
   const interpolatedVariableNames = [];
+  if (!primaryNode.quasi.expressions.length) {
+    throw new Error(
+      `${primaryNode.tag.name} argument must be interpolated in "${primaryNode.tag.name}\`\`" in "${primaryNode.loc.filename}" on line ${primaryNode.loc.start.line}`,
+    );
+  }
+  if (primaryNode.quasi.quasis[0].value.raw.length) {
+    throw new Error(
+      `${primaryNode.tag.name} argument must be interpolated at the beginning of "${primaryNode.tag.name}\`\`" in "${primaryNode.loc.filename}" on line ${primaryNode.loc.start.line}`,
+    );
+  }
   primaryNode.quasi.expressions.forEach((varNode) => {
     text.push(varNode);
     if (varNode.type === 'JSXElement') {
@@ -597,6 +644,11 @@ const extractVariableNamesFromQuasiNodes = (primaryNode, babel) => {
  * @param {*} babel
  */
 function getTextAndInterpolatedVariables(type, primaryNode, index, babel) {
+  if (!['date', 'time', 'number', 'plural', 'select', 'selectOrdinal'].includes(type)) {
+    throw new Error(
+      `Unsupported tagged template literal "${type}", must be one of date, time, number, plural, select, selectOrdinal in "${primaryNode.loc.filename}" on line ${primaryNode.loc.start.line}`,
+    );
+  }
   const componentFoundIndex = index;
   const { text, interpolatedVariableNames } = extractVariableNamesFromQuasiNodes(
     primaryNode,
