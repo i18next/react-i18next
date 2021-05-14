@@ -468,7 +468,6 @@
   function getDisplayName(Component) {
     return Component.displayName || Component.name || (typeof Component === 'string' && Component.length > 0 ? Component : 'Unknown');
   }
-
   function isObject(value) {
     return Object.prototype.toString.call(value) === '[object Object]';
   }
@@ -567,11 +566,32 @@
     return stringNode;
   }
 
-  function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
+  function injectKeyComponentsTags(children, targetString, i18n, combinedTOpts, resource, keyComponents) {
+    if (!isObject(children)) {
+      return targetString;
+    }
+
+    var prefix = i18n.options.interpolation.prefix || '{{';
+    var suffix = i18n.options.interpolation.suffix || '}}';
+    var newTargetString = targetString;
+    Object.keys(keyComponents || {}).forEach(function (key) {
+      var value = combinedTOpts[key];
+      var i = 0;
+
+      while (~(i = resource.indexOf(prefix + key + suffix, ++i))) {
+        var tag = "<".concat(key, ">").concat(value, "</").concat(key, ">");
+        newTargetString = newTargetString.substr(0, i) + tag + newTargetString.substr(i + value.length);
+      }
+    });
+    return newTargetString;
+  }
+
+  function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, resource, keyComponents) {
     if (targetString === '') return [];
     var keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
     var emptyChildrenButNeedsHandling = targetString && new RegExp(keepArray.join('|')).test(targetString);
     if (!children && !emptyChildrenButNeedsHandling) return [targetString];
+    var targetStringWithKeyComponentsTags = injectKeyComponentsTags(children, targetString, i18n, combinedTOpts, resource, keyComponents);
     var data = {};
 
     function getData(childs) {
@@ -583,7 +603,7 @@
     }
 
     getData(children);
-    var interpolatedString = i18n.services.interpolator.interpolate(targetString, _objectSpread2(_objectSpread2({}, data), combinedTOpts), i18n.language);
+    var interpolatedString = i18n.services.interpolator.interpolate(targetStringWithKeyComponentsTags, _objectSpread2(_objectSpread2({}, data), combinedTOpts), i18n.language);
     var ast = c.parse("<0>".concat(interpolatedString, "</0>"));
 
     function renderInner(child, node, rootReactNode) {
@@ -721,35 +741,7 @@
     var key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
     var resourceKey = getResourceKey(key, i18n.options);
     var lng = i18n.options.lng;
-    var originalResource = i18n.getResource(lng, namespaces, resourceKey);
-    var valueHasChanged = false;
-
-    if (isObject(keyComponents) && isObject(allComponents)) {
-      console.log('originalResource', originalResource);
-      var prefix = i18n.options.interpolation.prefix || '{{';
-      var suffix = i18n.options.interpolation.suffix || '}}';
-      var keysIds = Object.keys(keyComponents);
-      var value = originalResource || defaultValue;
-      keysIds.forEach(function (keyId) {
-        var tag = "<".concat(keyId, ">");
-        var closeTag = "</".concat(keyId, ">");
-
-        if (!value.includes(tag)) {
-          var wrapperKeyPattern = new RegExp(prefix + keyId + suffix, 'g');
-          valueHasChanged = true;
-          value = value.replace(wrapperKeyPattern, tag + prefix + keyId + suffix + closeTag);
-        }
-      });
-
-      if (originalResource && originalResource !== value) {
-        i18n.addResource(lng, namespaces, resourceKey, value);
-      }
-
-      if (!originalResource && defaultValue !== value) {
-        defaultValue = value;
-      }
-    }
-
+    var resource = i18n.getResource(lng, namespaces, resourceKey) || defaultValue;
     var interpolationOverride = values ? tOptions.interpolation : {
       interpolation: _objectSpread2(_objectSpread2({}, tOptions.interpolation), {}, {
         prefix: '#$?',
@@ -765,13 +757,8 @@
     });
 
     var translation = key ? t(key, combinedTOpts) : defaultValue;
-    var content = renderNodes(allComponents || children, translation, i18n, reactI18nextOptions, combinedTOpts);
+    var content = renderNodes(allComponents || children, translation, i18n, reactI18nextOptions, combinedTOpts, resource, keyComponents);
     var useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
-
-    if (valueHasChanged && originalResource) {
-      i18n.addResource(lng, namespaces, resourceKey, originalResource);
-    }
-
     return useAsParent ? React__default.createElement(useAsParent, additionalProps, content) : content;
   }
 
