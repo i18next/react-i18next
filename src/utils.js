@@ -111,3 +111,7 @@ export function getDisplayName(Component) {
     (typeof Component === 'string' && Component.length > 0 ? Component : 'Unknown')
   );
 }
+
+export function isObject(value) {
+  return Object.prototype.toString.call(value) === '[object Object]';
+}

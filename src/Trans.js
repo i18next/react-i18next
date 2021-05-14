@@ -1,11 +1,7 @@
 import React, { useContext } from 'react';
 import HTML from 'html-parse-stringify';
 import { getI18n, I18nContext, getDefaults } from './context';
-import { warn, warnOnce } from './utils';
-
-function isObject(value) {
-  return Object.prototype.toString.call(value) === '[object Object]';
-}
+import { warn, warnOnce, isObject } from './utils';
 
 function getAllComponents(components, keyComponents) {
   // Only include keyComponents if there is no components or if components is a object
@@ -123,7 +119,44 @@ export function nodesToString(children, i18nOptions) {
   return stringNode;
 }
 
-function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
+function injectKeyComponentsTags(
+  children,
+  targetString,
+  i18n,
+  combinedTOpts,
+  resource,
+  keyComponents,
+) {
+  if (!isObject(children)) {
+    return targetString;
+  }
+
+  const prefix = i18n.options.interpolation.prefix || '{{';
+  const suffix = i18n.options.interpolation.suffix || '}}';
+  let newTargetString = targetString;
+
+  Object.keys(keyComponents || {}).forEach((key) => {
+    const value = combinedTOpts[key];
+    let i = 0;
+    while (~(i = resource.indexOf(prefix + key + suffix, ++i))) {
+      const tag = `<${key}>${value}</${key}>`;
+      newTargetString =
+        newTargetString.substr(0, i) + tag + newTargetString.substr(i + value.length);
+    }
+  });
+
+  return newTargetString;
+}
+
+function renderNodes(
+  children,
+  targetString,
+  i18n,
+  i18nOptions,
+  combinedTOpts,
+  resource,
+  keyComponents,
+) {
   if (targetString === '') return [];
 
   // check if contains tags we need to replace from html string to react nodes
@@ -133,6 +166,16 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
 
   // no need to replace tags in the targetstring
   if (!children && !emptyChildrenButNeedsHandling) return [targetString];
+
+  // Inject tags to the keyComponents keys
+  const targetStringWithKeyComponentsTags = injectKeyComponentsTags(
+    children,
+    targetString,
+    i18n,
+    combinedTOpts,
+    resource,
+    keyComponents,
+  );
 
   // v2 -> interpolates upfront no need for "some <0>{{var}}</0>"" -> will be just "some {{var}}" in translation file
   const data = {};
@@ -151,7 +194,7 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
   getData(children);
 
   const interpolatedString = i18n.services.interpolator.interpolate(
-    targetString,
+    targetStringWithKeyComponentsTags,
     { ...data, ...combinedTOpts },
     i18n.language,
   );
@@ -159,7 +202,6 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
   // parse ast from string with additional wrapper tag
   // -> avoids issues in parser removing prepending text nodes
   const ast = HTML.parse(`<0>${interpolatedString}</0>`);
-
   function renderInner(child, node, rootReactNode) {
     const childs = getChildren(child);
     const mappedChildren = mapAST(childs, node.children, rootReactNode);
@@ -178,7 +220,6 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
   function mapAST(reactNode, astNode, rootReactNode) {
     const reactNodes = getAsArray(reactNode);
     const astNodes = getAsArray(astNode);
-
     return astNodes.reduce((mem, node, i) => {
       const translationContent = node.children && node.children[0] && node.children[0].content;
       if (node.type === 'tag') {
@@ -311,7 +352,7 @@ export function Trans({
   let namespaces = ns || t.ns || defaultNSFromContext || (i18n.options && i18n.options.defaultNS);
   namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
 
-  let defaultValue =
+  const defaultValue =
     defaults ||
     nodesToString(children, reactI18nextOptions) ||
     reactI18nextOptions.transEmptyNodeValue ||
@@ -321,39 +362,7 @@ export function Trans({
   const key = i18nKey || (hashTransKey ? hashTransKey(defaultValue) : defaultValue);
   const resourceKey = getResourceKey(key, i18n.options);
   const { lng } = i18n.options;
-  const originalResource = i18n.getResource(lng, namespaces, resourceKey);
-  let valueHasChanged = false;
-
-  // Only support keyComponents if both components and keyComponents are objects, it doesn't support arrays
-  if (isObject(keyComponents) && isObject(allComponents)) {
-    console.log('originalResource', originalResource);
-    // We need to change the resource or default value if we have keyComponents
-    const prefix = i18n.options.interpolation.prefix || '{{';
-    const suffix = i18n.options.interpolation.suffix || '}}';
-    const keysIds = Object.keys(keyComponents);
-    let value = originalResource || defaultValue;
-
-    // Add tag around every key in resource, skip if the tag already exists
-    keysIds.forEach((keyId) => {
-      const tag = `<${keyId}>`;
-      const closeTag = `</${keyId}>`;
-      if (!value.includes(tag)) {
-        const wrapperKeyPattern = new RegExp(prefix + keyId + suffix, 'g');
-        valueHasChanged = true;
-        value = value.replace(wrapperKeyPattern, tag + prefix + keyId + suffix + closeTag);
-      }
-    });
-
-    // Change the resource so it includes the tags
-    if (originalResource && originalResource !== value) {
-      i18n.addResource(lng, namespaces, resourceKey, value);
-    }
-
-    // If we don't have a resource change the defaultValue so it includes the tags
-    if (!originalResource && defaultValue !== value) {
-      defaultValue = value;
-    }
-  }
+  const resource = i18n.getResource(lng, namespaces, resourceKey) || defaultValue;
 
   const interpolationOverride = values
     ? tOptions.interpolation
@@ -375,16 +384,13 @@ export function Trans({
     i18n,
     reactI18nextOptions,
     combinedTOpts,
+    resource,
+    keyComponents,
   );
 
   // allows user to pass `null` to `parent`
   // and override `defaultTransParent` if is present
   const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
-
-  // Revert back the resource to the original one if it has been changed
-  if (valueHasChanged && originalResource) {
-    i18n.addResource(lng, namespaces, resourceKey, originalResource);
-  }
 
   return useAsParent ? React.createElement(useAsParent, additionalProps, content) : content;
 }

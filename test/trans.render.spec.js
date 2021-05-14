@@ -605,7 +605,7 @@ describe('trans should work with keyComponents', () => {
 
   const TestComponentWithMixedKeyComponentsAndComponents = () => (
     <Trans
-      defaults="My <custom>name</custom> is {{name}}"
+      defaults="My Christian <custom>name</custom> is {{name}} and some more"
       values={{ name: 'Christian' }}
       components={{ custom: <span className="highlight" /> }}
       keyComponents={{ name: <span className="myspan" /> }}
@@ -616,7 +616,7 @@ describe('trans should work with keyComponents', () => {
     const { container } = render(<TestComponentWithMixedKeyComponentsAndComponents />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
-        My 
+        My Christian 
         <span
           class="highlight"
         >
@@ -628,6 +628,7 @@ describe('trans should work with keyComponents', () => {
         >
           Christian
         </span>
+         and some more
       </div>
     `);
   });
@@ -656,7 +657,7 @@ describe('trans should work with keyComponents', () => {
 
   const TestComponentWithWrongMixOfKeyComponentsAndComponents2 = () => (
     <Trans
-      defaults="My <0>name</0> is {{name}}"
+      defaults="My Christian <0>name</0> is {{name}}"
       values={{ name: 'Christian' }}
       components={null}
       keyComponents={{ name: <span /> }}
@@ -667,7 +668,7 @@ describe('trans should work with keyComponents', () => {
     const { container } = render(<TestComponentWithWrongMixOfKeyComponentsAndComponents2 />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
-        My 
+        My Christian 
         name
          is 
         <span>
