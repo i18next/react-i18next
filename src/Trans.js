@@ -137,11 +137,15 @@ function injectKeyComponentsTags(
 
   Object.keys(keyComponents || {}).forEach((key) => {
     const value = combinedTOpts[key];
-    let i = 0;
-    while (~(i = resource.indexOf(prefix + key + suffix, ++i))) {
+    let pos;
+    for (
+      pos = resource.indexOf(prefix + key + suffix);
+      pos !== -1;
+      pos = resource.indexOf(prefix + key + suffix, pos + 1)
+    ) {
       const tag = `<${key}>${value}</${key}>`;
       newTargetString =
-        newTargetString.substr(0, i) + tag + newTargetString.substr(i + value.length);
+        newTargetString.substr(0, pos) + tag + newTargetString.substr(pos + value.length);
     }
   });
 

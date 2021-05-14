@@ -576,11 +576,11 @@
     var newTargetString = targetString;
     Object.keys(keyComponents || {}).forEach(function (key) {
       var value = combinedTOpts[key];
-      var i = 0;
+      var pos;
 
-      while (~(i = resource.indexOf(prefix + key + suffix, ++i))) {
+      for (pos = resource.indexOf(prefix + key + suffix); pos !== -1; pos = resource.indexOf(prefix + key + suffix, pos + 1)) {
         var tag = "<".concat(key, ">").concat(value, "</").concat(key, ">");
-        newTargetString = newTargetString.substr(0, i) + tag + newTargetString.substr(i + value.length);
+        newTargetString = newTargetString.substr(0, pos) + tag + newTargetString.substr(pos + value.length);
       }
     });
     return newTargetString;
