@@ -1,5 +1,6 @@
 import React from 'react';
 import { Namespace, DefaultNamespace, TFuncKey, Trans } from '.';
+import { i18n } from 'i18next';
 
 export { Trans };
 
