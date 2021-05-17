@@ -491,26 +491,13 @@ const icuInterpolators = ['date', 'time', 'number', 'plural', 'select', 'selectO
 const importsToAdd = ['Trans'];
 
 /**
- * Add `import { Trans } from "react-i18next" as needed
+ * helper split out of addNeededImports to make codeclimate happy
+ *
+ * This does the work of amending an existing import from "react-i18next", or
+ * creating a new one if it doesn't exist
  */
-function addNeededImports(state, babel, references) {
-  const t = babel.types;
-
-  // check if there is an existing react-i18next import
-  const existingImport = state.file.path.node.body.find(
-    (importNode) =>
-      t.isImportDeclaration(importNode) && importNode.source.value === 'react-i18next',
-  );
-  const usedRefs = Object.keys(references).filter((importName) => {
-    if (!icuInterpolators.includes(importName)) {
-      return false;
-    }
-    return references[importName].length;
-  });
-
-  const allImportsToAdd = importsToAdd.concat(usedRefs);
-
-  // append Trans to existing or add a new react-i18next import for the Trans
+function addImports(state, existingImport, allImportsToAdd, t) {
+  // append imports to existing or add a new react-i18next import for the Trans and icu tagged template literals
   if (existingImport) {
     allImportsToAdd.forEach((name) => {
       if (
@@ -529,6 +516,31 @@ function addNeededImports(state, babel, references) {
       ),
     );
   }
+}
+
+/**
+ * Add `import { Trans, number, date, <etc.> } from "react-i18next"` as needed
+ */
+function addNeededImports(state, babel, references) {
+  const t = babel.types;
+
+  // check if there is an existing react-i18next import
+  const existingImport = state.file.path.node.body.find(
+    (importNode) =>
+      t.isImportDeclaration(importNode) && importNode.source.value === 'react-i18next',
+  );
+  // check for any of the tagged template literals that are used in the source, and add them
+  const usedRefs = Object.keys(references).filter((importName) => {
+    if (!icuInterpolators.includes(importName)) {
+      return false;
+    }
+    return references[importName].length;
+  });
+
+  // combine Trans + any tagged template literals
+  const allImportsToAdd = importsToAdd.concat(usedRefs);
+
+  addImports(state, existingImport, allImportsToAdd, t);
 }
 
 /**
