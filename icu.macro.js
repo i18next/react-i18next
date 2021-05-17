@@ -637,6 +637,15 @@ const extractVariableNamesFromQuasiNodes = (primaryNode, babel) => {
   // in getValues() (toObjectProperty helper function)
   const interpolatedVariableNames = [];
   primaryNode.quasi.expressions.forEach((varNode) => {
+    if (
+      !babel.types.isIdentifier(varNode) &&
+      !babel.types.isTaggedTemplateExpression(varNode) &&
+      !babel.types.isJSXElement(varNode)
+    ) {
+      throw new Error(
+        `Must pass a variable, not an expression to "${primaryNode.tag.name}\`\`" in "${primaryNode.loc.filename}" on line ${primaryNode.loc.start.line}`,
+      );
+    }
     text.push(varNode);
     interpolatedVariableNames.push(...extractNodeVariableNames(varNode, babel));
   });

@@ -399,5 +399,20 @@ pluginTester({
       snapshot: false,
       error: /date argument must be interpolated at the beginning of "date``" in "[^"]+" on line 7/,
     },
+    {
+      code: `
+        import React from "react"
+        import { Trans, number } from "../icu.macro";
+
+        const tooLate = funcThatReturnsNumberOrUndefined;
+        const x = (
+          <Trans i18nKey="key">
+           this will {number\`\${tooLate || 0}\`}
+          </Trans>
+        );
+      `,
+      snapshot: false,
+      error: /Must pass a variable, not an expression to "number``" in "[^"]+" on line 7/,
+    },
   ],
 });
