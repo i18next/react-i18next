@@ -16,3 +16,12 @@ export {
   composeInitialProps,
   getInitialProps,
 } from './context';
+
+// dummy functions for icu.macro support
+
+export const date = () => '';
+export const time = () => '';
+export const number = () => '';
+export const select = () => '';
+export const plural = () => '';
+export const selectOrdinal = () => '';

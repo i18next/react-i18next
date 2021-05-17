@@ -523,7 +523,7 @@ const x = (
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from \\"react-i18next\\";
+import { Trans, number, date, plural, select } from \\"react-i18next\\";
 import React from \\"react\\";
 
 function Component({

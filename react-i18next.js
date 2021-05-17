@@ -925,17 +925,42 @@
     };
   }
 
+  var date = function date() {
+    return '';
+  };
+  var time = function time() {
+    return '';
+  };
+  var number = function number() {
+    return '';
+  };
+  var select = function select() {
+    return '';
+  };
+  var plural = function plural() {
+    return '';
+  };
+  var selectOrdinal = function selectOrdinal() {
+    return '';
+  };
+
   exports.I18nContext = I18nContext;
   exports.I18nextProvider = I18nextProvider;
   exports.Trans = Trans;
   exports.Translation = Translation;
   exports.composeInitialProps = composeInitialProps;
+  exports.date = date;
   exports.getDefaults = getDefaults;
   exports.getI18n = getI18n;
   exports.getInitialProps = getInitialProps;
   exports.initReactI18next = initReactI18next;
+  exports.number = number;
+  exports.plural = plural;
+  exports.select = select;
+  exports.selectOrdinal = selectOrdinal;
   exports.setDefaults = setDefaults;
   exports.setI18n = setI18n;
+  exports.time = time;
   exports.useSSR = useSSR;
   exports.useTranslation = useTranslation;
   exports.withSSR = withSSR;

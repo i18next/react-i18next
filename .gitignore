@@ -24,3 +24,6 @@ dist/**/*
 .next
 yarn.lock
 out
+
+# ignore packaged releases
+*.tgz

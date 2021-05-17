@@ -19,7 +19,7 @@ function ICUMacro({ references, state, babel }) {
   } = references;
 
   // assert we have the react-i18next Trans component imported
-  addNeededImports(state, babel);
+  addNeededImports(state, babel, references);
 
   // transform Plural and SelectOrdinal
   [...Plural, ...SelectOrdinal].forEach((referencePath) => {
@@ -487,22 +487,32 @@ function getComponents(children, babel) {
   }, []);
 }
 
+const icuInterpolators = ['date', 'time', 'number', 'plural', 'select', 'selectOrdinal'];
+const importsToAdd = ['Trans'];
+
 /**
  * Add `import { Trans } from "react-i18next" as needed
  */
-function addNeededImports(state, babel) {
+function addNeededImports(state, babel, references) {
   const t = babel.types;
-  const importsToAdd = ['Trans'];
 
   // check if there is an existing react-i18next import
   const existingImport = state.file.path.node.body.find(
     (importNode) =>
       t.isImportDeclaration(importNode) && importNode.source.value === 'react-i18next',
   );
+  const usedRefs = Object.keys(references).filter((importName) => {
+    if (!icuInterpolators.includes(importName)) {
+      return false;
+    }
+    return references[importName].length;
+  });
+
+  const allImportsToAdd = importsToAdd.concat(usedRefs);
 
   // append Trans to existing or add a new react-i18next import for the Trans
   if (existingImport) {
-    importsToAdd.forEach((name) => {
+    allImportsToAdd.forEach((name) => {
       if (
         existingImport.specifiers.findIndex(
           (specifier) => specifier.imported && specifier.imported.name === name,
@@ -514,7 +524,7 @@ function addNeededImports(state, babel) {
   } else {
     state.file.path.node.body.unshift(
       t.importDeclaration(
-        importsToAdd.map((name) => t.importSpecifier(t.identifier(name), t.identifier(name))),
+        allImportsToAdd.map((name) => t.importSpecifier(t.identifier(name), t.identifier(name))),
         t.stringLiteral('react-i18next'),
       ),
     );
@@ -640,7 +650,7 @@ const extractVariableNamesFromQuasiNodes = (primaryNode, babel) => {
 };
 
 const throwOnInvalidType = (type, primaryNode) => {
-  if (!['date', 'time', 'number', 'plural', 'select', 'selectOrdinal'].includes(type)) {
+  if (!icuInterpolators.includes(type)) {
     throw new Error(
       `Unsupported tagged template literal "${type}", must be one of date, time, number, plural, select, selectOrdinal in "${primaryNode.loc.filename}" on line ${primaryNode.loc.start.line}`,
     );
