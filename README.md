@@ -103,10 +103,16 @@ $ npm install react-i18next
 
 - If you don't use a module loader it will be added to `window.reactI18next`
 
+### Do you like to read a more complete step by step tutorial?
+
+[Here](https://dev.to/adrai/how-to-properly-internationalize-a-react-application-using-i18next-3hdb) you'll find a simple tutorial on how to best use react-i18next.
+Some basics of i18next and some cool possibilities on how to optimize your localization workflow.
+
 ### Examples
 
 - [Example react](https://github.com/i18next/react-i18next/tree/master/example/react)
 - [Example react with typescript 4.1+](https://github.com/i18next/react-i18next/tree/master/example/react-typescript4.1)
+- [Example locize.com](https://github.com/i18next/react-i18next/tree/master/example/locize)
 
 #### v9 samples
 
@@ -118,7 +124,7 @@ $ npm install react-i18next
 - [Example razzle](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/razzle-ssr)
 - [Example hashbase / beaker browser](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/dat)
 - [Example storybook](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/storybook)
-- [Example locize.com](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/locize-example)
+- [Example locize.com](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/locize)
 - [Example test with jest](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/test-jest)
 
 ### Requirements
