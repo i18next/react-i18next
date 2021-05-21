@@ -18,10 +18,10 @@
 
 ### IMPORTANT:
 
-Master Branch is the new v10 using hooks.
+Master Branch is the newest version using hooks (>= v10).
 
 ```bash
-$ v10.0.0
+$ >=v10.0.0
 npm i react-i18next
 ```
 
@@ -37,6 +37,7 @@ npm i react-i18next@legacy
 ### Documentation
 
 The documentation is published on [react.i18next.com](https://react.i18next.com)
+The general i18next documentation is published on [www.i18next.com](https://www.i18next.com)
 
 ### What will my code look like?
 
