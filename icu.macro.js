@@ -5,14 +5,24 @@ const { createMacro } = require('babel-plugin-macros');
 module.exports = createMacro(ICUMacro);
 
 function ICUMacro({ references, state, babel }) {
-  const t = babel.types;
-  const { Trans = [], Plural = [], Select = [], SelectOrdinal = [] } = references;
+  const {
+    Trans = [],
+    Plural = [],
+    Select = [],
+    SelectOrdinal = [],
+    number = [],
+    date = [],
+    select = [],
+    selectOrdinal = [],
+    plural = [],
+    time = [],
+  } = references;
 
   // assert we have the react-i18next Trans component imported
-  addNeededImports(state, babel);
+  addNeededImports(state, babel, references);
 
   // transform Plural and SelectOrdinal
-  [...Plural, ...SelectOrdinal].forEach(referencePath => {
+  [...Plural, ...SelectOrdinal].forEach((referencePath) => {
     if (referencePath.parentPath.type === 'JSXOpeningElement') {
       pluralAsJSX(
         referencePath.parentPath,
@@ -28,7 +38,7 @@ function ICUMacro({ references, state, babel }) {
   });
 
   // transform Select
-  Select.forEach(referencePath => {
+  Select.forEach((referencePath) => {
     if (referencePath.parentPath.type === 'JSXOpeningElement') {
       selectAsJSX(
         referencePath.parentPath,
@@ -44,7 +54,7 @@ function ICUMacro({ references, state, babel }) {
   });
 
   // transform Trans
-  Trans.forEach(referencePath => {
+  Trans.forEach((referencePath) => {
     if (referencePath.parentPath.type === 'JSXOpeningElement') {
       transAsJSX(
         referencePath.parentPath,
@@ -58,6 +68,32 @@ function ICUMacro({ references, state, babel }) {
     } else {
       // throw a helpful error message or something :)
     }
+  });
+
+  // check for number`` and others outside of <Trans>
+  Object.entries({
+    number,
+    date,
+    time,
+    select,
+    plural,
+    selectOrdinal,
+  }).forEach(([name, node]) => {
+    node.forEach((item) => {
+      let f = item.parentPath;
+      while (f) {
+        if (babel.types.isJSXElement(f)) {
+          if (f.node.openingElement.name.name === 'Trans') {
+            // this is a valid use of number/date/time/etc.
+            return;
+          }
+        }
+        f = f.parentPath;
+      }
+      throw new Error(
+        `"${name}\`\`" can only be used inside <Trans> in "${item.node.loc.filename}" on line ${item.node.loc.start.line}`,
+      );
+    });
   });
 }
 
@@ -198,7 +234,7 @@ function transAsJSX(parentPath, { attributes, children }, babel, { filename }) {
   let clonedAttributes = cloneExistingAttributes(attributes);
   if (parseDefaults) {
     // remove existing defaults so it can be replaced later with the new parsed defaults
-    clonedAttributes = clonedAttributes.filter(node => node.name.name !== 'defaults');
+    clonedAttributes = clonedAttributes.filter((node) => node.name.name !== 'defaults');
   }
 
   // replace the node with the new Trans
@@ -253,7 +289,7 @@ function cloneExistingAttributes(attributes) {
 }
 
 function findAttribute(name, attributes) {
-  return attributes.find(child => {
+  return attributes.find((child) => {
     const ele = child.node ? child.node : child;
     return ele.name.name === name;
   });
@@ -284,41 +320,88 @@ function trimIndent(text) {
   return newText;
 }
 
+/**
+ * add comma-delimited expressions like `{ val, number }`
+ */
+function mergeCommaExpressions(ele) {
+  if (ele.expression && ele.expression.expressions) {
+    return `{${ele.expression.expressions
+      .reduce((m, i) => {
+        m.push(i.name || i.value);
+        return m;
+      }, [])
+      .join(', ')}}`;
+  }
+  return '';
+}
+
+/**
+ * this is for supporting complex icu type interpolations
+ * date`${variable}` and number`{${varName}, ::percent}`
+ * also, plural`{${count}, one { ... } other { ... }}
+ */
+function mergeTaggedTemplateExpressions(ele, componentFoundIndex, t, babel) {
+  if (t.isTaggedTemplateExpression(ele.expression)) {
+    const [, text, index] = getTextAndInterpolatedVariables(
+      ele.expression.tag.name,
+      ele.expression,
+      componentFoundIndex,
+      babel,
+    );
+    return [text, index];
+  }
+  return ['', componentFoundIndex];
+}
+
 function mergeChildren(children, babel, componentStartIndex = 0) {
   const t = babel.types;
   let componentFoundIndex = componentStartIndex;
 
   return children.reduce((mem, child) => {
     const ele = child.node ? child.node : child;
+    let result = mem;
 
     // add text, but trim indentation whitespace
-    if (t.isJSXText(ele) && ele.value) mem += trimIndent(ele.value);
+    if (t.isJSXText(ele) && ele.value) result += trimIndent(ele.value);
     // add ?!? forgot
-    if (ele.expression && ele.expression.value) mem += ele.expression.value;
+    if (ele.expression && ele.expression.value) result += ele.expression.value;
     // add `{ val }`
-    if (ele.expression && ele.expression.name) mem += `{${ele.expression.name}}`;
+    if (ele.expression && ele.expression.name) result += `{${ele.expression.name}}`;
     // add `{ val, number }`
-    if (ele.expression && ele.expression.expressions) {
-      mem += `{${ele.expression.expressions
-        .reduce((m, i) => {
-          m.push(i.name || i.value);
-          return m;
-        }, [])
-        .join(', ')}}`;
-    }
+    result += mergeCommaExpressions(ele);
+    const [nextText, newIndex] = mergeTaggedTemplateExpressions(ele, componentFoundIndex, t, babel);
+    result += nextText;
+    componentFoundIndex = newIndex;
     // add <strong>...</strong> with replace to <0>inner string</0>
     if (t.isJSXElement(ele)) {
-      mem += `<${componentFoundIndex}>${mergeChildren(
+      result += `<${componentFoundIndex}>${mergeChildren(
         ele.children,
         babel,
       )}</${componentFoundIndex}>`;
-      componentFoundIndex++;
+      componentFoundIndex += 1;
     }
 
-    return mem;
+    return result;
   }, '');
 }
 
+const extractTaggedTemplateValues = (ele, babel, toObjectProperty) => {
+  // date`${variable}` and so on
+  if (ele.expression && ele.expression.type === 'TaggedTemplateExpression') {
+    const [variables] = getTextAndInterpolatedVariables(
+      ele.expression.tag.name,
+      ele.expression,
+      0,
+      babel,
+    );
+    return variables.map((vari) => toObjectProperty(vari));
+  }
+  return [];
+};
+
+/**
+ * Extract the names of interpolated value as object properties to pass to Trans
+ */
 function getValues(children, babel) {
   const t = babel.types;
   const toObjectProperty = (name, value) =>
@@ -326,66 +409,100 @@ function getValues(children, babel) {
 
   return children.reduce((mem, child) => {
     const ele = child.node ? child.node : child;
+    let result = mem;
 
     // add `{ var }` to values
     if (ele.expression && ele.expression.name) mem.push(toObjectProperty(ele.expression.name));
     // add `{ var, number }` to values
     if (ele.expression && ele.expression.expressions)
-      mem.push(
+      result.push(
         toObjectProperty(ele.expression.expressions[0].name || ele.expression.expressions[0].value),
       );
     // add `{ var: 'bar' }` to values
-    if (ele.expression && ele.expression.properties) mem = mem.concat(ele.expression.properties);
+    if (ele.expression && ele.expression.properties)
+      result = result.concat(ele.expression.properties);
+    // date`${variable}` and so on
+    result = result.concat(extractTaggedTemplateValues(ele, babel, toObjectProperty));
     // recursive add inner elements stuff to values
     if (t.isJSXElement(ele)) {
-      mem = mem.concat(getValues(ele.children, babel));
+      result = result.concat(getValues(ele.children, babel));
     }
 
-    return mem;
+    return result;
   }, []);
 }
 
+/**
+ * Common logic for adding a child element of Trans to the list of components to hydrate the translation
+ * @param {JSXElement} jsxElement
+ * @param {JSXElement[]} mem
+ */
+const processJSXElement = (jsxElement, mem, t) => {
+  const clone = t.clone(jsxElement);
+  clone.children = clone.children.reduce((clonedMem, clonedChild) => {
+    const clonedEle = clonedChild.node ? clonedChild.node : clonedChild;
+
+    // clean out invalid definitions by replacing `{ catchDate, date, short }` with `{ catchDate }`
+    if (clonedEle.expression && clonedEle.expression.expressions)
+      clonedEle.expression.expressions = [clonedEle.expression.expressions[0]];
+
+    clonedMem.push(clonedChild);
+    return clonedMem;
+  }, []);
+
+  mem.push(jsxElement);
+};
+
+/**
+ * Extract the React components to pass to Trans as components
+ */
 function getComponents(children, babel) {
   const t = babel.types;
 
   return children.reduce((mem, child) => {
     const ele = child.node ? child.node : child;
 
+    if (t.isJSXExpressionContainer(ele)) {
+      // check for date`` and so on
+      if (t.isTaggedTemplateExpression(ele.expression)) {
+        ele.expression.quasi.expressions.forEach((expr) => {
+          // check for sub-expressions. This can happen with plural`` or select`` or selectOrdinal``
+          // these can have nested components
+          if (t.isTaggedTemplateExpression(expr) && expr.quasi.expressions.length) {
+            mem.push(...getComponents(expr.quasi.expressions, babel));
+          }
+          if (!t.isJSXElement(expr)) {
+            // ignore anything that is not a component
+            return;
+          }
+          processJSXElement(expr, mem, t);
+        });
+      }
+    }
     if (t.isJSXElement(ele)) {
-      const clone = t.clone(ele);
-      clone.children = clone.children.reduce((clonedMem, clonedChild) => {
-        const clonedEle = clonedChild.node ? clonedChild.node : clonedChild;
-
-        // clean out invalid definitions by replacing `{ catchDate, date, short }` with `{ catchDate }`
-        if (clonedEle.expression && clonedEle.expression.expressions)
-          clonedEle.expression.expressions = [clonedEle.expression.expressions[0]];
-
-        clonedMem.push(clonedChild);
-        return clonedMem;
-      }, []);
-
-      mem.push(ele);
+      processJSXElement(ele, mem, t);
     }
 
     return mem;
   }, []);
 }
 
-function addNeededImports(state, babel) {
-  const t = babel.types;
-  const importsToAdd = ['Trans'];
+const icuInterpolators = ['date', 'time', 'number', 'plural', 'select', 'selectOrdinal'];
+const importsToAdd = ['Trans'];
 
-  // check if there is an existing react-i18next import
-  const existingImport = state.file.path.node.body.find(
-    importNode => t.isImportDeclaration(importNode) && importNode.source.value === 'react-i18next',
-  );
-
-  // append Trans to existing or add a new react-i18next import for the Trans
+/**
+ * helper split out of addNeededImports to make codeclimate happy
+ *
+ * This does the work of amending an existing import from "react-i18next", or
+ * creating a new one if it doesn't exist
+ */
+function addImports(state, existingImport, allImportsToAdd, t) {
+  // append imports to existing or add a new react-i18next import for the Trans and icu tagged template literals
   if (existingImport) {
-    importsToAdd.forEach(name => {
+    allImportsToAdd.forEach((name) => {
       if (
         existingImport.specifiers.findIndex(
-          specifier => specifier.imported && specifier.imported.name === name,
+          (specifier) => specifier.imported && specifier.imported.name === name,
         ) === -1
       ) {
         existingImport.specifiers.push(t.importSpecifier(t.identifier(name), t.identifier(name)));
@@ -394,9 +511,210 @@ function addNeededImports(state, babel) {
   } else {
     state.file.path.node.body.unshift(
       t.importDeclaration(
-        importsToAdd.map(name => t.importSpecifier(t.identifier(name), t.identifier(name))),
+        allImportsToAdd.map((name) => t.importSpecifier(t.identifier(name), t.identifier(name))),
         t.stringLiteral('react-i18next'),
       ),
     );
   }
+}
+
+/**
+ * Add `import { Trans, number, date, <etc.> } from "react-i18next"` as needed
+ */
+function addNeededImports(state, babel, references) {
+  const t = babel.types;
+
+  // check if there is an existing react-i18next import
+  const existingImport = state.file.path.node.body.find(
+    (importNode) =>
+      t.isImportDeclaration(importNode) && importNode.source.value === 'react-i18next',
+  );
+  // check for any of the tagged template literals that are used in the source, and add them
+  const usedRefs = Object.keys(references).filter((importName) => {
+    if (!icuInterpolators.includes(importName)) {
+      return false;
+    }
+    return references[importName].length;
+  });
+
+  // combine Trans + any tagged template literals
+  const allImportsToAdd = importsToAdd.concat(usedRefs);
+
+  addImports(state, existingImport, allImportsToAdd, t);
+}
+
+/**
+ * iterate over a node detected inside a tagged template literal
+ *
+ * This is a helper function for `extractVariableNamesFromQuasiNodes` defined below
+ *
+ * this is called using reduce as a way of tricking what would be `.map()`
+ * into passing in the parameters needed to both modify `componentFoundIndex`,
+ * `stringOutput`, and `interpolatedVariableNames`
+ * and to pass in the dependencies babel, and type. Type is the template type.
+ * For "date``" the type will be `date`. for "number``" the type is `number`, etc.
+ */
+const extractNestedTemplatesAndComponents = (
+  { componentFoundIndex: lastIndex, babel, stringOutput, type, interpolatedVariableNames },
+  node,
+) => {
+  let componentFoundIndex = lastIndex;
+  if (node.type === 'JSXElement') {
+    // perform the interpolation of components just as we do in a normal Trans setting
+    const subText = `<${componentFoundIndex}>${mergeChildren(
+      node.children,
+      babel,
+    )}</${componentFoundIndex}>`;
+    componentFoundIndex += 1;
+    stringOutput.push(subText);
+  } else if (node.type === 'TaggedTemplateExpression') {
+    // a nested date``/number``/plural`` etc., extract whatever is inside of it
+    const [variableNames, childText, newIndex] = getTextAndInterpolatedVariables(
+      node.tag.name,
+      node,
+      componentFoundIndex,
+      babel,
+    );
+    interpolatedVariableNames.push(...variableNames);
+    componentFoundIndex = newIndex;
+    stringOutput.push(childText);
+  } else if (node.type === 'Identifier') {
+    // turn date`${thing}` into `thing, date`
+    stringOutput.push(`${node.name}, ${type}`);
+  } else if (node.type === 'TemplateElement') {
+    // convert all whitespace into a single space for the text in the tagged template literal
+    stringOutput.push(node.value.cooked.replace(/\s+/g, ' '));
+  } else {
+    // unknown node type, ignore
+  }
+  return { componentFoundIndex, babel, stringOutput, type, interpolatedVariableNames };
+};
+
+/**
+ * filter the list of nodes within a tagged template literal to the 4 types we can process,
+ * and ignore anything else.
+ *
+ * this is a helper function for `extractVariableNamesFromQuasiNodes`
+ */
+const filterNodes = (node) => {
+  if (node.type === 'Identifier') {
+    // if the node has a name, keep it
+    return node.name;
+  }
+  if (node.type === 'JSXElement' || node.type === 'TaggedTemplateExpression') {
+    // always keep interpolated elements or other tagged template literals like a nested date`` inside a plural``
+    return true;
+  }
+  if (node.type === 'TemplateElement') {
+    // return the "cooked" (escaped) text for the text in the template literal (`, ::percent` in number`${varname}, ::percent`)
+    return node.value.cooked;
+  }
+  // unknown node type, ignore
+  return false;
+};
+
+const errorOnInvalidQuasiNodes = (primaryNode) => {
+  const noInterpolationError = !primaryNode.quasi.expressions.length;
+  const wrongOrderError = primaryNode.quasi.quasis[0].value.raw.length;
+  const message = `${primaryNode.tag.name} argument must be interpolated ${
+    noInterpolationError ? 'in' : 'at the beginning of'
+  } "${primaryNode.tag.name}\`\`" in "${primaryNode.loc.filename}" on line ${
+    primaryNode.loc.start.line
+  }`;
+  if (noInterpolationError || wrongOrderError) {
+    throw new Error(message);
+  }
+};
+
+const extractNodeVariableNames = (varNode, babel) => {
+  const interpolatedVariableNames = [];
+  if (varNode.type === 'JSXElement') {
+    // extract inner interpolated variables and add to the list
+    interpolatedVariableNames.push(
+      ...getValues(varNode.children, babel).map((value) => value.value.name),
+    );
+  } else if (varNode.type === 'Identifier') {
+    // the name of the interpolated variable
+    interpolatedVariableNames.push(varNode.name);
+  }
+  return interpolatedVariableNames;
+};
+
+const extractVariableNamesFromQuasiNodes = (primaryNode, babel) => {
+  errorOnInvalidQuasiNodes(primaryNode);
+  // this will contain all the nodes to convert to the ICU messageformat text
+  // at first they are unsorted, but will be ordered correctly at the end of the function
+  const text = [];
+  // the variable names. These are converted to object references as required for the Trans values
+  // in getValues() (toObjectProperty helper function)
+  const interpolatedVariableNames = [];
+  primaryNode.quasi.expressions.forEach((varNode) => {
+    if (
+      !babel.types.isIdentifier(varNode) &&
+      !babel.types.isTaggedTemplateExpression(varNode) &&
+      !babel.types.isJSXElement(varNode)
+    ) {
+      throw new Error(
+        `Must pass a variable, not an expression to "${primaryNode.tag.name}\`\`" in "${primaryNode.loc.filename}" on line ${primaryNode.loc.start.line}`,
+      );
+    }
+    text.push(varNode);
+    interpolatedVariableNames.push(...extractNodeVariableNames(varNode, babel));
+  });
+  primaryNode.quasi.quasis.forEach((quasiNode) => {
+    // these are the text surrounding the variable interpolation
+    // so in date`${varname}, short` it would be `''` and `, short`.
+    // (the empty string before `${varname}` and the stuff after it)
+    text.push(quasiNode);
+  });
+  return { text, interpolatedVariableNames };
+};
+
+const throwOnInvalidType = (type, primaryNode) => {
+  if (!icuInterpolators.includes(type)) {
+    throw new Error(
+      `Unsupported tagged template literal "${type}", must be one of date, time, number, plural, select, selectOrdinal in "${primaryNode.loc.filename}" on line ${primaryNode.loc.start.line}`,
+    );
+  }
+};
+
+/**
+ * Retrieve the new text to use, and any interpolated variables
+ *
+ * This is used to process tagged template literals like date`${variable}` and number`${num}, ::percent`
+ *
+ * for the data example, it will return text of `{variable, date}` with a variable of `variable`
+ * for the number example, it will return text of `{num, number, ::percent}` with a variable of `num`
+ * @param {string} type the name of the tagged template (`date`, `number`, `plural`, etc. - any valid complex ICU type)
+ * @param {TaggedTemplateExpression} primaryNode the template expression node
+ * @param {int} index starting index number of components to be used for interpolations like <0>
+ * @param {*} babel
+ */
+function getTextAndInterpolatedVariables(type, primaryNode, index, babel) {
+  throwOnInvalidType(type, primaryNode);
+  const componentFoundIndex = index;
+  const { text, interpolatedVariableNames } = extractVariableNamesFromQuasiNodes(
+    primaryNode,
+    babel,
+  );
+  const { stringOutput, componentFoundIndex: newIndex } = text
+    .filter(filterNodes)
+    // sort by the order they appear in the source code
+    .sort((a, b) => {
+      if (a.start > b.start) return 1;
+      return -1;
+    })
+    .reduce(extractNestedTemplatesAndComponents, {
+      babel,
+      componentFoundIndex,
+      stringOutput: [],
+      type,
+      interpolatedVariableNames,
+    });
+  return [
+    interpolatedVariableNames,
+    `{${stringOutput.join('')}}`,
+    // return the new component interpolation index
+    newIndex,
+  ];
 }

@@ -4,12 +4,13 @@ import logo from './logo.svg';
 import './App.css';
 
 import ComponentUsingMacro from './ComponentUsingMacro';
+import ComponentUsingMacroInterpolated from './ComponentUsingMacroInterpolated';
 
 class App extends Component {
   render() {
     const { t, i18n } = this.props;
 
-    const changeLanguage = lng => {
+    const changeLanguage = (lng) => {
       i18n.changeLanguage(lng);
     };
 
@@ -37,6 +38,7 @@ class App extends Component {
         />
         <div>{t('icu', { numPersons: 501 })}</div>
         <ComponentUsingMacro />
+        <ComponentUsingMacroInterpolated />
       </div>
     );
   }

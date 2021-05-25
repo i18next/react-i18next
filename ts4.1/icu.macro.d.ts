@@ -1,4 +1,6 @@
+import React from 'react';
 import { Namespace, DefaultNamespace, TFuncKey, Trans } from '.';
+import { i18n } from 'i18next';
 
 export { Trans };
 
@@ -77,4 +79,26 @@ declare module 'react-i18next/icu.macro' {
     K extends TFuncKey<N> extends infer A ? A : never,
     N extends Namespace = DefaultNamespace
   >(props: SelectProps<K, N>): React.ReactElement;
+
+  function date(strings: TemplateStringsArray, variable: Date): string;
+  function time(strings: TemplateStringsArray, variable: Date): string;
+  function number(strings: TemplateStringsArray, variable: number): string;
+
+  type ValidInterpolations = React.ReactElement | string;
+
+  function plural(
+    strings: TemplateStringsArray,
+    variable: number,
+    ...args: ValidInterpolations[]
+  ): string;
+  function selectOrdinal(
+    strings: TemplateStringsArray,
+    variable: number,
+    ...args: ValidInterpolations[]
+  ): string;
+  function select(
+    strings: TemplateStringsArray,
+    variable: string,
+    ...args: ValidInterpolations[]
+  ): string;
 }
