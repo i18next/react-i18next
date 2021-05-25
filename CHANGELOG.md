@@ -1,3 +1,7 @@
+### 11.9.0
+
+- typescript/icu macro: add new syntax for interpolation of complex types [1316](https://github.com/i18next/react-i18next/pull/1316) -> [docs for template usage](https://react.i18next.com/misc/using-with-icu-format#tagged-template-for-icu)
+
 ### 11.8.15
 
 - ignore null children in Trans component [1307](https://github.com/i18next/react-i18next/issues/1307)
