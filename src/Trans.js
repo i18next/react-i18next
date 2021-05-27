@@ -242,7 +242,12 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
           mem.push(React.cloneElement(child, { ...child.props, key: i }));
         }
       } else if (node.type === 'text') {
-        mem.push(node.content);
+        const wrapTextNodes = i18nOptions.transWrapTextNodes;
+        if (wrapTextNodes) {
+          mem.push(React.createElement(wrapTextNodes, { key: `${node.name}-${i}` }, node.content));
+        } else {
+          mem.push(node.content);
+        }
       }
       return mem;
     }, []);
