@@ -318,6 +318,7 @@
     bindI18nStore: '',
     transEmptyNodeValue: '',
     transSupportBasicHtmlNodes: true,
+    transWrapTextNodes: '',
     transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'p'],
     useSuspense: true
   };
@@ -640,7 +641,15 @@
             })));
           }
         } else if (node.type === 'text') {
-          mem.push(node.content);
+          var wrapTextNodes = i18nOptions.transWrapTextNodes;
+
+          if (wrapTextNodes) {
+            mem.push(React__default.createElement(wrapTextNodes, {
+              key: "".concat(node.name, "-").concat(i)
+            }, node.content));
+          } else {
+            mem.push(node.content);
+          }
         }
 
         return mem;
