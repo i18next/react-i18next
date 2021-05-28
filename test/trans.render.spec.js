@@ -546,3 +546,41 @@ describe('trans with null child', () => {
     `);
   });
 });
+
+describe('trans with wrapTextNodes', () => {
+  let orgValue;
+  beforeAll(() => {
+    orgValue = i18n.options.react.transWrapTextNodes;
+    i18n.options.react.transWrapTextNodes = 'span';
+  });
+  afterAll(() => {
+    i18n.options.react.transWrapTextNodes = orgValue;
+  })
+  
+  const TestComponent = () => (
+    <Trans i18nKey="transTest1">
+      Open <Link to="/msgs">here</Link>.
+    </Trans>
+  );
+
+  it('should wrap text nodes accordingly', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        <span>
+          Go 
+        </span>
+        <a
+          href="/msgs"
+        >
+          <span>
+            there
+          </span>
+        </a>
+        <span>
+          .
+        </span>
+      </div>
+    `);
+  });
+});
