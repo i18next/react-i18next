@@ -1,3 +1,7 @@
+### 11.10.0
+
+- add transWrapTextNodes option [1324](https://github.com/i18next/react-i18next/pull/1324) to prevent a well-known Google Translate issue with React apps [1323](https://github.com/i18next/react-i18next/issues/1323), thanks to [feross](https://github.com/feross)
+
 ### 11.9.0
 
 - typescript/icu macro: add new syntax for interpolation of complex types [1316](https://github.com/i18next/react-i18next/pull/1316) -> [docs for template usage](https://react.i18next.com/misc/using-with-icu-format#tagged-template-for-icu)
