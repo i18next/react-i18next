@@ -25,6 +25,10 @@ type Subtract<T extends K, K> = Omit<T, keyof K>;
 export interface Resources {}
 /**
  * This interface can be augmented by users in case they define a custom `defaultNS`.
+ *
+ * ```ts
+ * interface DefaultNS { name: 'myCustomNamespace' }
+ * ```
  */
 export interface DefaultNS {}
 
