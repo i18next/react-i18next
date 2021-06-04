@@ -23,6 +23,10 @@ type Subtract<T extends K, K> = Omit<T, keyof K>;
  * This interface can be augmented by users to add types to `react-i18next` default resources.
  */
 export interface Resources {}
+/**
+ * This interface can be augmented by users in case they define a custom `defaultNS`.
+ */
+export interface DefaultNS {}
 
 type Fallback<F, T = keyof Resources> = [T] extends [never] ? F : T;
 
@@ -158,7 +162,12 @@ type UseTranslationResponse<N extends Namespace> = [TFunction<N>, i18n, boolean]
   ready: boolean;
 };
 
-type DefaultNamespace<T = 'translation'> = T extends Fallback<string> ? T : string;
+type TranslationNS = 'translation';
+type NameKey = 'name';
+
+type ExtractName<T> = T extends { [key in NameKey]: unknown } ? T[NameKey] : TranslationNS;
+
+type DefaultNamespace<T = ExtractName<DefaultNS>> = T extends Fallback<string> ? T : string;
 
 export function useTranslation<N extends Namespace = DefaultNamespace>(
   ns?: N,
