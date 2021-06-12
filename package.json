@@ -85,7 +85,7 @@
     "rollup-plugin-terser": "^5.1.1",
     "sinon": "^7.2.3",
     "tslint": "^5.13.1",
-    "typescript": "^3.6.4",
+    "typescript": "^4.3.2",
     "yargs": "13.3.0"
   },
   "peerDependencies": {
@@ -103,13 +103,14 @@
     "build": "npm run clean && npm run build:cjs && npm run build:es && npm run build:umd && npm run build:amd && npm run copy",
     "preversion": "npm run build && git push",
     "postversion": "git push && git push --tags",
-    "pretest": "npm run test:typescript && npm run test:typescript:noninterop",
+    "pretest": "npm run test:typescript && npm run test:typescript:noninterop && npm run test:typescript:customtypes",
     "test": "cross-env BABEL_ENV=development jest --no-cache",
     "test:watch": "cross-env BABEL_ENV=development jest --no-cache --watch",
     "test:coverage": "cross-env BABEL_ENV=development jest --no-cache --coverage",
     "test:lint": "eslint ./src ./test",
     "test:typescript": "tslint --project tsconfig.json",
     "test:typescript:noninterop": "tslint --project tsconfig.nonEsModuleInterop.json",
+    "test:typescript:customtypes": "tslint --project ./test/typescript/custom-types/tsconfig.json",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
     "prettier": "prettier --write \"{,**/}*.{ts,tsx,js,json,md}\""
