@@ -126,6 +126,9 @@
     "testMatch": [
       "**/test/?(*.)(spec|test).js?(x)"
     ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/"
+    ],
     "collectCoverageFrom": [
       "**/src/*.{js,jsx}",
       "*.macro.js",
