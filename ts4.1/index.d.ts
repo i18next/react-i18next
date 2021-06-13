@@ -21,6 +21,8 @@ type Subtract<T extends K, K> = Omit<T, keyof K>;
 
 /**
  * This interface can be augmented by users to add types to `react-i18next` default resources.
+ *
+ * @deprecated use the `resources` key of `CustomTypeOptions` instead
  */
 export interface Resources {}
 /**
