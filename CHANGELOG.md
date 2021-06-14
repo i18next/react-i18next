@@ -1,3 +1,7 @@
+### 11.11.0
+
+- introduce `CustomTypeOptions` type definition and deprecate the `Resources` type definition [1328](https://github.com/i18next/react-i18next/pull/1328)
+
 ### 11.10.0
 
 - add transWrapTextNodes option [1324](https://github.com/i18next/react-i18next/pull/1324) to prevent a well-known Google Translate issue with React apps [1323](https://github.com/i18next/react-i18next/issues/1323), thanks to [feross](https://github.com/feross)
