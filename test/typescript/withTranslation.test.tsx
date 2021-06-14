@@ -3,7 +3,7 @@ import { withTranslation, WithTranslation } from 'react-i18next';
 import { default as myI18n } from './i18n';
 
 /**
- * @see https://react.i18next.com/latest/trans-component
+ * see https://react.i18next.com/latest/trans-component
  */
 
 interface MyComponentProps extends WithTranslation {
@@ -34,7 +34,7 @@ function defaultUsageWithDefaultProps() {
 }
 
 /**
- * @see https://react.i18next.com/latest/withtranslation-hoc#withtranslation-params
+ * see https://react.i18next.com/latest/withtranslation-hoc#withtranslation-params
  */
 function withNs() {
   const ExtendedComponent = withTranslation('ns')(MyComponent);
@@ -47,7 +47,7 @@ function withNsArray() {
 }
 
 /**
- * @see https://react.i18next.com/latest/withtranslation-hoc#overriding-the-i-18-next-instance
+ * see https://react.i18next.com/latest/withtranslation-hoc#overriding-the-i-18-next-instance
  */
 function withI18nOverride() {
   const ExtendedComponent = withTranslation('ns')(MyComponent);
@@ -55,7 +55,7 @@ function withI18nOverride() {
 }
 
 /**
- * @see https://react.i18next.com/latest/withtranslation-hoc#not-using-suspense
+ * see https://react.i18next.com/latest/withtranslation-hoc#not-using-suspense
  */
 function withSuspense() {
   const ExtendedComponent = withTranslation('ns')(MyComponent);

@@ -15,5 +15,5 @@
     "allowSyntheticDefaultImports": true
   },
   "include": ["./src/**/*", "./test/**/*"],
-  "exclude": ["test/typescript/nonEsModuleInterop/**/*.ts"]
+  "exclude": ["test/typescript/nonEsModuleInterop/**/*.ts", "test/typescript/custom-types"]
 }
