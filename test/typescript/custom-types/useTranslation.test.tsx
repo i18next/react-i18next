@@ -55,12 +55,22 @@ function expectErrorWhenUsingArrayNamespaceAndWrongKey() {
 
 function fullKeyUsage() {
   const { t } = useTranslation('withContext');
-  return t('animal.type_lion');
+  t('animal.type');
+  t('animal.type_lion');
+  t('animal.type_penguin');
 }
 
 function arrayFullKeyUsage() {
   const [t] = useTranslation(['withContext']);
-  return t('withContext:animal.type_lion');
+  t('withContext:animal.type');
+  t('withContext:animal.type_lion');
+  t('withContext:animal.type_penguin');
+}
+
+function expectErrorWhenKeyInvalid() {
+  const { t } = useTranslation('withContext');
+  // @ts-expect-error
+  t('animal.type_car');
 }
 
 function withoutContext() {
