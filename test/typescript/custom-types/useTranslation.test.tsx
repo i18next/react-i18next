@@ -50,3 +50,37 @@ function expectErrorWhenUsingArrayNamespaceAndWrongKey() {
   // @ts-expect-error
   return <>{t('custom:fake')}</>;
 }
+
+// Test Context
+
+function fullKeyUsage() {
+  const { t } = useTranslation('withContext');
+  return t('animal.type_lion');
+}
+
+function arrayFullKeyUsage() {
+  const [t] = useTranslation(['withContext']);
+  return t('withContext:animal.type_lion');
+}
+
+function withoutContext() {
+  const { t } = useTranslation('withContext');
+  const result = t('animal.type');
+  return result === 'Lion' || result === 'Penguin';
+}
+
+function contextUsage() {
+  const { t } = useTranslation('withContext');
+  return t('animal.type', { context: 'lion' }) === 'Lion';
+}
+
+function keyWithMultipleUnderscores() {
+  const { t } = useTranslation('withContext');
+  return t('key_with') === 'Multiple';
+}
+
+function pluralUsage() {
+  const { t } = useTranslation('withContext');
+  const result = t('person', { count: 1 });
+  return result === 'Persons' || result === 'Person';
+}

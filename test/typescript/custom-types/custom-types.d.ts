@@ -11,6 +11,17 @@ declare module 'react-i18next' {
       alternate: {
         baz: 'baz';
       };
+      withContext: {
+        type_male: 'Man';
+        type_female: 'Woman';
+        person: 'Person';
+        person_plural: 'Persons';
+        key_with_multiple: 'Multiple';
+        animal: {
+          type_lion: 'Lion';
+          type_penguin: 'Penguin';
+        };
+      };
     };
   }
 }
