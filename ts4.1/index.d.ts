@@ -87,17 +87,33 @@ declare module 'i18next' {
   }
 }
 
+type KeyWithSeparator<K, C> = `${K & string}_${C & string}`;
+type ChainedKeys<K1, K2> = `${K1 & string}.${K2 & string}`;
+type NamespacedKeys<NS, K> = `${NS & string}:${K & string}`;
+
+type KeyContext<K> = K extends KeyWithSeparator<string, infer C> ? KeyContext<C> : K;
+type KeyWithoutContext<K> = K extends KeyWithSeparator<infer KS, KeyContext<K>> ? KS : K;
+
 // Normalize single namespace
-type AppendKeys<K1, K2> = `${K1 & string}.${K2 & string}`;
-type AppendKeys2<K1, K2> = `${K1 & string}.${Exclude<K2, keyof any[]> & string}`;
+type AppendKeys<K1, K2> = K2 extends KeyWithSeparator<string, string>
+  ? ChainedKeys<K1, KeyWithoutContext<K2> | K2>
+  : ChainedKeys<K1, K2>;
+
+type AppendKeys2<K1, K2> = K2 extends KeyWithSeparator<string, string>
+  ? ChainedKeys<K1, Exclude<KeyWithoutContext<K2> | K2, keyof any[]>>
+  : ChainedKeys<K1, Exclude<K2, keyof any[]>>;
+
 type Normalize2<T, K = keyof T> = K extends keyof T
   ? T[K] extends Record<string, any>
     ? T[K] extends readonly any[]
-      ? AppendKeys2<K, keyof T[K]> | AppendKeys2<K, Normalize2<T[K]>>
-      : AppendKeys<K, keyof T[K]> | AppendKeys<K, Normalize2<T[K]>>
+      ? AppendKeys2<K, keyof T[K] | Normalize2<T[K]>>
+      : AppendKeys<K, keyof T[K] | Normalize2<T[K]>>
     : never
   : never;
-type Normalize<T> = keyof T | Normalize2<T>;
+
+type Normalize<T, KT = keyof T> = KT extends KeyWithSeparator<string, string>
+  ? KeyWithoutContext<KT> | KT | Normalize2<KeyWithoutContext<KT>>
+  : KT | Normalize2<T>;
 
 // Normalize multiple namespaces
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void
@@ -106,20 +122,26 @@ type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
 type LastOf<T> = UnionToIntersection<T extends any ? () => T : never> extends () => infer R
   ? R
   : never;
-type AppendNS<N, K> = `${N & string}:${K & string}`;
+
 type NormalizeMulti<T, U extends keyof T, L = LastOf<U>> = L extends U
-  ? AppendNS<L, Normalize<T[L]>> | NormalizeMulti<T, Exclude<U, L>>
+  ? NamespacedKeys<L, Normalize<T[L]>> | NormalizeMulti<T, Exclude<U, L>>
   : never;
 
-type NormalizeReturn<T, V> = V extends `${infer K}.${infer R}`
+type KeyOrNever<T, K> = K extends keyof T ? K : never;
+
+type NormalizeReturn<T, V, KT = keyof T> = V extends ChainedKeys<infer K, infer R>
   ? K extends keyof T
     ? NormalizeReturn<T[K], R>
     : never
-  : V extends keyof T
-  ? T[V]
+  : V extends string
+  ? KT extends KeyWithSeparator<V, infer C>
+    ? T[KeyOrNever<T, KeyWithSeparator<V, C> | V>]
+    : V extends keyof T
+    ? T[V]
+    : never
   : never;
 
-type NormalizeMultiReturn<T, V> = V extends `${infer N}:${infer R}`
+type NormalizeMultiReturn<T, V> = V extends NamespacedKeys<infer N, infer R>
   ? N extends keyof T
     ? NormalizeReturn<T[N], R>
     : never
