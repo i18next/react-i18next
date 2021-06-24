@@ -70,7 +70,7 @@ Head over to the **interactive playground** at [codesandbox](https://codesandbox
 - [I18n with React and i18next](https://alligator.io/react/i18n-with-react-and-i18next) via Alligator.io by Danny Hurlburt
 - [Ultimate Localization of React (Mobx) App with i18next](https://itnext.io/ultimate-localization-of-react-mobx-app-with-i18next-efab77712149) via itnext.io by Viktor Shevchenko
 - [Internationalization for react done right Using the i18next i18n ecosystem](https://reactjsexample.com/internationalization-for-react-done-right-using-the-i18next-i18n-ecosystem/) via reactjsexample.com
-- [Using i18next to translate React.js application](https://codetain.co/2018/05/using-i18next-to-translate-reactjs-application/) via codetain.co by Kasia Dadek
+- [How to translate React application with react-i18next](https://codetain.com/blog/how-to-translate-react-application-with-react-i18next) via codetain.co by Norbert Suski
 - [Building i18n with Gatsby](https://www.gatsbyjs.org/blog/2017-10-17-building-i18n-with-gatsby/) via gatsbyjs.org by Samuel Goudie
 - [Get your react.js application translated with style](https://medium.com/@jamuhl/get-your-react-js-application-translated-with-style-4ad090aefc2c) by Jan Mühlemann
 - [Translate your expo.io / react-native mobile application](https://medium.com/@jamuhl/translate-your-expo-io-react-native-mobile-application-aa220b2362d2) by Jan Mühlemann
