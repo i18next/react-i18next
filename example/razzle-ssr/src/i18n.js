@@ -5,6 +5,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 
 const options = {
   fallbackLng: 'en',
+  supportedLngs: ['en', 'de'],
   load: 'languageOnly', // we only provide en, de -> no region specific locals like en-US, de-DE
   // have a common namespace used around the full app
   ns: ['translations'],

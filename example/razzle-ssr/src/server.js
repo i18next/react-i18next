@@ -58,11 +58,22 @@ i18n
           if (url) {
             res.redirect(url);
           } else {
+            // First preferred language
+            const initialLanguage = req.i18n.languages[0];
+
+            // Fill initialI18nStore with only the necessary namespaces.
             const initialI18nStore = {};
-            req.i18n.languages.forEach(l => {
-              initialI18nStore[l] = req.i18n.services.resourceStore.data[l];
+            const usedNamespaces = req.i18n.reportNamespaces.getUsedNamespaces();
+
+            req.i18n.languages.forEach((language) => {
+              initialI18nStore[language] = {};
+
+              usedNamespaces.forEach((namespace) => {
+                initialI18nStore[language][namespace] = (
+                  req.i18n.services.resourceStore.data[language][namespace]
+                );
+              });
             });
-            const initialLanguage = req.i18n.language;
 
             res.status(200).send(
               `<!doctype html>
