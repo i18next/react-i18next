@@ -1,3 +1,7 @@
+### 11.11.1
+
+- feat(types): allow readonly namespaces in useTranslation [1339](https://github.com/i18next/react-i18next/pull/1339)
+
 ### 11.11.0
 
 - introduce `CustomTypeOptions` type definition and deprecate the `Resources` type definition [1328](https://github.com/i18next/react-i18next/pull/1328)
