@@ -27,6 +27,17 @@ function arrayNamespace() {
   );
 }
 
+function readonlyArrayNamespace() {
+  const namespaces = ['alternate', 'custom'] as const;
+  const [t] = useTranslation(namespaces);
+  return (
+    <>
+      {t('alternate:baz')}
+      {t('custom:foo')}
+    </>
+  );
+}
+
 function expectErrorWhenNamespaceDoesNotExist() {
   // @ts-expect-error
   const [t] = useTranslation('fake');

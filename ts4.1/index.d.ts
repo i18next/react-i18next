@@ -197,7 +197,7 @@ type UseTranslationResponse<N extends Namespace> = [TFunction<N>, i18n, boolean]
 };
 
 export function useTranslation<N extends Namespace = DefaultNamespace>(
-  ns?: N,
+  ns?: N | Readonly<N>,
   options?: UseTranslationOptions,
 ): UseTranslationResponse<N>;
 
