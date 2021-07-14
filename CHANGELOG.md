@@ -1,3 +1,7 @@
+### 11.11.2
+
+- feat(typings): support readonly namespaces in TFuncKey [1340](https://github.com/i18next/react-i18next/pull/1340)
+
 ### 11.11.1
 
 - feat(types): allow readonly namespaces in useTranslation [1339](https://github.com/i18next/react-i18next/pull/1339)
