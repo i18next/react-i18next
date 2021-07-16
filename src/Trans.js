@@ -127,15 +127,10 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
 
   getData(children);
 
-  const interpolatedString = i18n.services.interpolator.interpolate(
-    targetString,
-    { ...data, ...combinedTOpts },
-    i18n.language,
-  );
-
   // parse ast from string with additional wrapper tag
   // -> avoids issues in parser removing prepending text nodes
-  const ast = HTML.parse(`<0>${interpolatedString}</0>`);
+  const ast = HTML.parse(`<0>${targetString}</0>`);
+  const opts = { ...data, ...combinedTOpts };
 
   function renderInner(child, node, rootReactNode) {
     const childs = getChildren(child);
@@ -157,7 +152,12 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
     const astNodes = getAsArray(astNode);
 
     return astNodes.reduce((mem, node, i) => {
-      const translationContent = node.children && node.children[0] && node.children[0].content;
+      const translationContent =
+        node.children &&
+        node.children[0] &&
+        node.children[0].content &&
+        i18n.services.interpolator.interpolate(node.children[0].content, opts, i18n.language);
+
       if (node.type === 'tag') {
         let tmp = reactNodes[parseInt(node.name, 10)]; // regular array (components or children)
         if (!tmp && rootReactNode.length === 1 && rootReactNode[0][node.name])
@@ -182,7 +182,8 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
         // console.warn('CHILD', node.name, node, isElement, child);
 
         if (typeof child === 'string') {
-          mem.push(child);
+          const value = i18n.services.interpolator.interpolate(child, opts, i18n.language);
+          mem.push(value);
         } else if (
           hasChildren(child) || // the jsx element has children -> loop
           isValidTranslationWithChildren // valid jsx element with no children but the translation has -> loop
@@ -243,10 +244,11 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
         }
       } else if (node.type === 'text') {
         const wrapTextNodes = i18nOptions.transWrapTextNodes;
+        const content = i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
         if (wrapTextNodes) {
-          mem.push(React.createElement(wrapTextNodes, { key: `${node.name}-${i}` }, node.content));
+          mem.push(React.createElement(wrapTextNodes, { key: `${node.name}-${i}` }, content));
         } else {
-          mem.push(node.content);
+          mem.push(content);
         }
       }
       return mem;
