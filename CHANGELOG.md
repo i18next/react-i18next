@@ -1,3 +1,7 @@
+### 11.11.3
+
+- Trans: parse first, then interpolate [1345](https://github.com/i18next/react-i18next/pull/1345)
+
 ### 11.11.2
 
 - feat(typings): support readonly namespaces in TFuncKey [1340](https://github.com/i18next/react-i18next/pull/1340)

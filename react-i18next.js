@@ -569,8 +569,9 @@
     }
 
     getData(children);
-    var interpolatedString = i18n.services.interpolator.interpolate(targetString, _objectSpread2(_objectSpread2({}, data), combinedTOpts), i18n.language);
-    var ast = c.parse("<0>".concat(interpolatedString, "</0>"));
+    var ast = c.parse("<0>".concat(targetString, "</0>"));
+
+    var opts = _objectSpread2(_objectSpread2({}, data), combinedTOpts);
 
     function renderInner(child, node, rootReactNode) {
       var childs = getChildren(child);
@@ -589,7 +590,7 @@
       var reactNodes = getAsArray(reactNode);
       var astNodes = getAsArray(astNode);
       return astNodes.reduce(function (mem, node, i) {
-        var translationContent = node.children && node.children[0] && node.children[0].content;
+        var translationContent = node.children && node.children[0] && node.children[0].content && i18n.services.interpolator.interpolate(node.children[0].content, opts, i18n.language);
 
         if (node.type === 'tag') {
           var tmp = reactNodes[parseInt(node.name, 10)];
@@ -604,7 +605,8 @@
           var isKnownComponent = _typeof(children) === 'object' && children !== null && Object.hasOwnProperty.call(children, node.name);
 
           if (typeof child === 'string') {
-            mem.push(child);
+            var value = i18n.services.interpolator.interpolate(child, opts, i18n.language);
+            mem.push(value);
           } else if (hasChildren(child) || isValidTranslationWithChildren) {
               var inner = renderInner(child, node, rootReactNode);
               pushTranslatedJSX(child, inner, mem, i);
@@ -653,12 +655,14 @@
         } else if (node.type === 'text') {
           var wrapTextNodes = i18nOptions.transWrapTextNodes;
 
+          var _content = i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
+
           if (wrapTextNodes) {
             mem.push(React__default.createElement(wrapTextNodes, {
               key: "".concat(node.name, "-").concat(i)
-            }, node.content));
+            }, _content));
           } else {
-            mem.push(node.content);
+            mem.push(_content);
           }
         }
 
