@@ -555,8 +555,8 @@ describe('trans with wrapTextNodes', () => {
   });
   afterAll(() => {
     i18n.options.react.transWrapTextNodes = orgValue;
-  })
-  
+  });
+
   const TestComponent = () => (
     <Trans i18nKey="transTest1">
       Open <Link to="/msgs">here</Link>.
@@ -580,6 +580,27 @@ describe('trans with wrapTextNodes', () => {
         <span>
           .
         </span>
+      </div>
+    `);
+  });
+});
+
+describe('trans does ignore user defined values when parsing', () => {
+  const TestComponent = ({ value }) => (
+    <Trans>
+      This is <strong>just</strong> some {{ value }} text
+    </Trans>
+  );
+
+  it('should escape value with angle brackets', () => {
+    const { container } = render(<TestComponent value="<weird>" />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        This is 
+        <strong>
+          just
+        </strong>
+         some &lt;weird&gt; text
       </div>
     `);
   });
