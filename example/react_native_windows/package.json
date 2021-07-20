@@ -15,7 +15,7 @@
     "i18next": "20.0.0",
     "react": "16.13.1",
     "react-i18next": "11.7.3",
-    "react-native": "0.63.3",
+    "react-native": "0.64.1",
     "react-native-macos": "^0.62.0-0",
     "react-native-windows": "^0.63.0-0"
   },
