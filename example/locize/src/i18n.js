@@ -4,7 +4,6 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-locize-backend';
 import LastUsed from 'locize-lastused';
 import { locizePlugin } from 'locize';
-import Editor from 'locize-editor'; // old locize editor (will be removed in future)
 
 // OPTIONAL IF YOU LIKE TO SEE ALL (LOGIN TO TRANSLATION MANAGEMENT EDITOR)
 // 1) signup at https://locize.com/register and login
@@ -32,10 +31,6 @@ i18n
   // locize-editor
   // InContext Editor of lociz
   .use(locizePlugin) // old locize editor (will be removed in future)
-  // locize-editor
-  // InContext Editor of locize ?locize=true to show it
-  // https://github.com/locize/locize-editor
-  .use(Editor)
   // detect user language
   // learn more: https://github.com/i18next/i18next-browser-languageDetector
   .use(LanguageDetector)
@@ -54,17 +49,6 @@ i18n
     },
     backend: locizeOptions,
     locizeLastUsed: locizeOptions,
-    editor: {
-      // old locize editor (will be removed in future)
-      ...locizeOptions,
-      onEditorSaved: async (lng, ns) => {
-        // reload that namespace in given language
-        await i18n.reloadResources(lng, ns);
-        // trigger an event on i18n which triggers a rerender
-        // based on bindI18n below in react options
-        i18n.emit('editorSaved');
-      },
-    },
     react: {
       bindI18n: 'languageChanged editorSaved',
     },

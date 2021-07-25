@@ -6,6 +6,7 @@ let defaultOptions = {
   // nsMode: 'fallback' // loop through all namespaces given to hook, HOC, render prop for key lookup
   transEmptyNodeValue: '',
   transSupportBasicHtmlNodes: true,
+  transWrapTextNodes: '',
   transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'p'],
   // hashTransKey: key => key // calculate a key for Trans component based on defaultValue
   useSuspense: true,
@@ -29,7 +30,7 @@ export class ReportNamespaces {
   }
 
   addUsedNamespaces(namespaces) {
-    namespaces.forEach(ns => {
+    namespaces.forEach((ns) => {
       if (!this.usedNamespaces[ns]) this.usedNamespaces[ns] = true;
     });
   }
@@ -57,12 +58,12 @@ export const initReactI18next = {
 };
 
 export function composeInitialProps(ForComponent) {
-  return ctx =>
-    new Promise(resolve => {
+  return (ctx) =>
+    new Promise((resolve) => {
       const i18nInitialProps = getInitialProps();
 
       if (ForComponent.getInitialProps) {
-        ForComponent.getInitialProps(ctx).then(componentsInitialProps => {
+        ForComponent.getInitialProps(ctx).then((componentsInitialProps) => {
           resolve({
             ...componentsInitialProps,
             ...i18nInitialProps,
@@ -94,9 +95,9 @@ export function getInitialProps() {
 
   const ret = {};
   const initialI18nStore = {};
-  i18n.languages.forEach(l => {
+  i18n.languages.forEach((l) => {
     initialI18nStore[l] = {};
-    namespaces.forEach(ns => {
+    namespaces.forEach((ns) => {
       initialI18nStore[l][ns] = i18n.getResourceBundle(l, ns) || {};
     });
   });

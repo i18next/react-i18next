@@ -546,3 +546,62 @@ describe('trans with null child', () => {
     `);
   });
 });
+
+describe('trans with wrapTextNodes', () => {
+  let orgValue;
+  beforeAll(() => {
+    orgValue = i18n.options.react.transWrapTextNodes;
+    i18n.options.react.transWrapTextNodes = 'span';
+  });
+  afterAll(() => {
+    i18n.options.react.transWrapTextNodes = orgValue;
+  });
+
+  const TestComponent = () => (
+    <Trans i18nKey="transTest1">
+      Open <Link to="/msgs">here</Link>.
+    </Trans>
+  );
+
+  it('should wrap text nodes accordingly', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        <span>
+          Go 
+        </span>
+        <a
+          href="/msgs"
+        >
+          <span>
+            there
+          </span>
+        </a>
+        <span>
+          .
+        </span>
+      </div>
+    `);
+  });
+});
+
+describe('trans does ignore user defined values when parsing', () => {
+  const TestComponent = ({ value }) => (
+    <Trans>
+      This is <strong>just</strong> some {{ value }} text
+    </Trans>
+  );
+
+  it('should escape value with angle brackets', () => {
+    const { container } = render(<TestComponent value="<weird>" />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        This is 
+        <strong>
+          just
+        </strong>
+         some &lt;weird&gt; text
+      </div>
+    `);
+  });
+});

@@ -6,6 +6,44 @@
 
   var React__default = 'default' in React ? React['default'] : React;
 
+  function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+
+    if (Object.getOwnPropertySymbols) {
+      var symbols = Object.getOwnPropertySymbols(object);
+
+      if (enumerableOnly) {
+        symbols = symbols.filter(function (sym) {
+          return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+        });
+      }
+
+      keys.push.apply(keys, symbols);
+    }
+
+    return keys;
+  }
+
+  function _objectSpread2(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i] != null ? arguments[i] : {};
+
+      if (i % 2) {
+        ownKeys(Object(source), true).forEach(function (key) {
+          _defineProperty(target, key, source[key]);
+        });
+      } else if (Object.getOwnPropertyDescriptors) {
+        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+      } else {
+        ownKeys(Object(source)).forEach(function (key) {
+          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        });
+      }
+    }
+
+    return target;
+  }
+
   function _typeof(obj) {
     "@babel/helpers - typeof";
 
@@ -59,40 +97,6 @@
     return obj;
   }
 
-  function ownKeys(object, enumerableOnly) {
-    var keys = Object.keys(object);
-
-    if (Object.getOwnPropertySymbols) {
-      var symbols = Object.getOwnPropertySymbols(object);
-      if (enumerableOnly) symbols = symbols.filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-      });
-      keys.push.apply(keys, symbols);
-    }
-
-    return keys;
-  }
-
-  function _objectSpread2(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i] != null ? arguments[i] : {};
-
-      if (i % 2) {
-        ownKeys(Object(source), true).forEach(function (key) {
-          _defineProperty(target, key, source[key]);
-        });
-      } else if (Object.getOwnPropertyDescriptors) {
-        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-      } else {
-        ownKeys(Object(source)).forEach(function (key) {
-          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-        });
-      }
-    }
-
-    return target;
-  }
-
   function _objectWithoutPropertiesLoose(source, excluded) {
     if (source == null) return {};
     var target = {};
@@ -138,14 +142,17 @@
   }
 
   function _iterableToArrayLimit(arr, i) {
-    if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+    var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]);
+
+    if (_i == null) return;
     var _arr = [];
     var _n = true;
     var _d = false;
-    var _e = undefined;
+
+    var _s, _e;
 
     try {
-      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
         _arr.push(_s.value);
 
         if (i && _arr.length === i) break;
@@ -318,6 +325,7 @@
     bindI18nStore: '',
     transEmptyNodeValue: '',
     transSupportBasicHtmlNodes: true,
+    transWrapTextNodes: '',
     transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'p'],
     useSuspense: true
   };
@@ -466,6 +474,9 @@
     return Component.displayName || Component.name || (typeof Component === 'string' && Component.length > 0 ? Component : 'Unknown');
   }
 
+  var _excluded = ["format"],
+      _excluded2 = ["children", "count", "parent", "i18nKey", "tOptions", "values", "defaults", "components", "ns", "i18n", "t"];
+
   function hasChildren(node, checkLength) {
     if (!node) return false;
     var base = node.props ? node.props.children : node.children;
@@ -525,7 +536,7 @@
         warn("Trans: the passed in value is invalid - seems you passed in a null child.");
       } else if (_typeof(child) === 'object') {
         var format = child.format,
-            clone = _objectWithoutProperties(child, ["format"]);
+            clone = _objectWithoutProperties(child, _excluded);
 
         var keys = Object.keys(clone);
 
@@ -558,8 +569,9 @@
     }
 
     getData(children);
-    var interpolatedString = i18n.services.interpolator.interpolate(targetString, _objectSpread2(_objectSpread2({}, data), combinedTOpts), i18n.language);
-    var ast = c.parse("<0>".concat(interpolatedString, "</0>"));
+    var ast = c.parse("<0>".concat(targetString, "</0>"));
+
+    var opts = _objectSpread2(_objectSpread2({}, data), combinedTOpts);
 
     function renderInner(child, node, rootReactNode) {
       var childs = getChildren(child);
@@ -578,7 +590,7 @@
       var reactNodes = getAsArray(reactNode);
       var astNodes = getAsArray(astNode);
       return astNodes.reduce(function (mem, node, i) {
-        var translationContent = node.children && node.children[0] && node.children[0].content;
+        var translationContent = node.children && node.children[0] && node.children[0].content && i18n.services.interpolator.interpolate(node.children[0].content, opts, i18n.language);
 
         if (node.type === 'tag') {
           var tmp = reactNodes[parseInt(node.name, 10)];
@@ -593,7 +605,8 @@
           var isKnownComponent = _typeof(children) === 'object' && children !== null && Object.hasOwnProperty.call(children, node.name);
 
           if (typeof child === 'string') {
-            mem.push(child);
+            var value = i18n.services.interpolator.interpolate(child, opts, i18n.language);
+            mem.push(value);
           } else if (hasChildren(child) || isValidTranslationWithChildren) {
               var inner = renderInner(child, node, rootReactNode);
               pushTranslatedJSX(child, inner, mem, i);
@@ -640,7 +653,17 @@
             })));
           }
         } else if (node.type === 'text') {
-          mem.push(node.content);
+          var wrapTextNodes = i18nOptions.transWrapTextNodes;
+
+          var _content = i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
+
+          if (wrapTextNodes) {
+            mem.push(React__default.createElement(wrapTextNodes, {
+              key: "".concat(node.name, "-").concat(i)
+            }, _content));
+          } else {
+            mem.push(_content);
+          }
         }
 
         return mem;
@@ -667,7 +690,7 @@
         ns = _ref.ns,
         i18nFromProps = _ref.i18n,
         tFromProps = _ref.t,
-        additionalProps = _objectWithoutProperties(_ref, ["children", "count", "parent", "i18nKey", "tOptions", "values", "defaults", "components", "ns", "i18n", "t"]);
+        additionalProps = _objectWithoutProperties(_ref, _excluded2);
 
     var _ref2 = React.useContext(I18nContext) || {},
         i18nFromContext = _ref2.i18n,
@@ -806,12 +829,13 @@
     });
   }
 
+  var _excluded$1 = ["forwardedRef"];
   function withTranslation(ns) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     return function Extend(WrappedComponent) {
       function I18nextWithTranslation(_ref) {
         var forwardedRef = _ref.forwardedRef,
-            rest = _objectWithoutProperties(_ref, ["forwardedRef"]);
+            rest = _objectWithoutProperties(_ref, _excluded$1);
 
         var _useTranslation = useTranslation(ns, rest),
             _useTranslation2 = _slicedToArray(_useTranslation, 3),
@@ -847,10 +871,11 @@
     };
   }
 
+  var _excluded$2 = ["ns", "children"];
   function Translation(props) {
     var ns = props.ns,
         children = props.children,
-        options = _objectWithoutProperties(props, ["ns", "children"]);
+        options = _objectWithoutProperties(props, _excluded$2);
 
     var _useTranslation = useTranslation(ns, options),
         _useTranslation2 = _slicedToArray(_useTranslation, 3),
@@ -907,12 +932,13 @@
     }
   }
 
+  var _excluded$3 = ["initialI18nStore", "initialLanguage"];
   function withSSR() {
     return function Extend(WrappedComponent) {
       function I18nextWithSSR(_ref) {
         var initialI18nStore = _ref.initialI18nStore,
             initialLanguage = _ref.initialLanguage,
-            rest = _objectWithoutProperties(_ref, ["initialI18nStore", "initialLanguage"]);
+            rest = _objectWithoutProperties(_ref, _excluded$3);
 
         useSSR(initialI18nStore, initialLanguage);
         return React__default.createElement(WrappedComponent, _objectSpread2({}, rest));

@@ -21,10 +21,45 @@ type Subtract<T extends K, K> = Omit<T, keyof K>;
 
 /**
  * This interface can be augmented by users to add types to `react-i18next` default resources.
+ *
+ * @deprecated use the `resources` key of `CustomTypeOptions` instead
  */
 export interface Resources {}
+/**
+ * This interface can be augmented by users to add types to `react-i18next`. It accepts a `defaultNS` and `resources` properties.
+ *
+ * Usage:
+ * ```ts
+ * // react-i18next.d.ts
+ * import 'react-i18next';
+ * declare module 'react-i18next' {
+ *   interface CustomTypeOptions {
+ *     defaultNS: 'custom';
+ *     resources: {
+ *       custom: {
+ *         foo: 'foo';
+ *       };
+ *     };
+ *   }
+ * }
+ * ```
+ */
+export interface CustomTypeOptions {}
 
-type Fallback<F, T = keyof Resources> = [T] extends [never] ? F : T;
+type MergeBy<T, K> = Omit<T, keyof K> & K;
+
+type TypeOptions = MergeBy<
+  {
+    defaultNS: 'translation';
+    resources: Resources;
+  },
+  CustomTypeOptions
+>;
+
+type DefaultResources = TypeOptions['resources'];
+type DefaultNamespace<T = TypeOptions['defaultNS']> = T extends Fallback<string> ? T : string;
+
+type Fallback<F, T = keyof DefaultResources> = [T] extends [never] ? F : T;
 
 export type Namespace<F = Fallback<string>> = F | F[];
 
@@ -90,13 +125,15 @@ type NormalizeMultiReturn<T, V> = V extends `${infer N}:${infer R}`
     : never
   : never;
 
-export type TFuncKey<N extends Namespace = DefaultNamespace, T = Resources> = N extends (keyof T)[]
+export type TFuncKey<N extends Namespace = DefaultNamespace, T = DefaultResources> = N extends
+  | (keyof T)[]
+  | Readonly<(keyof T)[]>
   ? NormalizeMulti<T, N[number]>
   : N extends keyof T
   ? Normalize<T[N]>
   : string;
 
-export type TFuncReturn<N, TKeys, TDefaultResult, T = Resources> = N extends (keyof T)[]
+export type TFuncReturn<N, TKeys, TDefaultResult, T = DefaultResources> = N extends (keyof T)[]
   ? NormalizeMultiReturn<T, TKeys>
   : N extends keyof T
   ? NormalizeReturn<T[N], TKeys>
@@ -158,10 +195,8 @@ type UseTranslationResponse<N extends Namespace> = [TFunction<N>, i18n, boolean]
   ready: boolean;
 };
 
-type DefaultNamespace<T = 'translation'> = T extends Fallback<string> ? T : string;
-
 export function useTranslation<N extends Namespace = DefaultNamespace>(
-  ns?: N,
+  ns?: N | Readonly<N>,
   options?: UseTranslationOptions,
 ): UseTranslationResponse<N>;
 
