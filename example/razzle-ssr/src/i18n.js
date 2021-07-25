@@ -22,15 +22,12 @@ const options = {
       return value;
     },
   },
-  wait: process && !process.release,
+  useSuspense: process && !process.release,
 };
 
 // for browser use http backend to load translations and browser lng detector
 if (process && !process.release) {
-  i18n
-    .use(Backend)
-    .use(initReactI18next)
-    .use(LanguageDetector);
+  i18n.use(Backend).use(initReactI18next).use(LanguageDetector);
 }
 
 // initialize if not already initialized
