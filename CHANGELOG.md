@@ -1,3 +1,7 @@
+### 11.11.4
+
+- typescript: add returnNull and returnEptyString options to TypeOptions interface [1341](https://github.com/i18next/react-i18next/pull/1341)
+
 ### 11.11.3
 
 - Trans: parse first, then interpolate [1345](https://github.com/i18next/react-i18next/pull/1345)
