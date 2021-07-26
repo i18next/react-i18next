@@ -26,7 +26,7 @@ type Subtract<T extends K, K> = Omit<T, keyof K>;
  */
 export interface Resources {}
 /**
- * This interface can be augmented by users to add types to `react-i18next`. It accepts a `defaultNS` and `resources` properties.
+ * This interface can be augmented by users to add types to `react-i18next`. It accepts a `defaultNS`, `resources`, `returnNull` and `returnEmptyString` properties.
  *
  * Usage:
  * ```ts
@@ -35,6 +35,8 @@ export interface Resources {}
  * declare module 'react-i18next' {
  *   interface CustomTypeOptions {
  *     defaultNS: 'custom';
+ *     returnNull: false,
+ *     returnEmptyString: false,
  *     resources: {
  *       custom: {
  *         foo: 'foo';
@@ -50,6 +52,8 @@ type MergeBy<T, K> = Omit<T, keyof K> & K;
 
 type TypeOptions = MergeBy<
   {
+    returnNull: true;
+    returnEmptyString: true;
     defaultNS: 'translation';
     resources: Resources;
   },
@@ -111,12 +115,32 @@ type NormalizeMulti<T, U extends keyof T, L = LastOf<U>> = L extends U
   ? AppendNS<L, Normalize<T[L]>> | NormalizeMulti<T, Exclude<U, L>>
   : never;
 
+type CustomTypeParameters = {
+  returnNull?: boolean;
+  returnEmptyString?: boolean;
+};
+
+type TypeOptionsFallback<TranslationValue, Option, MatchingValue> = Option extends false
+  ? TranslationValue extends MatchingValue
+    ? string
+    : TranslationValue
+  : TranslationValue;
+
+/**
+ * Checks if user has enabled `returnEmptyString` and `returnNull` options to retrieve correct values.
+ */
+export type NormalizeByTypeOptions<
+  TranslationValue,
+  Options extends CustomTypeParameters = TypeOptions,
+  R = TypeOptionsFallback<TranslationValue, Options['returnEmptyString'], ''>
+> = TypeOptionsFallback<R, Options['returnNull'], null>;
+
 type NormalizeReturn<T, V> = V extends `${infer K}.${infer R}`
   ? K extends keyof T
     ? NormalizeReturn<T[K], R>
     : never
   : V extends keyof T
-  ? T[V]
+  ? NormalizeByTypeOptions<T[V]>
   : never;
 
 type NormalizeMultiReturn<T, V> = V extends `${infer N}:${infer R}`
