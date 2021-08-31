@@ -54,6 +54,7 @@ type TypeOptions = MergeBy<
   {
     returnNull: true;
     returnEmptyString: true;
+    keySeparator: '.';
     defaultNS: 'translation';
     resources: Resources;
   },
@@ -92,8 +93,10 @@ declare module 'i18next' {
 }
 
 // Normalize single namespace
-type AppendKeys<K1, K2> = `${K1 & string}.${K2 & string}`;
-type AppendKeys2<K1, K2> = `${K1 & string}.${Exclude<K2, keyof any[]> & string}`;
+type AppendKeys<K1, K2, S extends string = TypeOptions['keySeparator']> = `${K1 & string}${S}${K2 &
+  string}`;
+type AppendKeys2<K1, K2, S extends string = TypeOptions['keySeparator']> = `${K1 &
+  string}${S}${Exclude<K2, keyof any[]> & string}`;
 type Normalize2<T, K = keyof T> = K extends keyof T
   ? T[K] extends Record<string, any>
     ? T[K] extends readonly any[]
@@ -135,12 +138,18 @@ export type NormalizeByTypeOptions<
   R = TypeOptionsFallback<TranslationValue, Options['returnEmptyString'], ''>
 > = TypeOptionsFallback<R, Options['returnNull'], null>;
 
-type NormalizeReturn<T, V> = V extends `${infer K}.${infer R}`
+type NormalizeReturn<
+  T,
+  V,
+  S extends string | false = TypeOptions['keySeparator']
+> = V extends keyof T
+  ? NormalizeByTypeOptions<T[V]>
+  : S extends false
+  ? V
+  : V extends `${infer K}${S}${infer R}`
   ? K extends keyof T
     ? NormalizeReturn<T[K], R>
     : never
-  : V extends keyof T
-  ? NormalizeByTypeOptions<T[V]>
   : never;
 
 type NormalizeMultiReturn<T, V> = V extends `${infer N}:${infer R}`
