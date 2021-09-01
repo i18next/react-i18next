@@ -428,6 +428,23 @@ describe('trans with only content from translation file - no children', () => {
   });
 });
 
+describe('trans with only html content from translation file - no children', () => {
+  const TestComponent = () => <Trans i18nKey="transTest1_customHtml2" />;
+  it('should render translated string', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        <strong>
+          Go
+        </strong>
+         
+        <br />
+         there.
+      </div>
+    `);
+  });
+});
+
 describe('trans should not break on invalid node from translations', () => {
   const TestComponent = () => <Trans i18nKey="testInvalidHtml" />;
   it('should render translated string', () => {
