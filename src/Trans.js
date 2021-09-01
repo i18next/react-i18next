@@ -258,7 +258,11 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
   // call mapAST with having react nodes nested into additional node like
   // we did for the string ast from translation
   // return the children of that extra node to get expected result
-  const result = mapAST([{ dummy: true, children }], ast, getAsArray(children || []));
+  const result = mapAST(
+    [{ dummy: true, children: children || [] }],
+    ast,
+    getAsArray(children || []),
+  );
   return getChildren(result[0]);
 }
 
