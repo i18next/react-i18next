@@ -24,7 +24,7 @@ export function useTranslation(ns, props = {}) {
     );
 
   const i18nOptions = { ...getDefaults(), ...i18n.options.react, ...props };
-  const { useSuspense } = i18nOptions;
+  const { useSuspense, keyPrefix } = i18nOptions;
 
   // prepare having a namespace
   let namespaces = ns || defaultNSFromContext || (i18n.options && i18n.options.defaultNS);
@@ -40,7 +40,11 @@ export function useTranslation(ns, props = {}) {
 
   // binding t function to namespace (acts also as rerender trigger)
   function getT() {
-    return i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0]);
+    return i18n.getFixedT(
+      null,
+      i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
+      keyPrefix,
+    );
   }
   const [t, setT] = useState(getT);
 

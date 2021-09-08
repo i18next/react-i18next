@@ -52,6 +52,7 @@ export function useSSR(initialI18nStore: Resource, initialLanguage: string): voi
 export interface UseTranslationOptions {
   i18n?: i18n;
   useSuspense?: boolean;
+  keyPrefix?: string;
 }
 export type UseTranslationResponse = [TFunction, i18n, boolean] & {
   t: TFunction;

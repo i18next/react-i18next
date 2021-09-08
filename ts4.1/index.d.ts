@@ -211,6 +211,7 @@ export function useSSR(initialI18nStore: Resource, initialLanguage: string): voi
 export interface UseTranslationOptions {
   i18n?: i18n;
   useSuspense?: boolean;
+  keyPrefix?: string;
 }
 
 type UseTranslationResponse<N extends Namespace> = [TFunction<N>, i18n, boolean] & {
