@@ -672,7 +672,7 @@
 
     var result = mapAST([{
       dummy: true,
-      children: children
+      children: children || []
     }], ast, getAsArray(children || []));
     return getChildren(result[0]);
   }
@@ -763,7 +763,8 @@
 
     var i18nOptions = _objectSpread2(_objectSpread2(_objectSpread2({}, getDefaults()), i18n.options.react), props);
 
-    var useSuspense = i18nOptions.useSuspense;
+    var useSuspense = i18nOptions.useSuspense,
+        keyPrefix = i18nOptions.keyPrefix;
     var namespaces = ns || defaultNSFromContext || i18n.options && i18n.options.defaultNS;
     namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
     if (i18n.reportNamespaces.addUsedNamespaces) i18n.reportNamespaces.addUsedNamespaces(namespaces);
@@ -772,7 +773,7 @@
     });
 
     function getT() {
-      return i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0]);
+      return i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
     }
 
     var _useState = React.useState(getT),

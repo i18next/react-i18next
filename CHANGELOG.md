@@ -1,3 +1,7 @@
+### 11.12.0
+
+- feature: add key prefix support to useTranslation hook [1371](https://github.com/i18next/react-i18next/pull/1371)
+
 ### 11.11.4
 
 - typescript: add returnNull and returnEptyString options to TypeOptions interface [1341](https://github.com/i18next/react-i18next/pull/1341)
