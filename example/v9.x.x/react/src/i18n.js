@@ -1,7 +1,7 @@
 import i18n from 'i18next';
 import Backend from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
-import { reactI18nextModule } from 'react-i18next';
+import { initReactI18next } from 'react-i18next';
 
 i18n
   // load translation using http -> see /public/locales
@@ -12,7 +12,7 @@ i18n
   .use(LanguageDetector)
   // pass the i18n instance to the react-i18next components.
   // Alternative use the I18nextProvider: https://react.i18next.com/components/i18nextprovider
-  .use(reactI18nextModule)
+  .use(initReactI18next)
   // init i18next
   // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
