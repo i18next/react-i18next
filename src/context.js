@@ -52,6 +52,7 @@ export const initReactI18next = {
   type: '3rdParty',
 
   init(instance) {
+    instance.options.interpolation.escapeValue = false;
     setDefaults(instance.options.react);
     setI18n(instance);
   },
