@@ -15,9 +15,6 @@ describe('useTranslation loading ns', () => {
     newI18n.use(backend).init({
       lng: 'en',
       fallbackLng: 'en',
-      interpolation: {
-        escapeValue: false, // not needed for react!!
-      },
     });
   });
 
