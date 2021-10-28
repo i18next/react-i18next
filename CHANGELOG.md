@@ -1,6 +1,7 @@
-### 11.x.x
+### 11.13.0
 
-- add type-safe support to keyPrefix option [1390](https://github.com/i18next/react-i18next/pull/1390)
+- feat(types): add type-safe support to keyPrefix option [1390](https://github.com/i18next/react-i18next/pull/1390)
+- feat(types): allow key separator augmentation [1367](https://github.com/i18next/react-i18next/pull/1367)
 
 ### 11.12.0
 
