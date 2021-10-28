@@ -10,6 +10,9 @@ declare module 'react-i18next' {
       };
       alternate: {
         baz: 'baz';
+        foobar: {
+          barfoo: 'barfoo';
+        };
       };
     };
   }

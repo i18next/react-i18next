@@ -38,6 +38,11 @@ function readonlyArrayNamespace() {
   );
 }
 
+function keyPrefixOption() {
+  const [t] = useTranslation('alternate', { keyPrefix: 'foobar' });
+  return <>{t('barfoo')}</>;
+}
+
 function expectErrorWhenNamespaceDoesNotExist() {
   // @ts-expect-error
   const [t] = useTranslation('fake');
@@ -60,4 +65,16 @@ function expectErrorWhenUsingArrayNamespaceAndWrongKey() {
   const [t] = useTranslation(['custom']);
   // @ts-expect-error
   return <>{t('custom:fake')}</>;
+}
+
+function expectErrorWhenUsingWrongKeyPrefixOption() {
+  // @ts-expect-error
+  const [t] = useTranslation('alternate', { keyPrefix: 'abc' });
+  return <>{t('barfoo')}</>;
+}
+
+function expectErrorWhenUsingRightKeyPrefixOptionAndWrongKey() {
+  const [t] = useTranslation('alternate', { keyPrefix: 'foobar' });
+  // @ts-expect-error
+  return <>{t('abc')}</>;
 }
