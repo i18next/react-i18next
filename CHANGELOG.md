@@ -1,3 +1,7 @@
+### 11.x.x
+
+- Add type-safe support to keyPrefix option [1390](https://github.com/i18next/react-i18next/pull/1390)
+
 ### 11.12.0
 
 - feature: add key prefix support to useTranslation hook [1371](https://github.com/i18next/react-i18next/pull/1371)
