@@ -1,6 +1,6 @@
 ### 11.x.x
 
-- Add type-safe support to keyPrefix option [1390](https://github.com/i18next/react-i18next/pull/1390)
+- add type-safe support to keyPrefix option [1390](https://github.com/i18next/react-i18next/pull/1390)
 
 ### 11.12.0
 
