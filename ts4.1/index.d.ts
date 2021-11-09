@@ -35,8 +35,10 @@ export interface Resources {}
  * declare module 'react-i18next' {
  *   interface CustomTypeOptions {
  *     defaultNS: 'custom';
- *     returnNull: false,
- *     returnEmptyString: false,
+ *     returnNull: false;
+ *     returnEmptyString: false;
+ *     keySeparator: '.';
+ *     jsonFormat: 'v4';
  *     resources: {
  *       custom: {
  *         foo: 'foo';
@@ -56,6 +58,7 @@ type TypeOptions = MergeBy<
     returnEmptyString: true;
     keySeparator: '.';
     defaultNS: 'translation';
+    jsonFormat: 'v4';
     resources: Resources;
   },
   CustomTypeOptions
@@ -92,6 +95,12 @@ declare module 'i18next' {
   }
 }
 
+type WithOrWithoutPlural<K> = TypeOptions['jsonFormat'] extends 'v4'
+  ? K extends `${infer B}_${'zero' | 'one' | 'two' | 'few' | 'many' | 'other'}`
+    ? B | K
+    : K
+  : K;
+
 // Normalize single namespace
 type AppendKeys<K1, K2, S extends string = TypeOptions['keySeparator']> = `${K1 & string}${S}${K2 &
   string}`;
@@ -100,11 +109,11 @@ type AppendKeys2<K1, K2, S extends string = TypeOptions['keySeparator']> = `${K1
 type Normalize2<T, K = keyof T> = K extends keyof T
   ? T[K] extends Record<string, any>
     ? T[K] extends readonly any[]
-      ? AppendKeys2<K, keyof T[K]> | AppendKeys2<K, Normalize2<T[K]>>
-      : AppendKeys<K, keyof T[K]> | AppendKeys<K, Normalize2<T[K]>>
+      ? AppendKeys2<K, WithOrWithoutPlural<keyof T[K]>> | AppendKeys2<K, Normalize2<T[K]>>
+      : AppendKeys<K, WithOrWithoutPlural<keyof T[K]>> | AppendKeys<K, Normalize2<T[K]>>
     : never
   : never;
-type Normalize<T> = keyof T | Normalize2<T>;
+type Normalize<T> = WithOrWithoutPlural<keyof T> | Normalize2<T>;
 
 // Normalize multiple namespaces
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void

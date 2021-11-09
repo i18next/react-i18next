@@ -43,6 +43,16 @@ function keyPrefixOption() {
   return <>{t('barfoo')}</>;
 }
 
+function jsonFormatV4Plurals() {
+  const [t] = useTranslation('plurals');
+  return (
+    <>
+      {t('foo')}
+      {t('foo_one')}
+    </>
+  );
+}
+
 function expectErrorWhenNamespaceDoesNotExist() {
   // @ts-expect-error
   const [t] = useTranslation('fake');

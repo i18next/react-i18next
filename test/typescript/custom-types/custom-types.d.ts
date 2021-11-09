@@ -14,6 +14,13 @@ declare module 'react-i18next' {
           barfoo: 'barfoo';
         };
       };
+      plurals: {
+        foo_zero: 'foo';
+        foo_one: 'foo';
+        foo_two: 'foo';
+        foo_many: 'foo';
+        foo_other: 'foo';
+      };
     };
   }
 }
