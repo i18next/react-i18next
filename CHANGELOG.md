@@ -1,3 +1,8 @@
+### 11.14.0
+
+- Remove generics from Trans component to suppress warning issue [1400](https://github.com/i18next/react-i18next/pull/1400)
+- Add type support to plurals [1399](https://github.com/i18next/react-i18next/pull/1399)
+
 ### 11.13.0
 
 - feat(types): add type-safe support to keyPrefix option [1390](https://github.com/i18next/react-i18next/pull/1390)
