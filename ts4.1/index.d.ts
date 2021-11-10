@@ -214,6 +214,7 @@ export interface TFunction<
 
 type I18nKeyType<N extends Namespace> = TFuncKey<N> extends infer A ? A : never;
 export interface TransProps<
+  K extends TFuncKey<N> extends infer A ? A : never,
   N extends Namespace = DefaultNamespace,
   E extends Element = HTMLDivElement
 > extends React.HTMLProps<E> {
@@ -222,7 +223,7 @@ export interface TransProps<
   count?: number;
   defaults?: string;
   i18n?: i18n;
-  i18nKey?: I18nKeyType<N> | I18nKeyType<N>[];
+  i18nKey?: K | K[];
   ns?: N;
   parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
   tOptions?: {};
@@ -230,9 +231,11 @@ export interface TransProps<
   t?: TFunction<N>;
 }
 
-export function Trans<N extends Namespace = DefaultNamespace, E extends Element = HTMLDivElement>(
-  props: TransProps<N, E>,
-): React.ReactElement;
+export function Trans<
+  K extends TFuncKey<N> extends infer A ? A : never,
+  N extends Namespace = DefaultNamespace,
+  E extends Element = HTMLDivElement
+>(props: TransProps<K, N, E>): React.ReactElement;
 
 export function useSSR(initialI18nStore: Resource, initialLanguage: string): void;
 
