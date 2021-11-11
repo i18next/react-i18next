@@ -102,7 +102,7 @@ type WithOrWithoutPlural<K> = TypeOptions['jsonFormat'] extends 'v4'
   : K;
 
 // Normalize single namespace
-type KeysWithSeparator<K1, K2, S extends string = TypeOptions['keySeparator']> = `${K1 &
+export type KeysWithSeparator<K1, K2, S extends string = TypeOptions['keySeparator']> = `${K1 &
   string}${S}${K2 & string}`;
 type KeysWithSeparator2<K1, K2> = KeysWithSeparator<K1, Exclude<K2, keyof any[]>>;
 type Normalize2<T, K = keyof T> = K extends keyof T
