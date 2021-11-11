@@ -102,15 +102,18 @@ type WithOrWithoutPlural<K> = TypeOptions['jsonFormat'] extends 'v4'
   : K;
 
 // Normalize single namespace
-type AppendKeys<K1, K2, S extends string = TypeOptions['keySeparator']> = `${K1 & string}${S}${K2 &
-  string}`;
-type AppendKeys2<K1, K2, S extends string = TypeOptions['keySeparator']> = `${K1 &
-  string}${S}${Exclude<K2, keyof any[]> & string}`;
+type KeysWithSeparator<K1, K2, S extends string = TypeOptions['keySeparator']> = `${K1 &
+  string}${S}${K2 & string}`;
+type KeysWithSeparator2<K1, K2> = KeysWithSeparator<K1, Exclude<K2, keyof any[]>>;
 type Normalize2<T, K = keyof T> = K extends keyof T
   ? T[K] extends Record<string, any>
     ? T[K] extends readonly any[]
-      ? AppendKeys2<K, WithOrWithoutPlural<keyof T[K]>> | AppendKeys2<K, Normalize2<T[K]>>
-      : AppendKeys<K, WithOrWithoutPlural<keyof T[K]>> | AppendKeys<K, Normalize2<T[K]>>
+      ?
+          | KeysWithSeparator2<K, WithOrWithoutPlural<keyof T[K]>>
+          | KeysWithSeparator2<K, Normalize2<T[K]>>
+      :
+          | KeysWithSeparator<K, WithOrWithoutPlural<keyof T[K]>>
+          | KeysWithSeparator<K, Normalize2<T[K]>>
     : never
   : never;
 type Normalize<T> = WithOrWithoutPlural<keyof T> | Normalize2<T>;
@@ -167,32 +170,51 @@ type NormalizeMultiReturn<T, V> = V extends `${infer N}:${infer R}`
     : never
   : never;
 
+type NormalizeWithKeyPrefix<
+  T,
+  K,
+  S extends string = TypeOptions['keySeparator']
+> = K extends `${infer K1}${S}${infer K2}`
+  ? K1 extends keyof T
+    ? NormalizeWithKeyPrefix<T[K1], K2>
+    : never
+  : K extends keyof T
+  ? T[K] extends string
+    ? never
+    : Normalize<T[K]>
+  : never;
+
 type KeyPrefix<N extends Namespace> = N extends keyof DefaultResources
-  ? Fallback<string, keyof DefaultResources[N]> | undefined
+  ? Normalize<DefaultResources[N]> | undefined
   : string | undefined;
 
 export type TFuncKey<
   N extends Namespace = DefaultNamespace,
-  TKPrefix extends KeyPrefix<N> = undefined,
+  TKPrefix = undefined,
   T = DefaultResources
 > = N extends (keyof T)[] | Readonly<(keyof T)[]>
   ? NormalizeMulti<T, N[number]>
   : N extends keyof T
-  ? TKPrefix extends keyof T[N]
-    ? Normalize<T[N][TKPrefix]>
-    : Normalize<T[N]>
+  ? TKPrefix extends undefined
+    ? Normalize<T[N]>
+    : NormalizeWithKeyPrefix<T[N], TKPrefix>
   : string;
 
-export type TFuncReturn<N, TKeys, TDefaultResult, T = DefaultResources> = N extends (keyof T)[]
+export type TFuncReturn<
+  N,
+  TKeys,
+  TDefaultResult,
+  TKPrefix = undefined,
+  T = DefaultResources
+> = N extends (keyof T)[]
   ? NormalizeMultiReturn<T, TKeys>
   : N extends keyof T
-  ? NormalizeReturn<T[N], TKeys>
+  ? TKPrefix extends undefined
+    ? NormalizeReturn<T[N], TKeys>
+    : NormalizeReturn<T[N], KeysWithSeparator<TKPrefix, TKeys>>
   : Fallback<TDefaultResult>;
 
-export interface TFunction<
-  N extends Namespace = DefaultNamespace,
-  TKPrefix extends KeyPrefix<N> = undefined
-> {
+export interface TFunction<N extends Namespace = DefaultNamespace, TKPrefix = undefined> {
   <
     TKeys extends TFuncKey<N, TKPrefix> | TemplateStringsArray extends infer A ? A : never,
     TDefaultResult extends TFunctionResult = string,
@@ -200,7 +222,7 @@ export interface TFunction<
   >(
     key: TKeys | TKeys[],
     options?: TOptions<TInterpolationMap> | string,
-  ): TFuncReturn<N, TKeys, TDefaultResult>;
+  ): TFuncReturn<N, TKeys, TDefaultResult, TKPrefix>;
   <
     TKeys extends TFuncKey<N, TKPrefix> | TemplateStringsArray extends infer A ? A : never,
     TDefaultResult extends TFunctionResult = string,
@@ -209,7 +231,7 @@ export interface TFunction<
     key: TKeys | TKeys[],
     defaultValue?: string,
     options?: TOptions<TInterpolationMap> | string,
-  ): TFuncReturn<N, TKeys, TDefaultResult>;
+  ): TFuncReturn<N, TKeys, TDefaultResult, TKPrefix>;
 }
 
 type I18nKeyType<N extends Namespace> = TFuncKey<N> extends infer A ? A : never;
@@ -239,16 +261,13 @@ export function Trans<
 
 export function useSSR(initialI18nStore: Resource, initialLanguage: string): void;
 
-export interface UseTranslationOptions<
-  N extends Namespace = DefaultNamespace,
-  TKPrefix extends KeyPrefix<N> = undefined
-> {
+export interface UseTranslationOptions<TKPrefix = undefined> {
   i18n?: i18n;
   useSuspense?: boolean;
   keyPrefix?: TKPrefix;
 }
 
-type UseTranslationResponse<N extends Namespace, TKPrefix extends KeyPrefix<N>> = [
+type UseTranslationResponse<N extends Namespace, TKPrefix> = [
   TFunction<N, TKPrefix>,
   i18n,
   boolean,
@@ -263,7 +282,7 @@ export function useTranslation<
   TKPrefix extends KeyPrefix<N> = undefined
 >(
   ns?: N | Readonly<N>,
-  options?: UseTranslationOptions<N, TKPrefix>,
+  options?: UseTranslationOptions<TKPrefix>,
 ): UseTranslationResponse<N, TKPrefix>;
 
 // Need to see usage to improve this

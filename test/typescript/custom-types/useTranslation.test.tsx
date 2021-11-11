@@ -43,6 +43,16 @@ function keyPrefixOption() {
   return <>{t('barfoo')}</>;
 }
 
+function deepKeyPrefixOption() {
+  const [t] = useTranslation('alternate', { keyPrefix: 'foobar.deep' });
+  return (
+    <>
+      {t('deeper').deeeeeper}
+      {t('deeper.deeeeeper')}
+    </>
+  );
+}
+
 function jsonFormatV4Plurals() {
   const [t] = useTranslation('plurals');
   return (
