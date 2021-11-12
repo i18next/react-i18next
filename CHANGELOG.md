@@ -1,3 +1,7 @@
+### 11.14.2
+
+- Add type-safe support to deep keyPrefix [1403](https://github.com/i18next/react-i18next/pull/1403)
+
 ### 11.14.1
 
 - Rollback [1402](https://github.com/i18next/react-i18next/pull/1402): Remove generics from Trans component to suppress warning issue [1400](https://github.com/i18next/react-i18next/pull/1400)
