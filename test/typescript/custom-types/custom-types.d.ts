@@ -12,6 +12,11 @@ declare module 'react-i18next' {
         baz: 'baz';
         foobar: {
           barfoo: 'barfoo';
+          deep: {
+            deeper: {
+              deeeeeper: 'foobar';
+            };
+          };
         };
       };
       plurals: {

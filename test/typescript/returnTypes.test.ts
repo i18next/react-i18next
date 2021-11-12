@@ -1,4 +1,4 @@
-import { AppendKeys, NormalizeByTypeOptions, NormalizeReturn, TFuncReturn } from 'react-i18next';
+import { KeysWithSeparator, NormalizeByTypeOptions, NormalizeReturn } from 'react-i18next';
 
 // Test cases for TypeOptions['returnNull']: true
 type ReturnNull = NormalizeByTypeOptions<null, { returnNull: true }>; // Returns null
@@ -33,21 +33,24 @@ const emptyStringValue2: ReturnEmptyString = '';
 const nonEmptyStringValue2: ReturnEmptyString = 'non-empty-string';
 
 // Test cases for TypeOptions['keySeparator']: '.' (default)
-type DefaultCase = AppendKeys<'namespace', 'key' | 'key2'>;
+type DefaultCase = KeysWithSeparator<'namespace', 'key' | 'key2'>;
 const defaultCaseExpectedResult = 'namespace.key';
 const defaultCaseExpectedResult2 = 'namespace.key2';
 const defaultCase: DefaultCase = defaultCaseExpectedResult;
 const defaultCase2: DefaultCase = defaultCaseExpectedResult2;
 
 // Test cases for TypeOptions['keySeparator']: '>>>' (arbitrary separator)
-type ArbitrarySeparatorCase = AppendKeys<'namespace', 'key' | 'key2', '>>>'>;
+type ArbitrarySeparatorCase = KeysWithSeparator<'namespace', 'key' | 'key2', '>>>'>;
 const arbitrarySeparatorExpectedResult = 'namespace>>>key';
 const arbitrarySeparatorExpectedResult2 = 'namespace>>>key2';
 const arbitrarySeparatorCase: ArbitrarySeparatorCase = arbitrarySeparatorExpectedResult;
 const arbitrarySeparatorCase2: ArbitrarySeparatorCase = arbitrarySeparatorExpectedResult2;
 
 // Test cases for TypeOptions['keySeparator']: false (nesting not supported)
-interface MockDictionary { key: { nested: 'value' }; notNested: 'value' };
+interface MockDictionary {
+  key: { nested: 'value' };
+  notNested: 'value';
+}
 
 type ReturnGivenKey = NormalizeReturn<MockDictionary, 'key.nested', false>;
 const shouldBeGivenKey: ReturnGivenKey = 'key.nested';
