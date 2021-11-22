@@ -1,3 +1,7 @@
+### 11.14.3
+
+- types: remove undefined from conditional type [1410](https://github.com/i18next/react-i18next/pull/1410)
+
 ### 11.14.2
 
 - Add type-safe support to deep keyPrefix [1403](https://github.com/i18next/react-i18next/pull/1403)
