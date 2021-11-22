@@ -184,9 +184,9 @@ type NormalizeWithKeyPrefix<
     : Normalize<T[K]>
   : never;
 
-type KeyPrefix<N extends Namespace> = N extends keyof DefaultResources
-  ? Normalize<DefaultResources[N]> | undefined
-  : string | undefined;
+type KeyPrefix<N extends Namespace> =
+  | (N extends keyof DefaultResources ? Normalize<DefaultResources[N]> : string)
+  | undefined;
 
 export type TFuncKey<
   N extends Namespace = DefaultNamespace,
