@@ -8,7 +8,7 @@ import i18next, {
   TFunctionResult,
 } from 'i18next';
 import * as React from 'react';
-import { TextStyle } from 'react-native';
+import { TextProps } from 'react-native';
 
 type Subtract<T extends K, K> = Omit<T, keyof K>;
 
@@ -235,12 +235,12 @@ export interface TFunction<N extends Namespace = DefaultNamespace, TKPrefix = un
   ): TFuncReturn<N, TKeys, TDefaultResult, TKPrefix>;
 }
 
-export interface TransProps<
+export type TransProps<
   K extends TFuncKey<N, TKPrefix> extends infer A ? A : never,
   N extends Namespace = DefaultNamespace,
   TKPrefix = undefined,
-  E extends React.HTMLProps<HTMLDivElement> | TextStyle = React.HTMLProps<HTMLDivElement>
-> extends React.HTMLProps<E> {
+  E extends React.HTMLProps<HTMLDivElement> | TextProps = React.HTMLProps<HTMLDivElement>
+> = E & {
   children?: React.ReactNode;
   components?: readonly React.ReactNode[] | { readonly [tagName: string]: React.ReactNode };
   count?: number;
@@ -253,13 +253,13 @@ export interface TransProps<
   values?: {};
   shouldUnescape?: boolean;
   t?: TFunction<N, TKPrefix>;
-}
+};
 
 export function Trans<
   K extends TFuncKey<N, TKPrefix> extends infer A ? A : never,
   N extends Namespace = DefaultNamespace,
   TKPrefix extends KeyPrefix<N> = undefined,
-  E extends React.HTMLProps<HTMLDivElement> | TextStyle = React.HTMLProps<HTMLDivElement>
+  E extends React.HTMLProps<HTMLDivElement> | TextProps = React.HTMLProps<HTMLDivElement>
 >(props: TransProps<K, N, TKPrefix, E>): React.ReactElement;
 
 export function useSSR(initialI18nStore: Resource, initialLanguage: string): void;
