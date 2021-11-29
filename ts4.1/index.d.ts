@@ -8,6 +8,7 @@ import i18next, {
   TFunctionResult,
 } from 'i18next';
 import * as React from 'react';
+import { TextStyle } from 'react-native';
 
 type Subtract<T extends K, K> = Omit<T, keyof K>;
 
@@ -238,7 +239,7 @@ export interface TransProps<
   K extends TFuncKey<N, TKPrefix> extends infer A ? A : never,
   N extends Namespace = DefaultNamespace,
   TKPrefix = undefined,
-  E extends Element = HTMLDivElement
+  E extends React.HTMLProps<HTMLDivElement> | TextStyle = React.HTMLProps<HTMLDivElement>
 > extends React.HTMLProps<E> {
   children?: React.ReactNode;
   components?: readonly React.ReactNode[] | { readonly [tagName: string]: React.ReactNode };
@@ -258,7 +259,7 @@ export function Trans<
   K extends TFuncKey<N, TKPrefix> extends infer A ? A : never,
   N extends Namespace = DefaultNamespace,
   TKPrefix extends KeyPrefix<N> = undefined,
-  E extends Element = HTMLDivElement
+  E extends React.HTMLProps<HTMLDivElement> | TextStyle = React.HTMLProps<HTMLDivElement>
 >(props: TransProps<K, N, TKPrefix, E>): React.ReactElement;
 
 export function useSSR(initialI18nStore: Resource, initialLanguage: string): void;
