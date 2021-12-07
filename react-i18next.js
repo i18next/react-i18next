@@ -320,6 +320,28 @@
     }
   };
 
+  var replace = ''.replace;
+  var es = /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34);/g;
+  var unes = {
+    '&amp;': '&',
+    '&#38;': '&',
+    '&lt;': '<',
+    '&#60;': '<',
+    '&gt;': '>',
+    '&#62;': '>',
+    '&apos;': "'",
+    '&#39;': "'",
+    '&quot;': '"',
+    '&#34;': '"'
+  };
+  function unescape(un) {
+    return replace.call(un, es, cape);
+  }
+
+  function cape(m) {
+    return unes[m];
+  }
+
   var defaultOptions = {
     bindI18n: 'languageChanged',
     bindI18nStore: '',
@@ -655,7 +677,7 @@
         } else if (node.type === 'text') {
           var wrapTextNodes = i18nOptions.transWrapTextNodes;
 
-          var _content = i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
+          var _content = unescape(i18n.services.interpolator.interpolate(node.content, opts, i18n.language));
 
           if (wrapTextNodes) {
             mem.push(React__default.createElement(wrapTextNodes, {

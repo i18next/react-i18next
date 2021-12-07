@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import HTML from 'html-parse-stringify';
+import { unescape } from 'html-escaper';
 import { getI18n, I18nContext, getDefaults } from './context';
 import { warn, warnOnce } from './utils';
 
@@ -244,7 +245,9 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
         }
       } else if (node.type === 'text') {
         const wrapTextNodes = i18nOptions.transWrapTextNodes;
-        const content = i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
+        const content = unescape(
+          i18n.services.interpolator.interpolate(node.content, opts, i18n.language),
+        );
         if (wrapTextNodes) {
           mem.push(React.createElement(wrapTextNodes, { key: `${node.name}-${i}` }, content));
         } else {

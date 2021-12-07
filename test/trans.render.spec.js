@@ -622,3 +622,24 @@ describe('trans does ignore user defined values when parsing', () => {
     `);
   });
 });
+
+describe('trans should allow escaped html', () => {
+  const TestComponent = () => (
+    <Trans i18nKey="transTestEscapedHtml" components={[<Link to="/msgs" />]} />
+  );
+
+  it.only('should unescape &lt; &amp; &gt; to < & >', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Escaped html should unescape correctly 
+        <a
+          href="/msgs"
+        >
+          &lt;&&gt;
+        </a>
+        .
+      </div>
+    `);
+  });
+});
