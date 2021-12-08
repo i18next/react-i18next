@@ -245,7 +245,7 @@ export type TransProps<
   K extends TFuncKey<N, TKPrefix> extends infer A ? A : never,
   N extends Namespace = DefaultNamespace,
   TKPrefix = undefined,
-  E extends React.HTMLProps<HTMLDivElement> | TextProps = React.HTMLProps<HTMLDivElement>
+  E extends React.HTMLProps<HTMLDivElement> | TextProps
 > = E & {
   children?: React.ReactNode;
   components?: readonly React.ReactNode[] | { readonly [tagName: string]: React.ReactNode };
