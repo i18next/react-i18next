@@ -1,8 +1,8 @@
 import i18next, { ReactOptions, i18n, ThirdPartyModule, WithT, TFunction, Resource } from 'i18next';
 import * as React from 'react';
 
-type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
-type Subtract<T extends K, K> = Omit<T, keyof K>;
+export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
+export type Subtract<T extends K, K> = Omit<T, keyof K>;
 
 export type Namespace = string | string[];
 
