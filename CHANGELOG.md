@@ -1,3 +1,7 @@
+### 11.15.0
+
+- option to unescape html in Trans [1426](https://github.com/i18next/react-i18next/pull/1426)
+
 ### 11.14.3
 
 - types: remove undefined from conditional type [1410](https://github.com/i18next/react-i18next/pull/1410)
