@@ -320,6 +320,28 @@
     }
   };
 
+  var replace = ''.replace;
+  var es = /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34);/g;
+  var unes = {
+    '&amp;': '&',
+    '&#38;': '&',
+    '&lt;': '<',
+    '&#60;': '<',
+    '&gt;': '>',
+    '&#62;': '>',
+    '&apos;': "'",
+    '&#39;': "'",
+    '&quot;': '"',
+    '&#34;': '"'
+  };
+  function unescape(un) {
+    return replace.call(un, es, cape);
+  }
+
+  function cape(m) {
+    return unes[m];
+  }
+
   var defaultOptions = {
     bindI18n: 'languageChanged',
     bindI18nStore: '',
@@ -475,7 +497,7 @@
   }
 
   var _excluded = ["format"],
-      _excluded2 = ["children", "count", "parent", "i18nKey", "tOptions", "values", "defaults", "components", "ns", "i18n", "t"];
+      _excluded2 = ["children", "count", "parent", "i18nKey", "tOptions", "values", "defaults", "components", "ns", "i18n", "t", "shouldUnescape"];
 
   function hasChildren(node, checkLength) {
     if (!node) return false;
@@ -553,7 +575,7 @@
     return stringNode;
   }
 
-  function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
+  function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, shouldUnescape) {
     if (targetString === '') return [];
     var keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
     var emptyChildrenButNeedsHandling = targetString && new RegExp(keepArray.join('|')).test(targetString);
@@ -655,7 +677,7 @@
         } else if (node.type === 'text') {
           var wrapTextNodes = i18nOptions.transWrapTextNodes;
 
-          var _content = i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
+          var _content = shouldUnescape ? unescape(i18n.services.interpolator.interpolate(node.content, opts, i18n.language)) : i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
 
           if (wrapTextNodes) {
             mem.push(React__default.createElement(wrapTextNodes, {
@@ -690,6 +712,7 @@
         ns = _ref.ns,
         i18nFromProps = _ref.i18n,
         tFromProps = _ref.t,
+        shouldUnescape = _ref.shouldUnescape,
         additionalProps = _objectWithoutProperties(_ref, _excluded2);
 
     var _ref2 = React.useContext(I18nContext) || {},
@@ -729,7 +752,7 @@
     });
 
     var translation = key ? t(key, combinedTOpts) : defaultValue;
-    var content = renderNodes(components || children, translation, i18n, reactI18nextOptions, combinedTOpts);
+    var content = renderNodes(components || children, translation, i18n, reactI18nextOptions, combinedTOpts, shouldUnescape);
     var useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
     return useAsParent ? React__default.createElement(useAsParent, additionalProps, content) : content;
   }

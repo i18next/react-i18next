@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import HTML from 'html-parse-stringify';
+import { unescape } from 'html-escaper';
 import { getI18n, I18nContext, getDefaults } from './context';
 import { warn, warnOnce } from './utils';
 
@@ -100,7 +101,7 @@ export function nodesToString(children, i18nOptions) {
   return stringNode;
 }
 
-function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
+function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, shouldUnescape) {
   if (targetString === '') return [];
 
   // check if contains tags we need to replace from html string to react nodes
@@ -244,7 +245,9 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts) {
         }
       } else if (node.type === 'text') {
         const wrapTextNodes = i18nOptions.transWrapTextNodes;
-        const content = i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
+        const content = shouldUnescape
+          ? unescape(i18n.services.interpolator.interpolate(node.content, opts, i18n.language))
+          : i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
         if (wrapTextNodes) {
           mem.push(React.createElement(wrapTextNodes, { key: `${node.name}-${i}` }, content));
         } else {
@@ -278,6 +281,7 @@ export function Trans({
   ns,
   i18n: i18nFromProps,
   t: tFromProps,
+  shouldUnescape,
   ...additionalProps
 }) {
   const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = useContext(I18nContext) || {};
@@ -322,6 +326,7 @@ export function Trans({
     i18n,
     reactI18nextOptions,
     combinedTOpts,
+    shouldUnescape,
   );
 
   // allows user to pass `null` to `parent`
