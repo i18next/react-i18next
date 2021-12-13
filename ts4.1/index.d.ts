@@ -250,6 +250,7 @@ export interface TransProps<
   parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
   tOptions?: {};
   values?: {};
+  shouldUnescape?: boolean;
   t?: TFunction<N, TKPrefix>;
 }
 
@@ -268,7 +269,7 @@ export interface UseTranslationOptions<TKPrefix = undefined> {
   keyPrefix?: TKPrefix;
 }
 
-type UseTranslationResponse<N extends Namespace, TKPrefix> = [
+export type UseTranslationResponse<N extends Namespace, TKPrefix = undefined> = [
   TFunction<N, TKPrefix>,
   i18n,
   boolean,
