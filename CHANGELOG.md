@@ -1,3 +1,7 @@
+### 11.15.1
+
+- add missing types for shouldUnescape and useTranslation [1429](https://github.com/i18next/react-i18next/pull/1429)
+
 ### 11.15.0
 
 - option to unescape html in Trans [1426](https://github.com/i18next/react-i18next/pull/1426)
