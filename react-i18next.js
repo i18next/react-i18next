@@ -332,7 +332,9 @@
     '&apos;': "'",
     '&#39;': "'",
     '&quot;': '"',
-    '&#34;': '"'
+    '&#34;': '"',
+    '&nbsp;': ' ',
+    '&#160': ' '
   };
   function unescape(un) {
     return replace.call(un, es, cape);
