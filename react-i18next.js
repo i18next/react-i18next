@@ -321,7 +321,7 @@
   };
 
   var replace = ''.replace;
-  var es = /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34);/g;
+  var es = /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34|nbsp|#160);/g;
   var unes = {
     '&amp;': '&',
     '&#38;': '&',
