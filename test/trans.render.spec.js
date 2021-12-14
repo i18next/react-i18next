@@ -628,7 +628,7 @@ describe('trans should allow escaped html', () => {
     <Trans i18nKey="transTestEscapedHtml" components={[<Link to="/msgs" />]} shouldUnescape />
   );
 
-  it('should unescape &lt; &amp; &gt; to < & >', () => {
+  it('should unescape &lt; &nbsp; &amp; &gt; to < SPACE & >', () => {
     const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
@@ -636,7 +636,7 @@ describe('trans should allow escaped html', () => {
         <a
           href="/msgs"
         >
-          &lt;&&gt;
+          &lt;&nbsp;&&gt;
         </a>
         .
       </div>
