@@ -4,15 +4,9 @@
 [![Code Climate](https://codeclimate.com/github/codeclimate/codeclimate/badges/gpa.svg)](https://codeclimate.com/github/i18next/react-i18next)
 [![Coverage Status](https://coveralls.io/repos/github/i18next/react-i18next/badge.svg)](https://coveralls.io/github/i18next/react-i18next)
 [![Quality][quality-badge] ][quality-url]
-[![dependencies][dependencies-image] ][dependencies-url]
-[![devdependencies][devdependencies-image] ][devdependencies-url]
 
 [npm-icon]: https://nodei.co/npm/react-i18next.png?downloads=true
 [npm-url]: https://npmjs.org/package/react-i18next
-[dependencies-image]: https://david-dm.org/i18next/react-i18next.png
-[dependencies-url]: https://david-dm.org/i18next/react-i18next
-[devdependencies-image]: https://david-dm.org/i18next/react-i18next/dev-status.png
-[devdependencies-url]: https://david-dm.org/i18next/react-i18next#info=devDependencies
 [quality-badge]: http://npm.packagequality.com/shield/react-i18next.svg
 [quality-url]: http://packagequality.com/#?package=react-i18next
 
@@ -36,8 +30,9 @@ npm i react-i18next@legacy
 
 ### Documentation
 
-The documentation is published on [react.i18next.com](https://react.i18next.com)
-The general i18next documentation is published on [www.i18next.com](https://www.i18next.com)
+The documentation is published on [react.i18next.com](https://react.i18next.com) and PR changes can be supplied [here](https://github.com/i18next/react-i18next-gitbook).
+
+The general i18next documentation is published on [www.i18next.com](https://www.i18next.com) and PR changes can be supplied [here](https://github.com/i18next/i18next-gitbook).
 
 ### What will my code look like?
 
