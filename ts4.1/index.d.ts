@@ -131,10 +131,10 @@ type NormalizeMulti<T, U extends keyof T, L = LastOf<U>> = L extends U
   ? AppendNS<L, Normalize<T[L]>> | NormalizeMulti<T, Exclude<U, L>>
   : never;
 
-type CustomTypeParameters = {
+interface CustomTypeParameters {
   returnNull?: boolean;
   returnEmptyString?: boolean;
-};
+}
 
 type TypeOptionsFallback<TranslationValue, Option, MatchingValue> = Option extends false
   ? TranslationValue extends MatchingValue
