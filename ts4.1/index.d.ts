@@ -10,7 +10,7 @@ import i18next, {
 import * as React from 'react';
 import { TextProps } from 'react-native';
 
-export type Subtract<T extends K, K> = Omit<T, keyof K>;
+type Subtract<T extends K, K> = Omit<T, keyof K>;
 
 /**
  * Due to a limitation/bug on typescript 4.1 (https://github.com/microsoft/TypeScript/issues/41406), we added
@@ -25,7 +25,6 @@ export type Subtract<T extends K, K> = Omit<T, keyof K>;
  *
  * @deprecated use the `resources` key of `CustomTypeOptions` instead
  */
-// tslint:disable-next-line:no-empty-interface
 export interface Resources {}
 /**
  * This interface can be augmented by users to add types to `react-i18next`. It accepts a `defaultNS`, `resources`, `returnNull` and `returnEmptyString` properties.
@@ -50,12 +49,11 @@ export interface Resources {}
  * }
  * ```
  */
-// tslint:disable-next-line:no-empty-interface
 export interface CustomTypeOptions {}
 
-export type MergeBy<T, K> = Omit<T, keyof K> & K;
+type MergeBy<T, K> = Omit<T, keyof K> & K;
 
-export type TypeOptions = MergeBy<
+type TypeOptions = MergeBy<
   {
     returnNull: true;
     returnEmptyString: true;
@@ -67,12 +65,10 @@ export type TypeOptions = MergeBy<
   CustomTypeOptions
 >;
 
-export type DefaultResources = TypeOptions['resources'];
-export type DefaultNamespace<T = TypeOptions['defaultNS']> = T extends Fallback<string>
-  ? T
-  : string;
+type DefaultResources = TypeOptions['resources'];
+type DefaultNamespace<T = TypeOptions['defaultNS']> = T extends Fallback<string> ? T : string;
 
-export type Fallback<F, T = keyof DefaultResources> = [T] extends [never] ? F : T;
+type Fallback<F, T = keyof DefaultResources> = [T] extends [never] ? F : T;
 
 export type Namespace<F = Fallback<string>> = F | F[];
 
@@ -100,7 +96,7 @@ declare module 'i18next' {
   }
 }
 
-export type WithOrWithoutPlural<K> = TypeOptions['jsonFormat'] extends 'v4'
+type WithOrWithoutPlural<K> = TypeOptions['jsonFormat'] extends 'v4'
   ? K extends `${infer B}_${'zero' | 'one' | 'two' | 'few' | 'many' | 'other'}`
     ? B | K
     : K
@@ -109,8 +105,8 @@ export type WithOrWithoutPlural<K> = TypeOptions['jsonFormat'] extends 'v4'
 // Normalize single namespace
 export type KeysWithSeparator<K1, K2, S extends string = TypeOptions['keySeparator']> = `${K1 &
   string}${S}${K2 & string}`;
-export type KeysWithSeparator2<K1, K2> = KeysWithSeparator<K1, Exclude<K2, keyof any[]>>;
-export type Normalize2<T, K = keyof T> = K extends keyof T
+type KeysWithSeparator2<K1, K2> = KeysWithSeparator<K1, Exclude<K2, keyof any[]>>;
+type Normalize2<T, K = keyof T> = K extends keyof T
   ? T[K] extends Record<string, any>
     ? T[K] extends readonly any[]
       ?
@@ -121,28 +117,26 @@ export type Normalize2<T, K = keyof T> = K extends keyof T
           | KeysWithSeparator<K, Normalize2<T[K]>>
     : never
   : never;
-export type Normalize<T> = WithOrWithoutPlural<keyof T> | Normalize2<T>;
+type Normalize<T> = WithOrWithoutPlural<keyof T> | Normalize2<T>;
 
 // Normalize multiple namespaces
-export type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
-  k: infer I,
-) => void
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void
   ? I
   : never;
-export type LastOf<T> = UnionToIntersection<T extends any ? () => T : never> extends () => infer R
+type LastOf<T> = UnionToIntersection<T extends any ? () => T : never> extends () => infer R
   ? R
   : never;
-export type AppendNS<N, K> = `${N & string}:${K & string}`;
-export type NormalizeMulti<T, U extends keyof T, L = LastOf<U>> = L extends U
+type AppendNS<N, K> = `${N & string}:${K & string}`;
+type NormalizeMulti<T, U extends keyof T, L = LastOf<U>> = L extends U
   ? AppendNS<L, Normalize<T[L]>> | NormalizeMulti<T, Exclude<U, L>>
   : never;
 
-export interface CustomTypeParameters {
+type CustomTypeParameters = {
   returnNull?: boolean;
   returnEmptyString?: boolean;
-}
+};
 
-export type TypeOptionsFallback<TranslationValue, Option, MatchingValue> = Option extends false
+type TypeOptionsFallback<TranslationValue, Option, MatchingValue> = Option extends false
   ? TranslationValue extends MatchingValue
     ? string
     : TranslationValue
@@ -157,7 +151,7 @@ export type NormalizeByTypeOptions<
   R = TypeOptionsFallback<TranslationValue, Options['returnEmptyString'], ''>
 > = TypeOptionsFallback<R, Options['returnNull'], null>;
 
-export type NormalizeReturn<
+type NormalizeReturn<
   T,
   V,
   S extends string | false = TypeOptions['keySeparator']
@@ -171,13 +165,13 @@ export type NormalizeReturn<
     : never
   : never;
 
-export type NormalizeMultiReturn<T, V> = V extends `${infer N}:${infer R}`
+type NormalizeMultiReturn<T, V> = V extends `${infer N}:${infer R}`
   ? N extends keyof T
     ? NormalizeReturn<T[N], R>
     : never
   : never;
 
-export type NormalizeWithKeyPrefix<
+type NormalizeWithKeyPrefix<
   T,
   K,
   S extends string = TypeOptions['keySeparator']
@@ -191,7 +185,7 @@ export type NormalizeWithKeyPrefix<
     : Normalize<T[K]>
   : never;
 
-export type KeyPrefix<N extends Namespace> =
+type KeyPrefix<N extends Namespace> =
   | (N extends keyof DefaultResources ? Normalize<DefaultResources[N]> : string)
   | undefined;
 
@@ -199,7 +193,7 @@ export type TFuncKey<
   N extends Namespace = DefaultNamespace,
   TKPrefix = undefined,
   T = DefaultResources
-> = N extends Array<keyof T> | Readonly<Array<keyof T>>
+> = N extends (keyof T)[] | Readonly<(keyof T)[]>
   ? NormalizeMulti<T, N[number]>
   : N extends keyof T
   ? TKPrefix extends undefined
@@ -213,7 +207,7 @@ export type TFuncReturn<
   TDefaultResult,
   TKPrefix = undefined,
   T = DefaultResources
-> = N extends Array<keyof T>
+> = N extends (keyof T)[]
   ? NormalizeMultiReturn<T, TKeys>
   : N extends keyof T
   ? TKPrefix extends undefined
