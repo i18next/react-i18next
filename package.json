@@ -118,9 +118,9 @@
     "test:watch": "cross-env BABEL_ENV=development jest --no-cache --watch",
     "test:coverage": "cross-env BABEL_ENV=development jest --no-cache --coverage",
     "test:lint": "eslint ./src ./test",
-    "test:typescript": "tslint --project tsconfig.json",
-    "test:typescript:noninterop": "tslint --project tsconfig.nonEsModuleInterop.json",
-    "test:typescript:customtypes": "tslint --project ./test/typescript/custom-types/tsconfig.json",
+    "test:typescript": "tslint --project tsconfig.json '**/*.ts'",
+    "test:typescript:noninterop": "tslint --project tsconfig.nonEsModuleInterop.json '**/*.ts'",
+    "test:typescript:customtypes": "tslint --project ./test/typescript/custom-types/tsconfig.json '**/*.ts'",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
     "prettier": "prettier --write \"{,**/}*.{ts,tsx,js,json,md}\""
