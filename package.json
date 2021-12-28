@@ -49,6 +49,7 @@
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.7",
     "@testing-library/react-hooks": "^3.4.2",
+    "@types/react-native": "^0.66.6",
     "all-contributors-cli": "^6.20.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.3",
@@ -93,6 +94,14 @@
     "i18next": ">= 19.0.0",
     "react": ">= 16.8.0"
   },
+  "peerDependenciesMeta": {
+    "react-dom": {
+      "optional": true
+    },
+    "react-native": {
+      "optional": true
+    }
+  },
   "scripts": {
     "clean": "rimraf dist && mkdirp dist",
     "copy": "cp-cli ./dist/umd/react-i18next.min.js ./react-i18next.min.js && cp-cli ./dist/umd/react-i18next.js ./react-i18next.js",
@@ -109,9 +118,9 @@
     "test:watch": "cross-env BABEL_ENV=development jest --no-cache --watch",
     "test:coverage": "cross-env BABEL_ENV=development jest --no-cache --coverage",
     "test:lint": "eslint ./src ./test",
-    "test:typescript": "tslint --project tsconfig.json",
-    "test:typescript:noninterop": "tslint --project tsconfig.nonEsModuleInterop.json",
-    "test:typescript:customtypes": "tslint --project ./test/typescript/custom-types/tsconfig.json",
+    "test:typescript": "tslint --project tsconfig.json '**/*.ts'",
+    "test:typescript:noninterop": "tslint --project tsconfig.nonEsModuleInterop.json '**/*.ts'",
+    "test:typescript:customtypes": "tslint --project ./test/typescript/custom-types/tsconfig.json '**/*.ts'",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
     "prettier": "prettier --write \"{,**/}*.{ts,tsx,js,json,md}\""

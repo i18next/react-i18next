@@ -8,6 +8,7 @@ import i18next, {
   TFunctionResult,
 } from 'i18next';
 import * as React from 'react';
+import { TextProps } from 'react-native';
 
 type Subtract<T extends K, K> = Omit<T, keyof K>;
 
@@ -130,10 +131,10 @@ type NormalizeMulti<T, U extends keyof T, L = LastOf<U>> = L extends U
   ? AppendNS<L, Normalize<T[L]>> | NormalizeMulti<T, Exclude<U, L>>
   : never;
 
-type CustomTypeParameters = {
+interface CustomTypeParameters {
   returnNull?: boolean;
   returnEmptyString?: boolean;
-};
+}
 
 type TypeOptionsFallback<TranslationValue, Option, MatchingValue> = Option extends false
   ? TranslationValue extends MatchingValue
@@ -234,12 +235,12 @@ export interface TFunction<N extends Namespace = DefaultNamespace, TKPrefix = un
   ): TFuncReturn<N, TKeys, TDefaultResult, TKPrefix>;
 }
 
-export interface TransProps<
+export type TransProps<
   K extends TFuncKey<N, TKPrefix> extends infer A ? A : never,
   N extends Namespace = DefaultNamespace,
   TKPrefix = undefined,
-  E extends Element = HTMLDivElement
-> extends React.HTMLProps<E> {
+  E extends React.HTMLProps<HTMLDivElement> | TextProps
+> = E & {
   children?: React.ReactNode;
   components?: readonly React.ReactNode[] | { readonly [tagName: string]: React.ReactNode };
   count?: number;
@@ -252,13 +253,13 @@ export interface TransProps<
   values?: {};
   shouldUnescape?: boolean;
   t?: TFunction<N, TKPrefix>;
-}
+};
 
 export function Trans<
   K extends TFuncKey<N, TKPrefix> extends infer A ? A : never,
   N extends Namespace = DefaultNamespace,
   TKPrefix extends KeyPrefix<N> = undefined,
-  E extends Element = HTMLDivElement
+  E extends React.HTMLProps<HTMLDivElement> | TextProps = React.HTMLProps<HTMLDivElement>
 >(props: TransProps<K, N, TKPrefix, E>): React.ReactElement;
 
 export function useSSR(initialI18nStore: Resource, initialLanguage: string): void;

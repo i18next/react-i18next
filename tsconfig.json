@@ -12,7 +12,9 @@
     "paths": { "react-i18next": ["./"] },
 
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+
+    "skipLibCheck": true
   },
   "include": ["./src/**/*", "./test/**/*"],
   "exclude": ["test/typescript/nonEsModuleInterop/**/*.ts", "test/typescript/custom-types"]
