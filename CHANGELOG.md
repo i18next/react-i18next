@@ -1,3 +1,7 @@
+### 11.15.2
+
+- types: TypeScript interface for the Trans component does now accept react-native props [1418](https://github.com/i18next/react-i18next/pull/1418)
+
 ### 11.15.1
 
 - add missing types for shouldUnescape and useTranslation [1429](https://github.com/i18next/react-i18next/pull/1429)
