@@ -1,3 +1,7 @@
+### 11.15.3
+
+- types: fix for issue introduced with type extension for react-native [1436](https://github.com/i18next/react-i18next/pull/1436)
+
 ### 11.15.2
 
 - types: TypeScript interface for the Trans component does now accept react-native props [1418](https://github.com/i18next/react-i18next/pull/1418)
