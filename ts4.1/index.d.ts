@@ -8,7 +8,6 @@ import i18next, {
   TFunctionResult,
 } from 'i18next';
 import * as React from 'react';
-import { TextProps } from 'react-native';
 
 type Subtract<T extends K, K> = Omit<T, keyof K>;
 
@@ -239,7 +238,7 @@ export type TransProps<
   K extends TFuncKey<N, TKPrefix> extends infer A ? A : never,
   N extends Namespace = DefaultNamespace,
   TKPrefix = undefined,
-  E extends React.HTMLProps<HTMLDivElement> | TextProps
+  E = React.HTMLProps<HTMLDivElement>
 > = E & {
   children?: React.ReactNode;
   components?: readonly React.ReactNode[] | { readonly [tagName: string]: React.ReactNode };
@@ -259,7 +258,7 @@ export function Trans<
   K extends TFuncKey<N, TKPrefix> extends infer A ? A : never,
   N extends Namespace = DefaultNamespace,
   TKPrefix extends KeyPrefix<N> = undefined,
-  E extends React.HTMLProps<HTMLDivElement> | TextProps = React.HTMLProps<HTMLDivElement>
+  E = React.HTMLProps<HTMLDivElement>
 >(props: TransProps<K, N, TKPrefix, E>): React.ReactElement;
 
 export function useSSR(initialI18nStore: Resource, initialLanguage: string): void;
