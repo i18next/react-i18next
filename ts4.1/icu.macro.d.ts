@@ -14,6 +14,7 @@ declare module 'react-i18next/icu.macro' {
     i18n?: i18n;
     ns?: N;
     count: number;
+    values?: {};
     zero?: string | React.ReactElement;
     one?: string | React.ReactElement;
     two?: string | React.ReactElement;

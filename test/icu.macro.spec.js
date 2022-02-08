@@ -127,6 +127,19 @@ pluginTester({
     `,
 
     `
+      import { Plural } from '../icu.macro'
+
+      const x = <Plural
+        i18nKey="testKey"
+        count={itemsCount3}
+        values={{location: 'table'}}
+        $0={<Trans>There is <strong>no</strong> item on the <i>{location}</i>.</Trans>}
+        one={<Trans>There is <strong>#</strong> item on the <i>{location}</i>.</Trans>}
+        other={<Trans>There are <strong>#</strong> items on the <i>{location}</i>.</Trans>}
+      />
+    `,
+
+    `
       import { SelectOrdinal } from '../icu.macro'
 
       const x = <SelectOrdinal
