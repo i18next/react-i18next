@@ -1,3 +1,7 @@
+### 11.15.4
+
+- types: add values field to Plural component in macros [1446](https://github.com/i18next/react-i18next/pull/1446)
+
 ### 11.15.3
 
 - types: fix for issue introduced with type extension for react-native [1436](https://github.com/i18next/react-i18next/pull/1436)
