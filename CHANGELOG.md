@@ -1,3 +1,7 @@
+### 11.15.5
+
+- types: fix never return type when using plurals [1453](https://github.com/i18next/react-i18next/pull/1453)
+
 ### 11.15.4
 
 - types: add values field to Plural component in macros [1446](https://github.com/i18next/react-i18next/pull/1446)
