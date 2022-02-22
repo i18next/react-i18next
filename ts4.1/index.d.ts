@@ -95,8 +95,10 @@ declare module 'i18next' {
   }
 }
 
+type PluralSuffix = 'zero' | 'one' | 'two' | 'few' | 'many' | 'other';
+
 type WithOrWithoutPlural<K> = TypeOptions['jsonFormat'] extends 'v4'
-  ? K extends `${infer B}_${'zero' | 'one' | 'two' | 'few' | 'many' | 'other'}`
+  ? K extends `${infer B}_${PluralSuffix}`
     ? B | K
     : K
   : K;
@@ -150,6 +152,12 @@ export type NormalizeByTypeOptions<
   R = TypeOptionsFallback<TranslationValue, Options['returnEmptyString'], ''>
 > = TypeOptionsFallback<R, Options['returnNull'], null>;
 
+type StringIfPlural<T> = TypeOptions['jsonFormat'] extends 'v4'
+  ? T extends `${string}_${PluralSuffix}`
+    ? string
+    : never
+  : never;
+
 type NormalizeReturn<
   T,
   V,
@@ -162,7 +170,7 @@ type NormalizeReturn<
   ? K extends keyof T
     ? NormalizeReturn<T[K], R>
     : never
-  : never;
+  : StringIfPlural<keyof T>;
 
 type NormalizeMultiReturn<T, V> = V extends `${infer N}:${infer R}`
   ? N extends keyof T
