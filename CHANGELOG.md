@@ -1,3 +1,7 @@
+### 11.15.6
+
+- fix error for typescript 4.6 [1453](https://github.com/i18next/react-i18next/pull/1463)
+
 ### 11.15.5
 
 - types: fix never return type when using plurals [1453](https://github.com/i18next/react-i18next/pull/1453)
