@@ -327,7 +327,7 @@ export function withTranslation<N extends Namespace = DefaultNamespace>(
     withRef?: boolean;
   },
 ): <
-  C extends React.ComponentType<React.ComponentProps<C> & WithTranslationProps>,
+  C extends React.ComponentType<React.ComponentProps<any> & WithTranslationProps>,
   ResolvedProps = JSX.LibraryManagedAttributes<
     C,
     Subtract<React.ComponentProps<C>, WithTranslationProps>
