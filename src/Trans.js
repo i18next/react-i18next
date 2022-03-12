@@ -38,7 +38,10 @@ export function nodesToString(children, i18nOptions) {
 
   // do not use `React.Children.toArray`, will fail at object children
   const childrenArray = getAsArray(children);
-  const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
+  const keepArray =
+    i18nOptions.transSupportBasicHtmlNodes && i18nOptions.transKeepBasicHtmlNodesFor
+      ? i18nOptions.transKeepBasicHtmlNodesFor
+      : [];
 
   // e.g. lorem <br/> ipsum {{ messageCount, format }} dolor <strong>bold</strong> amet
   childrenArray.forEach((child, childIndex) => {
