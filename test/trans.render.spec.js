@@ -643,3 +643,38 @@ describe('trans should allow escaped html', () => {
     `);
   });
 });
+
+it('transSupportBasicHtmlNodes: false should not keep the name of simple nodes', () => {
+  const cloneInst = i18n.cloneInstance({
+    react: { transSupportBasicHtmlNodes: false, defaultTransParent: 'div' },
+  });
+
+  const TestComponent = () => (
+    <Trans i18n={cloneInst}>
+      <p>Plain paragraph</p>
+      <p>Plain paragraph 2</p>
+      <p>
+        Paragraph with <em>hack</em>
+      </p>
+      <p>
+        Paragraph with hack <em />
+      </p>
+      <p>
+        Paragraph with hack <em></em>
+      </p>
+      <p className="hack">Paragraph with hack</p>
+    </Trans>
+  );
+
+  const { container } = render(<TestComponent />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <div>
+      &lt;p&gt;Plain paragraph&lt;/p&gt;
+      &lt;p&gt;Plain paragraph 2&lt;/p&gt;
+      &lt;p&gt;Paragraph with ,&lt;em&gt;hack&lt;/em&gt;&lt;/p&gt;
+      &lt;p&gt;Paragraph with hack &lt;/p&gt;
+      &lt;p&gt;Paragraph with hack &lt;/p&gt;
+      &lt;p&gt;Paragraph with hack&lt;/p&gt;
+    </div>
+  `);
+});

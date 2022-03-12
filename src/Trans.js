@@ -68,6 +68,9 @@ export function nodesToString(children, i18nOptions) {
         // actual e.g. dolor <strong>bold</strong> amet
         // expected e.g. dolor <strong>bold</strong> amet
         stringNode += `<${child.type}>${childChildren}</${child.type}>`;
+      } else if (i18nOptions.transSupportBasicHtmlNodes === false) {
+        const content = nodesToString(childChildren, i18nOptions);
+        stringNode += `<${child.type}>${content}</${child.type}>`;
       } else {
         // regular case mapping the inner children
         const content = nodesToString(childChildren, i18nOptions);
@@ -186,8 +189,9 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
           const value = i18n.services.interpolator.interpolate(child, opts, i18n.language);
           mem.push(value);
         } else if (
-          hasChildren(child) || // the jsx element has children -> loop
-          isValidTranslationWithChildren // valid jsx element with no children but the translation has -> loop
+          i18nOptions.transSupportBasicHtmlNodes &&
+          (hasChildren(child) || // the jsx element has children -> loop
+            isValidTranslationWithChildren) // valid jsx element with no children but the translation has -> loop
         ) {
           const inner = renderInner(child, node, rootReactNode);
           pushTranslatedJSX(child, inner, mem, i);
