@@ -1,3 +1,7 @@
+### 11.15.7
+
+- types: add nsSeparator to CustomTypeOptions [1471](https://github.com/i18next/react-i18next/pull/1471)
+
 ### 11.15.6
 
 - fix error for typescript 4.6 [1453](https://github.com/i18next/react-i18next/pull/1463)
