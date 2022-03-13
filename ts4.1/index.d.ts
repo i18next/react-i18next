@@ -37,6 +37,7 @@ export interface Resources {}
  *     defaultNS: 'custom';
  *     returnNull: false;
  *     returnEmptyString: false;
+ *     nsSeparator: ':';
  *     keySeparator: '.';
  *     jsonFormat: 'v4';
  *     resources: {
@@ -57,6 +58,7 @@ type TypeOptions = MergeBy<
     returnNull: true;
     returnEmptyString: true;
     keySeparator: '.';
+    nsSeparator: ':';
     defaultNS: 'translation';
     jsonFormat: 'v4';
     resources: Resources;
@@ -121,15 +123,16 @@ type Normalize2<T, K = keyof T> = K extends keyof T
 type Normalize<T> = WithOrWithoutPlural<keyof T> | Normalize2<T>;
 
 // Normalize multiple namespaces
+type KeyWithNSSeparator<N, K, S extends string = TypeOptions['nsSeparator']> = `${N &
+  string}${S}${K & string}`;
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void
   ? I
   : never;
 type LastOf<T> = UnionToIntersection<T extends any ? () => T : never> extends () => infer R
   ? R
   : never;
-type AppendNS<N, K> = `${N & string}:${K & string}`;
 type NormalizeMulti<T, U extends keyof T, L = LastOf<U>> = L extends U
-  ? AppendNS<L, Normalize<T[L]>> | NormalizeMulti<T, Exclude<U, L>>
+  ? KeyWithNSSeparator<L, Normalize<T[L]>> | NormalizeMulti<T, Exclude<U, L>>
   : never;
 
 interface CustomTypeParameters {
