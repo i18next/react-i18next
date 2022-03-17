@@ -497,7 +497,7 @@
   }
 
   var _excluded = ["format"],
-      _excluded2 = ["children", "count", "parent", "i18nKey", "tOptions", "values", "defaults", "components", "ns", "i18n", "t", "shouldUnescape"];
+      _excluded2 = ["children", "count", "parent", "i18nKey", "context", "tOptions", "values", "defaults", "components", "ns", "i18n", "t", "shouldUnescape"];
 
   function hasChildren(node, checkLength) {
     if (!node) return false;
@@ -533,7 +533,7 @@
     if (!children) return '';
     var stringNode = '';
     var childrenArray = getAsArray(children);
-    var keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
+    var keepArray = i18nOptions.transSupportBasicHtmlNodes && i18nOptions.transKeepBasicHtmlNodesFor ? i18nOptions.transKeepBasicHtmlNodesFor : [];
     childrenArray.forEach(function (child, childIndex) {
       if (typeof child === 'string') {
         stringNode += "".concat(child);
@@ -704,6 +704,7 @@
         count = _ref.count,
         parent = _ref.parent,
         i18nKey = _ref.i18nKey,
+        context = _ref.context,
         _ref$tOptions = _ref.tOptions,
         tOptions = _ref$tOptions === void 0 ? {} : _ref$tOptions,
         values = _ref.values,
@@ -729,6 +730,8 @@
     var t = tFromProps || i18n.t.bind(i18n) || function (k) {
       return k;
     };
+
+    if (context) tOptions.context = context;
 
     var reactI18nextOptions = _objectSpread2(_objectSpread2({}, getDefaults()), i18n.options && i18n.options.react);
 

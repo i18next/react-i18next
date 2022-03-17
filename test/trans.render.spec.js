@@ -679,3 +679,26 @@ it('transSupportBasicHtmlNodes: false should not keep the name of simple nodes',
     </div>
   `);
 });
+
+describe('trans with context property', () => {
+  const TestComponent = ({ parent }) => (
+    <Trans i18nKey="testTransWithCtx" context="home" parent={parent}>
+      Open <Link to="/msgs">here</Link>.
+    </Trans>
+  );
+
+  it('should render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Go 
+        <a
+          href="/msgs"
+        >
+          home
+        </a>
+        .
+      </div>
+    `);
+  });
+});

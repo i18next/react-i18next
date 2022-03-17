@@ -43,6 +43,8 @@ i18n.init({
         transTest3_overwrite:
           'Result should be a clickable link <0 href="https://www.google.com">Google</0>',
         transTestEscapedHtml: 'Escaped html should unescape correctly <0>&lt;&nbsp;&amp;&gt;</0>.',
+        testTransWithCtx: 'Go <1>there</1>.',
+        testTransWithCtx_home: 'Go <1>home</1>.',
       },
       other: {
         transTest1: 'Another go <1>there</1>.',
