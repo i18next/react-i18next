@@ -1,3 +1,7 @@
+### 11.16.1
+
+- types: for context prop of Trans component
+
 ### 11.16.0
 
 - fix: transSupportBasicHtmlNodes for keepArray check [1470](https://github.com/i18next/react-i18next/pull/1470)

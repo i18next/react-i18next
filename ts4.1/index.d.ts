@@ -254,6 +254,7 @@ export type TransProps<
   children?: React.ReactNode;
   components?: readonly React.ReactNode[] | { readonly [tagName: string]: React.ReactNode };
   count?: number;
+  context?: string;
   defaults?: string;
   i18n?: i18n;
   i18nKey?: K | K[];
