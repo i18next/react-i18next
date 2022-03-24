@@ -301,6 +301,11 @@ pluginTester({
         </Trans>
       );
     `,
+    `
+      import { Trans } from "../icu.macro";
+
+      const x = <Trans>Welcome, &quot;{ name }&quot;!</Trans>
+    `,
     {
       code: `
         import React from "react"
