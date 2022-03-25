@@ -262,9 +262,20 @@ function buildTransElement(
 
   // add generated Trans attributes
   if (!attributeExistsAlready('defaults', finalAttributes))
-    finalAttributes.push(
-      t.jSXAttribute(t.jSXIdentifier('defaults'), t.StringLiteral(extracted.defaults)),
-    );
+    if (extracted.defaults.includes(`"`)) {
+      // wrap defaults that contain double quotes in brackets
+      finalAttributes.push(
+        t.jSXAttribute(
+          t.jSXIdentifier('defaults'),
+          t.jSXExpressionContainer(t.StringLiteral(extracted.defaults)),
+        ),
+      );
+    } else {
+      finalAttributes.push(
+        t.jSXAttribute(t.jSXIdentifier('defaults'), t.StringLiteral(extracted.defaults)),
+      );
+    }
+
   if (!attributeExistsAlready('components', finalAttributes))
     finalAttributes.push(
       t.jSXAttribute(t.jSXIdentifier('components'), t.jSXExpressionContainer(extracted.components)),

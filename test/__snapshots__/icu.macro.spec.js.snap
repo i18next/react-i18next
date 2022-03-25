@@ -572,3 +572,18 @@ const x = <Trans i18nKey=\\"key\\" defaults=\\"<0>exciting!</0>{count, plural, =
 }} />;
 "
 `;
+
+exports[`macros 22. macros: 22. macros 1`] = `
+"
+import { Trans } from \\"../icu.macro\\";
+
+const x = <Trans>Welcome, &quot;{ name }&quot;!</Trans>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from \\"react-i18next\\";
+const x = <Trans defaults={\\"Welcome, \\\\\\"{name}\\\\\\"!\\"} components={[]} values={{
+  name
+}} />;
+"
+`;
