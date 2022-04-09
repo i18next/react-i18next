@@ -107,6 +107,7 @@ export function withTranslation(
 ) => React.ComponentType<Omit<ResolvedProps, keyof WithTranslation> & WithTranslationProps>;
 
 export interface I18nextProviderProps {
+  children?: React.ReactNode;
   i18n: i18n;
   defaultNS?: string;
 }
