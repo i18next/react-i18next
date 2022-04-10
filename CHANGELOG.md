@@ -1,3 +1,7 @@
+### next
+
+- types: children fix for React v18 [1478](https://github.com/i18next/react-i18next/pull/1478)
+
 ### 11.16.2
 
 - update macro to wrap defaults in brackets when necessary [1472](https://github.com/i18next/react-i18next/pull/1472)
