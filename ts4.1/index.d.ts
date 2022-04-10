@@ -341,6 +341,7 @@ export function withTranslation<N extends Namespace = DefaultNamespace>(
 ) => React.ComponentType<Omit<ResolvedProps, keyof WithTranslation<N>> & WithTranslationProps>;
 
 export interface I18nextProviderProps {
+  children?: React.ReactNode;
   i18n: i18n;
   defaultNS?: string;
 }
