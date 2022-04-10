@@ -228,7 +228,7 @@ export type TFuncReturn<
 export interface TFunction<N extends Namespace = DefaultNamespace, TKPrefix = undefined> {
   <
     TKeys extends TFuncKey<N, TKPrefix> | TemplateStringsArray extends infer A ? A : never,
-    TDefaultResult extends TFunctionResult | ReactNode = string,
+    TDefaultResult extends TFunctionResult | React.ReactNode = string,
     TInterpolationMap extends object = StringMap
   >(
     key: TKeys | TKeys[],
@@ -236,7 +236,7 @@ export interface TFunction<N extends Namespace = DefaultNamespace, TKPrefix = un
   ): TFuncReturn<N, TKeys, TDefaultResult, TKPrefix>;
   <
     TKeys extends TFuncKey<N, TKPrefix> | TemplateStringsArray extends infer A ? A : never,
-    TDefaultResult extends TFunctionResult | ReactNode = string,
+    TDefaultResult extends TFunctionResult | React.ReactNode = string,
     TInterpolationMap extends object = StringMap
   >(
     key: TKeys | TKeys[],
