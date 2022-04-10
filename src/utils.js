@@ -96,7 +96,11 @@ export function hasLoadedNamespace(ns, i18n, options = {}) {
   if (i18n.hasResourceBundle(lng, ns)) return true;
 
   // were not loading at all -> SEMI SUCCESS
-  if (!i18n.services.backendConnector.backend) return true;
+  if (
+    !i18n.services.backendConnector.backend ||
+    (i18n.options.resources && !i18n.options.partialBundledLanguages)
+  )
+    return true;
 
   // failed loading ns - but at least fallback is not pending -> SEMI SUCCESS
   if (loadNotPending(lng, ns) && (!fallbackLng || loadNotPending(lastLng, ns))) return true;
