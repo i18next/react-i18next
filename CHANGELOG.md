@@ -1,4 +1,4 @@
-### next
+### 11.16.3
 
 - types: children fix for React v18 [1478](https://github.com/i18next/react-i18next/pull/1478)
 - fix: apply [same fix](https://github.com/i18next/i18next/commit/0dcf7fdede9d58e16f82179b41b09f10eda5aeea) for local hasLoadedNamespace function
