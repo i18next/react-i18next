@@ -1,3 +1,7 @@
+### 11.16.5
+
+- types: ReactNode should be prefixed with React [1481](https://github.com/i18next/react-i18next/pull/1481)
+
 ### 11.16.4
 
 - fix type 'TFunctionResult' is not assignable to type 'ReactNode' on React 18 [1480](https://github.com/i18next/react-i18next/pull/1480)
