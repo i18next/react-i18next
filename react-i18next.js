@@ -468,7 +468,8 @@
       }
     });
   }
-  function hasLoadedNamespace(ns, i18n) {
+
+  function oldI18nextHasLoadedNamespace(ns, i18n) {
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
     if (!i18n.languages || !i18n.languages.length) {
@@ -491,6 +492,21 @@
     if (!i18n.services.backendConnector.backend || i18n.options.resources && !i18n.options.partialBundledLanguages) return true;
     if (loadNotPending(lng, ns) && (!fallbackLng || loadNotPending(lastLng, ns))) return true;
     return false;
+  }
+
+  function hasLoadedNamespace(ns, i18n) {
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    var isNewerI18next = i18n.options.ignoreJSONStructure !== undefined;
+
+    if (!isNewerI18next) {
+      return oldI18nextHasLoadedNamespace(ns, i18n, options);
+    }
+
+    return i18n.hasLoadedNamespace(ns, {
+      precheck: function precheck(i18nInstance, loadNotPending) {
+        if (options.bindI18n && options.bindI18n.indexOf('languageChanging') > -1 && i18nInstance.services.backendConnector.backend && i18nInstance.isLanguageChangingTo && !loadNotPending(i18nInstance.isLanguageChangingTo, ns)) return false;
+      }
+    });
   }
   function getDisplayName(Component) {
     return Component.displayName || Component.name || (typeof Component === 'string' && Component.length > 0 ? Component : 'Unknown');

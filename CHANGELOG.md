@@ -1,3 +1,7 @@
+### 11.16.4
+
+- fix type 'TFunctionResult' is not assignable to type 'ReactNode' on React 18 [1480](https://github.com/i18next/react-i18next/pull/1480)
+
 ### 11.16.3
 
 - types: children fix for React v18 [1478](https://github.com/i18next/react-i18next/pull/1478)
