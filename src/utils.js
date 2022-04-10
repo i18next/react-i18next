@@ -40,29 +40,8 @@ export function loadNamespaces(i18n, ns, cb) {
   });
 }
 
-export function hasLoadedNamespace(ns, i18n, options = {}) {
-  /*
-
-  IN I18NEXT > v19.4.5 WE CAN (INTRODUCED JUNE 2020)
-
-  return i18n.hasLoadedNamespace(ns, {
-    precheck: (i18nInstance, loadNotPending) => {
-      if (
-        options.bindI18n &&
-        options.bindI18n.indexOf('languageChanging') > -1 &&
-        i18n.services.backendConnector.backend &&
-        i18n.isLanguageChangingTo &&
-        !loadNotPending(i18n.isLanguageChangingTo, ns)
-      )
-        return false;
-    }
-  })
-
-  // WILL BE BREAKING AS DEPENDS ON SPECIFIC I18NEXT VERSION
-  // WAIT A LITTLE FOR I18NEXT BEING UPDATED IN THE WILD
-
-  */
-
+// WAIT A LITTLE FOR I18NEXT BEING UPDATED IN THE WILD, before removing this old i18next version support
+function oldI18nextHasLoadedNamespace(ns, i18n, options = {}) {
   if (!i18n.languages || !i18n.languages.length) {
     warnOnce('i18n.languages were undefined or empty', i18n.languages);
     return true;
@@ -106,6 +85,29 @@ export function hasLoadedNamespace(ns, i18n, options = {}) {
   if (loadNotPending(lng, ns) && (!fallbackLng || loadNotPending(lastLng, ns))) return true;
 
   return false;
+}
+
+export function hasLoadedNamespace(ns, i18n, options = {}) {
+  // ignoreJSONStructure was introduced in v20.0.0 (MARCH 2021)
+  const isNewerI18next = i18n.options.ignoreJSONStructure !== undefined;
+  if (!isNewerI18next) {
+    // WAIT A LITTLE FOR I18NEXT BEING UPDATED IN THE WILD, before removing this old i18next version support
+    return oldI18nextHasLoadedNamespace(ns, i18n, options);
+  }
+
+  // IN I18NEXT > v19.4.5 WE CAN (INTRODUCED JUNE 2020)
+  return i18n.hasLoadedNamespace(ns, {
+    precheck: (i18nInstance, loadNotPending) => {
+      if (
+        options.bindI18n &&
+        options.bindI18n.indexOf('languageChanging') > -1 &&
+        i18nInstance.services.backendConnector.backend &&
+        i18nInstance.isLanguageChangingTo &&
+        !loadNotPending(i18nInstance.isLanguageChangingTo, ns)
+      )
+        return false;
+    },
+  });
 }
 
 export function getDisplayName(Component) {
