@@ -42,11 +42,6 @@ export function loadNamespaces(i18n, ns, cb) {
 
 // WAIT A LITTLE FOR I18NEXT BEING UPDATED IN THE WILD, before removing this old i18next version support
 function oldI18nextHasLoadedNamespace(ns, i18n, options = {}) {
-  if (!i18n.languages || !i18n.languages.length) {
-    warnOnce('i18n.languages were undefined or empty', i18n.languages);
-    return true;
-  }
-
   const lng = i18n.languages[0];
   const fallbackLng = i18n.options ? i18n.options.fallbackLng : false;
   const lastLng = i18n.languages[i18n.languages.length - 1];
@@ -88,6 +83,11 @@ function oldI18nextHasLoadedNamespace(ns, i18n, options = {}) {
 }
 
 export function hasLoadedNamespace(ns, i18n, options = {}) {
+  if (!i18n.languages || !i18n.languages.length) {
+    warnOnce('i18n.languages were undefined or empty', i18n.languages);
+    return true;
+  }
+
   // ignoreJSONStructure was introduced in v20.0.0 (MARCH 2021)
   const isNewerI18next = i18n.options.ignoreJSONStructure !== undefined;
   if (!isNewerI18next) {

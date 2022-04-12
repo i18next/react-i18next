@@ -471,12 +471,6 @@
 
   function oldI18nextHasLoadedNamespace(ns, i18n) {
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-    if (!i18n.languages || !i18n.languages.length) {
-      warnOnce('i18n.languages were undefined or empty', i18n.languages);
-      return true;
-    }
-
     var lng = i18n.languages[0];
     var fallbackLng = i18n.options ? i18n.options.fallbackLng : false;
     var lastLng = i18n.languages[i18n.languages.length - 1];
@@ -496,6 +490,12 @@
 
   function hasLoadedNamespace(ns, i18n) {
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+    if (!i18n.languages || !i18n.languages.length) {
+      warnOnce('i18n.languages were undefined or empty', i18n.languages);
+      return true;
+    }
+
     var isNewerI18next = i18n.options.ignoreJSONStructure !== undefined;
 
     if (!isNewerI18next) {

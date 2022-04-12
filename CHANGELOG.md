@@ -1,3 +1,7 @@
+### 11.16.6
+
+- fix: warn just once 'i18n.languages were undefined or empty' and return true, like before
+
 ### 11.16.5
 
 - types: ReactNode should be prefixed with React [1481](https://github.com/i18next/react-i18next/pull/1481)
