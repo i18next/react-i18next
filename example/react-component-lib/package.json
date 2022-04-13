@@ -1,0 +1,33 @@
+{
+  "name": "react_usinghooks",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "i18next": "21.6.16",
+    "i18next-browser-languagedetector": "6.1.4",
+    "i18next-http-backend": "1.4.0",
+    "react": "18.0.0",
+    "react-dom": "18.0.0",
+    "react-i18next": "11.16.6",
+    "react-scripts": "5.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "development": [
+      "last 2 chrome versions",
+      "last 2 firefox versions",
+      "last 2 edge versions"
+    ],
+    "production": [
+      ">1%",
+      "last 4 versions",
+      "Firefox ESR",
+      "not ie < 11"
+    ]
+  }
+}
