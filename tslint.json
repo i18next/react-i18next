@@ -3,6 +3,7 @@
   "extends": "dtslint/dtslint.json",
   "rules": {
     "array-type": [true, "array"],
+    "no-null-undefined-union": false,
     "no-empty-interface": false,
     "no-redundant-jsdoc": false,
     "no-unnecessary-generics": false,
