@@ -1,3 +1,7 @@
+### 11.16.7
+
+- types: Added objects explicitly to Trans children [1486](https://github.com/i18next/react-i18next/pull/1486)
+
 ### 11.16.6
 
 - fix: warn just once 'i18n.languages were undefined or empty' and return true, like before
