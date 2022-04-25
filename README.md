@@ -75,7 +75,7 @@ Head over to the **interactive playground** at [codesandbox](https://codesandbox
 ### Why i18next?
 
 - **Simplicity:** no need to change your webpack configuration or add additional babel transpilers, just use create-react-app and go.
-- **Production ready** we know there are more needs for production than just doing i18n on the clientside, so we offer wider support on [serverside](https://www.i18next.com/supported-frameworks.html) too (nodejs, php, ruby, .net, ...). **Learn once - translate everywhere**.
+- **Production ready** we know there are more needs for production than just doing i18n on the clientside, so we offer wider support on [serverside](https://www.i18next.com/overview/supported-frameworks) too (nodejs, php, ruby, .net, ...). **Learn once - translate everywhere**.
 - **Beyond i18n** comes with [locize](https://locize.com) bridging the gap between developement and translations - covering the whole translation process.
 
 ![ecosystem](https://raw.githubusercontent.com/i18next/i18next/master/assets/i18next-ecosystem.jpg)
