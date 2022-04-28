@@ -8,6 +8,33 @@ export function useTranslation(ns, props = {}) {
   const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = useContext(I18nContext) || {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
   if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
+
+  if (i18n && i18n.options.react && i18n.options.react.wait !== undefined)
+    warnOnce(
+      'It seems you are still using the old wait option, you may migrate to the new useSuspense behaviour.',
+    );
+
+  const i18nOptions = i18n ? { ...getDefaults(), ...i18n.options.react, ...props } : getDefaults();
+  const { useSuspense, keyPrefix } = i18nOptions;
+
+  // prepare having a namespace
+  let namespaces = ns || defaultNSFromContext || (i18n && i18n.options && i18n.options.defaultNS);
+  namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
+
+  // binding t function to namespace (acts also as rerender trigger)
+  function getT() {
+    return (
+      i18n &&
+      i18n.getFixedT(
+        null,
+        i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
+        keyPrefix,
+      )
+    );
+  }
+  const [t, setT] = useState(getT);
+
+  const isMounted = useRef(true);
   if (!i18n) {
     warnOnce('You will need to pass in an i18next instance by using initReactI18next');
     const notReadyT = (k) => (Array.isArray(k) ? k[k.length - 1] : k);
@@ -18,18 +45,6 @@ export function useTranslation(ns, props = {}) {
     return retNotReady;
   }
 
-  if (i18n.options.react && i18n.options.react.wait !== undefined)
-    warnOnce(
-      'It seems you are still using the old wait option, you may migrate to the new useSuspense behaviour.',
-    );
-
-  const i18nOptions = { ...getDefaults(), ...i18n.options.react, ...props };
-  const { useSuspense, keyPrefix } = i18nOptions;
-
-  // prepare having a namespace
-  let namespaces = ns || defaultNSFromContext || (i18n.options && i18n.options.defaultNS);
-  namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
-
   // report namespaces as used
   if (i18n.reportNamespaces.addUsedNamespaces) i18n.reportNamespaces.addUsedNamespaces(namespaces);
 
@@ -38,17 +53,6 @@ export function useTranslation(ns, props = {}) {
     (i18n.isInitialized || i18n.initializedStoreOnce) &&
     namespaces.every((n) => hasLoadedNamespace(n, i18n, i18nOptions));
 
-  // binding t function to namespace (acts also as rerender trigger)
-  function getT() {
-    return i18n.getFixedT(
-      null,
-      i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
-      keyPrefix,
-    );
-  }
-  const [t, setT] = useState(getT);
-
-  const isMounted = useRef(true);
   useEffect(() => {
     const { bindI18n, bindI18nStore } = i18nOptions;
     isMounted.current = true;
