@@ -40,6 +40,7 @@ export interface Resources {}
  *     nsSeparator: ':';
  *     keySeparator: '.';
  *     jsonFormat: 'v4';
+ *     allowObjectInHTMLChildren: false;
  *     resources: {
  *       custom: {
  *         foo: 'foo';
@@ -62,6 +63,7 @@ type TypeOptions = MergeBy<
     defaultNS: 'translation';
     jsonFormat: 'v4';
     resources: Resources;
+    allowObjectInHTMLChildren: false;
   },
   CustomTypeOptions
 >;
@@ -94,6 +96,15 @@ export interface ReportNamespaces {
 declare module 'i18next' {
   interface i18n {
     reportNamespaces: ReportNamespaces;
+  }
+}
+
+type ObjectOrNever = TypeOptions['allowObjectInHTMLChildren'] extends true
+  ? Record<string, unknown>
+  : never;
+declare module 'react' {
+  interface HTMLAttributes {
+    children?: ReactNode | ObjectOrNever;
   }
 }
 
@@ -245,13 +256,14 @@ export interface TFunction<N extends Namespace = DefaultNamespace, TKPrefix = un
   ): TFuncReturn<N, TKeys, TDefaultResult, TKPrefix>;
 }
 
+type TransChild = React.ReactNode | Record<string, unknown>;
 export type TransProps<
   K extends TFuncKey<N, TKPrefix> extends infer A ? A : never,
   N extends Namespace = DefaultNamespace,
   TKPrefix = undefined,
   E = React.HTMLProps<HTMLDivElement>
 > = E & {
-  children?: React.ReactNode | Record<string, unknown>;
+  children?: TransChild | TransChild[];
   components?: readonly React.ReactNode[] | { readonly [tagName: string]: React.ReactNode };
   count?: number;
   context?: string;
