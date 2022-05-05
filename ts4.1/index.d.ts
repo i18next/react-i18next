@@ -40,6 +40,7 @@ export interface Resources {}
  *     nsSeparator: ':';
  *     keySeparator: '.';
  *     jsonFormat: 'v4';
+ *     allowObjectInHTMLChildren: false;
  *     resources: {
  *       custom: {
  *         foo: 'foo';
@@ -103,7 +104,7 @@ type ObjectOrNever = TypeOptions['allowObjectInHTMLChildren'] extends true
   : never;
 declare module 'react' {
   interface HTMLAttributes {
-    children?: React.ReactNode | ObjectOrNever;
+    children?: ReactNode | ObjectOrNever;
   }
 }
 
