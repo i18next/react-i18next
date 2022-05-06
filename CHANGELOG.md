@@ -1,3 +1,7 @@
+### 11.16.9
+
+- types: fix missing generic type for HTMLAttributes [1499](https://github.com/i18next/react-i18next/pull/1499)
+
 ### 11.16.8
 
 - types: fix Trans component to support react 18 types, by introducing allowObjectInHTMLChildren TS option [1492](https://github.com/i18next/react-i18next/pull/1492)
