@@ -103,7 +103,7 @@ type ObjectOrNever = TypeOptions['allowObjectInHTMLChildren'] extends true
   ? Record<string, unknown>
   : never;
 declare module 'react' {
-  interface HTMLAttributes {
+  interface HTMLAttributes<T> {
     children?: ReactNode | ObjectOrNever;
   }
 }
