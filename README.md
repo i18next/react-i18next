@@ -3,12 +3,14 @@
 [![CircleCI](https://circleci.com/gh/i18next/react-i18next.svg?style=svg)](https://circleci.com/gh/i18next/react-i18next)
 [![Code Climate](https://codeclimate.com/github/codeclimate/codeclimate/badges/gpa.svg)](https://codeclimate.com/github/i18next/react-i18next)
 [![Coverage Status](https://coveralls.io/repos/github/i18next/react-i18next/badge.svg)](https://coveralls.io/github/i18next/react-i18next)
-[![Quality][quality-badge] ][quality-url]
+[![Quality][quality-badge]][quality-url]
+[![npm][npm-dl-badge]][npm-url]
 
 [npm-icon]: https://nodei.co/npm/react-i18next.png?downloads=true
 [npm-url]: https://npmjs.org/package/react-i18next
-[quality-badge]: http://npm.packagequality.com/shield/react-i18next.svg
-[quality-url]: http://packagequality.com/#?package=react-i18next
+[quality-badge]: https://npm.packagequality.com/shield/react-i18next.svg
+[quality-url]: https://packagequality.com/#?package=react-i18next
+[npm-dl-badge]: https://img.shields.io/npm/dw/react-i18next
 
 ### IMPORTANT:
 
