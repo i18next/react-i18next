@@ -326,8 +326,11 @@ export function withSSR(): <Props>(
   getInitialProps: (ctx: unknown) => Promise<any>;
 };
 
-export interface WithTranslation<N extends Namespace = DefaultNamespace> {
-  t: TFunction<N>;
+export interface WithTranslation<
+  N extends Namespace = DefaultNamespace,
+  TKPrefix extends KeyPrefix<N> = undefined
+> {
+  t: TFunction<N, TKPrefix>;
   i18n: i18n;
   tReady: boolean;
 }
@@ -337,10 +340,14 @@ export interface WithTranslationProps {
   useSuspense?: boolean;
 }
 
-export function withTranslation<N extends Namespace = DefaultNamespace>(
+export function withTranslation<
+  N extends Namespace = DefaultNamespace,
+  TKPrefix extends KeyPrefix<N> = undefined
+>(
   ns?: N,
   options?: {
     withRef?: boolean;
+    keyPrefix?: TKPrefix;
   },
 ): <
   C extends React.ComponentType<React.ComponentProps<any> & WithTranslationProps>,
