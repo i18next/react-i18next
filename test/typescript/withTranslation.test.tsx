@@ -61,3 +61,22 @@ function withSuspense() {
   const ExtendedComponent = withTranslation('ns')(MyComponent);
   return <ExtendedComponent bar="baz" useSuspense={false} />;
 }
+
+interface KeyPrefixComponentProps extends WithTranslation<'translation', 'deepPath'> {
+  bar: 'baz';
+}
+
+const KeyPrefixComponent = (props: KeyPrefixComponentProps) => {
+  const { t, i18n, tReady } = props;
+  const r: boolean = tReady;
+  return <h2>{t('deepKey1')}</h2>;
+};
+
+MyComponent.defaultProps = defaultProps;
+
+function withNsAndKeyPrefix() {
+  const ExtendedComponent = withTranslation('translation', { keyPrefix: 'deepPath' })(
+    KeyPrefixComponent,
+  );
+  return <ExtendedComponent bar="baz" />;
+}
