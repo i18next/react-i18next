@@ -39,6 +39,9 @@ i18n.init({
         testTrans4KeyWithNestedComponent: 'Result should be a list: <0></0>',
         testTrans5KeyWithNestedComponent: 'Result should be a list: <1></1>',
         testTrans5KeyWithValue: 'Result should be rendered within tag <0>{{testValue}}</0>',
+        deepPath: {
+          deepKey1: 'value1',
+        },
       },
       other: {
         transTest1: 'Another go <1>there</1>.',
