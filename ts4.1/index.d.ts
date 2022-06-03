@@ -368,7 +368,10 @@ export interface I18nextProviderProps {
 export const I18nextProvider: React.FunctionComponent<I18nextProviderProps>;
 export const I18nContext: React.Context<{ i18n: i18n }>;
 
-export interface TranslationProps<N extends Namespace = DefaultNamespace, TKPrefix> {
+export interface TranslationProps<
+  N extends Namespace = DefaultNamespace,
+  TKPrefix extends KeyPrefix<N> = undefined
+> {
   children: (
     t: TFunction<N, TKPrefix>,
     options: {
