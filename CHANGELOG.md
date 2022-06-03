@@ -1,3 +1,7 @@
+### 11.17.0
+
+- Add support for keyPrefix in withTranslation [1512](https://github.com/i18next/react-i18next/pull/1512)
+
 ### 11.16.11
 
 - types: fix Translation component types regression [1511](https://github.com/i18next/react-i18next/pull/1511)
