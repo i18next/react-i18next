@@ -1,3 +1,7 @@
+### 11.16.10
+
+- types: translation component types [1509](https://github.com/i18next/react-i18next/pull/1509)
+
 ### 11.16.9
 
 - types: fix missing generic type for HTMLAttributes [1499](https://github.com/i18next/react-i18next/pull/1499)
