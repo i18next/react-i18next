@@ -5,7 +5,7 @@ import { getDisplayName } from './utils';
 export function withTranslation(ns, options = {}) {
   return function Extend(WrappedComponent) {
     function I18nextWithTranslation({ forwardedRef, ...rest }) {
-      const [t, i18n, ready] = useTranslation(ns, rest);
+      const [t, i18n, ready] = useTranslation(ns, { ...rest, keyPrefix: options.keyPrefix });
 
       const passDownProps = {
         ...rest,

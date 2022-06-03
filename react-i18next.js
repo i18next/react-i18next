@@ -880,7 +880,9 @@
         var forwardedRef = _ref.forwardedRef,
             rest = _objectWithoutProperties(_ref, _excluded$1);
 
-        var _useTranslation = useTranslation(ns, rest),
+        var _useTranslation = useTranslation(ns, _objectSpread2(_objectSpread2({}, rest), {}, {
+          keyPrefix: options.keyPrefix
+        })),
             _useTranslation2 = _slicedToArray(_useTranslation, 3),
             t = _useTranslation2[0],
             i18n = _useTranslation2[1],
