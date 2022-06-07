@@ -26,27 +26,12 @@ function objectComponents() {
   return <Trans components={{ Btn: <button /> }} defaults="Hello <Btn />" />;
 }
 
-function MyComponent(): React.ReactElement {
+function MyComponent() {
   return <>world</>;
 }
 
 function objectCustomComponents() {
   return <Trans components={{ Btn: <MyComponent /> }} defaults="Hello <Btn />" />;
-}
-
-function objectCustomComponentsShouldError() {
-  return (
-    <Trans
-      // Valid ReactNodes according to types
-      components={{
-        Btn: MyComponent,
-        Btn2: null,
-        Btn4: true,
-        Btn5: {},
-      }}
-      defaults="Hello <Btn /><Btn2 /><Btn3 /><Btn4 /><Btn5 />"
-    />
-  );
 }
 
 function constObjectComponents() {
