@@ -34,7 +34,7 @@ export interface TransProps<E extends Element = HTMLDivElement>
   extends React.HTMLProps<E>,
     Partial<WithT> {
   children?: React.ReactNode;
-  components?: readonly React.ReactNode[] | { readonly [tagName: string]: React.ReactNode };
+  components?: readonly React.ReactElement[] | { readonly [tagName: string]: React.ReactElement };
   count?: number;
   context?: string;
   defaults?: string;

@@ -264,7 +264,7 @@ export type TransProps<
   E = React.HTMLProps<HTMLDivElement>
 > = E & {
   children?: TransChild | TransChild[];
-  components?: readonly React.ReactNode[] | { readonly [tagName: string]: React.ReactNode };
+  components?: readonly React.ReactElement[] | { readonly [tagName: string]: React.ReactElement };
   count?: number;
   context?: string;
   defaults?: string;
