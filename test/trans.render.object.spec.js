@@ -242,32 +242,3 @@ describe('trans using no children but components (object) - interpolated compone
     `);
   });
 });
-
-describe('trans using no children but components (object) - ReactNodes that error', () => {
-  const Button = ({ children }) => <button type="button">{children}</button>;
-  // Suppress console.errors in these tests
-  let consoleErrorFn;
-  beforeAll(() => {
-    consoleErrorFn = jest.spyOn(console, 'error').mockImplementation(() => jest.fn());
-  });
-  afterAll(() => {
-    consoleErrorFn.restoreMocks();
-  });
-  it('should throw if you use some valid ReactNodes', () => {
-    expect(() =>
-      render(<Trans defaults="hello <ClickMe>Test</ClickMe>" components={{ ClickMe: Button }} />),
-    ).toThrow();
-
-    expect(() =>
-      render(<Trans defaults="hello <ClickMe>Test</ClickMe>" components={{ ClickMe: {} }} />),
-    ).toThrow();
-
-    expect(() =>
-      render(<Trans defaults="hello <ClickMe>Test</ClickMe>" components={{ ClickMe: null }} />),
-    ).toThrow();
-
-    expect(() =>
-      render(<Trans defaults="hello <ClickMe>Test</ClickMe>" components={{ ClickMe: true }} />),
-    ).toThrow();
-  });
-});
