@@ -1,3 +1,7 @@
+### 11.17.1
+
+- Stricter typescript type for Trans components prop [1516](https://github.com/i18next/react-i18next/pull/1516)
+
 ### 11.17.0
 
 - Add support for keyPrefix in withTranslation [1512](https://github.com/i18next/react-i18next/pull/1512)
