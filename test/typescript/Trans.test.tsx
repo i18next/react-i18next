@@ -26,6 +26,14 @@ function objectComponents() {
   return <Trans components={{ Btn: <button /> }} defaults="Hello <Btn />" />;
 }
 
+function MyComponent() {
+  return <>world</>;
+}
+
+function objectCustomComponents() {
+  return <Trans components={{ Btn: <MyComponent /> }} defaults="Hello <Btn />" />;
+}
+
 function constObjectComponents() {
   const constObject = {
     Btn: <button />,
