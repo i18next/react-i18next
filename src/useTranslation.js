@@ -2,6 +2,14 @@ import { useState, useEffect, useContext, useRef } from 'react';
 import { getI18n, getDefaults, ReportNamespaces, I18nContext } from './context';
 import { warnOnce, loadNamespaces, hasLoadedNamespace } from './utils';
 
+const usePrevious = (value, ignore) => {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = ignore ? ref.current : value;
+  }, [value, ignore]);
+  return ref.current;
+};
+
 export function useTranslation(ns, props = {}) {
   // assert we have the needed i18nInstance
   const { i18n: i18nFromProps } = props;
@@ -48,6 +56,9 @@ export function useTranslation(ns, props = {}) {
   }
   const [t, setT] = useState(getT);
 
+  const joinedNS = namespaces.join();
+  const previousJoinedNS = usePrevious(joinedNS);
+
   const isMounted = useRef(true);
   useEffect(() => {
     const { bindI18n, bindI18nStore } = i18nOptions;
@@ -59,6 +70,10 @@ export function useTranslation(ns, props = {}) {
       loadNamespaces(i18n, namespaces, () => {
         if (isMounted.current) setT(getT);
       });
+    }
+
+    if (ready && previousJoinedNS && previousJoinedNS !== joinedNS && isMounted.current) {
+      setT(getT);
     }
 
     function boundReset() {
@@ -76,7 +91,7 @@ export function useTranslation(ns, props = {}) {
       if (bindI18nStore && i18n)
         bindI18nStore.split(' ').forEach((e) => i18n.store.off(e, boundReset));
     };
-  }, [i18n, namespaces.join()]); // re-run effect whenever list of namespaces changes
+  }, [i18n, joinedNS]); // re-run effect whenever list of namespaces changes
 
   // t is correctly initialized by useState hook. We only need to update it after i18n
   // instance was replaced (for example in the provider).
