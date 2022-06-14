@@ -776,6 +776,14 @@
     return useAsParent ? React__default.createElement(useAsParent, additionalProps, content) : content;
   }
 
+  var usePrevious = function usePrevious(value, ignore) {
+    var ref = React.useRef();
+    React.useEffect(function () {
+      ref.current = ignore ? ref.current : value;
+    }, [value, ignore]);
+    return ref.current;
+  };
+
   function useTranslation(ns) {
     var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var i18nFromProps = props.i18n;
@@ -823,6 +831,8 @@
         t = _useState2[0],
         setT = _useState2[1];
 
+    var joinedNS = namespaces.join();
+    var previousJoinedNS = usePrevious(joinedNS);
     var isMounted = React.useRef(true);
     React.useEffect(function () {
       var bindI18n = i18nOptions.bindI18n,
@@ -833,6 +843,10 @@
         loadNamespaces(i18n, namespaces, function () {
           if (isMounted.current) setT(getT);
         });
+      }
+
+      if (ready && previousJoinedNS && previousJoinedNS !== joinedNS && isMounted.current) {
+        setT(getT);
       }
 
       function boundReset() {
@@ -850,7 +864,7 @@
           return i18n.store.off(e, boundReset);
         });
       };
-    }, [i18n, namespaces.join()]);
+    }, [i18n, joinedNS]);
     var isInitial = React.useRef(true);
     React.useEffect(function () {
       if (isMounted.current && !isInitial.current) {

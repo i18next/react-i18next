@@ -1,3 +1,7 @@
+### 11.17.2
+
+- reset t if ns changes in useTranslation [1518](https://github.com/i18next/react-i18next/pull/1518)
+
 ### 11.17.1
 
 - Stricter typescript type for Trans components prop [1516](https://github.com/i18next/react-i18next/pull/1516)
