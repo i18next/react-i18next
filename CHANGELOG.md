@@ -1,3 +1,7 @@
+### 11.17.3
+
+- style: explicit React imports [1525](https://github.com/i18next/react-i18next/pull/1525)
+
 ### 11.17.2
 
 - reset t if ns changes in useTranslation [1518](https://github.com/i18next/react-i18next/pull/1518)

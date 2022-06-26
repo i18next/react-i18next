@@ -1,10 +1,8 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react')) :
   typeof define === 'function' && define.amd ? define(['exports', 'react'], factory) :
-  (global = global || self, factory(global.ReactI18next = {}, global.React));
-}(this, function (exports, React) { 'use strict';
-
-  var React__default = 'default' in React ? React['default'] : React;
+  (global = global || self, factory(global.ReactI18next = {}, global.react));
+}(this, function (exports, react) { 'use strict';
 
   function ownKeys(object, enumerableOnly) {
     var keys = Object.keys(object);
@@ -352,7 +350,7 @@
     useSuspense: true
   };
   var i18nInstance;
-  var I18nContext = React__default.createContext();
+  var I18nContext = react.createContext();
   function setDefaults() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     defaultOptions = _objectSpread2(_objectSpread2({}, defaultOptions), options);
@@ -530,7 +528,7 @@
   function hasValidReactChildren(children) {
     if (Object.prototype.toString.call(children) !== '[object Array]') return false;
     return children.every(function (child) {
-      return React__default.isValidElement(child);
+      return react.isValidElement(child);
     });
   }
 
@@ -553,7 +551,7 @@
     childrenArray.forEach(function (child, childIndex) {
       if (typeof child === 'string') {
         stringNode += "".concat(child);
-      } else if (React__default.isValidElement(child)) {
+      } else if (react.isValidElement(child)) {
         var childPropsCount = Object.keys(child.props).length;
         var shouldKeepChild = keepArray.indexOf(child.type) > -1;
         var childChildren = child.props.children;
@@ -602,7 +600,7 @@
       var childrenArray = getAsArray(childs);
       childrenArray.forEach(function (child) {
         if (typeof child === 'string') return;
-        if (hasChildren(child)) getData(getChildren(child));else if (_typeof(child) === 'object' && !React__default.isValidElement(child)) Object.assign(data, child);
+        if (hasChildren(child)) getData(getChildren(child));else if (_typeof(child) === 'object' && !react.isValidElement(child)) Object.assign(data, child);
       });
     }
 
@@ -619,7 +617,7 @@
 
     function pushTranslatedJSX(child, inner, mem, i, isVoid) {
       if (child.dummy) child.children = inner;
-      mem.push(React__default.cloneElement(child, _objectSpread2(_objectSpread2({}, child.props), {}, {
+      mem.push(react.cloneElement(child, _objectSpread2(_objectSpread2({}, child.props), {}, {
         key: i
       }), isVoid ? undefined : inner));
     }
@@ -637,7 +635,7 @@
           var child = Object.keys(node.attrs).length !== 0 ? mergeProps({
             props: node.attrs
           }, tmp) : tmp;
-          var isElement = React__default.isValidElement(child);
+          var isElement = react.isValidElement(child);
           var isValidTranslationWithChildren = isElement && hasChildren(node, true) && !node.voidElement;
           var isEmptyTransWithHTML = emptyChildrenButNeedsHandling && _typeof(child) === 'object' && child.dummy && !isElement;
           var isKnownComponent = _typeof(children) === 'object' && children !== null && Object.hasOwnProperty.call(children, node.name);
@@ -651,7 +649,7 @@
             } else if (isEmptyTransWithHTML) {
             var _inner = mapAST(reactNodes, node.children, rootReactNode);
 
-            mem.push(React__default.cloneElement(child, _objectSpread2(_objectSpread2({}, child.props), {}, {
+            mem.push(react.cloneElement(child, _objectSpread2(_objectSpread2({}, child.props), {}, {
               key: i
             }), _inner));
           } else if (Number.isNaN(parseFloat(node.name))) {
@@ -661,13 +659,13 @@
               pushTranslatedJSX(child, _inner2, mem, i, node.voidElement);
             } else if (i18nOptions.transSupportBasicHtmlNodes && keepArray.indexOf(node.name) > -1) {
               if (node.voidElement) {
-                mem.push(React__default.createElement(node.name, {
+                mem.push(react.createElement(node.name, {
                   key: "".concat(node.name, "-").concat(i)
                 }));
               } else {
                 var _inner3 = mapAST(reactNodes, node.children, rootReactNode);
 
-                mem.push(React__default.createElement(node.name, {
+                mem.push(react.createElement(node.name, {
                   key: "".concat(node.name, "-").concat(i)
                 }, _inner3));
               }
@@ -682,11 +680,11 @@
             var content = node.children[0] ? translationContent : null;
             if (content) mem.push(content);
           } else if (node.children.length === 1 && translationContent) {
-            mem.push(React__default.cloneElement(child, _objectSpread2(_objectSpread2({}, child.props), {}, {
+            mem.push(react.cloneElement(child, _objectSpread2(_objectSpread2({}, child.props), {}, {
               key: i
             }), translationContent));
           } else {
-            mem.push(React__default.cloneElement(child, _objectSpread2(_objectSpread2({}, child.props), {}, {
+            mem.push(react.cloneElement(child, _objectSpread2(_objectSpread2({}, child.props), {}, {
               key: i
             })));
           }
@@ -696,7 +694,7 @@
           var _content = shouldUnescape ? unescape(i18n.services.interpolator.interpolate(node.content, opts, i18n.language)) : i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
 
           if (wrapTextNodes) {
-            mem.push(React__default.createElement(wrapTextNodes, {
+            mem.push(react.createElement(wrapTextNodes, {
               key: "".concat(node.name, "-").concat(i)
             }, _content));
           } else {
@@ -732,7 +730,7 @@
         shouldUnescape = _ref.shouldUnescape,
         additionalProps = _objectWithoutProperties(_ref, _excluded2);
 
-    var _ref2 = React.useContext(I18nContext) || {},
+    var _ref2 = react.useContext(I18nContext) || {},
         i18nFromContext = _ref2.i18n,
         defaultNSFromContext = _ref2.defaultNS;
 
@@ -773,12 +771,12 @@
     var translation = key ? t(key, combinedTOpts) : defaultValue;
     var content = renderNodes(components || children, translation, i18n, reactI18nextOptions, combinedTOpts, shouldUnescape);
     var useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
-    return useAsParent ? React__default.createElement(useAsParent, additionalProps, content) : content;
+    return useAsParent ? react.createElement(useAsParent, additionalProps, content) : content;
   }
 
   var usePrevious = function usePrevious(value, ignore) {
-    var ref = React.useRef();
-    React.useEffect(function () {
+    var ref = react.useRef();
+    react.useEffect(function () {
       ref.current = ignore ? ref.current : value;
     }, [value, ignore]);
     return ref.current;
@@ -788,7 +786,7 @@
     var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var i18nFromProps = props.i18n;
 
-    var _ref = React.useContext(I18nContext) || {},
+    var _ref = react.useContext(I18nContext) || {},
         i18nFromContext = _ref.i18n,
         defaultNSFromContext = _ref.defaultNS;
 
@@ -826,15 +824,15 @@
       return i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
     }
 
-    var _useState = React.useState(getT),
+    var _useState = react.useState(getT),
         _useState2 = _slicedToArray(_useState, 2),
         t = _useState2[0],
         setT = _useState2[1];
 
     var joinedNS = namespaces.join();
     var previousJoinedNS = usePrevious(joinedNS);
-    var isMounted = React.useRef(true);
-    React.useEffect(function () {
+    var isMounted = react.useRef(true);
+    react.useEffect(function () {
       var bindI18n = i18nOptions.bindI18n,
           bindI18nStore = i18nOptions.bindI18nStore;
       isMounted.current = true;
@@ -865,8 +863,8 @@
         });
       };
     }, [i18n, joinedNS]);
-    var isInitial = React.useRef(true);
-    React.useEffect(function () {
+    var isInitial = react.useRef(true);
+    react.useEffect(function () {
       if (isMounted.current && !isInitial.current) {
         setT(getT);
       }
@@ -914,19 +912,19 @@
           passDownProps.forwardedRef = forwardedRef;
         }
 
-        return React__default.createElement(WrappedComponent, passDownProps);
+        return react.createElement(WrappedComponent, passDownProps);
       }
 
       I18nextWithTranslation.displayName = "withI18nextTranslation(".concat(getDisplayName(WrappedComponent), ")");
       I18nextWithTranslation.WrappedComponent = WrappedComponent;
 
       var forwardRef = function forwardRef(props, ref) {
-        return React__default.createElement(I18nextWithTranslation, Object.assign({}, props, {
+        return react.createElement(I18nextWithTranslation, Object.assign({}, props, {
           forwardedRef: ref
         }));
       };
 
-      return options.withRef ? React__default.forwardRef(forwardRef) : I18nextWithTranslation;
+      return options.withRef ? react.forwardRef(forwardRef) : I18nextWithTranslation;
     };
   }
 
@@ -952,13 +950,13 @@
     var i18n = _ref.i18n,
         defaultNS = _ref.defaultNS,
         children = _ref.children;
-    var value = React.useMemo(function () {
+    var value = react.useMemo(function () {
       return {
         i18n: i18n,
         defaultNS: defaultNS
       };
     }, [i18n, defaultNS]);
-    return React.createElement(I18nContext.Provider, {
+    return react.createElement(I18nContext.Provider, {
       value: value
     }, children);
   }
@@ -967,7 +965,7 @@
     var props = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     var i18nFromProps = props.i18n;
 
-    var _ref = React.useContext(I18nContext) || {},
+    var _ref = react.useContext(I18nContext) || {},
         i18nFromContext = _ref.i18n;
 
     var i18n = i18nFromProps || i18nFromContext || getI18n();
@@ -1000,7 +998,7 @@
             rest = _objectWithoutProperties(_ref, _excluded$3);
 
         useSSR(initialI18nStore, initialLanguage);
-        return React__default.createElement(WrappedComponent, _objectSpread2({}, rest));
+        return react.createElement(WrappedComponent, _objectSpread2({}, rest));
       }
 
       I18nextWithSSR.getInitialProps = composeInitialProps(WrappedComponent);
