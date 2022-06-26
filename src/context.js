@@ -1,4 +1,4 @@
-import React from 'react';
+import { createContext } from 'react';
 
 let defaultOptions = {
   bindI18n: 'languageChanged',
@@ -14,7 +14,7 @@ let defaultOptions = {
 
 let i18nInstance;
 
-export const I18nContext = React.createContext();
+export const I18nContext = createContext();
 
 export function setDefaults(options = {}) {
   defaultOptions = { ...defaultOptions, ...options };
