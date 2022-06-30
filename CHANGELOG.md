@@ -1,3 +1,7 @@
+### 11.17.4
+
+- fix: UMD build [1527](https://github.com/i18next/react-i18next/issues/1527)
+
 ### 11.17.3
 
 - style: explicit React imports [1525](https://github.com/i18next/react-i18next/pull/1525)
