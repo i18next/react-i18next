@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react')) :
   typeof define === 'function' && define.amd ? define(['exports', 'react'], factory) :
-  (global = global || self, factory(global.ReactI18next = {}, global.react));
+  (global = global || self, factory(global.ReactI18next = {}, global.React));
 }(this, function (exports, react) { 'use strict';
 
   function ownKeys(object, enumerableOnly) {
