@@ -44,7 +44,7 @@ export interface TransProps<E extends Element = HTMLDivElement>
   parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
   tOptions?: {};
   values?: {};
-  shouldUnescape?: boolean;
+  preprocessor?: (html: string) => string;
   t?: TFunction;
 }
 export function Trans<E extends Element = HTMLDivElement>(props: TransProps<E>): React.ReactElement;

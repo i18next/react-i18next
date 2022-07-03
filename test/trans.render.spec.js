@@ -623,25 +623,28 @@ describe('trans does ignore user defined values when parsing', () => {
   });
 });
 
-describe('trans should allow escaped html', () => {
+it('trans should allow preprocessing html', () => {
+  const preprocessor = (html) => html.replace('&amp;', '&');
   const TestComponent = () => (
-    <Trans i18nKey="transTestEscapedHtml" components={[<Link to="/msgs" />]} shouldUnescape />
+    <Trans
+      i18nKey="transTestPreprocessedHtml"
+      components={[<Link to="/msgs" />]}
+      preprocessor={preprocessor}
+    />
   );
 
-  it('should unescape &lt; &nbsp; &amp; &gt; to < SPACE & >', () => {
-    const { container } = render(<TestComponent />);
-    expect(container.firstChild).toMatchInlineSnapshot(`
-      <div>
-        Escaped html should unescape correctly 
-        <a
-          href="/msgs"
-        >
-          &lt;&nbsp;&&gt;
-        </a>
-        .
-      </div>
-    `);
-  });
+  const { container } = render(<TestComponent />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <div>
+      Html should be preprocessed: 
+      <a
+        href="/msgs"
+      >
+        &
+      </a>
+      .
+    </div>
+  `);
 });
 
 it('transSupportBasicHtmlNodes: false should not keep the name of simple nodes', () => {
