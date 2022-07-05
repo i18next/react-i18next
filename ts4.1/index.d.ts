@@ -274,7 +274,7 @@ export type TransProps<
   parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
   tOptions?: {};
   values?: {};
-  preprocessor?: (html: string) => string;
+  shouldUnescape?: boolean;
   t?: TFunction<N, TKPrefix>;
 };
 

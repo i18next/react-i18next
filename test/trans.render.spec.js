@@ -623,28 +623,54 @@ describe('trans does ignore user defined values when parsing', () => {
   });
 });
 
-it('trans should allow preprocessing html', () => {
-  const preprocessor = (html) => html.replace('&amp;', '&');
+describe('trans should allow escaped html', () => {
   const TestComponent = () => (
-    <Trans
-      i18nKey="transTestPreprocessedHtml"
-      components={[<Link to="/msgs" />]}
-      preprocessor={preprocessor}
-    />
+    <Trans i18nKey="transTestEscapedHtml" components={[<Link to="/msgs" />]} shouldUnescape />
   );
 
-  const { container } = render(<TestComponent />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <div>
-      Html should be preprocessed: 
-      <a
-        href="/msgs"
-      >
-        &
-      </a>
-      .
-    </div>
-  `);
+  it('should unescape &lt; &nbsp; &amp; &gt; to < SPACE & >', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Escaped html should unescape correctly 
+        <a
+          href="/msgs"
+        >
+          &lt;&nbsp;&&gt;
+        </a>
+        .
+      </div>
+    `);
+  });
+});
+
+describe('trans with custom unescape', () => {
+  let orgValue;
+  beforeAll(() => {
+    orgValue = i18n.options.react.unescape;
+    i18n.options.react.unescape = (text) => text.replace('&shy;', '\u00AD');
+  });
+
+  afterAll(() => {
+    i18n.options.react.unescape = orgValue;
+  });
+
+  it('should allow unescape override', () => {
+    const TestComponent = () => (
+      <Trans i18nKey="transTestCustomUnescape" components={[<Link to="/msgs" />]} shouldUnescape />
+    );
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Text should be passed through custom unescape 
+        <a
+          href="/msgs"
+        >
+          \u00AD
+        </a>
+      </div>
+    `);
+  });
 });
 
 it('transSupportBasicHtmlNodes: false should not keep the name of simple nodes', () => {

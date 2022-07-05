@@ -103,7 +103,7 @@ export function nodesToString(children, i18nOptions) {
   return stringNode;
 }
 
-function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, preprocessor) {
+function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, shouldUnescape) {
   if (targetString === '') return [];
 
   // check if contains tags we need to replace from html string to react nodes
@@ -246,8 +246,10 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, p
         }
       } else if (node.type === 'text') {
         const wrapTextNodes = i18nOptions.transWrapTextNodes;
-        const content = preprocessor
-          ? preprocessor(i18n.services.interpolator.interpolate(node.content, opts, i18n.language))
+        const content = shouldUnescape
+          ? i18nOptions.unescape(
+              i18n.services.interpolator.interpolate(node.content, opts, i18n.language),
+            )
           : i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
         if (wrapTextNodes) {
           mem.push(createElement(wrapTextNodes, { key: `${node.name}-${i}` }, content));
@@ -283,7 +285,7 @@ export function Trans({
   ns,
   i18n: i18nFromProps,
   t: tFromProps,
-  preprocessor,
+  shouldUnescape,
   ...additionalProps
 }) {
   const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = useContext(I18nContext) || {};
@@ -330,7 +332,7 @@ export function Trans({
     i18n,
     reactI18nextOptions,
     combinedTOpts,
-    preprocessor,
+    shouldUnescape,
   );
 
   // allows user to pass `null` to `parent`
