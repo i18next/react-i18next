@@ -644,6 +644,35 @@ describe('trans should allow escaped html', () => {
   });
 });
 
+describe('trans with custom unescape', () => {
+  let orgValue;
+  beforeAll(() => {
+    orgValue = i18n.options.react.unescape;
+    i18n.options.react.unescape = (text) => text.replace('&shy;', '\u00AD');
+  });
+
+  afterAll(() => {
+    i18n.options.react.unescape = orgValue;
+  });
+
+  it('should allow unescape override', () => {
+    const TestComponent = () => (
+      <Trans i18nKey="transTestCustomUnescape" components={[<Link to="/msgs" />]} shouldUnescape />
+    );
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Text should be passed through custom unescape 
+        <a
+          href="/msgs"
+        >
+          \u00AD
+        </a>
+      </div>
+    `);
+  });
+});
+
 it('transSupportBasicHtmlNodes: false should not keep the name of simple nodes', () => {
   const cloneInst = i18n.cloneInstance({
     react: { transSupportBasicHtmlNodes: false, defaultTransParent: 'div' },

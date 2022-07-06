@@ -1,6 +1,5 @@
 import { useContext, isValidElement, cloneElement, createElement } from 'react';
 import HTML from 'html-parse-stringify';
-import { unescape } from 'html-escaper';
 import { getI18n, I18nContext, getDefaults } from './context';
 import { warn, warnOnce } from './utils';
 
@@ -124,8 +123,7 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
     childrenArray.forEach((child) => {
       if (typeof child === 'string') return;
       if (hasChildren(child)) getData(getChildren(child));
-      else if (typeof child === 'object' && !isValidElement(child))
-        Object.assign(data, child);
+      else if (typeof child === 'object' && !isValidElement(child)) Object.assign(data, child);
     });
   }
 
@@ -249,7 +247,9 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
       } else if (node.type === 'text') {
         const wrapTextNodes = i18nOptions.transWrapTextNodes;
         const content = shouldUnescape
-          ? unescape(i18n.services.interpolator.interpolate(node.content, opts, i18n.language))
+          ? i18nOptions.unescape(
+              i18n.services.interpolator.interpolate(node.content, opts, i18n.language),
+            )
           : i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
         if (wrapTextNodes) {
           mem.push(createElement(wrapTextNodes, { key: `${node.name}-${i}` }, content));
