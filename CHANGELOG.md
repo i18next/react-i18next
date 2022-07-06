@@ -1,3 +1,7 @@
+### 11.18.0
+
+- ability to add custom unescape function [1529](https://github.com/i18next/react-i18next/pull/1529)
+
 ### 11.17.4
 
 - fix: UMD build [1527](https://github.com/i18next/react-i18next/issues/1527)

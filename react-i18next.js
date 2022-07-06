@@ -318,9 +318,8 @@
     }
   };
 
-  var replace = ''.replace;
-  var es = /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34);/g;
-  var unes = {
+  var matchHtmlEntity = /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34);/g;
+  var htmlEntities = {
     '&amp;': '&',
     '&#38;': '&',
     '&lt;': '<',
@@ -332,13 +331,14 @@
     '&quot;': '"',
     '&#34;': '"'
   };
-  function unescape(un) {
-    return replace.call(un, es, cape);
-  }
 
-  function cape(m) {
-    return unes[m];
-  }
+  var unescapeHtmlEntity = function unescapeHtmlEntity(m) {
+    return htmlEntities[m];
+  };
+
+  var unescape = function unescape(text) {
+    return text.replace(matchHtmlEntity, unescapeHtmlEntity);
+  };
 
   var defaultOptions = {
     bindI18n: 'languageChanged',
@@ -347,7 +347,8 @@
     transSupportBasicHtmlNodes: true,
     transWrapTextNodes: '',
     transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'p'],
-    useSuspense: true
+    useSuspense: true,
+    unescape: unescape
   };
   var i18nInstance;
   var I18nContext = react.createContext();
@@ -691,7 +692,7 @@
         } else if (node.type === 'text') {
           var wrapTextNodes = i18nOptions.transWrapTextNodes;
 
-          var _content = shouldUnescape ? unescape(i18n.services.interpolator.interpolate(node.content, opts, i18n.language)) : i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
+          var _content = shouldUnescape ? i18nOptions.unescape(i18n.services.interpolator.interpolate(node.content, opts, i18n.language)) : i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
 
           if (wrapTextNodes) {
             mem.push(react.createElement(wrapTextNodes, {
