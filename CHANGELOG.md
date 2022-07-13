@@ -1,3 +1,7 @@
+### 11.18.1
+
+- types: allow iterable with objects as children [1531](https://github.com/i18next/react-i18next/pull/1531)
+
 ### 11.18.0
 
 - ability to add custom unescape function [1529](https://github.com/i18next/react-i18next/pull/1529)
