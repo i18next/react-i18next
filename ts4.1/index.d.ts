@@ -102,9 +102,12 @@ declare module 'i18next' {
 type ObjectOrNever = TypeOptions['allowObjectInHTMLChildren'] extends true
   ? Record<string, unknown>
   : never;
+
+type ReactI18NextChild = React.ReactNode | ObjectOrNever;
+
 declare module 'react' {
   interface HTMLAttributes<T> {
-    children?: ReactNode | ObjectOrNever;
+    children?: ReactI18NextChild | Iterable<ReactI18NextChild>;
   }
 }
 
