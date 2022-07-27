@@ -636,7 +636,7 @@ describe('trans should allow escaped html', () => {
         <a
           href="/msgs"
         >
-          &lt;&nbsp;&&gt;
+          &lt; &&gt;
         </a>
         .
       </div>
