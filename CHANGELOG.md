@@ -1,3 +1,7 @@
+### 11.18.3
+
+- types: bindI18n option for UseTranslationOptions
+
 ### 11.18.2
 
 - more html entities to unescape by default [1538](https://github.com/i18next/react-i18next/pull/1538)

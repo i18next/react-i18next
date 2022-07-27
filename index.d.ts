@@ -55,6 +55,8 @@ export interface UseTranslationOptions {
   i18n?: i18n;
   useSuspense?: boolean;
   keyPrefix?: string;
+  bindI18n?: string | false;
+  // other of these options might also work: https://github.com/i18next/i18next/blob/master/index.d.ts#L127
 }
 export type UseTranslationResponse = [TFunction, i18n, boolean] & {
   t: TFunction;
