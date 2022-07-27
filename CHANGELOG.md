@@ -1,3 +1,7 @@
+### 11.18.2
+
+- more html entities to unescape by default [1538](https://github.com/i18next/react-i18next/pull/1538)
+
 ### 11.18.1
 
 - types: allow iterable with objects as children [1531](https://github.com/i18next/react-i18next/pull/1531)

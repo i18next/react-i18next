@@ -318,7 +318,7 @@
     }
   };
 
-  var matchHtmlEntity = /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34);/g;
+  var matchHtmlEntity = /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34|nbsp|#160|copy|#169|reg|#174|hellip|#8230);/g;
   var htmlEntities = {
     '&amp;': '&',
     '&#38;': '&',
@@ -329,7 +329,15 @@
     '&apos;': "'",
     '&#39;': "'",
     '&quot;': '"',
-    '&#34;': '"'
+    '&#34;': '"',
+    '&nbsp;': ' ',
+    '&#160;': ' ',
+    '&copy;': '©',
+    '&#169;': '©',
+    '&reg;': '®',
+    '&#174;': '®',
+    '&hellip;': '…',
+    '&#8230;': '…'
   };
 
   var unescapeHtmlEntity = function unescapeHtmlEntity(m) {
