@@ -1,4 +1,6 @@
-const matchHtmlEntity = /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34);/g;
+// unescape common html entities
+
+const matchHtmlEntity = /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34|nbsp|#160|copy|#169|reg|#174|hellip|#8230);/g;
 
 const htmlEntities = {
   '&amp;': '&',
@@ -11,6 +13,14 @@ const htmlEntities = {
   '&#39;': "'",
   '&quot;': '"',
   '&#34;': '"',
+  '&nbsp;': ' ',
+  '&#160;': ' ',
+  '&copy;': '©',
+  '&#169;': '©',
+  '&reg;': '®',
+  '&#174;': '®',
+  '&hellip;': '…',
+  '&#8230;': '…',
 };
 
 const unescapeHtmlEntity = (m) => htmlEntities[m];
