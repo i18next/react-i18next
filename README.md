@@ -64,7 +64,7 @@ Head over to the **interactive playground** at [codesandbox](https://codesandbox
 
 ### 📖 What others say
 
-- [How to properly internationalize a React application using i18next](https://dev.to/adrai/how-to-properly-internationalize-a-react-application-using-i18next-3hdb) by Adriano Raiano
+- [How to properly internationalize a React application using i18next](https://locize.com/blog/react-i18next/) by Adriano Raiano
 - [I18n with React and i18next](https://alligator.io/react/i18n-with-react-and-i18next) via Alligator.io by Danny Hurlburt
 - [Ultimate Localization of React (Mobx) App with i18next](https://itnext.io/ultimate-localization-of-react-mobx-app-with-i18next-efab77712149) via itnext.io by Viktor Shevchenko
 - [Internationalization for react done right Using the i18next i18n ecosystem](https://reactjsexample.com/internationalization-for-react-done-right-using-the-i18next-i18n-ecosystem/) via reactjsexample.com
@@ -103,7 +103,7 @@ $ npm install react-i18next
 
 ### Do you like to read a more complete step by step tutorial?
 
-[Here](https://dev.to/adrai/how-to-properly-internationalize-a-react-application-using-i18next-3hdb) you'll find a simple tutorial on how to best use react-i18next.
+[Here](https://locize.com/blog/react-i18next/) you'll find a simple tutorial on how to best use react-i18next.
 Some basics of i18next and some cool possibilities on how to optimize your localization workflow.
 
 ### Examples
