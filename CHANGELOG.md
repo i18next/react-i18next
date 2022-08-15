@@ -1,3 +1,7 @@
+### 11.18.4
+
+- fix: reset t when keyPrefix is updated [1544](https://github.com/i18next/react-i18next/pull/1544)
+
 ### 11.18.3
 
 - types: bindI18n option for UseTranslationOptions

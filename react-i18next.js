@@ -531,7 +531,7 @@
 
   function getChildren(node) {
     if (!node) return [];
-    return node && node.children ? node.children : node.props && node.props.children;
+    return node.props ? node.props.children : node.children;
   }
 
   function hasValidReactChildren(children) {
@@ -879,7 +879,7 @@
       }
 
       isInitial.current = false;
-    }, [i18n]);
+    }, [i18n, keyPrefix]);
     var ret = [t, i18n, ready];
     ret.t = t;
     ret.i18n = i18n;
