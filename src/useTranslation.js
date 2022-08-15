@@ -101,7 +101,7 @@ export function useTranslation(ns, props = {}) {
       setT(getT);
     }
     isInitial.current = false;
-  }, [i18n]); // re-run when i18n instance was replaced
+  }, [i18n, keyPrefix]); // re-run when i18n instance or keyPrefix were replaced
 
   const ret = [t, i18n, ready];
   ret.t = t;
