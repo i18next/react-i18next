@@ -1,3 +1,7 @@
+### 11.18.5
+
+- support unescaping forward slash [1548](https://github.com/i18next/react-i18next/pull/1548)
+
 ### 11.18.4
 
 - fix: reset t when keyPrefix is updated [1544](https://github.com/i18next/react-i18next/pull/1544)
