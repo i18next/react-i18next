@@ -27,8 +27,8 @@ export default {
   title: 'Components',
 };
 export const Mocking = () => <ClassComponent t={(k) => k} />;
-Mocking.storyName = 'Class Component Mocking t()';
+Mocking.storyName = 'Mocking t()';
 
-export const ClassComponentUsingHOC = () => <ComponentUsingHOC />;
-export const FunctionalComponentUsingHook = () => <ComponentUsingHook />;
-export const ComponentUsingTransComponent = () => <ComponentUsingTrans />;
+export const UsingHOC = () => <ComponentUsingHOC />;
+export const UsingHook = () => <ComponentUsingHook />;
+export const UsingTransComponent = () => <ComponentUsingTrans />;

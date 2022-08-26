@@ -1,6 +1,7 @@
 import { useEffect, Suspense } from 'react';
-import i18n from '../src/i18n';
 import { I18nextProvider } from 'react-i18next';
+
+import i18n from '../src/i18n';
 
 // Create a global variable called locale in storybook
 // and add a dropdown in the toolbar to change your locale
@@ -19,7 +20,7 @@ export const globalTypes = {
   },
 };
 
-// Wraps your stories in the I18nextProvider component
+// Wrap your stories in the I18nextProvider component
 const i18nextStoryDecorator = (Story, context) => {
   const { locale } = context.globals;
 
@@ -40,5 +41,5 @@ const i18nextStoryDecorator = (Story, context) => {
   );
 };
 
-// Wrap all stories in these decorators
+// export decorators for storybook to wrap your stories in
 export const decorators = [i18nextStoryDecorator];
