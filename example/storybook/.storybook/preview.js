@@ -14,11 +14,18 @@ export const globalTypes = {
       items: [
         { value: 'en', right: '🇺🇸', title: 'English' },
         { value: 'de', right: '🇩🇪', title: 'Deutsch' },
+        { value: 'ar', right: '🇦🇪', title: 'عربي' },
       ],
       showName: true,
     },
   },
 };
+
+// When The language changes, set the document direction
+i18n.on('languageChanged', (locale) => {
+  const direction = i18n.dir(locale);
+  document.dir = direction;
+});
 
 // Wrap your stories in the I18nextProvider component
 const i18nextStoryDecorator = (Story, context) => {
