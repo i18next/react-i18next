@@ -34,6 +34,7 @@ function Page() {
       <div className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <Welcome />
+        <button onClick={() => changeLanguage('ar')}>ar</button>
         <button onClick={() => changeLanguage('de')}>de</button>
         <button onClick={() => changeLanguage('en')}>en</button>
       </div>
