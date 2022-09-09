@@ -56,6 +56,7 @@ export interface UseTranslationOptions {
   useSuspense?: boolean;
   keyPrefix?: string;
   bindI18n?: string | false;
+  nsMode?: 'fallback' | 'default';
   // other of these options might also work: https://github.com/i18next/i18next/blob/master/index.d.ts#L127
 }
 export type UseTranslationResponse = [TFunction, i18n, boolean] & {
@@ -129,6 +130,7 @@ export interface TranslationProps {
   ns?: Namespace;
   i18n?: i18n;
   useSuspense?: boolean;
+  nsMode?: 'fallback' | 'default';
 }
 
 export function Translation(props: TranslationProps): any;

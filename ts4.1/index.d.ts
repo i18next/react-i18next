@@ -294,6 +294,8 @@ export interface UseTranslationOptions<TKPrefix = undefined> {
   i18n?: i18n;
   useSuspense?: boolean;
   keyPrefix?: TKPrefix;
+  bindI18n?: string | false;
+  nsMode?: 'fallback' | 'default';
 }
 
 export type UseTranslationResponse<N extends Namespace, TKPrefix = undefined> = [
@@ -387,6 +389,7 @@ export interface TranslationProps<
   i18n?: i18n;
   useSuspense?: boolean;
   keyPrefix?: TKPrefix;
+  nsMode?: 'fallback' | 'default';
 }
 
 export function Translation<

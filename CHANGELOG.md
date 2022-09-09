@@ -1,3 +1,7 @@
+### 11.18.6
+
+- types: nsMode [1554](https://github.com/i18next/react-i18next/issues/1554)
+
 ### 11.18.5
 
 - support unescaping forward slash [1548](https://github.com/i18next/react-i18next/pull/1548)
