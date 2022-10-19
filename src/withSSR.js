@@ -1,4 +1,4 @@
-import React from 'react';
+import { createElement } from 'react';
 import { useSSR } from './useSSR';
 import { composeInitialProps } from './context';
 import { getDisplayName } from './utils';
@@ -8,7 +8,7 @@ export function withSSR() {
     function I18nextWithSSR({ initialI18nStore, initialLanguage, ...rest }) {
       useSSR(initialI18nStore, initialLanguage);
 
-      return React.createElement(WrappedComponent, {
+      return createElement(WrappedComponent, {
         ...rest,
       });
     }

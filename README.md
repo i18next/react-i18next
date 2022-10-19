@@ -3,12 +3,14 @@
 [![CircleCI](https://circleci.com/gh/i18next/react-i18next.svg?style=svg)](https://circleci.com/gh/i18next/react-i18next)
 [![Code Climate](https://codeclimate.com/github/codeclimate/codeclimate/badges/gpa.svg)](https://codeclimate.com/github/i18next/react-i18next)
 [![Coverage Status](https://coveralls.io/repos/github/i18next/react-i18next/badge.svg)](https://coveralls.io/github/i18next/react-i18next)
-[![Quality][quality-badge] ][quality-url]
+[![Quality][quality-badge]][quality-url]
+[![npm][npm-dl-badge]][npm-url]
 
 [npm-icon]: https://nodei.co/npm/react-i18next.png?downloads=true
 [npm-url]: https://npmjs.org/package/react-i18next
-[quality-badge]: http://npm.packagequality.com/shield/react-i18next.svg
-[quality-url]: http://packagequality.com/#?package=react-i18next
+[quality-badge]: https://npm.packagequality.com/shield/react-i18next.svg
+[quality-url]: https://packagequality.com/#?package=react-i18next
+[npm-dl-badge]: https://img.shields.io/npm/dw/react-i18next
 
 ### IMPORTANT:
 
@@ -62,7 +64,7 @@ Head over to the **interactive playground** at [codesandbox](https://codesandbox
 
 ### 📖 What others say
 
-- [How to properly internationalize a React application using i18next](https://dev.to/adrai/how-to-properly-internationalize-a-react-application-using-i18next-3hdb) by Adriano Raiano
+- [How to properly internationalize a React application using i18next](https://locize.com/blog/react-i18next/) by Adriano Raiano
 - [I18n with React and i18next](https://alligator.io/react/i18n-with-react-and-i18next) via Alligator.io by Danny Hurlburt
 - [Ultimate Localization of React (Mobx) App with i18next](https://itnext.io/ultimate-localization-of-react-mobx-app-with-i18next-efab77712149) via itnext.io by Viktor Shevchenko
 - [Internationalization for react done right Using the i18next i18n ecosystem](https://reactjsexample.com/internationalization-for-react-done-right-using-the-i18next-i18n-ecosystem/) via reactjsexample.com
@@ -101,7 +103,7 @@ $ npm install react-i18next
 
 ### Do you like to read a more complete step by step tutorial?
 
-[Here](https://dev.to/adrai/how-to-properly-internationalize-a-react-application-using-i18next-3hdb) you'll find a simple tutorial on how to best use react-i18next.
+[Here](https://locize.com/blog/react-i18next/) you'll find a simple tutorial on how to best use react-i18next.
 Some basics of i18next and some cool possibilities on how to optimize your localization workflow.
 
 ### Examples
@@ -165,6 +167,9 @@ This project follows the [all-contributors](https://github.com/kentcdodds/all-co
 <p align="center">
   <a href="https://locize.com/" target="_blank">
     <img src="https://raw.githubusercontent.com/i18next/i18next/master/assets/locize_sponsor_240.gif" width="240px">
+  </a>
+  <a href="https://localistars.com/" target="_blank">
+    <img src="https://raw.githubusercontent.com/i18next/i18next/master/assets/localistars_sponsor_240.gif" width="240px">
   </a>
 </p>
 

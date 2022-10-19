@@ -47,5 +47,9 @@ export default {
     name: 'ReactI18next',
     format,
     file,
+    globals: {
+      react: 'React',
+      'react-dom': 'ReactDOM',
+    },
   },
 };

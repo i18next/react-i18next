@@ -1,14 +1,5 @@
 import React, { Component, Suspense } from 'react';
-import { storiesOf } from '@storybook/react';
 import { useTranslation, withTranslation, Trans } from 'react-i18next';
-
-import '../i18n';
-
-// here catches the suspense from components not yet ready (still loading translations)
-// alternative set useSuspense false on i18next.options.react when initializing i18next
-export default function SuspenseWrapper({ children }) {
-  return <Suspense fallback={<div>loading...</div>}>{children}</Suspense>;
-}
 
 class ClassComponent extends Component {
   render() {
@@ -16,11 +7,11 @@ class ClassComponent extends Component {
     return <h2>{t('title')}</h2>;
   }
 }
+
 const ComponentUsingHOC = withTranslation()(ClassComponent);
 
 function ComponentUsingHook() {
-  const { t, i18n } = useTranslation();
-
+  const { t } = useTranslation();
   return <div>{t('description.part2')}</div>;
 }
 
@@ -32,9 +23,12 @@ function ComponentUsingTrans() {
   );
 }
 
-storiesOf('Components', module)
-  .addDecorator(story => <SuspenseWrapper>{story()}</SuspenseWrapper>)
-  .add('mocking', () => <ClassComponent t={k => k} />)
-  .add('class component using HOC', () => <ComponentUsingHOC />)
-  .add('functional component using hook', () => <ComponentUsingHook />)
-  .add('component using Trans component', () => <ComponentUsingTrans />);
+export default {
+  title: 'Components',
+};
+export const Mocking = () => <ClassComponent t={(k) => k} />;
+Mocking.storyName = 'Mocking t()';
+
+export const UsingHOC = () => <ComponentUsingHOC />;
+export const UsingHook = () => <ComponentUsingHook />;
+export const UsingTransComponent = () => <ComponentUsingTrans />;

@@ -115,15 +115,24 @@ describe('useTranslation', () => {
   });
 
   describe('key prefix', () => {
-    i18nInstance.addResource('en', 'translation', 'deeply.nested.key', 'here!');
+    i18nInstance.addResource('en', 'translation', 'deeply.nested_a.key', 'here_a!');
+    i18nInstance.addResource('en', 'translation', 'deeply.nested_b.key', 'here_b!');
 
-    it('should apply keyPrefix', () => {
-      const { result } = renderHook(() =>
-        useTranslation('translation', { i18n: i18nInstance, keyPrefix: 'deeply.nested' }),
+    it('should apply keyPrefix and reset it once changed', () => {
+      let keyPrefix = 'deeply.nested_a';
+      const { result, rerender } = renderHook(() =>
+        useTranslation('translation', { i18n: i18nInstance, keyPrefix }),
       );
-      const { t } = result.current;
-      expect(t('key')).toBe('here!');
-      expect(t.keyPrefix).toBe('deeply.nested');
+      const { t: t1 } = result.current;
+      expect(t1('key')).toBe('here_a!');
+      expect(t1.keyPrefix).toBe('deeply.nested_a');
+
+      keyPrefix = 'deeply.nested_b';
+      rerender();
+
+      const { t: t2 } = result.current;
+      expect(t2('key')).toBe('here_b!');
+      expect(t2.keyPrefix).toBe('deeply.nested_b');
     });
   });
 

@@ -12,7 +12,12 @@ describe('withTranslation', () => {
       expect(typeof t).toBe('function');
       expect(instance).toBe(i18n);
 
-      return <div>{t('key1')}</div>;
+      return (
+        <div>
+          {t('key1')}
+          {t('deepPath.deepKey1')}
+        </div>
+      );
     }
   }
 
@@ -27,6 +32,7 @@ describe('withTranslation', () => {
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
         test
+        value1
       </div>
     `);
   });

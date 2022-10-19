@@ -1,6 +1,6 @@
 {
   "name": "react-i18next",
-  "version": "11.16.9",
+  "version": "11.18.6",
   "description": "Internationalization for react done right. Using the i18next i18n ecosystem.",
   "main": "dist/commonjs/index.js",
   "types": "./index.d.ts",
@@ -32,7 +32,6 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.14.5",
-    "html-escaper": "^2.0.2",
     "html-parse-stringify": "^3.0.1"
   },
   "devDependencies": {
@@ -117,9 +116,9 @@
     "test:watch": "cross-env BABEL_ENV=development jest --no-cache --watch",
     "test:coverage": "cross-env BABEL_ENV=development jest --no-cache --coverage",
     "test:lint": "eslint ./src ./test",
-    "test:typescript": "tslint --project tsconfig.json '**/*.ts'",
-    "test:typescript:noninterop": "tslint --project tsconfig.nonEsModuleInterop.json '**/*.ts'",
-    "test:typescript:customtypes": "tslint --project ./test/typescript/custom-types/tsconfig.json '**/*.ts'",
+    "test:typescript": "tslint --project tsconfig.json '**/*.{ts,tsx}'",
+    "test:typescript:noninterop": "tslint --project tsconfig.nonEsModuleInterop.json '**/*.{ts,tsx}'",
+    "test:typescript:customtypes": "tslint --project ./test/typescript/custom-types/tsconfig.json '**/*.{ts,tsx}'",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
     "prettier": "prettier --write \"{,**/}*.{ts,tsx,js,json,md}\""

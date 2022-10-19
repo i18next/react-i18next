@@ -40,9 +40,11 @@ declare module 'i18next' {
 type ObjectOrNever = TypeOptions['allowObjectInHTMLChildren'] extends true
   ? Record<string, unknown>
   : never;
+type ReactI18NextChild = React.ReactNode | ObjectOrNever;
+
 declare module 'react' {
   interface HTMLAttributes<T> {
-    children?: ReactNode | ObjectOrNever;
+    children?: ReactI18NextChild | Iterable<ReactI18NextChild>;
   }
 }
 
@@ -56,7 +58,7 @@ export type TransProps<
   E = React.HTMLProps<HTMLDivElement>
 > = E & {
   children?: TransChild | TransChild[];
-  components?: readonly React.ReactNode[] | { readonly [tagName: string]: React.ReactNode };
+  components?: readonly React.ReactElement[] | { readonly [tagName: string]: React.ReactElement };
   count?: number;
   context?: string;
   defaults?: string;
@@ -83,6 +85,9 @@ export interface UseTranslationOptions<TKPrefix = undefined> {
   i18n?: i18n;
   useSuspense?: boolean;
   keyPrefix?: TKPrefix;
+  bindI18n?: string | false;
+  nsMode?: 'fallback' | 'default';
+  // other of these options might also work: https://github.com/i18next/i18next/blob/master/index.d.ts#L127
 }
 
 export type UseTranslationResponse<N extends Namespace, TKPrefix = undefined> = [
@@ -118,8 +123,11 @@ export function withSSR(): <Props>(
   getInitialProps: (ctx: unknown) => Promise<any>;
 };
 
-export interface WithTranslation<N extends Namespace = DefaultNamespace> {
-  t: TFunction<N>;
+export interface WithTranslation<
+  N extends Namespace = DefaultNamespace,
+  TKPrefix extends KeyPrefix<N> = undefined
+> {
+  t: TFunction<N, TKPrefix>;
   i18n: i18n;
   tReady: boolean;
 }
@@ -129,10 +137,14 @@ export interface WithTranslationProps {
   useSuspense?: boolean;
 }
 
-export function withTranslation<N extends Namespace = DefaultNamespace>(
+export function withTranslation<
+  N extends Namespace = DefaultNamespace,
+  TKPrefix extends KeyPrefix<N> = undefined
+>(
   ns?: N,
   options?: {
     withRef?: boolean;
+    keyPrefix?: TKPrefix;
   },
 ): <
   C extends React.ComponentType<React.ComponentProps<any> & WithTranslationProps>,
@@ -153,9 +165,12 @@ export interface I18nextProviderProps {
 export const I18nextProvider: React.FunctionComponent<I18nextProviderProps>;
 export const I18nContext: React.Context<{ i18n: i18n }>;
 
-export interface TranslationProps<N extends Namespace = DefaultNamespace> {
+export interface TranslationProps<
+  N extends Namespace = DefaultNamespace,
+  TKPrefix extends KeyPrefix<N> = undefined
+> {
   children: (
-    t: TFunction<N>,
+    t: TFunction<N, TKPrefix>,
     options: {
       i18n: i18n;
       lng: string;
@@ -165,8 +180,11 @@ export interface TranslationProps<N extends Namespace = DefaultNamespace> {
   ns?: N;
   i18n?: i18n;
   useSuspense?: boolean;
+  keyPrefix?: TKPrefix;
+  nsMode?: 'fallback' | 'default';
 }
 
-export function Translation<N extends Namespace = DefaultNamespace>(
-  props: TranslationProps<N>,
-): any;
+export function Translation<
+  N extends Namespace = DefaultNamespace,
+  TKPrefix extends KeyPrefix<N> = undefined
+>(props: TranslationProps<N, TKPrefix>): any;

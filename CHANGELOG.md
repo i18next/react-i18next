@@ -1,3 +1,59 @@
+### 11.18.6
+
+- types: nsMode [1554](https://github.com/i18next/react-i18next/issues/1554)
+
+### 11.18.5
+
+- support unescaping forward slash [1548](https://github.com/i18next/react-i18next/pull/1548)
+
+### 11.18.4
+
+- fix: reset t when keyPrefix is updated [1544](https://github.com/i18next/react-i18next/pull/1544)
+
+### 11.18.3
+
+- types: bindI18n option for UseTranslationOptions
+
+### 11.18.2
+
+- more html entities to unescape by default [1538](https://github.com/i18next/react-i18next/pull/1538)
+
+### 11.18.1
+
+- types: allow iterable with objects as children [1531](https://github.com/i18next/react-i18next/pull/1531)
+
+### 11.18.0
+
+- ability to add custom unescape function [1529](https://github.com/i18next/react-i18next/pull/1529)
+
+### 11.17.4
+
+- fix: UMD build [1527](https://github.com/i18next/react-i18next/issues/1527)
+
+### 11.17.3
+
+- style: explicit React imports [1525](https://github.com/i18next/react-i18next/pull/1525)
+
+### 11.17.2
+
+- reset t if ns changes in useTranslation [1518](https://github.com/i18next/react-i18next/pull/1518)
+
+### 11.17.1
+
+- Stricter typescript type for Trans components prop [1516](https://github.com/i18next/react-i18next/pull/1516)
+
+### 11.17.0
+
+- Add support for keyPrefix in withTranslation [1512](https://github.com/i18next/react-i18next/pull/1512)
+
+### 11.16.11
+
+- types: fix Translation component types regression [1511](https://github.com/i18next/react-i18next/pull/1511)
+
+### 11.16.10
+
+- types: translation component types [1509](https://github.com/i18next/react-i18next/pull/1509)
+
 ### 11.16.9
 
 - types: fix missing generic type for HTMLAttributes [1499](https://github.com/i18next/react-i18next/pull/1499)

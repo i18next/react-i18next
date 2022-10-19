@@ -25,7 +25,7 @@ function MyComponent() {
 function Page() {
   const { t, i18n } = useTranslation();
 
-  const changeLanguage = lng => {
+  const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
   };
 
@@ -34,6 +34,7 @@ function Page() {
       <div className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <Welcome />
+        <button onClick={() => changeLanguage('ar')}>ar</button>
         <button onClick={() => changeLanguage('de')}>de</button>
         <button onClick={() => changeLanguage('en')}>en</button>
       </div>
@@ -45,7 +46,7 @@ function Page() {
   );
 }
 
-// loading component for suspence fallback
+// loading component for suspense fallback
 const Loader = () => (
   <div className="App">
     <img src={logo} className="App-logo" alt="logo" />

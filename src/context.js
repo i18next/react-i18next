@@ -1,4 +1,5 @@
-import React from 'react';
+import { createContext } from 'react';
+import { unescape } from './unescape';
 
 let defaultOptions = {
   bindI18n: 'languageChanged',
@@ -10,11 +11,12 @@ let defaultOptions = {
   transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'p'],
   // hashTransKey: key => key // calculate a key for Trans component based on defaultValue
   useSuspense: true,
+  unescape,
 };
 
 let i18nInstance;
 
-export const I18nContext = React.createContext();
+export const I18nContext = createContext();
 
 export function setDefaults(options = {}) {
   defaultOptions = { ...defaultOptions, ...options };
