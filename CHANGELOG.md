@@ -1,3 +1,7 @@
+### 12.0.0
+
+- Update t function types to rely on types coming from i18next [1501](https://github.com/i18next/react-i18next/pull/1501)
+
 ### 11.18.6
 
 - types: nsMode [1554](https://github.com/i18next/react-i18next/issues/1554)
