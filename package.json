@@ -4,13 +4,6 @@
   "description": "Internationalization for react done right. Using the i18next i18n ecosystem.",
   "main": "dist/commonjs/index.js",
   "types": "./index.d.ts",
-  "typesVersions": {
-    ">=4.1": {
-      "*": [
-        "ts4.1/*"
-      ]
-    }
-  },
   "jsnext:main": "dist/es/index.js",
   "module": "dist/es/index.js",
   "keywords": [
@@ -67,7 +60,7 @@
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-testing-library": "^3.10.1",
     "husky": "^3.0.3",
-    "i18next": "^21.0.0",
+    "i18next": "^22.0.1",
     "jest": "^24.8.0",
     "jest-cli": "^24.8.4",
     "lint-staged": "^8.1.3",
