@@ -109,7 +109,7 @@ Some basics of i18next and some cool possibilities on how to optimize your local
 ### Examples
 
 - [Example react](https://github.com/i18next/react-i18next/tree/master/example/react)
-- [Example react with typescript 4.1+](https://github.com/i18next/react-i18next/tree/master/example/react-typescript4.1)
+- [React examples with typescript](https://github.com/i18next/react-i18next/tree/master/example/react-typescript)
 - [Example locize.com](https://github.com/i18next/react-i18next/tree/master/example/locize)
 
 #### v9 samples
