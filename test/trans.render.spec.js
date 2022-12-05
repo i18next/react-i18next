@@ -72,6 +72,7 @@ describe('trans simple using ns prop', () => {
 describe('trans using translation prop', () => {
   const TestComponent = ({ parent }) => (
     <Trans i18nKey="transTest3" parent={parent}>
+      {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <a />
     </Trans>
   );
@@ -94,6 +95,7 @@ describe('trans using translation prop', () => {
 describe('trans overwrites translation prop', () => {
   const TestComponent = ({ parent }) => (
     <Trans i18nKey="transTest3_overwrite" parent={parent}>
+      {/* eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label */}
       <a href="https://www.bing.com" />
     </Trans>
   );
