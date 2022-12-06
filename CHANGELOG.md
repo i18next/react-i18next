@@ -1,3 +1,7 @@
+### 12.1.0
+
+- context-less version of Trans component to be used for environments without react context [1588](https://github.com/i18next/react-i18next/pull/1588)
+
 ### 12.0.0
 
 - Update t function types to rely on types coming from i18next [1501](https://github.com/i18next/react-i18next/pull/1501)
