@@ -1,30 +1,11 @@
 import { createContext } from 'react';
-import { unescape } from './unescape';
+import { getDefaults, setDefaults } from './defaults';
+import { getI18n, setI18n } from './i18nInstance';
+import { initReactI18next } from './initReactI18next';
 
-let defaultOptions = {
-  bindI18n: 'languageChanged',
-  bindI18nStore: '',
-  // nsMode: 'fallback' // loop through all namespaces given to hook, HOC, render prop for key lookup
-  transEmptyNodeValue: '',
-  transSupportBasicHtmlNodes: true,
-  transWrapTextNodes: '',
-  transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'p'],
-  // hashTransKey: key => key // calculate a key for Trans component based on defaultValue
-  useSuspense: true,
-  unescape,
-};
-
-let i18nInstance;
+export { getDefaults, setDefaults, getI18n, setI18n, initReactI18next };
 
 export const I18nContext = createContext();
-
-export function setDefaults(options = {}) {
-  defaultOptions = { ...defaultOptions, ...options };
-}
-
-export function getDefaults() {
-  return defaultOptions;
-}
 
 export class ReportNamespaces {
   constructor() {
@@ -41,23 +22,6 @@ export class ReportNamespaces {
     return Object.keys(this.usedNamespaces);
   }
 }
-
-export function setI18n(instance) {
-  i18nInstance = instance;
-}
-
-export function getI18n() {
-  return i18nInstance;
-}
-
-export const initReactI18next = {
-  type: '3rdParty',
-
-  init(instance) {
-    setDefaults(instance.options.react);
-    setI18n(instance);
-  },
-};
 
 export function composeInitialProps(ForComponent) {
   return (ctx) =>

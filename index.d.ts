@@ -1,15 +1,15 @@
 import i18next, {
   ReactOptions,
   i18n,
-  ThirdPartyModule,
   Resource,
-  TFuncKey,
   Namespace,
   TypeOptions,
   TFunction,
   KeyPrefix,
 } from 'i18next';
 import * as React from 'react';
+export { Trans, TransProps } from './TransWithoutContext';
+export { initReactI18next } from './initReactI18next';
 
 type Subtract<T extends K, K> = Omit<T, keyof K>;
 
@@ -17,7 +17,6 @@ export function setDefaults(options: ReactOptions): void;
 export function getDefaults(): ReactOptions;
 export function setI18n(instance: i18n): void;
 export function getI18n(): i18n;
-export const initReactI18next: ThirdPartyModule;
 export function composeInitialProps(ForComponent: any): (ctx: unknown) => Promise<any>;
 export function getInitialProps(): {
   initialI18nStore: {
@@ -49,35 +48,6 @@ declare module 'react' {
 }
 
 type DefaultNamespace = TypeOptions['defaultNS'];
-
-type TransChild = React.ReactNode | Record<string, unknown>;
-export type TransProps<
-  K extends TFuncKey<N, TKPrefix> extends infer A ? A : never,
-  N extends Namespace = DefaultNamespace,
-  TKPrefix = undefined,
-  E = React.HTMLProps<HTMLDivElement>
-> = E & {
-  children?: TransChild | TransChild[];
-  components?: readonly React.ReactElement[] | { readonly [tagName: string]: React.ReactElement };
-  count?: number;
-  context?: string;
-  defaults?: string;
-  i18n?: i18n;
-  i18nKey?: K | K[];
-  ns?: N;
-  parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
-  tOptions?: {};
-  values?: {};
-  shouldUnescape?: boolean;
-  t?: TFunction<N, TKPrefix>;
-};
-
-export function Trans<
-  K extends TFuncKey<N, TKPrefix> extends infer A ? A : never,
-  N extends Namespace = DefaultNamespace,
-  TKPrefix extends KeyPrefix<N> = undefined,
-  E = React.HTMLProps<HTMLDivElement>
->(props: TransProps<K, N, TKPrefix, E>): React.ReactElement;
 
 export function useSSR(initialI18nStore: Resource, initialLanguage: string): void;
 

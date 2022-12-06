@@ -318,126 +318,6 @@
     }
   };
 
-  var matchHtmlEntity = /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34|nbsp|#160|copy|#169|reg|#174|hellip|#8230|#x2F|#47);/g;
-  var htmlEntities = {
-    '&amp;': '&',
-    '&#38;': '&',
-    '&lt;': '<',
-    '&#60;': '<',
-    '&gt;': '>',
-    '&#62;': '>',
-    '&apos;': "'",
-    '&#39;': "'",
-    '&quot;': '"',
-    '&#34;': '"',
-    '&nbsp;': ' ',
-    '&#160;': ' ',
-    '&copy;': '©',
-    '&#169;': '©',
-    '&reg;': '®',
-    '&#174;': '®',
-    '&hellip;': '…',
-    '&#8230;': '…',
-    '&#x2F;': '/',
-    '&#47;': '/'
-  };
-
-  var unescapeHtmlEntity = function unescapeHtmlEntity(m) {
-    return htmlEntities[m];
-  };
-
-  var unescape = function unescape(text) {
-    return text.replace(matchHtmlEntity, unescapeHtmlEntity);
-  };
-
-  var defaultOptions = {
-    bindI18n: 'languageChanged',
-    bindI18nStore: '',
-    transEmptyNodeValue: '',
-    transSupportBasicHtmlNodes: true,
-    transWrapTextNodes: '',
-    transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'p'],
-    useSuspense: true,
-    unescape: unescape
-  };
-  var i18nInstance;
-  var I18nContext = react.createContext();
-  function setDefaults() {
-    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    defaultOptions = _objectSpread2(_objectSpread2({}, defaultOptions), options);
-  }
-  function getDefaults() {
-    return defaultOptions;
-  }
-  var ReportNamespaces = function () {
-    function ReportNamespaces() {
-      _classCallCheck(this, ReportNamespaces);
-
-      this.usedNamespaces = {};
-    }
-
-    _createClass(ReportNamespaces, [{
-      key: "addUsedNamespaces",
-      value: function addUsedNamespaces(namespaces) {
-        var _this = this;
-
-        namespaces.forEach(function (ns) {
-          if (!_this.usedNamespaces[ns]) _this.usedNamespaces[ns] = true;
-        });
-      }
-    }, {
-      key: "getUsedNamespaces",
-      value: function getUsedNamespaces() {
-        return Object.keys(this.usedNamespaces);
-      }
-    }]);
-
-    return ReportNamespaces;
-  }();
-  function setI18n(instance) {
-    i18nInstance = instance;
-  }
-  function getI18n() {
-    return i18nInstance;
-  }
-  var initReactI18next = {
-    type: '3rdParty',
-    init: function init(instance) {
-      setDefaults(instance.options.react);
-      setI18n(instance);
-    }
-  };
-  function composeInitialProps(ForComponent) {
-    return function (ctx) {
-      return new Promise(function (resolve) {
-        var i18nInitialProps = getInitialProps();
-
-        if (ForComponent.getInitialProps) {
-          ForComponent.getInitialProps(ctx).then(function (componentsInitialProps) {
-            resolve(_objectSpread2(_objectSpread2({}, componentsInitialProps), i18nInitialProps));
-          });
-        } else {
-          resolve(i18nInitialProps);
-        }
-      });
-    };
-  }
-  function getInitialProps() {
-    var i18n = getI18n();
-    var namespaces = i18n.reportNamespaces ? i18n.reportNamespaces.getUsedNamespaces() : [];
-    var ret = {};
-    var initialI18nStore = {};
-    i18n.languages.forEach(function (l) {
-      initialI18nStore[l] = {};
-      namespaces.forEach(function (ns) {
-        initialI18nStore[l][ns] = i18n.getResourceBundle(l, ns) || {};
-      });
-    });
-    ret.initialI18nStore = initialI18nStore;
-    ret.initialLanguage = i18n.language;
-    return ret;
-  }
-
   function warn() {
     if (console && console.warn) {
       var _console;
@@ -519,6 +399,64 @@
   }
   function getDisplayName(Component) {
     return Component.displayName || Component.name || (typeof Component === 'string' && Component.length > 0 ? Component : 'Unknown');
+  }
+
+  var matchHtmlEntity = /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34|nbsp|#160|copy|#169|reg|#174|hellip|#8230|#x2F|#47);/g;
+  var htmlEntities = {
+    '&amp;': '&',
+    '&#38;': '&',
+    '&lt;': '<',
+    '&#60;': '<',
+    '&gt;': '>',
+    '&#62;': '>',
+    '&apos;': "'",
+    '&#39;': "'",
+    '&quot;': '"',
+    '&#34;': '"',
+    '&nbsp;': ' ',
+    '&#160;': ' ',
+    '&copy;': '©',
+    '&#169;': '©',
+    '&reg;': '®',
+    '&#174;': '®',
+    '&hellip;': '…',
+    '&#8230;': '…',
+    '&#x2F;': '/',
+    '&#47;': '/'
+  };
+
+  var unescapeHtmlEntity = function unescapeHtmlEntity(m) {
+    return htmlEntities[m];
+  };
+
+  var unescape = function unescape(text) {
+    return text.replace(matchHtmlEntity, unescapeHtmlEntity);
+  };
+
+  var defaultOptions = {
+    bindI18n: 'languageChanged',
+    bindI18nStore: '',
+    transEmptyNodeValue: '',
+    transSupportBasicHtmlNodes: true,
+    transWrapTextNodes: '',
+    transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'p'],
+    useSuspense: true,
+    unescape: unescape
+  };
+  function setDefaults() {
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    defaultOptions = _objectSpread2(_objectSpread2({}, defaultOptions), options);
+  }
+  function getDefaults() {
+    return defaultOptions;
+  }
+
+  var i18nInstance;
+  function setI18n(instance) {
+    i18nInstance = instance;
+  }
+  function getI18n() {
+    return i18nInstance;
   }
 
   var _excluded = ["format"],
@@ -741,11 +679,7 @@
         shouldUnescape = _ref.shouldUnescape,
         additionalProps = _objectWithoutProperties(_ref, _excluded2);
 
-    var _ref2 = react.useContext(I18nContext) || {},
-        i18nFromContext = _ref2.i18n,
-        defaultNSFromContext = _ref2.defaultNS;
-
-    var i18n = i18nFromProps || i18nFromContext || getI18n();
+    var i18n = i18nFromProps || getI18n();
 
     if (!i18n) {
       warnOnce('You will need to pass in an i18next instance by using i18nextReactModule');
@@ -760,7 +694,7 @@
 
     var reactI18nextOptions = _objectSpread2(_objectSpread2({}, getDefaults()), i18n.options && i18n.options.react);
 
-    var namespaces = ns || t.ns || defaultNSFromContext || i18n.options && i18n.options.defaultNS;
+    var namespaces = ns || t.ns || i18n.options && i18n.options.defaultNS;
     namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
     var defaultValue = defaults || nodesToString(children, reactI18nextOptions) || reactI18nextOptions.transEmptyNodeValue || i18nKey;
     var hashTransKey = reactI18nextOptions.hashTransKey;
@@ -783,6 +717,116 @@
     var content = renderNodes(components || children, translation, i18n, reactI18nextOptions, combinedTOpts, shouldUnescape);
     var useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
     return useAsParent ? react.createElement(useAsParent, additionalProps, content) : content;
+  }
+
+  var initReactI18next = {
+    type: '3rdParty',
+    init: function init(instance) {
+      setDefaults(instance.options.react);
+      setI18n(instance);
+    }
+  };
+
+  var I18nContext = react.createContext();
+  var ReportNamespaces = function () {
+    function ReportNamespaces() {
+      _classCallCheck(this, ReportNamespaces);
+
+      this.usedNamespaces = {};
+    }
+
+    _createClass(ReportNamespaces, [{
+      key: "addUsedNamespaces",
+      value: function addUsedNamespaces(namespaces) {
+        var _this = this;
+
+        namespaces.forEach(function (ns) {
+          if (!_this.usedNamespaces[ns]) _this.usedNamespaces[ns] = true;
+        });
+      }
+    }, {
+      key: "getUsedNamespaces",
+      value: function getUsedNamespaces() {
+        return Object.keys(this.usedNamespaces);
+      }
+    }]);
+
+    return ReportNamespaces;
+  }();
+  function composeInitialProps(ForComponent) {
+    return function (ctx) {
+      return new Promise(function (resolve) {
+        var i18nInitialProps = getInitialProps();
+
+        if (ForComponent.getInitialProps) {
+          ForComponent.getInitialProps(ctx).then(function (componentsInitialProps) {
+            resolve(_objectSpread2(_objectSpread2({}, componentsInitialProps), i18nInitialProps));
+          });
+        } else {
+          resolve(i18nInitialProps);
+        }
+      });
+    };
+  }
+  function getInitialProps() {
+    var i18n = getI18n();
+    var namespaces = i18n.reportNamespaces ? i18n.reportNamespaces.getUsedNamespaces() : [];
+    var ret = {};
+    var initialI18nStore = {};
+    i18n.languages.forEach(function (l) {
+      initialI18nStore[l] = {};
+      namespaces.forEach(function (ns) {
+        initialI18nStore[l][ns] = i18n.getResourceBundle(l, ns) || {};
+      });
+    });
+    ret.initialI18nStore = initialI18nStore;
+    ret.initialLanguage = i18n.language;
+    return ret;
+  }
+
+  var _excluded$1 = ["children", "count", "parent", "i18nKey", "context", "tOptions", "values", "defaults", "components", "ns", "i18n", "t", "shouldUnescape"];
+  function Trans$1(_ref) {
+    var children = _ref.children,
+        count = _ref.count,
+        parent = _ref.parent,
+        i18nKey = _ref.i18nKey,
+        context = _ref.context,
+        _ref$tOptions = _ref.tOptions,
+        tOptions = _ref$tOptions === void 0 ? {} : _ref$tOptions,
+        values = _ref.values,
+        defaults = _ref.defaults,
+        components = _ref.components,
+        ns = _ref.ns,
+        i18nFromProps = _ref.i18n,
+        tFromProps = _ref.t,
+        shouldUnescape = _ref.shouldUnescape,
+        additionalProps = _objectWithoutProperties(_ref, _excluded$1);
+
+    var _ref2 = react.useContext(I18nContext) || {},
+        i18nFromContext = _ref2.i18n,
+        defaultNSFromContext = _ref2.defaultNS;
+
+    var i18n = i18nFromProps || i18nFromContext || getI18n();
+
+    var t = tFromProps || i18n.t.bind(i18n) || function (k) {
+      return k;
+    };
+
+    return Trans(_objectSpread2({
+      children: children,
+      count: count,
+      parent: parent,
+      i18nKey: i18nKey,
+      context: context,
+      tOptions: tOptions,
+      values: values,
+      defaults: defaults,
+      components: components,
+      ns: ns || t.ns || defaultNSFromContext || i18n.options && i18n.options.defaultNS,
+      i18n: i18n,
+      t: tFromProps,
+      shouldUnescape: shouldUnescape
+    }, additionalProps));
   }
 
   var usePrevious = function usePrevious(value, ignore) {
@@ -895,13 +939,13 @@
     });
   }
 
-  var _excluded$1 = ["forwardedRef"];
+  var _excluded$2 = ["forwardedRef"];
   function withTranslation(ns) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     return function Extend(WrappedComponent) {
       function I18nextWithTranslation(_ref) {
         var forwardedRef = _ref.forwardedRef,
-            rest = _objectWithoutProperties(_ref, _excluded$1);
+            rest = _objectWithoutProperties(_ref, _excluded$2);
 
         var _useTranslation = useTranslation(ns, _objectSpread2(_objectSpread2({}, rest), {}, {
           keyPrefix: options.keyPrefix
@@ -939,11 +983,11 @@
     };
   }
 
-  var _excluded$2 = ["ns", "children"];
+  var _excluded$3 = ["ns", "children"];
   function Translation(props) {
     var ns = props.ns,
         children = props.children,
-        options = _objectWithoutProperties(props, _excluded$2);
+        options = _objectWithoutProperties(props, _excluded$3);
 
     var _useTranslation = useTranslation(ns, options),
         _useTranslation2 = _slicedToArray(_useTranslation, 3),
@@ -1000,13 +1044,13 @@
     }
   }
 
-  var _excluded$3 = ["initialI18nStore", "initialLanguage"];
+  var _excluded$4 = ["initialI18nStore", "initialLanguage"];
   function withSSR() {
     return function Extend(WrappedComponent) {
       function I18nextWithSSR(_ref) {
         var initialI18nStore = _ref.initialI18nStore,
             initialLanguage = _ref.initialLanguage,
-            rest = _objectWithoutProperties(_ref, _excluded$3);
+            rest = _objectWithoutProperties(_ref, _excluded$4);
 
         useSSR(initialI18nStore, initialLanguage);
         return react.createElement(WrappedComponent, _objectSpread2({}, rest));
@@ -1040,7 +1084,8 @@
 
   exports.I18nContext = I18nContext;
   exports.I18nextProvider = I18nextProvider;
-  exports.Trans = Trans;
+  exports.Trans = Trans$1;
+  exports.TransWithoutContext = Trans;
   exports.Translation = Translation;
   exports.composeInitialProps = composeInitialProps;
   exports.date = date;
