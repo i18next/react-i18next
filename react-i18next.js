@@ -451,6 +451,14 @@
     return defaultOptions;
   }
 
+  var i18nInstance;
+  function setI18n(instance) {
+    i18nInstance = instance;
+  }
+  function getI18n() {
+    return i18nInstance;
+  }
+
   var _excluded = ["format"],
       _excluded2 = ["children", "count", "parent", "i18nKey", "context", "tOptions", "values", "defaults", "components", "ns", "i18n", "t", "shouldUnescape"];
 
@@ -671,7 +679,7 @@
         shouldUnescape = _ref.shouldUnescape,
         additionalProps = _objectWithoutProperties(_ref, _excluded2);
 
-    var i18n = i18nFromProps;
+    var i18n = i18nFromProps || getI18n();
 
     if (!i18n) {
       warnOnce('You will need to pass in an i18next instance by using i18nextReactModule');
@@ -711,7 +719,14 @@
     return useAsParent ? react.createElement(useAsParent, additionalProps, content) : content;
   }
 
-  var i18nInstance;
+  var initReactI18next = {
+    type: '3rdParty',
+    init: function init(instance) {
+      setDefaults(instance.options.react);
+      setI18n(instance);
+    }
+  };
+
   var I18nContext = react.createContext();
   var ReportNamespaces = function () {
     function ReportNamespaces() {
@@ -738,19 +753,6 @@
 
     return ReportNamespaces;
   }();
-  function setI18n(instance) {
-    i18nInstance = instance;
-  }
-  function getI18n() {
-    return i18nInstance;
-  }
-  var initReactI18next = {
-    type: '3rdParty',
-    init: function init(instance) {
-      setDefaults(instance.options.react);
-      setI18n(instance);
-    }
-  };
   function composeInitialProps(ForComponent) {
     return function (ctx) {
       return new Promise(function (resolve) {

@@ -2,6 +2,7 @@ import { isValidElement, cloneElement, createElement } from 'react';
 import HTML from 'html-parse-stringify';
 import { warn, warnOnce } from './utils';
 import { getDefaults } from './defaults';
+import { getI18n } from './i18nInstance';
 
 function hasChildren(node, checkLength) {
   if (!node) return false;
@@ -288,7 +289,7 @@ export function Trans({
   shouldUnescape,
   ...additionalProps
 }) {
-  const i18n = i18nFromProps;
+  const i18n = i18nFromProps || getI18n();
 
   if (!i18n) {
     warnOnce('You will need to pass in an i18next instance by using i18nextReactModule');

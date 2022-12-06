@@ -1,7 +1,6 @@
 import i18next, {
   ReactOptions,
   i18n,
-  ThirdPartyModule,
   Resource,
   Namespace,
   TypeOptions,
@@ -10,6 +9,7 @@ import i18next, {
 } from 'i18next';
 import * as React from 'react';
 export { Trans, TransProps } from './TransWithoutContext';
+export { initReactI18next } from './initReactI18next';
 
 type Subtract<T extends K, K> = Omit<T, keyof K>;
 
@@ -17,7 +17,6 @@ export function setDefaults(options: ReactOptions): void;
 export function getDefaults(): ReactOptions;
 export function setI18n(instance: i18n): void;
 export function getI18n(): i18n;
-export const initReactI18next: ThirdPartyModule;
 export function composeInitialProps(ForComponent: any): (ctx: unknown) => Promise<any>;
 export function getInitialProps(): {
   initialI18nStore: {
