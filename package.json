@@ -17,6 +17,19 @@
     "react",
     "reactjs"
   ],
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./dist/es/index.js",
+      "require": "./dist/commonjs/index.js"
+    },
+    "./TransWithoutContext": {
+      "types": "./TransWithoutContext.d.ts",
+      "import": "./dist/es/TransWithoutContext.js",
+      "require": "./dist/commonjs/TransWithoutContext.js"
+    }
+  },
   "homepage": "https://github.com/i18next/react-i18next",
   "bugs": "https://github.com/i18next/react-i18next/issues",
   "repository": {

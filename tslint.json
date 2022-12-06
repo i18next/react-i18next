@@ -8,7 +8,8 @@
     "no-redundant-jsdoc": false,
     "no-unnecessary-generics": false,
     "semicolon": false,
-    "strict-export-declare-modifiers": false
+    "strict-export-declare-modifiers": false,
+    "no-relative-import-in-test": false
   },
   "linterOptions": {
     "exclude": ["node_modules/**/*"]
