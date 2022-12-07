@@ -3,15 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "i18next": "21.0.0",
-    "i18next-browser-languagedetector": "6.1.1",
-    "i18next-locize-backend": "4.2.2",
-    "locize": "2.2.4",
-    "locize-lastused": "3.0.12",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "react-i18next": "11.10.0",
-    "react-scripts": "^4.0.3"
+    "i18next": "22.1.2",
+    "i18next-browser-languagedetector": "7.0.1",
+    "i18next-locize-backend": "6.0.1",
+    "locize": "2.4.5",
+    "locize-lastused": "3.1.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-i18next": "12.1.1",
+    "react-scripts": "5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
