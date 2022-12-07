@@ -1,7 +1,7 @@
 import { createElement } from 'react';
-import { useSSR } from './useSSR';
-import { composeInitialProps } from './context';
-import { getDisplayName } from './utils';
+import { useSSR } from './useSSR.js';
+import { composeInitialProps } from './context.js';
+import { getDisplayName } from './utils.js';
 
 export function withSSR() {
   return function Extend(WrappedComponent) {

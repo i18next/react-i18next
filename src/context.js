@@ -1,7 +1,7 @@
 import { createContext } from 'react';
-import { getDefaults, setDefaults } from './defaults';
-import { getI18n, setI18n } from './i18nInstance';
-import { initReactI18next } from './initReactI18next';
+import { getDefaults, setDefaults } from './defaults.js';
+import { getI18n, setI18n } from './i18nInstance.js';
+import { initReactI18next } from './initReactI18next.js';
 
 export { getDefaults, setDefaults, getI18n, setI18n, initReactI18next };
 

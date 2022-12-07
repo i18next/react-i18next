@@ -1,4 +1,4 @@
-import { unescape } from './unescape';
+import { unescape } from './unescape.js';
 
 let defaultOptions = {
   bindI18n: 'languageChanged',

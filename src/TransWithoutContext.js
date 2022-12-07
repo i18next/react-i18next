@@ -1,8 +1,8 @@
 import { isValidElement, cloneElement, createElement } from 'react';
 import HTML from 'html-parse-stringify';
-import { warn, warnOnce } from './utils';
-import { getDefaults } from './defaults';
-import { getI18n } from './i18nInstance';
+import { warn, warnOnce } from './utils.js';
+import { getDefaults } from './defaults.js';
+import { getI18n } from './i18nInstance.js';
 
 function hasChildren(node, checkLength) {
   if (!node) return false;

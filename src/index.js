@@ -1,11 +1,11 @@
-export { Trans } from './Trans';
-export { Trans as TransWithoutContext } from './TransWithoutContext';
-export { useTranslation } from './useTranslation';
-export { withTranslation } from './withTranslation';
-export { Translation } from './Translation';
-export { I18nextProvider } from './I18nextProvider';
-export { withSSR } from './withSSR';
-export { useSSR } from './useSSR';
+export { Trans } from './Trans.js';
+export { Trans as TransWithoutContext } from './TransWithoutContext.js';
+export { useTranslation } from './useTranslation.js';
+export { withTranslation } from './withTranslation.js';
+export { Translation } from './Translation.js';
+export { I18nextProvider } from './I18nextProvider.js';
+export { withSSR } from './withSSR.js';
+export { useSSR } from './useSSR.js';
 
 export {
   I18nContext,
@@ -16,7 +16,7 @@ export {
   getI18n,
   composeInitialProps,
   getInitialProps,
-} from './context';
+} from './context.js';
 
 // dummy functions for icu.macro support
 

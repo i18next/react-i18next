@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef } from 'react';
-import { getI18n, getDefaults, ReportNamespaces, I18nContext } from './context';
-import { warnOnce, loadNamespaces, hasLoadedNamespace } from './utils';
+import { getI18n, getDefaults, ReportNamespaces, I18nContext } from './context.js';
+import { warnOnce, loadNamespaces, hasLoadedNamespace } from './utils.js';
 
 const usePrevious = (value, ignore) => {
   const ref = useRef();

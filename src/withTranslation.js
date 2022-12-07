@@ -1,6 +1,6 @@
 import { createElement, forwardRef as forwardRefReact } from 'react';
-import { useTranslation } from './useTranslation';
-import { getDisplayName } from './utils';
+import { useTranslation } from './useTranslation.js';
+import { getDisplayName } from './utils.js';
 
 export function withTranslation(ns, options = {}) {
   return function Extend(WrappedComponent) {

@@ -1,4 +1,4 @@
-import { useTranslation } from './useTranslation';
+import { useTranslation } from './useTranslation.js';
 
 export function Translation(props) {
   const { ns, children, ...options } = props;

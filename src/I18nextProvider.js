@@ -1,5 +1,5 @@
 import { createElement, useMemo } from 'react';
-import { I18nContext } from './context';
+import { I18nContext } from './context.js';
 
 export function I18nextProvider({ i18n, defaultNS, children }) {
   const value = useMemo(

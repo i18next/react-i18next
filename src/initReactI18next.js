@@ -1,5 +1,5 @@
-import { setDefaults } from './defaults';
-import { setI18n } from './i18nInstance';
+import { setDefaults } from './defaults.js';
+import { setI18n } from './i18nInstance.js';
 
 export const initReactI18next = {
   type: '3rdParty',

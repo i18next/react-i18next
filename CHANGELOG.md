@@ -1,3 +1,7 @@
+### 12.1.1
+
+- fix for node resolution [1589](https://github.com/i18next/react-i18next/issues/1589)
+
 ### 12.1.0
 
 - context-less version of Trans component to be used for environments without react context [1588](https://github.com/i18next/react-i18next/pull/1588)
