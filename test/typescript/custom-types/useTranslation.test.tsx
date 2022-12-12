@@ -22,7 +22,9 @@ function arrayNamespace() {
   return (
     <>
       {t('alternate:baz')}
+      {t('baz', { ns: 'alternate' })}
       {t('custom:foo')}
+      {t('foo', { ns: 'custom' })}
     </>
   );
 }
@@ -33,7 +35,9 @@ function readonlyArrayNamespace() {
   return (
     <>
       {t('alternate:baz')}
+      {t('baz', { ns: 'alternate' })}
       {t('custom:foo')}
+      {t('foo', { ns: 'custom' })}
     </>
   );
 }
@@ -47,7 +51,7 @@ function deepKeyPrefixOption() {
   const [t] = useTranslation('alternate', { keyPrefix: 'foobar.deep' });
   return (
     <>
-      {t('deeper').deeeeeper}
+      {t('deeper', { returnObjects: true }).deeeeeper}
       {t('deeper.deeeeeper')}
     </>
   );
@@ -75,16 +79,12 @@ function expectErrorWhenKeyNotInNamespace() {
   return <>{t('fake')}</>;
 }
 
-function expectErrorWhenUsingArrayNamespaceAndUnscopedKey() {
-  const [t] = useTranslation(['custom']);
-  // @ts-expect-error
-  return <>{t('foo')}</>;
-}
-
 function expectErrorWhenUsingArrayNamespaceAndWrongKey() {
   const [t] = useTranslation(['custom']);
   // @ts-expect-error
-  return <>{t('custom:fake')}</>;
+  <>{t('custom:fake')}</>;
+  // @ts-expect-error
+  return <>{t('fake', { ns: 'custom' })}</>;
 }
 
 function expectErrorWhenUsingWrongKeyPrefixOption() {
