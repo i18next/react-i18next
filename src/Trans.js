@@ -23,7 +23,7 @@ export function Trans({
   const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = useContext(I18nContext) || {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
 
-  const t = tFromProps || (i18n && i18n.t.bind(i18n)) || ((k) => k);
+  const t = tFromProps || (i18n && i18n.t.bind(i18n));
 
   return TransWithoutContext({
     children,

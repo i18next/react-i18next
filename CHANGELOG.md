@@ -1,3 +1,7 @@
+### 12.1.3
+
+- fix fallback of t function in Trans component
+
 ### 12.1.2
 
 - fix crash in gatsby [1594](https://github.com/i18next/react-i18next/issues/1594)
