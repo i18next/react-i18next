@@ -36,7 +36,8 @@ export function Trans({
     defaults,
     components,
     // prepare having a namespace
-    ns: ns || t.ns || defaultNSFromContext || (i18n && i18n.options && i18n.options.defaultNS),
+    ns:
+      ns || (t && t.ns) || defaultNSFromContext || (i18n && i18n.options && i18n.options.defaultNS),
     i18n,
     t: tFromProps,
     shouldUnescape,
