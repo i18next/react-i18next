@@ -1,3 +1,7 @@
+### 12.1.2
+
+- fix crash in gatsby [1594](https://github.com/i18next/react-i18next/issues/1594)
+
 ### 12.1.1
 
 - fix for node resolution [1589](https://github.com/i18next/react-i18next/issues/1589)

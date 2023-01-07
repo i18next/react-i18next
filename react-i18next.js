@@ -808,7 +808,7 @@
 
     var i18n = i18nFromProps || i18nFromContext || getI18n();
 
-    var t = tFromProps || i18n.t.bind(i18n) || function (k) {
+    var t = tFromProps || i18n && i18n.t.bind(i18n) || function (k) {
       return k;
     };
 
@@ -822,7 +822,7 @@
       values: values,
       defaults: defaults,
       components: components,
-      ns: ns || t.ns || defaultNSFromContext || i18n.options && i18n.options.defaultNS,
+      ns: ns || t.ns || defaultNSFromContext || i18n && i18n.options && i18n.options.defaultNS,
       i18n: i18n,
       t: tFromProps,
       shouldUnescape: shouldUnescape

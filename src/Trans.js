@@ -23,7 +23,7 @@ export function Trans({
   const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = useContext(I18nContext) || {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
 
-  const t = tFromProps || i18n.t.bind(i18n) || ((k) => k);
+  const t = tFromProps || (i18n && i18n.t.bind(i18n)) || ((k) => k);
 
   return TransWithoutContext({
     children,
@@ -36,7 +36,7 @@ export function Trans({
     defaults,
     components,
     // prepare having a namespace
-    ns: ns || t.ns || defaultNSFromContext || (i18n.options && i18n.options.defaultNS),
+    ns: ns || t.ns || defaultNSFromContext || (i18n && i18n.options && i18n.options.defaultNS),
     i18n,
     t: tFromProps,
     shouldUnescape,
