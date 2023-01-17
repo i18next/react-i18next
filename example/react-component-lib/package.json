@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "i18next": "21.6.16",
-    "i18next-browser-languagedetector": "6.1.4",
-    "i18next-http-backend": "1.4.0",
-    "react": "18.1.0",
-    "react-dom": "18.1.0",
-    "react-i18next": "11.16.7",
+    "i18next": "22.4.9",
+    "i18next-browser-languagedetector": "7.0.1",
+    "i18next-http-backend": "2.1.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-i18next": "12.1.4",
     "react-scripts": "5.0.1"
   },
   "scripts": {

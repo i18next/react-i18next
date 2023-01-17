@@ -1,6 +1,5 @@
 import React, { Component, Suspense } from 'react';
 import { useTranslation, withTranslation, Trans } from 'react-i18next';
-import logo from './logo.svg';
 import './App.css';
 
 import { MyCompFromOtherLib } from './other-lib/component';
@@ -34,7 +33,7 @@ function Page() {
   return (
     <div className="App">
       <div className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <img src="logo.svg" className="App-logo" alt="logo" />
         <Welcome />
         <button type="button" onClick={() => changeLanguage('de')}>
           de
@@ -56,7 +55,7 @@ function Page() {
 // loading component for suspense fallback
 const Loader = () => (
   <div className="App">
-    <img src={logo} className="App-logo" alt="logo" />
+    <img src="logo.svg" className="App-logo" alt="logo" />
     <div>loading...</div>
   </div>
 );
