@@ -1,3 +1,7 @@
+### 12.1.5
+
+- fix react merged types [1606](https://github.com/i18next/react-i18next/pull/1606) originally introduced with #1531 to address #1506
+
 ### 12.1.4
 
 - fix crash in gatsby [1594](https://github.com/i18next/react-i18next/issues/1594)
