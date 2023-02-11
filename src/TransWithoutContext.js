@@ -32,6 +32,35 @@ function mergeProps(source, target) {
   return newTarget;
 }
 
+const mappableAttr = {
+  a: ['href', 'target'],
+};
+
+function getChildPropsWithoutChildren(child) {
+  return Object.keys(child.props).filter(
+    (prop) => prop !== 'children' && (typeof child.props[prop] === 'string' || !child.props[prop]),
+  );
+}
+
+function arePropsHtmlMappable(child) {
+  const childProps = getChildPropsWithoutChildren(child);
+  if (!mappableAttr[child.type]) return false;
+  if (childProps.find((a) => mappableAttr[child.type].indexOf(a) < 0)) return false;
+  return true;
+}
+
+function getMappedAttributes(child) {
+  if (!arePropsHtmlMappable(child)) return '';
+
+  const childProps = getChildPropsWithoutChildren(child);
+  if (childProps.find((a) => mappableAttr[child.type].indexOf(a) < 0)) return false;
+  let additionalAttributes = '';
+  childProps.forEach((prop) => {
+    additionalAttributes += !child.props[prop] ? ` ${prop}` : ` ${prop}="${child.props[prop]}"`;
+  });
+  return additionalAttributes;
+}
+
 export function nodesToString(children, i18nOptions) {
   if (!children) return '';
   let stringNode = '';
@@ -50,7 +79,8 @@ export function nodesToString(children, i18nOptions) {
       // expected e.g. lorem
       stringNode += `${child}`;
     } else if (isValidElement(child)) {
-      const childPropsCount = Object.keys(child.props).length;
+      const childProps = Object.keys(child.props);
+      const childPropsCount = childProps.length;
       const shouldKeepChild = keepArray.indexOf(child.type) > -1;
       const childChildren = child.props.children;
 
@@ -71,6 +101,16 @@ export function nodesToString(children, i18nOptions) {
         // actual e.g. dolor <strong>bold</strong> amet
         // expected e.g. dolor <strong>bold</strong> amet
         stringNode += `<${child.type}>${childChildren}</${child.type}>`;
+      } else if (
+        shouldKeepChild &&
+        childPropsCount > 1 &&
+        typeof childChildren === 'string' &&
+        arePropsHtmlMappable(child)
+      ) {
+        // actual e.g. dolor <a href="https://locize.com">bold</a> amet
+        // expected e.g. dolor <a href="https://locize.com">bold</a> amet
+        const additionalAttributes = getMappedAttributes(child);
+        stringNode += `<${child.type}${additionalAttributes}>${childChildren}</${child.type}>`;
       } else {
         // regular case mapping the inner children
         const content = nodesToString(childChildren, i18nOptions);

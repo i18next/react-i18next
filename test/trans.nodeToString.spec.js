@@ -60,6 +60,21 @@ describe('trans nodeToString', () => {
     });
   });
 
+  it('should handle non voidElements eg. <a> having normal string attributes and only one child typeof string', () => {
+    const fragment = (
+      <>
+        lorem <a href="https://locize.com">bold</a> ipsum
+      </>
+    );
+    const expected = 'lorem <a href="https://locize.com">bold</a> ipsum';
+    const transKeepBasicHtmlNodesFor = ['br', 'strong', 'i', 'a'];
+    const actual = nodesToString(fragment.props.children, {
+      transSupportBasicHtmlNodes: true,
+      transKeepBasicHtmlNodesFor,
+    });
+    expect(actual).toEqual(expected);
+  });
+
   describe('treat like other components if not simple (legacy)', () => {
     it('should handle voidElements eg. br', () => {
       const fragment = (
