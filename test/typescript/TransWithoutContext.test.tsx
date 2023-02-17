@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Trans } from '../../TransWithoutContext';
+import { Trans } from '../../@types/TransWithoutContext';
 
 function basic() {
   return <Trans>Foo</Trans>;
