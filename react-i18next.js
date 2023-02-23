@@ -847,7 +847,9 @@
     if (!i18n) {
       warnOnce('You will need to pass in an i18next instance by using initReactI18next');
 
-      var notReadyT = function notReadyT(k) {
+      var notReadyT = function notReadyT(k, optsOrDefaultValue) {
+        if (typeof optsOrDefaultValue === 'string') return optsOrDefaultValue;
+        if (optsOrDefaultValue && _typeof(optsOrDefaultValue) === 'object' && typeof optsOrDefaultValue.defaultValue === 'string') return optsOrDefaultValue.defaultValue;
         return Array.isArray(k) ? k[k.length - 1] : k;
       };
 
