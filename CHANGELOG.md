@@ -1,3 +1,7 @@
+### 12.2.0
+
+- if defaultValue is passed in not ready t functio (via useTranslation) return that instead of the key, even though the user-land could should be fixed [1618](https://github.com/i18next/react-i18next/issues/1618)
+
 ### 12.1.5
 
 - fix react merged types [1606](https://github.com/i18next/react-i18next/pull/1606) originally introduced with #1531 to address #1506

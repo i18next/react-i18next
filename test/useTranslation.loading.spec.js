@@ -43,4 +43,13 @@ describe('useTranslation loading ns', () => {
     await waitForNextUpdate();
     expect(t('key1')).toBe('test');
   });
+
+  it('should return defaultValue if i18n instance not found', async () => {
+    const { result } = renderHook(() =>
+      useTranslation('common', { i18n: newI18n, useSuspense: false }),
+    );
+    const { t } = result.current;
+    expect(t('key1', 'my default value')).toBe('my default value');
+    expect(t('key1', { defaultValue: 'my default value' })).toBe('my default value');
+  });
 });

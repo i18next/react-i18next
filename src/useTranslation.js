@@ -18,7 +18,16 @@ export function useTranslation(ns, props = {}) {
   if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
   if (!i18n) {
     warnOnce('You will need to pass in an i18next instance by using initReactI18next');
-    const notReadyT = (k) => (Array.isArray(k) ? k[k.length - 1] : k);
+    const notReadyT = (k, optsOrDefaultValue) => {
+      if (typeof optsOrDefaultValue === 'string') return optsOrDefaultValue;
+      if (
+        optsOrDefaultValue &&
+        typeof optsOrDefaultValue === 'object' &&
+        typeof optsOrDefaultValue.defaultValue === 'string'
+      )
+        return optsOrDefaultValue.defaultValue;
+      return Array.isArray(k) ? k[k.length - 1] : k;
+    };
     const retNotReady = [notReadyT, {}, false];
     retNotReady.t = notReadyT;
     retNotReady.i18n = {};
