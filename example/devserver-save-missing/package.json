@@ -1,0 +1,43 @@
+{
+  "name": "react_usinghooks",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "body-parser": "1.20.2",
+    "i18next": "22.4.10",
+    "i18next-browser-languagedetector": "7.0.1",
+    "i18next-fs-backend": "2.1.1",
+    "i18next-http-backend": "2.1.1",
+    "i18next-http-middleware": "3.3.0",
+    "react": "18.2.0",
+    "react-app-rewired": "2.2.1",
+    "react-dom": "18.2.0",
+    "react-i18next": "12.2.0",
+    "react-scripts": "5.0.1"
+  },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "development": [
+      "last 2 chrome versions",
+      "last 2 firefox versions",
+      "last 2 edge versions"
+    ],
+    "production": [
+      ">1%",
+      "last 4 versions",
+      "Firefox ESR",
+      "not ie < 11"
+    ]
+  }
+}
