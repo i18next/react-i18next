@@ -7,17 +7,16 @@ jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(),
 }));
 
-const tSpy = jest.fn((str) => str);
-const useTranslationSpy = useTranslation;
-
-useTranslationSpy.mockReturnValue({
-  t: tSpy,
-  i18n: {
-    changeLanguage: () => new Promise(() => {}),
-  },
-});
-
 it('test render', () => {
+  const useTranslationSpy = useTranslation;
+  const tSpy = jest.fn((str) => str);
+  useTranslationSpy.mockReturnValue({
+    t: tSpy,
+    i18n: {
+      changeLanguage: () => new Promise(() => {}),
+    },
+  });
+
   const mounted = mount(<UseTranslationWithInterpolation />);
 
   // console.log(mounted.debug());
