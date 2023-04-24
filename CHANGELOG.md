@@ -1,3 +1,7 @@
+### 12.2.1
+
+- type fix: the type of defaultNS in I18nextProvider should support string[] [1633](https://github.com/i18next/react-i18next/pull/1633)
+
 ### 12.2.0
 
 - if defaultValue is passed in not ready t functio (via useTranslation) return that instead of the key, even though the user-land could should be fixed [1618](https://github.com/i18next/react-i18next/issues/1618)
