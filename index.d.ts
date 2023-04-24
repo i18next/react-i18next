@@ -130,7 +130,7 @@ export function withTranslation<
 export interface I18nextProviderProps {
   children?: React.ReactNode;
   i18n: i18n;
-  defaultNS?: string;
+  defaultNS?: string | string[];
 }
 
 export const I18nextProvider: React.FunctionComponent<I18nextProviderProps>;
