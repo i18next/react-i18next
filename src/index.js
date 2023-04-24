@@ -6,17 +6,11 @@ export { Translation } from './Translation.js';
 export { I18nextProvider } from './I18nextProvider.js';
 export { withSSR } from './withSSR.js';
 export { useSSR } from './useSSR.js';
+export { initReactI18next } from './initReactI18next.js';
+export { setDefaults, getDefaults } from './defaults.js';
+export { setI18n, getI18n } from './i18nInstance.js';
 
-export {
-  I18nContext,
-  initReactI18next,
-  setDefaults,
-  getDefaults,
-  setI18n,
-  getI18n,
-  composeInitialProps,
-  getInitialProps,
-} from './context.js';
+export { I18nContext, composeInitialProps, getInitialProps } from './context.js';
 
 // dummy functions for icu.macro support
 

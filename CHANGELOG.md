@@ -1,3 +1,7 @@
+### 12.2.2
+
+- try to fix conditional exports in package.json
+
 ### 12.2.1
 
 - type fix: the type of defaultNS in I18nextProvider should support string[] [1633](https://github.com/i18next/react-i18next/pull/1633)
