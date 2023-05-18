@@ -160,4 +160,44 @@ describe('useTranslation', () => {
       expect(t2('key1')).toBe('test2');
     });
   });
+
+  describe('with lng prop', () => {
+    i18nInstance.addResource('en', 'translation', 'myKey', 'second test');
+    i18nInstance.addResource('fr', 'translation', 'myKey', 'deuxième essai');
+    i18nInstance.addResource('it', 'translation', 'myKey', 'secondo test');
+    const wrapper = ({ children, i18n }) => (
+      <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+    );
+
+    it('should render correct content', () => {
+      const { result: resultNoLng } = renderHook(() => useTranslation('translation'), {
+        wrapper,
+        initialProps: {
+          i18n: i18nInstance,
+        },
+      });
+      const { t: t1 } = resultNoLng.current;
+      expect(t1('myKey')).toBe('second test');
+
+      const { result: resultIt } = renderHook(() => useTranslation('translation', { lng: 'it' }), {
+        wrapper,
+        initialProps: {
+          i18n: i18nInstance,
+        },
+      });
+
+      const { t: t2 } = resultIt.current;
+      expect(t2('myKey')).toBe('secondo test');
+
+      const { result: resultFr } = renderHook(() => useTranslation('translation', { lng: 'fr' }), {
+        wrapper,
+        initialProps: {
+          i18n: i18nInstance,
+        },
+      });
+
+      const { t: t3 } = resultFr.current;
+      expect(t3('myKey')).toBe('deuxième essai');
+    });
+  });
 });

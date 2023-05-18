@@ -874,7 +874,7 @@
     });
 
     function getT() {
-      return i18n.getFixedT(null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
+      return i18n.getFixedT(props.lng || null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
     }
 
     var _useState = react.useState(getT),

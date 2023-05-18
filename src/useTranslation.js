@@ -58,7 +58,7 @@ export function useTranslation(ns, props = {}) {
   // binding t function to namespace (acts also as rerender trigger)
   function getT() {
     return i18n.getFixedT(
-      null,
+      props.lng || null,
       i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
       keyPrefix,
     );

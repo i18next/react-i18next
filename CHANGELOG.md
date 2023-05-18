@@ -1,3 +1,7 @@
+### 12.3.0
+
+- optional lng prop for useTranslation (helping on server side [1637](https://github.com/i18next/react-i18next/issues/1637))
+
 ### 12.2.2
 
 - try to fix conditional exports in package.json

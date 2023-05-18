@@ -58,6 +58,7 @@ export interface UseTranslationOptions<TKPrefix = undefined> {
   keyPrefix?: TKPrefix;
   bindI18n?: string | false;
   nsMode?: 'fallback' | 'default';
+  lng?: string;
   // other of these options might also work: https://github.com/i18next/i18next/blob/master/index.d.ts#L127
 }
 
