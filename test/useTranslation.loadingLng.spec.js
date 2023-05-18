@@ -77,7 +77,7 @@ describe('useTranslation loading ns with lng via props', () => {
     const retPT = renderHook(() =>
       useTranslation('newns', { i18n: newI18n, useSuspense: true, lng: 'pt' }),
     );
-    backend.flush({ language: 'pt' });
+    // backend.flush({ language: 'pt' }); // already loaded
     // await retPT.waitForNextUpdate(); // already loaded
     const { t: tPT } = retPT.result.current;
     expect(tPT('key1')).toBe('pt/newns for key1');
