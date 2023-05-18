@@ -84,7 +84,7 @@
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-testing-library": "^3.10.1",
     "husky": "^3.0.3",
-    "i18next": "^22.4.3",
+    "i18next": "^22.5.0",
     "jest": "^24.8.0",
     "jest-cli": "^24.8.4",
     "lint-staged": "^8.1.3",

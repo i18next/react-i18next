@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import { getI18n, getDefaults, ReportNamespaces, I18nContext } from './context.js';
-import { warnOnce, loadNamespaces, hasLoadedNamespace } from './utils.js';
+import { warnOnce, loadNamespaces, loadLanguages, hasLoadedNamespace } from './utils.js';
 
 const usePrevious = (value, ignore) => {
   const ref = useRef();
@@ -65,7 +65,8 @@ export function useTranslation(ns, props = {}) {
   }
   const [t, setT] = useState(getT);
 
-  const joinedNS = namespaces.join();
+  let joinedNS = namespaces.join();
+  if (props.lng) joinedNS = `${props.lng}${joinedNS}`;
   const previousJoinedNS = usePrevious(joinedNS);
 
   const isMounted = useRef(true);
@@ -76,9 +77,15 @@ export function useTranslation(ns, props = {}) {
     // if not ready and not using suspense load the namespaces
     // in side effect and do not call resetT if unmounted
     if (!ready && !useSuspense) {
-      loadNamespaces(i18n, namespaces, () => {
-        if (isMounted.current) setT(getT);
-      });
+      if (props.lng) {
+        loadLanguages(i18n, props.lng, namespaces, () => {
+          if (isMounted.current) setT(getT);
+        });
+      } else {
+        loadNamespaces(i18n, namespaces, () => {
+          if (isMounted.current) setT(getT);
+        });
+      }
     }
 
     if (ready && previousJoinedNS && previousJoinedNS !== joinedNS && isMounted.current) {
@@ -125,8 +132,10 @@ export function useTranslation(ns, props = {}) {
 
   // not yet loaded namespaces -> load them -> and trigger suspense
   throw new Promise((resolve) => {
-    loadNamespaces(i18n, namespaces, () => {
-      resolve();
-    });
+    if (props.lng) {
+      loadLanguages(i18n, props.lng, namespaces, () => resolve());
+    } else {
+      loadNamespaces(i18n, namespaces, () => resolve());
+    }
   });
 }

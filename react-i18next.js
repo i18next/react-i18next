@@ -341,8 +341,9 @@
     if (typeof args[0] === 'string') alreadyWarned[args[0]] = new Date();
     warn.apply(void 0, args);
   }
-  function loadNamespaces(i18n, ns, cb) {
-    i18n.loadNamespaces(ns, function () {
+
+  var loadedClb = function loadedClb(i18n, cb) {
+    return function () {
       if (i18n.isInitialized) {
         cb();
       } else {
@@ -355,7 +356,18 @@
 
         i18n.on('initialized', initialized);
       }
+    };
+  };
+
+  function loadNamespaces(i18n, ns, cb) {
+    i18n.loadNamespaces(ns, loadedClb(i18n, cb));
+  }
+  function loadLanguages(i18n, lng, ns, cb) {
+    if (typeof ns === 'string') ns = [ns];
+    ns.forEach(function (n) {
+      if (i18n.options.ns.indexOf(n) < 0) i18n.options.ns.push(n);
     });
+    i18n.loadLanguages(lng, loadedClb(i18n, cb));
   }
 
   function oldI18nextHasLoadedNamespace(ns, i18n) {
@@ -392,6 +404,7 @@
     }
 
     return i18n.hasLoadedNamespace(ns, {
+      lng: options.lng,
       precheck: function precheck(i18nInstance, loadNotPending) {
         if (options.bindI18n && options.bindI18n.indexOf('languageChanging') > -1 && i18nInstance.services.backendConnector.backend && i18nInstance.isLanguageChangingTo && !loadNotPending(i18nInstance.isLanguageChangingTo, ns)) return false;
       }
@@ -883,6 +896,7 @@
         setT = _useState2[1];
 
     var joinedNS = namespaces.join();
+    if (props.lng) joinedNS = "".concat(props.lng).concat(joinedNS);
     var previousJoinedNS = usePrevious(joinedNS);
     var isMounted = react.useRef(true);
     react.useEffect(function () {
@@ -891,9 +905,15 @@
       isMounted.current = true;
 
       if (!ready && !useSuspense) {
-        loadNamespaces(i18n, namespaces, function () {
-          if (isMounted.current) setT(getT);
-        });
+        if (props.lng) {
+          loadLanguages(i18n, props.lng, namespaces, function () {
+            if (isMounted.current) setT(getT);
+          });
+        } else {
+          loadNamespaces(i18n, namespaces, function () {
+            if (isMounted.current) setT(getT);
+          });
+        }
       }
 
       if (ready && previousJoinedNS && previousJoinedNS !== joinedNS && isMounted.current) {
@@ -931,9 +951,15 @@
     if (ready) return ret;
     if (!ready && !useSuspense) return ret;
     throw new Promise(function (resolve) {
-      loadNamespaces(i18n, namespaces, function () {
-        resolve();
-      });
+      if (props.lng) {
+        loadLanguages(i18n, props.lng, namespaces, function () {
+          return resolve();
+        });
+      } else {
+        loadNamespaces(i18n, namespaces, function () {
+          return resolve();
+        });
+      }
     });
   }
 

@@ -21,23 +21,34 @@ export function warnOnce(...args) {
 //   }
 // }
 
-export function loadNamespaces(i18n, ns, cb) {
-  i18n.loadNamespaces(ns, () => {
-    // delay ready if not yet initialized i18n instance
-    if (i18n.isInitialized) {
+const loadedClb = (i18n, cb) => () => {
+  // delay ready if not yet initialized i18n instance
+  if (i18n.isInitialized) {
+    cb();
+  } else {
+    const initialized = () => {
+      // due to emitter removing issue in i18next we need to delay remove
+      setTimeout(() => {
+        i18n.off('initialized', initialized);
+      }, 0);
       cb();
-    } else {
-      const initialized = () => {
-        // due to emitter removing issue in i18next we need to delay remove
-        setTimeout(() => {
-          i18n.off('initialized', initialized);
-        }, 0);
-        cb();
-      };
+    };
+    i18n.on('initialized', initialized);
+  }
+};
 
-      i18n.on('initialized', initialized);
-    }
+export function loadNamespaces(i18n, ns, cb) {
+  i18n.loadNamespaces(ns, loadedClb(i18n, cb));
+}
+
+// should work with I18NEXT >= v22.5.0
+export function loadLanguages(i18n, lng, ns, cb) {
+  // eslint-disable-next-line no-param-reassign
+  if (typeof ns === 'string') ns = [ns];
+  ns.forEach((n) => {
+    if (i18n.options.ns.indexOf(n) < 0) i18n.options.ns.push(n);
   });
+  i18n.loadLanguages(lng, loadedClb(i18n, cb));
 }
 
 // WAIT A LITTLE FOR I18NEXT BEING UPDATED IN THE WILD, before removing this old i18next version support
@@ -97,6 +108,7 @@ export function hasLoadedNamespace(ns, i18n, options = {}) {
 
   // IN I18NEXT > v19.4.5 WE CAN (INTRODUCED JUNE 2020)
   return i18n.hasLoadedNamespace(ns, {
+    lng: options.lng,
     precheck: (i18nInstance, loadNotPending) => {
       if (
         options.bindI18n &&
