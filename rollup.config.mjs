@@ -1,9 +1,11 @@
-import babel from 'rollup-plugin-babel';
-import commonjs from 'rollup-plugin-commonjs';
-import nodeResolve from 'rollup-plugin-node-resolve';
-import replace from 'rollup-plugin-replace';
-import { terser } from 'rollup-plugin-terser';
-import { argv } from 'yargs';
+import babel from '@rollup/plugin-babel';
+import nodeResolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import replace from '@rollup/plugin-replace';
+import terser from '@rollup/plugin-terser';
+import yargs from 'yargs';
+
+const { argv } = yargs(process.argv);
 
 const format = argv.format || argv.f || 'iife';
 const compress = argv.uglify;
@@ -14,8 +16,7 @@ const babelOptions = {
       '@babel/preset-env',
       {
         targets: {
-          esmodules: true,
-          ie: '11',
+          browsers:['defaults']
         },
       },
     ],

@@ -161,12 +161,10 @@ const x = <Trans defaults=\\"Caught on <Link to='/dest'>{ catchDate, date, short
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { Trans } from \\"react-i18next\\";
-
 const Link = ({
   to,
   children
 }) => <a href={to}>{children}</a>;
-
 const x = <Trans values={{
   catchDate: Date.now()
 }} defaults=\\"Caught on <0>{catchDate, date, short}</0>!\\" components={[<Link to='/dest'>{(catchDate)}</Link>]} />;
@@ -453,12 +451,10 @@ export default function TestPage({count = 1}) {
 
 import React from 'react';
 import { useTranslation, Trans } from 'react-i18next';
-
 const Link = ({
   to,
   children
 }) => <a href={to}>{children}</a>;
-
 export default function TestPage({
   count = 1
 }) {
@@ -548,14 +544,12 @@ const x = (
 
 import { Trans, number, date, plural, select } from \\"react-i18next\\";
 import React from \\"react\\";
-
 function Component({
   children,
   style
 }) {
   return <div style={style}>{children}</div>;
 }
-
 const count = 2;
 const numbers = 34;
 const selectInput = \\"thing\\";

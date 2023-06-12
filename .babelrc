@@ -1,12 +1,25 @@
 {
   "env": {
     "development": {
-      "presets": ["@babel/preset-env", "@babel/react"],
+      "presets": [["@babel/env", {
+        "targets": {
+          "browsers":[
+            "defaults"
+          ]
+        }
+      }], "@babel/react"],
       "plugins": ["@babel/plugin-transform-runtime"]
     },
     "jsnext": {
       "presets": [
-        ["@babel/preset-env", { "modules": false, "useBuiltIns": false }],
+        ["@babel/env", {
+          "targets": {
+            "browsers":[
+              "defaults"
+            ]
+          },
+          "modules": false, "useBuiltIns": false
+        }],
         "@babel/react"
       ],
       "plugins": ["@babel/plugin-transform-runtime"]
