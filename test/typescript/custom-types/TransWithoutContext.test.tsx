@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Trans } from '../../../@types/TransWithoutContext';
+import { Trans } from '../../../TransWithoutContext';
 
 function defaultNamespaceUsage() {
   return <Trans i18nKey="foo">foo</Trans>;
