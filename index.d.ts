@@ -1,4 +1,4 @@
-import type { $Subtract, $Tuple } from './@types/helpers';
+import type { $Subtract, $Tuple } from './helpers';
 import type {
   ReactOptions,
   i18n,
@@ -10,8 +10,8 @@ import type {
   KeyPrefix,
 } from 'i18next';
 import * as React from 'react';
-export { Trans, TransProps } from './@types/TransWithoutContext';
-export { initReactI18next } from './@types/initReactI18next';
+export { Trans, TransProps } from './TransWithoutContext';
+export { initReactI18next } from './initReactI18next';
 
 export function setDefaults(options: ReactOptions): void;
 export function getDefaults(): ReactOptions;
@@ -74,7 +74,7 @@ export type UseTranslationResponse<Ns extends Namespace, KPrefix> = [
 // Workaround to make code completion to work when suggesting namespaces.
 // This is a typescript limitation when using generics with default values,
 // it'll be addressed in this issue: https://github.com/microsoft/TypeScript/issues/52516
-type FallbackNs<Ns> = Ns extends undefined
+export type FallbackNs<Ns> = Ns extends undefined
   ? _DefaultNamespace
   : Ns extends Namespace
   ? Ns
@@ -82,16 +82,14 @@ type FallbackNs<Ns> = Ns extends undefined
 
 export function useTranslation<
   Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
-  KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined
+  KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined,
 >(
   ns?: Ns,
   options?: UseTranslationOptions<KPrefix>,
 ): UseTranslationResponse<FallbackNs<Ns>, KPrefix>;
 
 // Need to see usage to improve this
-export function withSSR(): <Props>(
-  WrappedComponent: React.ComponentType<Props>,
-) => {
+export function withSSR(): <Props>(WrappedComponent: React.ComponentType<Props>) => {
   ({
     initialI18nStore,
     initialLanguage,
@@ -105,7 +103,7 @@ export function withSSR(): <Props>(
 
 export interface WithTranslation<
   Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
-  KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined
+  KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined,
 > {
   t: TFunction<FallbackNs<Ns>, KPrefix>;
   i18n: i18n;
@@ -119,7 +117,7 @@ export interface WithTranslationProps {
 
 export function withTranslation<
   Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
-  KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined
+  KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined,
 >(
   ns?: Ns,
   options?: {
@@ -131,7 +129,7 @@ export function withTranslation<
   ResolvedProps = JSX.LibraryManagedAttributes<
     C,
     $Subtract<React.ComponentProps<C>, WithTranslationProps>
-  >
+  >,
 >(
   component: C,
 ) => React.ComponentType<Omit<ResolvedProps, keyof WithTranslation<Ns>> & WithTranslationProps>;
@@ -147,7 +145,7 @@ export const I18nContext: React.Context<{ i18n: i18n }>;
 
 export interface TranslationProps<
   Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
-  KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined
+  KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined,
 > {
   children: (
     t: TFunction<FallbackNs<Ns>, KPrefix>,
@@ -166,5 +164,5 @@ export interface TranslationProps<
 
 export function Translation<
   Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
-  KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined
+  KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined,
 >(props: TranslationProps<Ns, KPrefix>): any;

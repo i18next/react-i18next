@@ -17,7 +17,7 @@ export type TransProps<
   Ns extends Namespace = _DefaultNamespace,
   TOpt extends TOptions = {},
   KPrefix = undefined,
-  E = React.HTMLProps<HTMLDivElement>
+  E = React.HTMLProps<HTMLDivElement>,
 > = E & {
   children?: TransChild | readonly TransChild[];
   components?: readonly React.ReactElement[] | { readonly [tagName: string]: React.ReactElement };
@@ -39,5 +39,5 @@ export function Trans<
   Ns extends Namespace = _DefaultNamespace,
   TOpt extends TOptions = {},
   KPrefix extends KeyPrefix<Ns> = undefined,
-  E = React.HTMLProps<HTMLDivElement>
+  E = React.HTMLProps<HTMLDivElement>,
 >(props: TransProps<Key, Ns, TOpt, KPrefix, E>): React.ReactElement;
