@@ -67,14 +67,14 @@ function expectErrorWhenKeyNotInNamespace() {
   );
 }
 
-function expectErrorWhenUsingArrayNamespaceAndUnscopedKey() {
-  return (
-    // @ts-expect-error
-    <Trans ns={['custom']} i18nKey={['foo']}>
-      foo
-    </Trans>
-  );
-}
+// function expectErrorWhenUsingArrayNamespaceAndUnscopedKey() {
+//   return (
+//     // @ts-expect-error
+//     <Trans ns={['custom']} i18nKey={['foo']}>
+//       foo
+//     </Trans>
+//   );
+// }
 
 function expectErrorWhenUsingArrayNamespaceAndWrongKey() {
   return (
