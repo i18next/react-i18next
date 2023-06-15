@@ -12,10 +12,8 @@
     "paths": { "react-i18next": ["./"] },
 
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-
-    "skipLibCheck": true
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["./src/**/*", "./test/**/*"],
+  "include": ["./index.d.ts", "./@types/**/*", "./icu.macro.d.ts", "./test/**/*"],
   "exclude": ["test/typescript/nonEsModuleInterop/**/*.ts", "test/typescript/custom-types"]
 }

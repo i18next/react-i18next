@@ -1,33 +1,43 @@
-import { i18n, TFuncKey, Namespace, TypeOptions, TFunction, KeyPrefix } from 'i18next';
+import type {
+  i18n,
+  ParseKeys,
+  Namespace,
+  TypeOptions,
+  TOptions,
+  TFunction,
+  KeyPrefix,
+} from 'i18next';
 import * as React from 'react';
 
-type DefaultNamespace = TypeOptions['defaultNS'];
+type _DefaultNamespace = TypeOptions['defaultNS'];
 
 type TransChild = React.ReactNode | Record<string, unknown>;
 export type TransProps<
-  K extends TFuncKey<N, TKPrefix> extends infer A ? A : never,
-  N extends Namespace = DefaultNamespace,
-  TKPrefix = undefined,
-  E = React.HTMLProps<HTMLDivElement>
+  Key extends ParseKeys<Ns, TOpt, KPrefix>,
+  Ns extends Namespace = _DefaultNamespace,
+  TOpt extends TOptions = {},
+  KPrefix = undefined,
+  E = React.HTMLProps<HTMLDivElement>,
 > = E & {
-  children?: TransChild | TransChild[];
+  children?: TransChild | readonly TransChild[];
   components?: readonly React.ReactElement[] | { readonly [tagName: string]: React.ReactElement };
   count?: number;
   context?: string;
   defaults?: string;
   i18n?: i18n;
-  i18nKey?: K | K[];
-  ns?: N;
+  i18nKey?: Key | Key[];
+  ns?: Ns;
   parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
-  tOptions?: {};
+  tOptions?: TOpt;
   values?: {};
   shouldUnescape?: boolean;
-  t?: TFunction<N, TKPrefix>;
+  t?: TFunction<Ns, KPrefix>;
 };
 
 export function Trans<
-  K extends TFuncKey<N, TKPrefix> extends infer A ? A : never,
-  N extends Namespace = DefaultNamespace,
-  TKPrefix extends KeyPrefix<N> = undefined,
-  E = React.HTMLProps<HTMLDivElement>
->(props: TransProps<K, N, TKPrefix, E>): React.ReactElement;
+  Key extends ParseKeys<Ns, TOpt, KPrefix>,
+  Ns extends Namespace = _DefaultNamespace,
+  TOpt extends TOptions = {},
+  KPrefix extends KeyPrefix<Ns> = undefined,
+  E = React.HTMLProps<HTMLDivElement>,
+>(props: TransProps<Key, Ns, TOpt, KPrefix, E>): React.ReactElement;
