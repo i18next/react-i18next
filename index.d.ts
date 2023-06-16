@@ -81,6 +81,16 @@ export type FallbackNs<Ns> = Ns extends undefined
   ? Ns
   : _DefaultNamespace;
 
+export function createTranslationHook<
+  Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
+  KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined,
+>(
+  context: React.Context<{ i18n: i18n }>,
+): (
+  ns?: Ns,
+  options?: UseTranslationOptions<KPrefix>,
+) => UseTranslationResponse<FallbackNs<Ns>, KPrefix>;
+
 export function useTranslation<
   Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
   KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined,
@@ -136,6 +146,7 @@ export function withTranslation<
 ) => React.ComponentType<Omit<ResolvedProps, keyof WithTranslation<Ns>> & WithTranslationProps>;
 
 export interface I18nextProviderProps {
+  context?: React.Context<{ i18n: i18n }>;
   children?: React.ReactNode;
   i18n: i18n;
   defaultNS?: string | string[];

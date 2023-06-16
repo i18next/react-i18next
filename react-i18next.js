@@ -590,7 +590,8 @@
 	  }, [value, ignore]);
 	  return ref.current;
 	};
-	function useTranslation(ns) {
+	const useTranslation = createTranslationHook(I18nContext);
+	const createTranslationHook = I18nContext => function (ns) {
 	  let props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 	  const {
 	    i18n: i18nFromProps
@@ -687,7 +688,7 @@
 	      loadNamespaces(i18n, namespaces, () => resolve());
 	    }
 	  });
-	}
+	};
 
 	function withTranslation(ns) {
 	  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -738,6 +739,7 @@
 
 	function I18nextProvider(_ref) {
 	  let {
+	    context,
 	    i18n,
 	    defaultNS,
 	    children
@@ -746,7 +748,8 @@
 	    i18n,
 	    defaultNS
 	  }), [i18n, defaultNS]);
-	  return react.createElement(I18nContext.Provider, {
+	  const Context = context || I18nContext;
+	  return react.createElement(Context.Provider, {
 	    value
 	  }, children);
 	}

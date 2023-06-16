@@ -1,7 +1,7 @@
 import { createElement, useMemo } from 'react';
 import { I18nContext } from './context.js';
 
-export function I18nextProvider({ i18n, defaultNS, children }) {
+export function I18nextProvider({ context, i18n, defaultNS, children }) {
   const value = useMemo(
     () => ({
       i18n,
@@ -9,8 +9,11 @@ export function I18nextProvider({ i18n, defaultNS, children }) {
     }),
     [i18n, defaultNS],
   );
+
+  const Context = context || I18nContext;
+
   return createElement(
-    I18nContext.Provider,
+    Context.Provider,
     {
       value,
     },
