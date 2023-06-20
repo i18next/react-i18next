@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "i18next": "^23.0.1",
+    "i18next": "^23.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.0.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.12",
-    "@types/react-dom": "^18.2.5",
+    "@types/react": "^18.2.13",
+    "@types/react-dom": "^18.2.6",
     "i18next-resources-for-ts": "1.2.1",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5"
