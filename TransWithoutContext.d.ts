@@ -1,12 +1,4 @@
-import type {
-  i18n,
-  ParseKeys,
-  Namespace,
-  TypeOptions,
-  TOptions,
-  TFunction,
-  KeyPrefix,
-} from 'i18next';
+import type { i18n, ParseKeys, Namespace, TypeOptions, TOptions, TFunction } from 'i18next';
 import * as React from 'react';
 
 type _DefaultNamespace = TypeOptions['defaultNS'];
@@ -38,6 +30,6 @@ export function Trans<
   Key extends ParseKeys<Ns, TOpt, KPrefix>,
   Ns extends Namespace = _DefaultNamespace,
   TOpt extends TOptions = {},
-  KPrefix extends KeyPrefix<Ns> = undefined,
+  KPrefix = undefined,
   E = React.HTMLProps<HTMLDivElement>,
 >(props: TransProps<Key, Ns, TOpt, KPrefix, E>): React.ReactElement;
