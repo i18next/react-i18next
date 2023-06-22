@@ -1,3 +1,7 @@
+### 13.0.1
+
+- types: Fix performance issue in Trans component [1646](https://github.com/i18next/react-i18next/pull/1646)
+
 ### 13.0.0
 
 - Update types to support t function redesign [1615](https://github.com/i18next/react-i18next/pull/1615)
