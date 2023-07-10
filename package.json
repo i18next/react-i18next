@@ -39,6 +39,10 @@
       "import": "./dist/es/initReactI18next.js",
       "require": "./dist/commonjs/initReactI18next.js",
       "default": "./dist/es/initReactI18next.js"
+    },
+    "./icu.macro": {
+      "types": "./icu.macro.d.ts",
+      "default": "./icu.macro.js"
     }
   },
   "homepage": "https://github.com/i18next/react-i18next",

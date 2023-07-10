@@ -1,3 +1,7 @@
+### 13.0.2
+
+- export icu.macro [1652](https://github.com/i18next/react-i18next/issues/1652)
+
 ### 13.0.1
 
 - types: Fix performance issue in Trans component [1646](https://github.com/i18next/react-i18next/pull/1646)
