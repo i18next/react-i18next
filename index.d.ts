@@ -36,18 +36,6 @@ declare module 'i18next' {
   }
 }
 
-type ObjectOrNever = TypeOptions['allowObjectInHTMLChildren'] extends true
-  ? Record<string, unknown>
-  : never;
-
-type ReactI18NextChildren = React.ReactNode | ObjectOrNever;
-
-declare module 'react' {
-  interface HTMLAttributes<T> {
-    children?: ReactI18NextChildren;
-  }
-}
-
 type _DefaultNamespace = TypeOptions['defaultNS'];
 
 export function useSSR(initialI18nStore: Resource, initialLanguage: string): void;
