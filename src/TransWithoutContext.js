@@ -113,7 +113,7 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
     targetString && new RegExp(keepArray.join('|')).test(targetString);
 
   // no need to replace tags in the targetstring
-  if (!children && !emptyChildrenButNeedsHandling) return [targetString];
+  if (!children && !emptyChildrenButNeedsHandling && !shouldUnescape) return [targetString];
 
   // v2 -> interpolates upfront no need for "some <0>{{var}}</0>"" -> will be just "some {{var}}" in translation file
   const data = {};

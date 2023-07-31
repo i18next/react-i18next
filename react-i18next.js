@@ -323,7 +323,7 @@
 	  if (targetString === '') return [];
 	  const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
 	  const emptyChildrenButNeedsHandling = targetString && new RegExp(keepArray.join('|')).test(targetString);
-	  if (!children && !emptyChildrenButNeedsHandling) return [targetString];
+	  if (!children && !emptyChildrenButNeedsHandling && !shouldUnescape) return [targetString];
 	  const data = {};
 	  function getData(childs) {
 	    const childrenArray = getAsArray(childs);

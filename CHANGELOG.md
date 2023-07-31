@@ -1,3 +1,7 @@
+### 13.0.3
+
+- fix unescape is not consistently called for all values [1657](https://github.com/i18next/react-i18next/issues/1657)
+
 ### 13.0.2
 
 - export icu.macro [1652](https://github.com/i18next/react-i18next/issues/1652)

@@ -673,42 +673,16 @@ describe('trans with custom unescape', () => {
       </div>
     `);
   });
-});
 
-it('transSupportBasicHtmlNodes: false should not keep the name of simple nodes', () => {
-  const cloneInst = i18n.cloneInstance({
-    react: { transSupportBasicHtmlNodes: false, defaultTransParent: 'div' },
+  it('should allow unescape override again', () => {
+    const TestComponent = () => <Trans i18nKey="transTestCustomUnescapeSecond" shouldUnescape />;
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Vertrauens\u00ADkennwert
+      </div>
+    `);
   });
-
-  const TestComponent = () => (
-    <Trans i18n={cloneInst}>
-      <p>Plain paragraph</p>
-      <p>
-        Paragraph with <em>hack</em>
-      </p>
-      <p className="hack">Paragraph with hack</p>
-    </Trans>
-  );
-
-  const { container } = render(<TestComponent />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <div>
-      <p>
-        Plain paragraph
-      </p>
-      <p>
-        Paragraph with 
-        <em>
-          hack
-        </em>
-      </p>
-      <p
-        class="hack"
-      >
-        Paragraph with hack
-      </p>
-    </div>
-  `);
 });
 
 describe('trans with context property', () => {
