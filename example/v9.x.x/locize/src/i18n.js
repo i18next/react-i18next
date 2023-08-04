@@ -31,7 +31,7 @@ i18n
     interpolation: {
       escapeValue: false, // not needed for react!!
       formatSeparator: ',',
-      format: function(value, format, lng) {
+      format: function (value, format, lng) {
         if (format === 'uppercase') return value.toUpperCase();
         return value;
       },
@@ -43,7 +43,7 @@ i18n
 
     editor: {
       // trigger a reload on editor save
-      onEditorSaved: function(lng, ns) {
+      onEditorSaved: function (lng, ns) {
         i18n.reloadResources(lng, ns);
       },
     },

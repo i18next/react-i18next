@@ -1,12 +1,9 @@
 {
   "extends": [
     "airbnb",
-    "prettier",
-    "prettier/react",
-    "plugin:testing-library/recommended",
-    "plugin:jest-dom/recommended"
+    "prettier"
   ],
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
     "ecmaVersion": 8,
     "ecmaFeatures": {
@@ -18,8 +15,7 @@
   "env": {
     "browser": true,
     "node": true,
-    "jquery": true,
-    "jest": true
+    "jquery": true
   },
   "rules": {
     "no-debugger": 0,
@@ -30,6 +26,10 @@
         "argsIgnorePattern": "res|next|^err"
       }
     ],
+    "prefer-arrow-callback": [
+      "error", {
+      "allowNamedFunctions": true
+    }],
     "prefer-const": [
       "error",
       {
@@ -77,6 +77,9 @@
         "extensions": [".js", ".jsx"]
       }
     ],
+    "react/no-unknown-property": ["error", {
+      "ignore": ["i18nIsDynamicList"]
+    }],
     "radix": 0,
     "no-shadow": [
       2,

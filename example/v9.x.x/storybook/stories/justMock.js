@@ -14,5 +14,5 @@ const SayWelcome = ({ t }) => (
 
 // we just pass down a mock `t` funtion so the component works in stories
 storiesOf('Mock "away"', module).add('showing a pure component', () => (
-  <SayWelcome t={key => key} />
+  <SayWelcome t={(key) => key} />
 ));

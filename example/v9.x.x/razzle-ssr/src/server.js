@@ -15,7 +15,7 @@ import i18n from './i18n';
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebookincubator/create-react-app/issues/637
 const appDirectory = fs.realpathSync(process.cwd());
-const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
+const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
 const appSrc = resolveApp('src');
 
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
@@ -56,7 +56,7 @@ i18n
             res.redirect(url);
           } else {
             const initialI18nStore = {};
-            req.i18n.languages.forEach(l => {
+            req.i18n.languages.forEach((l) => {
               initialI18nStore[l] = req.i18n.services.resourceStore.data[l];
             });
             const initialLanguage = req.i18n.language;

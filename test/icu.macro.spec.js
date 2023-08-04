@@ -385,7 +385,8 @@ pluginTester({
         );
       `,
       snapshot: false,
-      error: /Unsupported tagged template literal "fail", must be one of date, time, number, plural, select, selectOrdinal in "[^"]+" on line 7/,
+      error:
+        /Unsupported tagged template literal "fail", must be one of date, time, number, plural, select, selectOrdinal in "[^"]+" on line 7/,
     },
     {
       code: `

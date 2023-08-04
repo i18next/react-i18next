@@ -33,7 +33,7 @@ const ExtendedFn = withSSR()(FunctionComponent);
 
 <ExtendedFn initialLanguage={'en'} initialI18nStore={{ en: { namespace: { key: 'value' } } }} />;
 
-const FunctionComponentWithProps: React.FunctionComponent<{ foo: string }> = props => {
+const FunctionComponentWithProps: React.FunctionComponent<{ foo: string }> = (props) => {
   return null;
 };
 

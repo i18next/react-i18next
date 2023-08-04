@@ -21,10 +21,10 @@ describe('useSSR', () => {
       backendConnector: {},
     },
     isInitialized: true,
-    changeLanguage: lng => {
+    changeLanguage: (lng) => {
       mockI18n.language = lng;
     },
-    getFixedT: () => message => message,
+    getFixedT: () => (message) => message,
     hasResourceBundle: (lng, ns) => ns === 'alreadyLoadedNS',
     loadNamespaces: () => {},
   };

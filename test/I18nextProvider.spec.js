@@ -17,7 +17,7 @@ const instance = {
   },
   isInitialized: true,
   changeLanguage: () => {},
-  getFixedT: () => message => message,
+  getFixedT: () => (message) => message,
   hasResourceBundle: (lng, ns) => ns === 'translation',
   loadNamespaces: () => {},
   on: () => {},

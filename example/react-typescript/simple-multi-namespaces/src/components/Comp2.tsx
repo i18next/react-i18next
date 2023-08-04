@@ -1,7 +1,7 @@
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 function Comp2() {
-  const {t} = useTranslation('ns2');
+  const { t } = useTranslation('ns2');
 
   return (
     <div className="App">

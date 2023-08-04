@@ -29,10 +29,10 @@ if (
     hostname: 'api.locize.io',
   };
 
-  navigator.permissions.query(permission).then(res => {
+  navigator.permissions.query(permission).then((res) => {
     if (res.state === 'granted') return render();
 
-    navigator.permissions.request(permission).then(res => {
+    navigator.permissions.request(permission).then((res) => {
       if (res.state === 'granted') return document.location.reload();
       console.error('not allowed to access the "api.locize.io" network');
     });

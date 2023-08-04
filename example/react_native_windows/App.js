@@ -25,7 +25,7 @@ import {initReactI18next, useTranslation} from 'react-i18next';
 const languageDetector = {
   type: 'languageDetector',
   async: true,
-  detect: cb => cb('en'),
+  detect: (cb) => cb('en'),
   init: () => {},
   cacheUserLanguage: () => {},
 };
@@ -62,7 +62,8 @@ function Content() {
       <SafeAreaView>
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
+          style={styles.scrollView}
+        >
           <View style={styles.body}>
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>{t('hello')}</Text>

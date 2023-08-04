@@ -14,7 +14,7 @@ const SayWelcomeComponent = ({ t }) => (
 
 // passing t function using a render prop
 const SayWelcome = () => (
-  <NamespacesConsumer>{t => <SayWelcomeComponent t={t} />}</NamespacesConsumer>
+  <NamespacesConsumer>{(t) => <SayWelcomeComponent t={t} />}</NamespacesConsumer>
 );
 
 // we just pass down a mock `t` funtion so the component works in stories

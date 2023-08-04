@@ -1,0 +1,3 @@
+**/dist/**/*.js
+**/react-i18next.js
+**/react-i18next.min.js
