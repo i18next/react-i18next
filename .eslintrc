@@ -1,9 +1,7 @@
 {
   "extends": [
     "airbnb",
-    "prettier",
-    "plugin:testing-library/react",
-    "plugin:jest-dom/recommended"
+    "prettier"
   ],
   "parser": "@babel/eslint-parser",
   "parserOptions": {
@@ -17,8 +15,7 @@
   "env": {
     "browser": true,
     "node": true,
-    "jquery": true,
-    "jest": true
+    "jquery": true
   },
   "rules": {
     "no-debugger": 0,
