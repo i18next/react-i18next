@@ -2,11 +2,10 @@
   "extends": [
     "airbnb",
     "prettier",
-    "prettier/react",
-    "plugin:testing-library/recommended",
+    "plugin:testing-library/react",
     "plugin:jest-dom/recommended"
   ],
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
     "ecmaVersion": 8,
     "ecmaFeatures": {
