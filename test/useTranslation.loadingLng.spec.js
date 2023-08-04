@@ -66,6 +66,7 @@ describe('useTranslation loading ns with lng via props', () => {
     const { t } = result.current;
     expect(t('key1')).toBe('pt/newns for key1');
 
+    // eslint-disable-next-line testing-library/render-result-naming-convention
     const retDe = renderHook(() =>
       useTranslation('newns', { i18n: newI18n, useSuspense: true, lng: 'de' }),
     );
@@ -74,6 +75,7 @@ describe('useTranslation loading ns with lng via props', () => {
     const { t: tDE } = retDe.result.current;
     expect(tDE('key1')).toBe('de/newns for key1');
 
+    // eslint-disable-next-line testing-library/render-result-naming-convention
     const retPT = renderHook(() =>
       useTranslation('newns', { i18n: newI18n, useSuspense: true, lng: 'pt' }),
     );

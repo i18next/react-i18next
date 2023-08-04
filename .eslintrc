@@ -26,6 +26,10 @@
         "argsIgnorePattern": "res|next|^err"
       }
     ],
+    "prefer-arrow-callback": [
+      "error", {
+      "allowNamedFunctions": true
+    }],
     "prefer-const": [
       "error",
       {
@@ -73,6 +77,9 @@
         "extensions": [".js", ".jsx"]
       }
     ],
+    "react/no-unknown-property": ["error", {
+      "ignore": ["i18nIsDynamicList"]
+    }],
     "radix": 0,
     "no-shadow": [
       2,

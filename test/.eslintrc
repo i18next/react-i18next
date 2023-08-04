@@ -5,5 +5,8 @@
   ],
   "env": {
     "jest": true
+  },
+  "rules": {
+    "testing-library/no-node-access": ["error", {"allowContainerFirstChild": true}]
   }
 }

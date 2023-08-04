@@ -9,11 +9,13 @@ function Link({ to, children }) {
 }
 
 describe('trans simple', () => {
-  const TestComponent = ({ parent }) => (
-    <Trans i18nKey="transTest1" parent={parent}>
-      Open <Link to="/msgs">here</Link>.
-    </Trans>
-  );
+  function TestComponent({ parent }) {
+    return (
+      <Trans i18nKey="transTest1" parent={parent}>
+        Open <Link to="/msgs">here</Link>.
+      </Trans>
+    );
+  }
 
   it('should render correct content', () => {
     const { container } = render(<TestComponent />);
@@ -47,11 +49,13 @@ describe('trans simple', () => {
 });
 
 describe('trans simple using ns prop', () => {
-  const TestComponent = ({ parent }) => (
-    <Trans i18nKey="transTest1" ns="other" parent={parent}>
-      Open <Link to="/msgs">here</Link>.
-    </Trans>
-  );
+  function TestComponent({ parent }) {
+    return (
+      <Trans i18nKey="transTest1" ns="other" parent={parent}>
+        Open <Link to="/msgs">here</Link>.
+      </Trans>
+    );
+  }
 
   it('should render correct content', () => {
     const { container } = render(<TestComponent />);
@@ -70,12 +74,14 @@ describe('trans simple using ns prop', () => {
 });
 
 describe('trans using translation prop', () => {
-  const TestComponent = ({ parent }) => (
-    <Trans i18nKey="transTest3" parent={parent}>
-      {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
-      <a />
-    </Trans>
-  );
+  function TestComponent({ parent }) {
+    return (
+      <Trans i18nKey="transTest3" parent={parent}>
+        {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
+        <a />
+      </Trans>
+    );
+  }
 
   it('should render correct content', () => {
     const { container } = render(<TestComponent />);
@@ -93,12 +99,14 @@ describe('trans using translation prop', () => {
 });
 
 describe('trans overwrites translation prop', () => {
-  const TestComponent = ({ parent }) => (
-    <Trans i18nKey="transTest3_overwrite" parent={parent}>
-      {/* eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label */}
-      <a href="https://www.bing.com" />
-    </Trans>
-  );
+  function TestComponent({ parent }) {
+    return (
+      <Trans i18nKey="transTest3_overwrite" parent={parent}>
+        {/* eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label */}
+        <a href="https://www.bing.com" />
+      </Trans>
+    );
+  }
 
   it('should render correct content', () => {
     const { container } = render(<TestComponent />);
@@ -116,15 +124,21 @@ describe('trans overwrites translation prop', () => {
 });
 
 describe('trans simple with custom html tag', () => {
-  const TestComponent = ({ parent }) => (
-    <Trans i18nKey="transTest1_customHtml" parent={parent}>
-      Open <Link to="/msgs">here</Link>.
-    </Trans>
-  );
+  function TestComponent({ parent }) {
+    return (
+      <Trans i18nKey="transTest1_customHtml" parent={parent}>
+        Open <Link to="/msgs">here</Link>.
+      </Trans>
+    );
+  }
 
-  const TestComponent2 = ({ parent }) => <Trans i18nKey="transTest1_customHtml2" parent={parent} />;
+  function TestComponent2({ parent }) {
+    return <Trans i18nKey="transTest1_customHtml2" parent={parent} />;
+  }
 
-  const TestComponent3 = ({ parent }) => <Trans i18nKey="transTest1_customHtml3" parent={parent} />;
+  function TestComponent3({ parent }) {
+    return <Trans i18nKey="transTest1_customHtml3" parent={parent} />;
+  }
 
   it('should not skip custom html tags', () => {
     const { container } = render(<TestComponent />);
@@ -175,14 +189,14 @@ describe('trans simple with custom html tag', () => {
 });
 
 describe('trans testTransKey1 singular', () => {
-  const TestComponent = () => {
+  function TestComponent() {
     const numOfItems = 1;
     return (
       <Trans i18nKey="testTransKey1" count={numOfItems}>
         {{ numOfItems }} items matched.
       </Trans>
     );
-  };
+  }
 
   it('should render correct content', () => {
     const { container } = render(<TestComponent />);
@@ -196,14 +210,14 @@ describe('trans testTransKey1 singular', () => {
 });
 
 describe('trans testTransKey1 plural', () => {
-  const TestComponent = () => {
+  function TestComponent() {
     const numOfItems = 10;
     return (
       <Trans i18nKey="testTransKey1" count={numOfItems}>
         {{ numOfItems }} items matched.
       </Trans>
     );
-  };
+  }
 
   it('should render correct content', () => {
     const { container } = render(<TestComponent />);
@@ -217,14 +231,14 @@ describe('trans testTransKey1 plural', () => {
 });
 
 describe('trans testTransKey2', () => {
-  const TestComponent = () => {
+  function TestComponent() {
     const numOfItems = 10;
     return (
       <Trans i18nKey="testTransKey2" count={numOfItems}>
         <span className="matchCount">{{ numOfItems }}</span> items matched.
       </Trans>
     );
-  };
+  }
 
   it('should render correct content', () => {
     const { container } = render(<TestComponent />);
@@ -242,14 +256,14 @@ describe('trans testTransKey2', () => {
 });
 
 describe('trans testTransKey3', () => {
-  const TestComponent = () => {
+  function TestComponent() {
     const numOfItems = 10;
     return (
       <Trans i18nKey="testTransKey3" count={numOfItems}>
         Result: <span className="matchCount">{{ numOfItems }}</span> items matched.
       </Trans>
     );
-  };
+  }
 
   it('should render correct content', () => {
     const { container } = render(<TestComponent />);
@@ -268,7 +282,7 @@ describe('trans testTransKey3', () => {
 });
 
 describe('trans complex', () => {
-  const TestComponent = () => {
+  function TestComponent() {
     const count = 10;
     const name = 'Jan';
     // prettier-ignore
@@ -277,7 +291,7 @@ describe('trans complex', () => {
         Hello <strong>{{ name }}</strong>, you have {{ count }} message. Open <Link to="/msgs">here</Link>.
       </Trans>
     );
-  };
+  }
 
   it('should render correct content', () => {
     const { container } = render(<TestComponent />);
@@ -302,7 +316,7 @@ describe('trans complex', () => {
 });
 
 describe('trans complex - count only in props', () => {
-  const TestComponent = () => {
+  function TestComponent() {
     const count = 10;
     const name = 'Jan';
     // prettier-ignore
@@ -311,7 +325,7 @@ describe('trans complex - count only in props', () => {
         Hello <strong>{{ name }}</strong>, you have {{n: count}} message. Open <Link to="/msgs">here</Link>.
       </Trans>
     );
-  };
+  }
 
   it('should render correct content', () => {
     const { container } = render(<TestComponent />);
@@ -336,7 +350,7 @@ describe('trans complex - count only in props', () => {
 });
 
 describe('trans complex v2 no extra pseudo elements for interpolation', () => {
-  const TestComponent = () => {
+  function TestComponent() {
     const count = 10;
     const name = 'Jan';
     // prettier-ignore
@@ -345,7 +359,7 @@ describe('trans complex v2 no extra pseudo elements for interpolation', () => {
         Hello <strong>{{ name }}</strong>, you have {{ count }} message. Open <Link to="/msgs">here</Link>.
       </Trans>
     );
-  };
+  }
 
   it('should render correct content', () => {
     const { container } = render(<TestComponent />);
@@ -368,7 +382,7 @@ describe('trans complex v2 no extra pseudo elements for interpolation', () => {
 });
 
 describe('trans with t as prop', () => {
-  const TestComponent = ({ t, cb }) => {
+  function TestComponent({ t, cb }) {
     const customT = (...args) => {
       if (cb) cb();
       return t(...args);
@@ -378,7 +392,7 @@ describe('trans with t as prop', () => {
         Open <Link to="/msgs">here</Link>.
       </Trans>
     );
-  };
+  }
 
   it('should use props t', () => {
     let usedCustomT = false;
@@ -411,7 +425,9 @@ describe('trans with t as prop', () => {
 });
 
 describe('trans with empty content', () => {
-  const TestComponent = () => <Trans />;
+  function TestComponent() {
+    return <Trans />;
+  }
   it('should render an empty string', () => {
     const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`<div />`);
@@ -419,7 +435,9 @@ describe('trans with empty content', () => {
 });
 
 describe('trans with only content from translation file - no children', () => {
-  const TestComponent = () => <Trans i18nKey="key1" />;
+  function TestComponent() {
+    return <Trans i18nKey="key1" />;
+  }
   it('should render translated string', () => {
     const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
@@ -431,7 +449,9 @@ describe('trans with only content from translation file - no children', () => {
 });
 
 describe('trans with only html content from translation file - no children', () => {
-  const TestComponent = () => <Trans i18nKey="transTest1_customHtml2" />;
+  function TestComponent() {
+    return <Trans i18nKey="transTest1_customHtml2" />;
+  }
   it('should render translated string', () => {
     const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
@@ -448,7 +468,9 @@ describe('trans with only html content from translation file - no children', () 
 });
 
 describe('trans should not break on invalid node from translations', () => {
-  const TestComponent = () => <Trans i18nKey="testInvalidHtml" />;
+  function TestComponent() {
+    return <Trans i18nKey="testInvalidHtml" />;
+  }
   it('should render translated string', () => {
     const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
@@ -460,7 +482,9 @@ describe('trans should not break on invalid node from translations', () => {
 });
 
 describe('trans should not break on invalid node from translations - part2', () => {
-  const TestComponent = () => <Trans i18nKey="testInvalidHtml2" />;
+  function TestComponent() {
+    return <Trans i18nKey="testInvalidHtml2" />;
+  }
   it('should render translated string', () => {
     const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
@@ -472,14 +496,16 @@ describe('trans should not break on invalid node from translations - part2', () 
 });
 
 describe('trans should work with misleading overloaded empty elements in components', () => {
-  const TestComponent = () => (
-    <Trans
-      i18nKey="someKey"
-      defaults="Hi {{ firstName }},<br/>and <bold>welcome</bold>"
-      values={{ firstName: 'Fritz' }}
-      components={{ br: <br />, bold: <strong /> }}
-    />
-  );
+  function TestComponent() {
+    return (
+      <Trans
+        i18nKey="someKey"
+        defaults="Hi {{ firstName }},<br/>and <bold>welcome</bold>"
+        values={{ firstName: 'Fritz' }}
+        components={{ br: <br />, bold: <strong /> }}
+      />
+    );
+  }
   it('should render translated string', () => {
     const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
@@ -496,13 +522,15 @@ describe('trans should work with misleading overloaded empty elements in compone
 });
 
 describe('trans should work with lowercase elements in components', () => {
-  const TestComponent = () => (
-    <Trans
-      i18nKey="someKeyWithLowercaseComp"
-      defaults="click <whatever>here</whatever> for more"
-      components={{ whatever: <a href="/foo">dummy</a> }}
-    />
-  );
+  function TestComponent() {
+    return (
+      <Trans
+        i18nKey="someKeyWithLowercaseComp"
+        defaults="click <whatever>here</whatever> for more"
+        components={{ whatever: <a href="/foo">dummy</a> }}
+      />
+    );
+  }
   it('should render translated string', () => {
     const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
@@ -520,13 +548,15 @@ describe('trans should work with lowercase elements in components', () => {
 });
 
 describe('trans should work with uppercase elements in components', () => {
-  const TestComponent = () => (
-    <Trans
-      i18nKey="someKeyWithUppercaseComp"
-      defaults="click <Link>here</Link> for more"
-      components={{ Link: <a href="/foo">dummy</a> }}
-    />
-  );
+  function TestComponent() {
+    return (
+      <Trans
+        i18nKey="someKeyWithUppercaseComp"
+        defaults="click <Link>here</Link> for more"
+        components={{ Link: <a href="/foo">dummy</a> }}
+      />
+    );
+  }
   it('should render translated string', () => {
     const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
@@ -544,11 +574,13 @@ describe('trans should work with uppercase elements in components', () => {
 });
 
 describe('trans with null child', () => {
-  const TestComponent = () => (
-    <Trans i18nKey="transTest1">
-      Open <Link to="/msgs">here</Link>.{null}
-    </Trans>
-  );
+  function TestComponent() {
+    return (
+      <Trans i18nKey="transTest1">
+        Open <Link to="/msgs">here</Link>.{null}
+      </Trans>
+    );
+  }
 
   it('should ignore the null child and render correct content', () => {
     const { container } = render(<TestComponent />);
@@ -576,11 +608,13 @@ describe('trans with wrapTextNodes', () => {
     i18n.options.react.transWrapTextNodes = orgValue;
   });
 
-  const TestComponent = () => (
-    <Trans i18nKey="transTest1">
-      Open <Link to="/msgs">here</Link>.
-    </Trans>
-  );
+  function TestComponent() {
+    return (
+      <Trans i18nKey="transTest1">
+        Open <Link to="/msgs">here</Link>.
+      </Trans>
+    );
+  }
 
   it('should wrap text nodes accordingly', () => {
     const { container } = render(<TestComponent />);
@@ -605,11 +639,13 @@ describe('trans with wrapTextNodes', () => {
 });
 
 describe('trans does ignore user defined values when parsing', () => {
-  const TestComponent = ({ value }) => (
-    <Trans>
-      This is <strong>just</strong> some {{ value }} text
-    </Trans>
-  );
+  function TestComponent({ value }) {
+    return (
+      <Trans>
+        This is <strong>just</strong> some {{ value }} text
+      </Trans>
+    );
+  }
 
   it('should escape value with angle brackets', () => {
     const { container } = render(<TestComponent value="<weird>" />);
@@ -626,9 +662,11 @@ describe('trans does ignore user defined values when parsing', () => {
 });
 
 describe('trans should allow escaped html', () => {
-  const TestComponent = () => (
-    <Trans i18nKey="transTestEscapedHtml" components={[<Link to="/msgs" />]} shouldUnescape />
-  );
+  function TestComponent() {
+    return (
+      <Trans i18nKey="transTestEscapedHtml" components={[<Link to="/msgs" />]} shouldUnescape />
+    );
+  }
 
   it('should unescape &lt; &nbsp; &amp; &gt; to < SPACE & >', () => {
     const { container } = render(<TestComponent />);
@@ -658,9 +696,15 @@ describe('trans with custom unescape', () => {
   });
 
   it('should allow unescape override', () => {
-    const TestComponent = () => (
-      <Trans i18nKey="transTestCustomUnescape" components={[<Link to="/msgs" />]} shouldUnescape />
-    );
+    function TestComponent() {
+      return (
+        <Trans
+          i18nKey="transTestCustomUnescape"
+          components={[<Link to="/msgs" />]}
+          shouldUnescape
+        />
+      );
+    }
     const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
@@ -675,7 +719,9 @@ describe('trans with custom unescape', () => {
   });
 
   it('should allow unescape override again', () => {
-    const TestComponent = () => <Trans i18nKey="transTestCustomUnescapeSecond" shouldUnescape />;
+    function TestComponent() {
+      return <Trans i18nKey="transTestCustomUnescapeSecond" shouldUnescape />;
+    }
     const { container } = render(<TestComponent />);
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
@@ -686,11 +732,13 @@ describe('trans with custom unescape', () => {
 });
 
 describe('trans with context property', () => {
-  const TestComponent = ({ parent }) => (
-    <Trans i18nKey="testTransWithCtx" context="home" parent={parent}>
-      Open <Link to="/msgs">here</Link>.
-    </Trans>
-  );
+  function TestComponent({ parent }) {
+    return (
+      <Trans i18nKey="testTransWithCtx" context="home" parent={parent}>
+        Open <Link to="/msgs">here</Link>.
+      </Trans>
+    );
+  }
 
   it('should render correct content', () => {
     const { container } = render(<TestComponent />);
