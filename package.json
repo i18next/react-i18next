@@ -92,7 +92,7 @@
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-testing-library": "^5.11.0",
-    "husky": "^3.0.3",
+    "husky": "^8.0.3",
     "i18next": "^23.2.10",
     "jest": "^24.8.0",
     "jest-cli": "^24.8.4",
@@ -143,7 +143,8 @@
     "test:typescript:customtypes": "tslint --project ./test/typescript/custom-types/tsconfig.json '**/*.{ts,tsx}'",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
-    "prettier": "prettier --write \"{,**/}*.{ts,tsx,js,json,md}\""
+    "prettier": "prettier --write \"{,**/}*.{ts,tsx,js,json,md}\"",
+    "prepare": "husky install"
   },
   "author": "Jan Mühlemann <jan.muehlemann@gmail.com> (https://github.com/jamuhl)",
   "license": "MIT",
