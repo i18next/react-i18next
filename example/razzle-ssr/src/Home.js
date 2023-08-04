@@ -4,7 +4,7 @@ import logo from './react.svg';
 import './Home.css';
 
 function Home() {
-  const [ t ] = useTranslation('translations');
+  const [t] = useTranslation('translations');
 
   return (
     <div className="Home">

@@ -7,7 +7,7 @@ jest.unmock('../src/Translation');
 
 describe('Translation', () => {
   function TestComponent() {
-    return <Translation>{t => <div>{t('key1')}</div>}</Translation>;
+    return <Translation>{(t) => <div>{t('key1')}</div>}</Translation>;
   }
 
   it('should render correct content', () => {

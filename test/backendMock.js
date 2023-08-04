@@ -15,7 +15,7 @@ class Backend {
   }
 
   flush() {
-    this.queue.forEach(cb => {
+    this.queue.forEach((cb) => {
       cb(null, {
         key1: 'test',
         interpolateKey: 'add {{insert}} {{up, uppercase}}',

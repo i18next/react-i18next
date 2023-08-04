@@ -6,7 +6,7 @@ import { initReactI18next, useTranslation } from 'react-i18next';
 const languageDetector = {
   type: 'languageDetector',
   async: true,
-  detect: cb => cb('en'),
+  detect: (cb) => cb('en'),
   init: () => {},
   cacheUserLanguage: () => {},
 };

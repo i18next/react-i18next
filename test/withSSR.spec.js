@@ -22,10 +22,10 @@ const mockI18n = {
     backendConnector: {},
   },
   isInitialized: true,
-  changeLanguage: lng => {
+  changeLanguage: (lng) => {
     mockI18n.language = lng;
   },
-  getFixedT: () => message => message,
+  getFixedT: () => (message) => message,
   hasResourceBundle: (lng, ns) => ns === 'alreadyLoadedNS',
   getResourceBundle: (lng, ns) => ({ lng, ns }),
   loadNamespaces: () => {},

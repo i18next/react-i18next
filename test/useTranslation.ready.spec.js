@@ -19,7 +19,7 @@ describe('useTranslation', () => {
       },
       isInitialized: true,
       changeLanguage: () => {},
-      getFixedT: () => message => message,
+      getFixedT: () => (message) => message,
       hasResourceBundle: (lng, ns) => ns === 'alreadyLoadedNS',
       loadNamespaces: () => {},
       on: () => {},

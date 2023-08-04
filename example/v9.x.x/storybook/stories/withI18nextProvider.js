@@ -10,7 +10,7 @@ import i18n from '../src/i18n';
 
 // use a decorator to enclose your stories in a I18nextProvider
 storiesOf('with I18nextProvider', module)
-  .addDecorator(story => <I18nextProvider i18n={i18n}>{story()}</I18nextProvider>)
+  .addDecorator((story) => <I18nextProvider i18n={i18n}>{story()}</I18nextProvider>)
   .add('app view', () => <App />);
 
 // learn more:
