@@ -110,7 +110,7 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
   // check if contains tags we need to replace from html string to react nodes
   const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
   const emptyChildrenButNeedsHandling =
-    targetString && new RegExp(keepArray.join('|')).test(targetString);
+    targetString && new RegExp(keepArray.map((keep) => `<${keep}`).join('|')).test(targetString);
 
   // no need to replace tags in the targetstring
   if (!children && !emptyChildrenButNeedsHandling && !shouldUnescape) return [targetString];
