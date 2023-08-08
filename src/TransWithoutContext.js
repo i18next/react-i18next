@@ -1,4 +1,4 @@
-import { isValidElement, cloneElement, createElement } from 'react';
+import React, { isValidElement, cloneElement, createElement, Children } from 'react';
 import HTML from 'html-parse-stringify';
 import { warn, warnOnce } from './utils.js';
 import { getDefaults } from './defaults.js';
@@ -143,8 +143,17 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
   }
 
   function pushTranslatedJSX(child, inner, mem, i, isVoid) {
-    if (child.dummy) child.children = inner; // needed on preact!
-    mem.push(cloneElement(child, { ...child.props, key: i }, isVoid ? undefined : inner));
+    if (child.dummy) {
+      child.children = inner; // needed on preact!
+      mem.push(cloneElement(child, { key: i }, isVoid ? undefined : inner));
+    } else {
+      mem.push(
+        ...Children.map([child], (c) => {
+          const { i18nIsDynamicList, ...rest } = c.props;
+          return <c.type key={i} ref={c.ref} {...rest} {...(isVoid ? {} : { children: inner })} />;
+        }),
+      );
+    }
   }
 
   // reactNode (the jsx root element or child)
@@ -202,7 +211,7 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
             node.children,
             rootReactNode,
           );
-          mem.push(cloneElement(child, { ...child.props, key: i }, inner));
+          pushTranslatedJSX(child, inner, mem, i);
         } else if (Number.isNaN(parseFloat(node.name))) {
           if (isKnownComponent) {
             const inner = renderInner(child, node, rootReactNode);
@@ -238,12 +247,16 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
           // in the translation AST while having an object in reactNodes
           // -> push the content no need to interpolate again
           if (content) mem.push(content);
-        } else if (node.children.length === 1 && translationContent) {
+        } else {
           // If component does not have children, but translation - has
           // with this in component could be components={[<span class='make-beautiful'/>]} and in translation - 'some text <0>some highlighted message</0>'
-          mem.push(cloneElement(child, { ...child.props, key: i }, translationContent));
-        } else {
-          mem.push(cloneElement(child, { ...child.props, key: i }));
+          pushTranslatedJSX(
+            child,
+            translationContent,
+            mem,
+            i,
+            node.children.length !== 1 || !translationContent,
+          );
         }
       } else if (node.type === 'text') {
         const wrapTextNodes = i18nOptions.transWrapTextNodes;
