@@ -138,7 +138,6 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
   function renderInner(child, node, rootReactNode) {
     const childs = getChildren(child);
     const mappedChildren = mapAST(childs, node.children, rootReactNode);
-    // console.warn('INNER', node.name, node, child, childs, node.children, mappedChildren);
     return hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
   }
 
@@ -149,8 +148,9 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
     } else {
       mem.push(
         ...Children.map([child], (c) => {
-          const { i18nIsDynamicList, ...rest } = c.props;
-          return <c.type key={i} ref={c.ref} {...rest} {...(isVoid ? {} : { children: inner })} />;
+          const props = { ...c.props };
+          delete props.i18nIsDynamicList;
+          return <c.type {...props} key={i} ref={c.ref} {...(isVoid ? {} : { children: inner })} />;
         }),
       );
     }
@@ -171,11 +171,15 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
         i18n.services.interpolator.interpolate(node.children[0].content, opts, i18n.language);
 
       if (node.type === 'tag') {
-        let tmp = reactNodes[parseInt(node.name, 10)]; // regular array (components or children)
-        if (!tmp && rootReactNode.length === 1 && rootReactNode[0][node.name])
-          tmp = rootReactNode[0][node.name]; // trans components is an object
-        if (!tmp) tmp = {};
-        //  console.warn('TMP', node.name, parseInt(node.name, 10), tmp, reactNodes);
+        // regular array (components or children)
+        let tmp = reactNodes[parseInt(node.name, 10)];
+
+        // trans components is an object
+        if (rootReactNode.length === 1) tmp ||= rootReactNode[0][node.name];
+
+        // neither
+        tmp ||= {};
+
         const child =
           Object.keys(node.attrs).length !== 0 ? mergeProps({ props: node.attrs }, tmp) : tmp;
 
@@ -191,7 +195,6 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
           typeof children === 'object' &&
           children !== null &&
           Object.hasOwnProperty.call(children, node.name);
-        // console.warn('CHILD', node.name, node, isElement, child);
 
         if (typeof child === 'string') {
           const value = i18n.services.interpolator.interpolate(child, opts, i18n.language);
