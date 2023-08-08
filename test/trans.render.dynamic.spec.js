@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import './i18n';
-import { Trans } from '../src/Trans';
+import { Trans } from '../src';
 
 describe('Trans should render nested components', () => {
   it('should render dynamic ul as components property', () => {
@@ -45,7 +45,7 @@ describe('Trans should render nested components', () => {
       return (
         <Trans i18nKey="testTrans5KeyWithNestedComponent">
           My list:
-          <ul>
+          <ul i18nIsDynamicList>
             {list.map((item) => (
               <li key={item}>{item}</li>
             ))}
@@ -65,6 +65,28 @@ describe('Trans should render nested components', () => {
             li2
           </li>
         </ul>
+      </div>
+    `);
+  });
+
+  it('should render dynamic content correctly', () => {
+    const dynamicContent = <div>testing</div>;
+
+    function TestComponent() {
+      return (
+        <Trans>
+          My dynamic content:
+          <React.Fragment i18nIsDynamicList>{dynamicContent}</React.Fragment>
+        </Trans>
+      );
+    }
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        My dynamic content:
+        <div>
+          testing
+        </div>
       </div>
     `);
   });

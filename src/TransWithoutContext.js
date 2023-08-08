@@ -13,7 +13,7 @@ function hasChildren(node, checkLength) {
 
 function getChildren(node) {
   if (!node) return [];
-  return node.props ? node.props.children : node.children;
+  return getAsArray(node.props ? node.props.children : node.children);
 }
 
 function hasValidReactChildren(children) {
