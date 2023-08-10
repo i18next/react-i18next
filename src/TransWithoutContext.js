@@ -1,4 +1,4 @@
-import { isValidElement, cloneElement, createElement } from 'react';
+import React, { isValidElement, cloneElement, createElement, Children } from 'react';
 import HTML from 'html-parse-stringify';
 import { warn, warnOnce } from './utils.js';
 import { getDefaults } from './defaults.js';
@@ -13,7 +13,8 @@ function hasChildren(node, checkLength) {
 
 function getChildren(node) {
   if (!node) return [];
-  return node.props ? node.props.children : node.children;
+  const children = node.props ? node.props.children : node.children;
+  return node.props?.i18nIsDynamicList ? getAsArray(children) : children;
 }
 
 function hasValidReactChildren(children) {
@@ -110,7 +111,7 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
   // check if contains tags we need to replace from html string to react nodes
   const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
   const emptyChildrenButNeedsHandling =
-    targetString && new RegExp(keepArray.join('|')).test(targetString);
+    targetString && new RegExp(keepArray.map((keep) => `<${keep}`).join('|')).test(targetString);
 
   // no need to replace tags in the targetstring
   if (!children && !emptyChildrenButNeedsHandling && !shouldUnescape) return [targetString];
@@ -138,13 +139,22 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
   function renderInner(child, node, rootReactNode) {
     const childs = getChildren(child);
     const mappedChildren = mapAST(childs, node.children, rootReactNode);
-    // console.warn('INNER', node.name, node, child, childs, node.children, mappedChildren);
     return hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
   }
 
   function pushTranslatedJSX(child, inner, mem, i, isVoid) {
-    if (child.dummy) child.children = inner; // needed on preact!
-    mem.push(cloneElement(child, { ...child.props, key: i }, isVoid ? undefined : inner));
+    if (child.dummy) {
+      child.children = inner; // needed on preact!
+      mem.push(cloneElement(child, { key: i }, isVoid ? undefined : inner));
+    } else {
+      mem.push(
+        ...Children.map([child], (c) => {
+          const props = { ...c.props };
+          delete props.i18nIsDynamicList;
+          return <c.type {...props} key={i} ref={c.ref} {...(isVoid ? {} : { children: inner })} />;
+        }),
+      );
+    }
   }
 
   // reactNode (the jsx root element or child)
@@ -162,11 +172,15 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
         i18n.services.interpolator.interpolate(node.children[0].content, opts, i18n.language);
 
       if (node.type === 'tag') {
-        let tmp = reactNodes[parseInt(node.name, 10)]; // regular array (components or children)
-        if (!tmp && rootReactNode.length === 1 && rootReactNode[0][node.name])
-          tmp = rootReactNode[0][node.name]; // trans components is an object
-        if (!tmp) tmp = {};
-        //  console.warn('TMP', node.name, parseInt(node.name, 10), tmp, reactNodes);
+        // regular array (components or children)
+        let tmp = reactNodes[parseInt(node.name, 10)];
+
+        // trans components is an object
+        if (rootReactNode.length === 1) tmp ||= rootReactNode[0][node.name];
+
+        // neither
+        tmp ||= {};
+
         const child =
           Object.keys(node.attrs).length !== 0 ? mergeProps({ props: node.attrs }, tmp) : tmp;
 
@@ -182,7 +196,6 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
           typeof children === 'object' &&
           children !== null &&
           Object.hasOwnProperty.call(children, node.name);
-        // console.warn('CHILD', node.name, node, isElement, child);
 
         if (typeof child === 'string') {
           const value = i18n.services.interpolator.interpolate(child, opts, i18n.language);
@@ -202,7 +215,7 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
             node.children,
             rootReactNode,
           );
-          mem.push(cloneElement(child, { ...child.props, key: i }, inner));
+          pushTranslatedJSX(child, inner, mem, i);
         } else if (Number.isNaN(parseFloat(node.name))) {
           if (isKnownComponent) {
             const inner = renderInner(child, node, rootReactNode);
@@ -238,12 +251,16 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
           // in the translation AST while having an object in reactNodes
           // -> push the content no need to interpolate again
           if (content) mem.push(content);
-        } else if (node.children.length === 1 && translationContent) {
+        } else {
           // If component does not have children, but translation - has
           // with this in component could be components={[<span class='make-beautiful'/>]} and in translation - 'some text <0>some highlighted message</0>'
-          mem.push(cloneElement(child, { ...child.props, key: i }, translationContent));
-        } else {
-          mem.push(cloneElement(child, { ...child.props, key: i }));
+          pushTranslatedJSX(
+            child,
+            translationContent,
+            mem,
+            i,
+            node.children.length !== 1 || !translationContent,
+          );
         }
       } else if (node.type === 'text') {
         const wrapTextNodes = i18nOptions.transWrapTextNodes;

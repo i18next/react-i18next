@@ -36,6 +36,14 @@ declare module 'i18next' {
   }
 }
 
+declare global {
+  namespace JSX {
+    interface IntrinsicAttributes {
+      i18nIsDynamicList?: boolean;
+    }
+  }
+}
+
 type ObjectOrNever = TypeOptions['allowObjectInHTMLChildren'] extends true
   ? Record<string, unknown>
   : never;
