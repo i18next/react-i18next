@@ -13,7 +13,8 @@ function hasChildren(node, checkLength) {
 
 function getChildren(node) {
   if (!node) return [];
-  return getAsArray(node.props ? node.props.children : node.children);
+  const children = node.props ? node.props.children : node.children;
+  return node.props?.i18nIsDynamicList ? getAsArray(children) : children;
 }
 
 function hasValidReactChildren(children) {
