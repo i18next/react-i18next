@@ -69,7 +69,7 @@ describe('Trans should render nested components', () => {
     `);
   });
 
-  it('should render dynamic content correctly', () => {
+  it('should render dynamic Elements correctly', () => {
     const dynamicContent = <div>testing</div>;
 
     function TestComponent() {
@@ -87,6 +87,25 @@ describe('Trans should render nested components', () => {
         <div>
           testing
         </div>
+      </div>
+    `);
+  });
+
+  it('should render dynamic strings correctly', () => {
+    const dynamicContent = 'testing';
+
+    function TestComponent() {
+      return (
+        <Trans>
+          My dynamic content: <React.Fragment i18nIsDynamicList>{dynamicContent}</React.Fragment>
+        </Trans>
+      );
+    }
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        My dynamic content: 
+        testing
       </div>
     `);
   });

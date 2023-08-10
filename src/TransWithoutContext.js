@@ -139,7 +139,12 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
   function renderInner(child, node, rootReactNode) {
     const childs = getChildren(child);
     const mappedChildren = mapAST(childs, node.children, rootReactNode);
-    return hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
+    // `mappedChildren` will always be empty if using the `i18nIsDynamicList` prop,
+    // but the children might not necessarily be react components
+    return (hasValidReactChildren(childs) && mappedChildren.length === 0) ||
+      child.props?.i18nIsDynamicList
+      ? childs
+      : mappedChildren;
   }
 
   function pushTranslatedJSX(child, inner, mem, i, isVoid) {
