@@ -1,3 +1,7 @@
+### 13.1.0
+
+- Fix non-list dynamic content in Trans component [1660](https://github.com/i18next/react-i18next/pull/1660)
+
 ### 13.0.3
 
 - fix unescape is not consistently called for all values [1657](https://github.com/i18next/react-i18next/issues/1657)
