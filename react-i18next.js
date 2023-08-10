@@ -357,7 +357,7 @@
     function renderInner(child, node, rootReactNode) {
       const childs = getChildren(child);
       const mappedChildren = mapAST(childs, node.children, rootReactNode);
-      return hasValidReactChildren(childs) && mappedChildren.length === 0 ? childs : mappedChildren;
+      return hasValidReactChildren(childs) && mappedChildren.length === 0 || child.props?.i18nIsDynamicList ? childs : mappedChildren;
     }
     function pushTranslatedJSX(child, inner, mem, i, isVoid) {
       if (child.dummy) {

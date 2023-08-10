@@ -1,3 +1,7 @@
+### 13.1.1
+
+- Render all children regardless of type when using i18nIsDynamicList prop [1661](https://github.com/i18next/react-i18next/pull/1661)
+
 ### 13.1.0
 
 - Fix non-list dynamic content in Trans component [1660](https://github.com/i18next/react-i18next/pull/1660)
