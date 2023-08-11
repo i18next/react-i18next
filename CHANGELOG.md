@@ -1,3 +1,7 @@
+### 13.1.2
+
+- postpone usage of newer ES syntax
+
 ### 13.1.1
 
 - Render all children regardless of type when using i18nIsDynamicList prop [1661](https://github.com/i18next/react-i18next/pull/1661)

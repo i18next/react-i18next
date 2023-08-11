@@ -275,7 +275,7 @@
   function getChildren(node) {
     if (!node) return [];
     const children = node.props ? node.props.children : node.children;
-    return node.props?.i18nIsDynamicList ? getAsArray(children) : children;
+    return node.props && node.props.i18nIsDynamicList ? getAsArray(children) : children;
   }
   function hasValidReactChildren(children) {
     if (Object.prototype.toString.call(children) !== '[object Array]') return false;
@@ -357,7 +357,7 @@
     function renderInner(child, node, rootReactNode) {
       const childs = getChildren(child);
       const mappedChildren = mapAST(childs, node.children, rootReactNode);
-      return hasValidReactChildren(childs) && mappedChildren.length === 0 || child.props?.i18nIsDynamicList ? childs : mappedChildren;
+      return hasValidReactChildren(childs) && mappedChildren.length === 0 || child.props && child.props.i18nIsDynamicList ? childs : mappedChildren;
     }
     function pushTranslatedJSX(child, inner, mem, i, isVoid) {
       if (child.dummy) {
@@ -387,8 +387,8 @@
         const translationContent = node.children && node.children[0] && node.children[0].content && i18n.services.interpolator.interpolate(node.children[0].content, opts, i18n.language);
         if (node.type === 'tag') {
           let tmp = reactNodes[parseInt(node.name, 10)];
-          if (rootReactNode.length === 1) tmp ||= rootReactNode[0][node.name];
-          tmp ||= {};
+          if (rootReactNode.length === 1 && !tmp) tmp = rootReactNode[0][node.name];
+          if (!tmp) tmp = {};
           const child = Object.keys(node.attrs).length !== 0 ? mergeProps({
             props: node.attrs
           }, tmp) : tmp;
