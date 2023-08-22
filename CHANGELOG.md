@@ -1,3 +1,7 @@
+### 13.2.0
+
+- Don't use defaults prop as default key [1664](https://github.com/i18next/react-i18next/pull/1664)
+
 ### 13.1.2
 
 - postpone usage of newer ES syntax

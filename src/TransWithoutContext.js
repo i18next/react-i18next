@@ -332,7 +332,9 @@ export function Trans({
   const defaultValue =
     defaults || nodeAsString || reactI18nextOptions.transEmptyNodeValue || i18nKey;
   const { hashTransKey } = reactI18nextOptions;
-  const key = i18nKey || (hashTransKey ? hashTransKey(nodeAsString) : nodeAsString);
+  const key =
+    i18nKey ||
+    (hashTransKey ? hashTransKey(nodeAsString || defaultValue) : nodeAsString || defaultValue);
   const interpolationOverride = values
     ? tOptions.interpolation
     : { interpolation: { ...tOptions.interpolation, prefix: '#$?', suffix: '?$#' } };
