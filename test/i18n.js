@@ -47,6 +47,8 @@ i18n.init({
         transTestCustomUnescapeSecond: 'Vertrauens&shy;kennwert',
         testTransWithCtx: 'Go <1>there</1>.',
         testTransWithCtx_home: 'Go <1>home</1>.',
+        'You have {{count}} message_one': 'You have {{count}} message',
+        'You have {{count}} message_other': 'You have {{count}} messages',
         deepPath: {
           deepKey1: 'value1',
         },

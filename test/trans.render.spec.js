@@ -755,3 +755,22 @@ describe('trans with context property', () => {
     `);
   });
 });
+
+describe('trans with defaults property and children', () => {
+  function TestComponent() {
+    return (
+      <Trans count={3} defaults="This property should not get used">
+        You have {{ count: 3 }} message
+      </Trans>
+    );
+  }
+
+  it('should render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        You have 3 messages
+      </div>
+    `);
+  });
+});
