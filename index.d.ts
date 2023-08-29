@@ -52,7 +52,10 @@ type ReactI18NextChildren = React.ReactNode | ObjectOrNever;
 
 declare module 'react' {
   interface HTMLAttributes<T> {
-    children?: ReactI18NextChildren;
+    // This union is inspired by the typings for React.ReactNode. We do this to fix "This JSX tag's 'children' prop
+    // expects a single child of type 'ReactI18NextChildren', but multiple children were provided":
+    // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/5a1e9f91ed0143adede394adb3f540e650455f71/types/react/index.d.ts#L268
+    children?: ReactI18NextChildren | Iterable<ReactI18NextChildren>;
   }
 }
 

@@ -95,3 +95,23 @@ function withTfunctionAndKeyPrefixAndWrongKey() {
     </Trans>
   );
 }
+
+function withTextAndInterpolation() {
+  return <Trans>foo {{ var: '' }}</Trans>;
+}
+
+function withInterpolationInHTMLElement() {
+  return (
+    <Trans>
+      foo <strong>{{ var: '' }}</strong>
+    </Trans>
+  );
+}
+
+function withTextAndInterpolationChildrenInHTMLElement() {
+  return (
+    <Trans>
+      <span>foo {{ var: '' }}</span>
+    </Trans>
+  );
+}

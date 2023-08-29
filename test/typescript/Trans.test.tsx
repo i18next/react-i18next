@@ -96,3 +96,12 @@ function extraDivProps() {
     </>
   );
 }
+
+function objectChild() {
+  return (
+    <Trans>
+      {/* @ts-expect-error */}
+      <span>This {{ var: '' }} is an error since `allowObjectInHTMLChildren` is disabled</span>
+    </Trans>
+  );
+}
