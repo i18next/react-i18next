@@ -75,6 +75,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^11.2.7",
     "@testing-library/react-hooks": "^3.4.2",
+    "@types/react": "^18.2.21",
     "all-contributors-cli": "^6.26.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^24.8.0",
