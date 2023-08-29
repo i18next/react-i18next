@@ -1,3 +1,7 @@
+### 13.2.1
+
+- types: Allow iterable ReactI18NextChildren as children [1669](https://github.com/i18next/react-i18next/pull/1669)
+
 ### 13.2.0
 
 - Don't use defaults prop as default key [1664](https://github.com/i18next/react-i18next/pull/1664)
