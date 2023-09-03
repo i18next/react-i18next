@@ -10,8 +10,11 @@ import type {
   KeyPrefix,
 } from 'i18next';
 import * as React from 'react';
-export { Trans, TransProps } from './TransWithoutContext';
+import { Trans, TransProps } from './TransWithoutContext';
 export { initReactI18next } from './initReactI18next';
+
+export const TransWithoutContext: typeof Trans;
+export { Trans, TransProps }
 
 export function setDefaults(options: ReactOptions): void;
 export function getDefaults(): ReactOptions;
