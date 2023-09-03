@@ -1,3 +1,7 @@
+### 13.2.2
+
+- Fix missing TransWithoutContext type [1672](https://github.com/i18next/react-i18next/pull/1672)
+
 ### 13.2.1
 
 - types: Allow iterable ReactI18NextChildren as children [1669](https://github.com/i18next/react-i18next/pull/1669)
