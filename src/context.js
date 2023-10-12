@@ -3,9 +3,9 @@ import { getDefaults, setDefaults } from './defaults.js';
 import { getI18n, setI18n } from './i18nInstance.js';
 import { initReactI18next } from './initReactI18next.js';
 
-export { getDefaults, setDefaults, getI18n, setI18n, initReactI18next };
+export { getDefaults, getI18n, initReactI18next, setDefaults, setI18n };
 
-export const I18nContext = createContext();
+export const I18nContext = /* #__PURE__ */ createContext();
 
 export class ReportNamespaces {
   constructor() {
