@@ -13,6 +13,7 @@ i18n.init({
     en: {
       translation: {
         key1: 'test',
+        interpolateKeyWithDefaultVariables: 'add {{defaultInsert}} {{defaultUp, uppercase}}',
         interpolateKey: 'add {{insert}} {{up, uppercase}}',
         interpolateKey2: '<strong>add</strong> {{insert}} {{up, uppercase}}',
         transTest1: 'Go <1>there</1>.',
@@ -65,6 +66,10 @@ i18n.init({
     format(value, format) {
       if (format === 'uppercase') return value.toUpperCase();
       return value;
+    },
+    defaultVariables: {
+      defaultInsert: 'first',
+      defaultUp: 'second',
     },
   },
 

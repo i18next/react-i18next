@@ -521,6 +521,20 @@ describe('trans should work with misleading overloaded empty elements in compone
   });
 });
 
+describe('trans should work with defaultVariables', () => {
+  function TestComponent() {
+    return <Trans i18nKey="interpolateKeyWithDefaultVariables" />;
+  }
+  it('should render translated string', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        add first SECOND
+      </div>
+    `);
+  });
+});
+
 describe('trans should work with lowercase elements in components', () => {
   function TestComponent() {
     return (

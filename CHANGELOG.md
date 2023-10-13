@@ -1,3 +1,7 @@
+### 13.3.0
+
+- Respect defaultVariables in the interpolation options [1685](https://github.com/i18next/react-i18next/issues/1685)
+
 ### 13.2.2
 
 - Fix missing TransWithoutContext type [1672](https://github.com/i18next/react-i18next/pull/1672)
