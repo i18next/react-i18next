@@ -488,22 +488,21 @@
       hashTransKey
     } = reactI18nextOptions;
     const key = i18nKey || (hashTransKey ? hashTransKey(nodeAsString || defaultValue) : nodeAsString || defaultValue);
-    let interpolationOverride = values ? tOptions.interpolation : {
+    if (i18n.options && i18n.options.interpolation && i18n.options.interpolation.defaultVariables) {
+      values = values && Object.keys(values).length > 0 ? {
+        ...values,
+        ...i18n.options.interpolation.defaultVariables
+      } : {
+        ...i18n.options.interpolation.defaultVariables
+      };
+    }
+    const interpolationOverride = values ? tOptions.interpolation : {
       interpolation: {
         ...tOptions.interpolation,
         prefix: '#$?',
         suffix: '?$#'
       }
     };
-    if (i18n.options && i18n.options.interpolation && i18n.options.interpolation.defaultVariables) {
-      if (!interpolationOverride) interpolationOverride = {};
-      interpolationOverride.interpolation = {
-        defaultVariables: {
-          ...i18n.options.interpolation.defaultVariables,
-          ...(interpolationOverride.interpolation && interpolationOverride.interpolation.defaultVariables || {})
-        }
-      };
-    }
     const combinedTOpts = {
       ...tOptions,
       count,

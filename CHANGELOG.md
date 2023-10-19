@@ -1,3 +1,7 @@
+### 13.3.1
+
+- optimize defaultVariables feature introduced in last release
+
 ### 13.3.0
 
 - Respect defaultVariables in the interpolation options [1685](https://github.com/i18next/react-i18next/issues/1685)
