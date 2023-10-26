@@ -1,5 +1,4 @@
 import { createInstance } from 'i18next';
-import { initReactI18next } from 'react-i18next';
 
 const i18n = createInstance({
   fallbackLng: 'en',
@@ -23,6 +22,6 @@ const i18n = createInstance({
   },
 });
 
-i18n.use(initReactI18next).init();
+i18n.init();
 
 export default i18n;
