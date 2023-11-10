@@ -1,3 +1,7 @@
+### 13.4.0
+
+- fix: separate cjs and mjs typings
+
 ### 13.3.2
 
 - types: fix consider importing '\*.js'
