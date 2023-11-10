@@ -1,3 +1,7 @@
+### 13.3.2
+
+- types: fix consider importing '\*.js'
+
 ### 13.3.1
 
 - optimize defaultVariables feature introduced in last release

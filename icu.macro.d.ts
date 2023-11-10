@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { Trans } from './';
+import { Trans } from './index.js';
 import type { Namespace, TypeOptions, i18n, ParseKeys } from 'i18next';
 
 export { Trans };

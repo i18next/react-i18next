@@ -1,4 +1,4 @@
-import type { $Subtract, $Tuple } from './helpers';
+import type { $Subtract, $Tuple } from './helpers.js';
 import type {
   ReactOptions,
   i18n,
@@ -10,11 +10,11 @@ import type {
   KeyPrefix,
 } from 'i18next';
 import * as React from 'react';
-import { Trans, TransProps } from './TransWithoutContext';
-export { initReactI18next } from './initReactI18next';
+import { Trans, TransProps } from './TransWithoutContext.js';
+export { initReactI18next } from './initReactI18next.js';
 
 export const TransWithoutContext: typeof Trans;
-export { Trans, TransProps }
+export { Trans, TransProps };
 
 export function setDefaults(options: ReactOptions): void;
 export function getDefaults(): ReactOptions;
