@@ -1,3 +1,7 @@
+### 13.4.1
+
+- types: use CustomInstanceExtenstions to extend reportNamespaces
+
 ### 13.4.0
 
 - fix: separate cjs and mjs typings
