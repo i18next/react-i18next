@@ -1,3 +1,7 @@
+### 13.5.0
+
+- self-closing components in translation strings should not attempt to replace the component's children [1695](https://github.com/i18next/react-i18next/issues/1695)
+
 ### 13.4.1
 
 - types: use CustomInstanceExtenstions to extend reportNamespaces

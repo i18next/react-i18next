@@ -512,6 +512,16 @@
       ns: namespaces
     };
     const translation = key ? t(key, combinedTOpts) : defaultValue;
+    if (components) {
+      Object.keys(components).forEach(c => {
+        const comp = components[c];
+        if (typeof comp.type === 'function' || !comp.props || !comp.props.children || translation.indexOf(`${c}/>`) < 0 && translation.indexOf(`${c} />`) < 0) return;
+        function Componentized() {
+          return React.createElement(React.Fragment, null, comp);
+        }
+        components[c] = React.createElement(Componentized, null);
+      });
+    }
     const content = renderNodes(components || children, translation, i18n, reactI18nextOptions, combinedTOpts, shouldUnescape);
     const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
     return useAsParent ? React.createElement(useAsParent, additionalProps, content) : content;

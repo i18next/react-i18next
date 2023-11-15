@@ -355,6 +355,24 @@ export function Trans({
   };
   const translation = key ? t(key, combinedTOpts) : defaultValue;
 
+  if (components) {
+    Object.keys(components).forEach((c) => {
+      const comp = components[c];
+      if (
+        typeof comp.type === 'function' ||
+        !comp.props ||
+        !comp.props.children ||
+        (translation.indexOf(`${c}/>`) < 0 && translation.indexOf(`${c} />`) < 0)
+      )
+        return;
+      // eslint-disable-next-line react/no-unstable-nested-components, no-inner-declarations
+      function Componentized() {
+        return <>{comp}</>;
+      }
+      components[c] = <Componentized />;
+    });
+  }
+
   const content = renderNodes(
     components || children,
     translation,

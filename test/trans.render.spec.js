@@ -587,6 +587,30 @@ describe('trans should work with uppercase elements in components', () => {
   });
 });
 
+describe('trans should work with selfclosing elements in components', () => {
+  function TestComponent() {
+    return (
+      <Trans
+        i18nKey="transTestWithSelfClosing"
+        components={{
+          component: <div>These children will be preserved</div>,
+        }}
+      />
+    );
+  }
+  it('should render translated string', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        interpolated component: 
+        <div>
+          These children will be preserved
+        </div>
+      </div>
+    `);
+  });
+});
+
 describe('trans with null child', () => {
   function TestComponent() {
     return (

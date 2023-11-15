@@ -53,6 +53,7 @@ i18n.init({
         deepPath: {
           deepKey1: 'value1',
         },
+        transTestWithSelfClosing: 'interpolated component: <component/>',
       },
       other: {
         transTest1: 'Another go <1>there</1>.',
