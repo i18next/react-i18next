@@ -3,7 +3,7 @@ import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-locize-backend';
 import LastUsed from 'locize-lastused';
-import { locizePlugin, locizeEditorPlugin } from 'locize';
+import { locizePlugin } from 'locize';
 
 // OPTIONAL IF YOU LIKE TO SEE ALL (LOGIN TO TRANSLATION MANAGEMENT EDITOR)
 // 1) signup at https://locize.com/register and login
@@ -30,8 +30,7 @@ i18n
   .use(LastUsed)
   // locize-editor
   // InContext Editor of locize
-  // .use(locizePlugin)
-  .use(locizeEditorPlugin()) // locizeEditorPlugin will show the incontext editor only if passing ?incontext=true
+  .use(locizePlugin) // will show the incontext editor only if passing ?incontext=true
   // detect user language
   // learn more: https://github.com/i18next/i18next-browser-languageDetector
   .use(LanguageDetector)
