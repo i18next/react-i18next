@@ -98,3 +98,14 @@ function expectErrorWhenUsingRightKeyPrefixOptionAndWrongKey() {
   // @ts-expect-error
   return <>{t('abc')}</>;
 }
+
+function useTranslationWithContext() {
+  const [t] = useTranslation('custom');
+  return (
+    <>
+      {t('some')}
+      {/* works only in TS v5 */}
+      {/* {t('some', { context: 'me' })} */}
+    </>
+  );
+}
