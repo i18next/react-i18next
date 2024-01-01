@@ -96,7 +96,6 @@
     "coveralls": "^3.1.1",
     "cp-cli": "^2.0.0",
     "cross-env": "^7.0.3",
-    "dtslint": "^4.2.1",
     "eslint": "^8.42.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-prettier": "^8.8.0",
@@ -118,8 +117,8 @@
     "rimraf": "2.6.3",
     "rollup": "3.25.1",
     "sinon": "^7.2.3",
-    "tslint": "^6.1.3",
     "typescript": "5.1.3",
+    "vitest": "1.1.1",
     "yargs": "^17.7.2"
   },
   "peerDependencies": {
@@ -136,6 +135,7 @@
   },
   "scripts": {
     "clean": "rimraf dist && mkdirp dist",
+    "lint": "eslint ./src ./test",
     "copy": "cp-cli ./dist/umd/react-i18next.min.js ./react-i18next.min.js && cp-cli ./dist/umd/react-i18next.js ./react-i18next.js && echo '{\"type\":\"module\"}' > dist/es/package.json",
     "build:es": "cross-env BABEL_ENV=jsnext babel src --out-dir dist/es",
     "build:cjs": "babel src --out-dir dist/commonjs",
@@ -146,17 +146,15 @@
     "fix_dist_package": "node -e 'console.log(`{\"type\":\"module\",\"version\":\"${process.env.npm_package_version}\"}`)' > dist/es/package.json",
     "preversion": "npm run build && git push",
     "postversion": "npm run fix_dist_package && git push && git push --tags",
-    "pretest": "npm run test:typescript && npm run test:typescript:noninterop && npm run test:typescript:customtypes",
-    "test": "cross-env BABEL_ENV=development jest --no-cache",
-    "test:watch": "cross-env BABEL_ENV=development jest --no-cache --watch",
-    "test:coverage": "cross-env BABEL_ENV=development jest --no-cache --coverage",
-    "test:lint": "eslint ./src ./test",
-    "test:typescript": "tslint --project tsconfig.json '**/*.{ts,tsx}'",
-    "test:typescript:noninterop": "tslint --project tsconfig.nonEsModuleInterop.json '**/*.{ts,tsx}'",
-    "test:typescript:customtypes": "tslint --project ./test/typescript/custom-types/tsconfig.json '**/*.{ts,tsx}'",
+    "pretest": "npm run lint",
+    "test": "npm run test:typescript -- --run && npm run test:runtime",
+    "test:runtime": "cross-env BABEL_ENV=development jest --no-cache",
+    "test:watch": "npm run test:runtime -- --watch",
+    "test:coverage": "npm run test:runtime -- --coverage",
+    "test:typescript": "vitest --typecheck --workspace vitest.workspace.mts",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
-    "prettier": "prettier --write \"{,**/}*.{ts,tsx,js,json,md}\"",
+    "prettier": "prettier --write \"{,**/}*.{mts,ts,tsx,js,json,md}\"",
     "prepare": "husky install"
   },
   "author": "Jan Mühlemann <jan.muehlemann@gmail.com> (https://github.com/jamuhl)",
@@ -186,7 +184,7 @@
   },
   "lint-staged": {
     "linters": {
-      "*.{ts,tsx,js,json,md}": [
+      "*.{mts,ts,tsx,js,json,md}": [
         "prettier --write",
         "git add"
       ]

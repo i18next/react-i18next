@@ -47,15 +47,6 @@ describe('<Trans />', () => {
         i18nKey: ['alternate:baz', 'custom:bar'],
       });
     });
-
-    it('should throw error if key is not present inside namespaces', () => {
-      // <Trans ns={['alternate', 'custom']} i18nKey={['alternate:baz', 'custom:bar']} />
-      expectTypeOf(Trans).toBeCallableWith({
-        ns: ['alternate', 'custom'],
-        // @ts-expect-error
-        i18nKey: ['alternate:baz', 'custom:bar2'],
-      });
-    });
   });
 
   describe('usage with `t` function', () => {
@@ -99,22 +90,6 @@ describe('<Trans />', () => {
     it('should work with text and interpolation', () => {
       expectTypeOf(Trans).toBeCallableWith({
         children: <>foo {{ var: '' }}</>,
-      });
-    });
-
-    it('should work with Interpolation in HTMLElement', () => {
-      expectTypeOf(Trans).toBeCallableWith({
-        children: (
-          <>
-            foo <strong>{{ var: '' }}</strong>
-          </>
-        ),
-      });
-    });
-
-    it('should work with text and interpolation as children of an HTMLElement', () => {
-      expectTypeOf(Trans).toBeCallableWith({
-        children: <span>foo {{ var: '' }}</span>,
       });
     });
   });

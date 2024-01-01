@@ -1,117 +1,120 @@
+import { describe, it, expectTypeOf } from 'vitest';
 import * as React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-function defaultNamespaceUsage() {
-  return <Trans i18nKey="foo">foo</Trans>;
-}
+describe('<Trans />', () => {
+  describe('default namespace', () => {
+    it('standard usage', () => {
+      // <Trans i18nKey="foo">foo</Trans>
+      expectTypeOf(Trans).toBeCallableWith({
+        i18nKey: 'foo',
+      });
+    });
 
-function namedDefaultNamespaceUsage() {
-  return (
-    <Trans ns="custom" i18nKey="foo">
-      foo
-    </Trans>
-  );
-}
+    it('should trow if key do not exist', () => {
+      expectTypeOf<React.ComponentProps<typeof Trans>>()
+        .toHaveProperty('i18nKey')
+        .extract<'Nope'>()
+        // @ts-expect-error
+        .toMatchTypeOf<'Nope'>();
+    });
+  });
 
-function alternateNamespaceUsage() {
-  return (
-    <Trans ns="alternate" i18nKey="baz">
-      foo
-    </Trans>
-  );
-}
+  describe('named namespace', () => {
+    it('standard usage', () => {
+      // <Trans ns="custom" i18nKey="foo">foo</Trans>
+      expectTypeOf(Trans).toBeCallableWith({
+        ns: 'custom',
+        i18nKey: 'foo',
+      });
+    });
 
-function arrayNamespace() {
-  return (
-    <Trans ns={['alternate', 'custom']} i18nKey={['alternate:baz', 'custom:bar']}>
-      foo
-    </Trans>
-  );
-}
+    it('should trow if namespace do not exist', () => {
+      expectTypeOf<React.ComponentProps<typeof Trans>>()
+        .toHaveProperty('ns')
+        .extract<'Nope'>()
+        // @ts-expect-error
+        .toMatchTypeOf<'Nope'>();
+    });
+  });
 
-function withTfunction() {
-  const { t } = useTranslation('alternate');
+  describe('array namespace', () => {
+    it('should work with array namespace', () => {
+      // <Trans ns={['alternate', 'custom']} i18nKey={['alternate:baz', 'custom:bar']} />
+      expectTypeOf(Trans).toBeCallableWith({
+        ns: ['alternate', 'custom'],
+        i18nKey: ['alternate:baz', 'custom:bar'],
+      });
+    });
 
-  return (
-    <Trans t={t} i18nKey="foobar.barfoo">
-      foo
-    </Trans>
-  );
-}
+    it('should throw error if key is not present inside namespaces', () => {
+      // <Trans ns={['alternate', 'custom']} i18nKey={['alternate:baz', 'custom:bar']} />
+      expectTypeOf(Trans).toBeCallableWith({
+        ns: ['alternate', 'custom'],
+        // @ts-expect-error
+        i18nKey: ['alternate:baz', 'custom:bar2'],
+      });
+    });
+  });
 
-function withTfunctionAndKeyPrefix() {
-  const { t } = useTranslation('alternate', { keyPrefix: 'foobar.deep' });
+  describe('usage with `t` function', () => {
+    it('should work when providing `t` function', () => {
+      const { t } = useTranslation('alternate');
 
-  return (
-    <Trans t={t} i18nKey="deeper.deeeeeper">
-      foo
-    </Trans>
-  );
-}
+      // <Trans t={t} i18nKey="foobar.barfoo">foo</Trans>
+      expectTypeOf(Trans).toBeCallableWith({
+        t,
+        i18nKey: 'foobar.barfoo',
+      });
+    });
 
-function expectErrorWhenNamespaceDoesNotExist() {
-  return (
-    // @ts-expect-error
-    <Trans ns="fake" i18nKey="foo">
-      foo
-    </Trans>
-  );
-}
+    it('should work when providing `t` function with a prefix', () => {
+      const { t } = useTranslation('alternate', { keyPrefix: 'foobar.deep' });
 
-function expectErrorWhenKeyNotInNamespace() {
-  return (
-    // @ts-expect-error
-    <Trans ns="custom" i18nKey="fake">
-      foo
-    </Trans>
-  );
-}
+      // <Trans t={t} i18nKey="deeper.deeeeeper">foo</Trans>
+      expectTypeOf<
+        typeof Trans<'deeper.deeeeeper', 'alternate', {}, 'foobar.deep'>
+      >().toBeCallableWith({
+        t,
+        i18nKey: 'deeper.deeeeeper',
+      });
+    });
 
-// function expectErrorWhenUsingArrayNamespaceAndUnscopedKey() {
-//   return (
-//     // @ts-expect-error
-//     <Trans ns={['custom']} i18nKey={['foo']}>
-//       foo
-//     </Trans>
-//   );
-// }
+    it('should throw error with `t` function with key prefix and wrong `i18nKey`', () => {
+      const { t } = useTranslation('alternate', { keyPrefix: 'foobar.deep' });
 
-function expectErrorWhenUsingArrayNamespaceAndWrongKey() {
-  return (
-    // @ts-expect-error
-    <Trans ns={['custom']} i18nKey={['custom:fake']}>
-      foo
-    </Trans>
-  );
-}
+      // <Trans t={t} i18nKey="xxx">foo</Trans>
+      expectTypeOf<
+        typeof Trans<'deeper.deeeeeper', 'alternate', {}, 'foobar.deep'>
+      >().toBeCallableWith({
+        t,
+        // @ts-expect-error
+        i18nKey: 'xxx',
+      });
+    });
+  });
 
-function withTfunctionAndKeyPrefixAndWrongKey() {
-  const { t } = useTranslation('alternate', { keyPrefix: 'foobar.deep' });
+  describe('interpolation', () => {
+    it('should work with text and interpolation', () => {
+      expectTypeOf(Trans).toBeCallableWith({
+        children: <>foo {{ var: '' }}</>,
+      });
+    });
 
-  return (
-    // @ts-expect-error
-    <Trans t={t} i18nKey="xxx">
-      foo
-    </Trans>
-  );
-}
+    it('should work with Interpolation in HTMLElement', () => {
+      expectTypeOf(Trans).toBeCallableWith({
+        children: (
+          <>
+            foo <strong>{{ var: '' }}</strong>
+          </>
+        ),
+      });
+    });
 
-function withTextAndInterpolation() {
-  return <Trans>foo {{ var: '' }}</Trans>;
-}
-
-function withInterpolationInHTMLElement() {
-  return (
-    <Trans>
-      foo <strong>{{ var: '' }}</strong>
-    </Trans>
-  );
-}
-
-function withTextAndInterpolationChildrenInHTMLElement() {
-  return (
-    <Trans>
-      <span>foo {{ var: '' }}</span>
-    </Trans>
-  );
-}
+    it('should work with text and interpolation as children of an  HTMLElement', () => {
+      expectTypeOf(Trans).toBeCallableWith({
+        children: <span>foo {{ var: '' }}</span>,
+      });
+    });
+  });
+});

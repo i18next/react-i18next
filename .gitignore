@@ -27,3 +27,6 @@ out
 
 # ignore packaged releases
 *.tgz
+
+# vitest temp / cache files
+tsconfig.vitest-temp.json

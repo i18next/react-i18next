@@ -8,8 +8,6 @@ bin/
 .eslintrc
 .gitignore
 bower.json
-gulpfile.js
-karma.conf.js
 .github
 .circleci
 .vscode
@@ -19,4 +17,5 @@ rollup.config.mjs
 .codeclimate.yml
 .coveralls.yml
 tsconfig*.json
-.prettierrc
+.prettierrc.json
+vitest.workspace.mts
