@@ -10,14 +10,14 @@
     "test": "jest"
   },
   "dependencies": {
-    "@os-team/i18next-react-native-language-detector": "1.0.28",
-    "i18next": "23.4.6",
-    "i18next-chained-backend": "4.4.0",
-    "i18next-localstorage-backend": "4.1.1",
-    "i18next-locize-backend": "6.2.3",
+    "@os-team/i18next-react-native-language-detector": "1.0.30",
+    "i18next": "23.7.13",
+    "i18next-chained-backend": "4.6.2",
+    "i18next-localstorage-backend": "4.2.0",
+    "i18next-locize-backend": "6.4.1",
     "intl-pluralrules": "2.0.1",
     "react": "18.2.0",
-    "react-i18next": "13.2.2",
+    "react-i18next": "14.0.0",
     "react-native": "0.72.4"
   },
   "devDependencies": {
