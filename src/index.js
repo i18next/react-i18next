@@ -1,5 +1,5 @@
 export { Trans } from './Trans.js';
-export { Trans as TransWithoutContext } from './TransWithoutContext.jsx';
+export { Trans as TransWithoutContext } from './TransWithoutContext.js';
 export { useTranslation } from './useTranslation.js';
 export { withTranslation } from './withTranslation.js';
 export { Translation } from './Translation.js';
