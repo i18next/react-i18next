@@ -1,4 +1,4 @@
-import React, { isValidElement, cloneElement, createElement, Children } from 'react';
+import { Fragment, isValidElement, cloneElement, createElement, Children } from 'react';
 import HTML from 'html-parse-stringify';
 import { warn, warnOnce } from './utils.js';
 import { getDefaults } from './defaults.js';
@@ -156,7 +156,16 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
         ...Children.map([child], (c) => {
           const props = { ...c.props };
           delete props.i18nIsDynamicList;
-          return <c.type {...props} key={i} ref={c.ref} {...(isVoid ? {} : { children: inner })} />;
+          // <c.type {...props} key={i} ref={c.ref} {...(isVoid ? {} : { children: inner })} />;
+          return createElement(
+            c.type,
+            {
+              ...props,
+              key: i,
+              ref: c.ref,
+            },
+            isVoid ? null : inner,
+          );
         }),
       );
     }
@@ -365,11 +374,14 @@ export function Trans({
         (translation.indexOf(`${c}/>`) < 0 && translation.indexOf(`${c} />`) < 0)
       )
         return;
+
       // eslint-disable-next-line react/no-unstable-nested-components, no-inner-declarations
       function Componentized() {
-        return <>{comp}</>;
+        // <>{comp}</>
+        return createElement(Fragment, null, comp);
       }
-      components[c] = <Componentized />;
+      // <Componentized />
+      components[c] = createElement(Componentized);
     });
   }
 

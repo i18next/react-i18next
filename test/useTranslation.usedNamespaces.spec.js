@@ -1,9 +1,14 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { describe, it, vitest, expect, afterEach } from 'vitest';
+import { renderHook, cleanup } from '@testing-library/react-hooks';
 import { useTranslation } from '../src/useTranslation';
 
-jest.unmock('../src/useTranslation');
+vitest.unmock('../src/useTranslation');
 
 describe('useTranslation', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   it('should render correct content if ready (having all ns)', () => {
     const i18n = {
       language: 'en',

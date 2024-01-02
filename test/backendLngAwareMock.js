@@ -1,4 +1,4 @@
-class Backend {
+export class BackendLngAwareMock {
   constructor(services, options = {}) {
     this.init(services, options);
     this.type = 'backend';
@@ -28,13 +28,13 @@ class Backend {
         });
       }
     }
+
     q.forEach((item) => {
       this.queue.splice(this.queue.indexOf(item), 1);
+
       item.callback(null, {
         key1: `${item.language}/${item.namespace} for key1`,
       });
     });
   }
 }
-
-export default Backend;

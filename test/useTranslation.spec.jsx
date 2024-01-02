@@ -1,14 +1,19 @@
+import { describe, it, vitest, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import React from 'react';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, cleanup } from '@testing-library/react-hooks';
 import i18nInstance from './i18n';
 import { useTranslation } from '../src/useTranslation';
 import { setI18n } from '../src/context';
 import { I18nextProvider } from '../src/I18nextProvider';
 
-jest.unmock('../src/useTranslation');
-jest.unmock('../src/I18nextProvider');
+vitest.unmock('../src/useTranslation');
+vitest.unmock('../src/I18nextProvider');
 
 describe('useTranslation', () => {
+  afterEach(() => {
+    cleanup();
+  })
+
   describe('object', () => {
     it('should render correct content', () => {
       const { result } = renderHook(() => useTranslation('translation', { i18n: i18nInstance }));
@@ -38,7 +43,7 @@ describe('useTranslation', () => {
 
     describe('handling gracefully', () => {
       it('should render content fallback', () => {
-        console.warn = jest.fn();
+        console.warn = vitest.fn();
 
         const { result } = renderHook(() => useTranslation('translation', { i18n: undefined }));
         const { t, i18n } = result.current;

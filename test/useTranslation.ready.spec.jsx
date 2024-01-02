@@ -1,11 +1,17 @@
+import { describe, it, vitest, expect, beforeEach, afterEach } from 'vitest';
 import React from 'react';
-import { renderHook } from '@testing-library/react-hooks';
-import { render } from '@testing-library/react';
+import { renderHook, cleanup as cleanupHook } from '@testing-library/react-hooks';
+import { render, cleanup } from '@testing-library/react';
 import { useTranslation } from '../src/useTranslation';
 
-jest.unmock('../src/useTranslation');
+vitest.unmock('../src/useTranslation');
 
 describe('useTranslation', () => {
+afterEach(() => {
+  cleanup();
+  cleanupHook();
+})
+
   let instance;
   beforeEach(() => {
     instance = {
@@ -36,7 +42,7 @@ describe('useTranslation', () => {
 
   it('should throw a suspense if not ready (having not all ns)', async () => {
     expect(() => {
-      console.error = jest.fn(); // silent down the error boundary error from react-dom
+      console.error = vitest.fn(); // silent down the error boundary error from react-dom
 
       render(<TestComponentNotReady i18n={instance} />);
     }).toThrow(

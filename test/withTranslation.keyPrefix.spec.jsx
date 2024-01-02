@@ -1,11 +1,16 @@
+import { describe, it, vitest, expect, afterEach } from 'vitest';
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 import i18n from './i18n';
 import { withTranslation } from '../src/withTranslation';
 
-jest.unmock('../src/withTranslation');
+vitest.unmock('../src/withTranslation');
 
 describe('withTranslation', () => {
+  afterEach(() => {
+    cleanup();
+  })
+
   class TestComponentKeyPrefix extends React.Component {
     render() {
       const { t, i18n: instance } = this.props;

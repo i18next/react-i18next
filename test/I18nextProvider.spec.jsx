@@ -1,10 +1,11 @@
+import { describe, it, expect, vitest, afterEach } from 'vitest';
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, cleanup } from '@testing-library/react';
 import { I18nextProvider } from '../src/I18nextProvider';
 import { useTranslation } from '../src/useTranslation';
 
-jest.unmock('../src/useTranslation');
-jest.unmock('../src/I18nextProvider');
+vitest.unmock('../src/useTranslation');
+vitest.unmock('../src/I18nextProvider');
 
 const instance = {
   language: 'en',
@@ -26,6 +27,10 @@ const instance = {
 };
 
 describe('I18nextProvider', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   it('should render correct content', () => {
     function TestComponent() {
       const { t, i18n } = useTranslation('translation');

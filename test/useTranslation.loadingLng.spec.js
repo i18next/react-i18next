@@ -1,22 +1,26 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { describe, it, vitest, beforeEach, afterEach, expect } from 'vitest';
+import { renderHook, cleanup } from '@testing-library/react-hooks';
 import i18n from './i18n';
-import BackendMock from './lngAwareBackendMock';
+import { BackendLngAwareMock } from './backendLngAwareMock';
 import { useTranslation } from '../src/useTranslation';
 
-jest.unmock('../src/useTranslation');
+vitest.unmock('../src/useTranslation');
 
 describe('useTranslation loading ns with lng via props', () => {
   let newI18n;
+  /** @type {BackendLngAwareMock} */
   let backend;
 
   beforeEach(() => {
     newI18n = i18n.createInstance();
-    backend = new BackendMock();
+    backend = new BackendLngAwareMock();
     newI18n.use(backend).init({
       lng: 'en',
       fallbackLng: 'en',
     });
   });
+
+  afterEach(cleanup);
 
   it('should wait for correct translation with suspense', async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
@@ -57,31 +61,36 @@ describe('useTranslation loading ns with lng via props', () => {
     expect(t('key1', { defaultValue: 'my default value' })).toBe('fr/common for key1');
   });
 
-  it('should correctly return and render correct tranlations in multiple useTranslation usages', async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useTranslation('newns', { i18n: newI18n, useSuspense: true, lng: 'pt' }),
-    );
-    backend.flush();
-    await waitForNextUpdate();
-    const { t } = result.current;
-    expect(t('key1')).toBe('pt/newns for key1');
+  it('should correctly return and render correct translations in multiple useTranslation usages', async () => {
+    {
+      const { result, waitForNextUpdate } = renderHook(() =>
+        useTranslation('newns', { i18n: newI18n, useSuspense: true, lng: 'pt' }),
+      );
 
-    // eslint-disable-next-line testing-library/render-result-naming-convention
-    const retDe = renderHook(() =>
-      useTranslation('newns', { i18n: newI18n, useSuspense: true, lng: 'de' }),
-    );
-    backend.flush({ language: 'de' });
-    await retDe.waitForNextUpdate();
-    const { t: tDE } = retDe.result.current;
-    expect(tDE('key1')).toBe('de/newns for key1');
+      backend.flush();
+      await waitForNextUpdate();
+      const { t } = result.current;
+      expect(t('key1')).toBe('pt/newns for key1');
+    }
 
-    // eslint-disable-next-line testing-library/render-result-naming-convention
-    const retPT = renderHook(() =>
-      useTranslation('newns', { i18n: newI18n, useSuspense: true, lng: 'pt' }),
-    );
-    // backend.flush({ language: 'pt' }); // already loaded
-    // await retPT.waitForNextUpdate(); // already loaded
-    const { t: tPT } = retPT.result.current;
-    expect(tPT('key1')).toBe('pt/newns for key1');
+    {
+      const { result, waitForNextUpdate } = renderHook(() =>
+        useTranslation('newns', { i18n: newI18n, useSuspense: true, lng: 'de' }),
+      );
+      backend.flush({ language: 'de' });
+      await waitForNextUpdate();
+      const { t } = result.current;
+      expect(t('key1')).toBe('de/newns for key1');
+    }
+
+    {
+      const { result } = renderHook(() =>
+        useTranslation('newns', { i18n: newI18n, useSuspense: true, lng: 'pt' }),
+      );
+      // backend.flush({ language: 'pt' }); // already loaded
+      // await retPT.waitForNextUpdate(); // already loaded
+      const { t } = result.current;
+      expect(t('key1')).toBe('pt/newns for key1');
+    }
   });
 });

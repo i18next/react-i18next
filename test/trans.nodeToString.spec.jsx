@@ -1,7 +1,8 @@
+import { describe, it, expect } from 'vitest';
 import React from 'react';
 import { nodesToString } from '../src/Trans';
 
-describe('trans nodeToString', () => {
+describe('trans nodeToString', () => { 
   describe('treat like other components (legacy)', () => {
     it('should handle voidElements eg. br', () => {
       const fragment = (

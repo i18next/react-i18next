@@ -1,9 +1,19 @@
+import { describe, it, expect, afterEach } from 'vitest';
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 import './i18n';
 import { Trans } from '../src';
 
 describe('Trans should render nested components', () => {
+  // beforeAll(() => {
+  //   vitest.spyOn(console, 'error').mockImplementation(() => { });
+  // })
+
+  afterEach(() => {
+    cleanup();
+    // vitest.clearAllMocks();
+  });
+
   it('should render dynamic ul as components property', () => {
     const list = ['li1', 'li2'];
 
