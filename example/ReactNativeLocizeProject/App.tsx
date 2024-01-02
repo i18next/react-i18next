@@ -1,9 +1,10 @@
 import {Suspense, Component} from 'react';
-import {Text, Button, View, TouchableOpacity} from 'react-native';
+import {Text, Button, View} from 'react-native';
 import {useTranslation, withTranslation, Trans} from 'react-i18next';
+import type {TFunction} from 'i18next';
 
 // use hoc for class based components
-class LegacyWelcomeClass extends Component {
+class LegacyWelcomeClass extends Component<{t: TFunction}> {
   render() {
     const {t} = this.props;
     return <Text>{t('title')}</Text>;
@@ -25,7 +26,7 @@ function MyComponent() {
 function AppInner() {
   const {t, i18n} = useTranslation();
 
-  const changeLanguage = lng => {
+  const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
   };
 
