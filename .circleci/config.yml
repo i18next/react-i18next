@@ -36,9 +36,9 @@ jobs:
       - run:
           name: test
           command: npm test
-      - run:
-          name: coverage
-          command: npm run test:coverage && cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
+      # - run:
+      #     name: coverage
+      #     command: npm run test:coverage && cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
 
 workflows:
   lint_and_test:
