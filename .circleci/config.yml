@@ -1,6 +1,25 @@
-version: 2
+version: 2.1
+
 jobs:
-  build:
+  lint:
+    docker:
+      - image: circleci/node
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install-npm-wee
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Lint
+          command: npm run lint
+
+  test:
     docker:
       - image: circleci/node:latest
     steps:
@@ -20,3 +39,9 @@ jobs:
       - run:
           name: coverage
           command: npm run test:coverage && cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
+
+workflows:
+  lint_and_test:
+    jobs:
+      - lint
+      - test
