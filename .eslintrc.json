@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "airbnb",
-    "prettier"
-  ],
+  "extends": ["airbnb", "prettier"],
   "parser": "@babel/eslint-parser",
   "parserOptions": {
     "ecmaVersion": 8,
@@ -14,8 +11,7 @@
   },
   "env": {
     "browser": true,
-    "node": true,
-    "jquery": true
+    "node": true
   },
   "rules": {
     "no-debugger": 0,
@@ -27,9 +23,11 @@
       }
     ],
     "prefer-arrow-callback": [
-      "error", {
-      "allowNamedFunctions": true
-    }],
+      "error",
+      {
+        "allowNamedFunctions": true
+      }
+    ],
     "prefer-const": [
       "error",
       {
@@ -65,9 +63,12 @@
     "consistent-return": 0,
     "react/display-name": 1,
     "react/no-array-index-key": 0,
-    "react/jsx-no-useless-fragment": ["error", {
-      "allowExpressions": true
-    }],
+    "react/jsx-no-useless-fragment": [
+      "error",
+      {
+        "allowExpressions": true
+      }
+    ],
     "react/react-in-jsx-scope": 0,
     "react/prefer-stateless-function": 0,
     "react/forbid-prop-types": 0,
@@ -80,9 +81,12 @@
         "extensions": [".js", ".jsx"]
       }
     ],
-    "react/no-unknown-property": ["error", {
-      "ignore": ["i18nIsDynamicList"]
-    }],
+    "react/no-unknown-property": [
+      "error",
+      {
+        "ignore": ["i18nIsDynamicList"]
+      }
+    ],
     "radix": 0,
     "no-shadow": [
       2,

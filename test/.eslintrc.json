@@ -1,0 +1,9 @@
+{
+  "extends": ["plugin:testing-library/react", "plugin:jest-dom/recommended"],
+  "globals": {
+    "globalThis": false
+  },
+  "rules": {
+    "testing-library/no-node-access": ["error", { "allowContainerFirstChild": true }]
+  }
+}

@@ -1,9 +1,14 @@
+import { describe, it, expect, afterEach } from 'vitest';
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 import './i18n';
 import { Trans } from '../src/Trans';
 
 describe('trans using no children but components (object) - base case using array not object', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   function TestComponent() {
     return (
       <Trans

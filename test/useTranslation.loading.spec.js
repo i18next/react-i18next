@@ -1,9 +1,10 @@
+import { describe, it, vitest, beforeEach, expect } from 'vitest';
 import { renderHook } from '@testing-library/react-hooks';
 import i18n from './i18n';
-import BackendMock from './backendMock';
+import { BackendMock } from './backendMock';
 import { useTranslation } from '../src/useTranslation';
 
-jest.unmock('../src/useTranslation');
+vitest.unmock('../src/useTranslation');
 
 describe('useTranslation loading ns', () => {
   let newI18n;

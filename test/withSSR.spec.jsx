@@ -1,39 +1,45 @@
+import { describe, it, vitest, expect, beforeAll, afterAll, afterEach } from 'vitest';
+import { render, cleanup } from '@testing-library/react';
 import React from 'react';
-import { render } from '@testing-library/react';
 import i18n from './i18n';
 import { setI18n } from '../src/context';
 import { withSSR } from '../src/withSSR';
 import { useTranslation } from '../src/useTranslation';
 
-jest.unmock('../src/withSSR');
+vitest.unmock('../src/withSSR');
 
-const mockI18n = {
-  language: 'en',
-  languages: ['en'],
-  options: {
-    ns: [],
-    defaultNS: 'defaultNS',
-    nsMode: 'fallback',
-  },
-  services: {
-    resourceStore: {
-      data: {},
-    },
-    backendConnector: {},
-  },
-  isInitialized: true,
-  changeLanguage: (lng) => {
-    mockI18n.language = lng;
-  },
-  getFixedT: () => (message) => message,
-  hasResourceBundle: (lng, ns) => ns === 'alreadyLoadedNS',
-  getResourceBundle: (lng, ns) => ({ lng, ns }),
-  loadNamespaces: () => {},
-  on: () => {},
-  off: () => {},
-};
 
 describe('withSSR', () => {
+  afterEach(() => {
+    cleanup();
+  })
+
+  const mockI18n = {
+    language: 'en',
+    languages: ['en'],
+    options: {
+      ns: [],
+      defaultNS: 'defaultNS',
+      nsMode: 'fallback',
+    },
+    services: {
+      resourceStore: {
+        data: {},
+      },
+      backendConnector: {},
+    },
+    isInitialized: true,
+    changeLanguage: (lng) => {
+      mockI18n.language = lng;
+    },
+    getFixedT: () => (message) => message,
+    hasResourceBundle: (lng, ns) => ns === 'alreadyLoadedNS',
+    getResourceBundle: (lng, ns) => ({ lng, ns }),
+    loadNamespaces: () => { },
+    on: () => { },
+    off: () => { },
+  };
+
   function TestComponent() {
     useTranslation('ns1');
     return <div>SSR</div>;

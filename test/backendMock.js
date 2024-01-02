@@ -1,4 +1,4 @@
-class Backend {
+export class BackendMock {
   constructor(services, options = {}) {
     this.init(services, options);
     this.type = 'backend';
@@ -23,5 +23,3 @@ class Backend {
     });
   }
 }
-
-export default Backend;

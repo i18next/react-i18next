@@ -1,5 +1,17 @@
+import { describe, it, expect } from 'vitest';
 import pluginTester from 'babel-plugin-tester';
 import plugin from 'babel-plugin-macros';
+
+/**
+ * babel-plugin-tester in icu.macro.spec.js need test function exposed in globals scope.
+ *
+ * Instead of exposing globals using relative --globals flag I exposed utilities only for this file
+ * @see https://github.com/babel-utils/babel-plugin-tester#vitest
+ */
+
+globalThis.describe = describe;
+globalThis.it = it;
+globalThis.expect = expect;
 
 pluginTester({
   plugin,

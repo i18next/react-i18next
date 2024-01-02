@@ -1,11 +1,16 @@
+import { describe, it, vitest, expect, afterEach } from 'vitest';
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 import './i18n';
 import { Translation } from '../src/Translation';
 
-jest.unmock('../src/Translation');
+vitest.unmock('../src/Translation');
 
 describe('Translation', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   function TestComponent() {
     return <Translation>{(t) => <div>{t('key1')}</div>}</Translation>;
   }

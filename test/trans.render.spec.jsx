@@ -1,5 +1,6 @@
+import { describe, it, expect, beforeAll, afterAll, afterEach  } from 'vitest';
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 import i18n from './i18n';
 import { withTranslation } from '../src/withTranslation';
 import { Trans } from '../src/Trans';
@@ -9,6 +10,10 @@ function Link({ to, children }) {
 }
 
 describe('trans simple', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   function TestComponent({ parent }) {
     return (
       <Trans i18nKey="transTest1" parent={parent}>

@@ -1,9 +1,10 @@
+import { describe, it, vitest, beforeAll, afterAll, expect } from 'vitest';
 import { renderHook } from '@testing-library/react-hooks';
 import i18n from './i18n';
 import { setI18n } from '../src/context';
 import { useSSR } from '../src/useSSR';
 
-jest.unmock('../src/useSSR');
+vitest.unmock('../src/useSSR');
 
 describe('useSSR', () => {
   const mockI18n = {

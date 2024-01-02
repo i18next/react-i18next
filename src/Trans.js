@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { nodesToString, Trans as TransWithoutContext } from './TransWithoutContext.js';
+import { nodesToString, Trans as TransWithoutContext } from './TransWithoutContext.jsx';
 import { getI18n, I18nContext } from './context.js';
 
 export { nodesToString };

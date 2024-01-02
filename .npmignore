@@ -18,4 +18,5 @@ rollup.config.mjs
 .coveralls.yml
 tsconfig*.json
 .prettierrc.json
+vitest.config.mts
 vitest.workspace.mts
