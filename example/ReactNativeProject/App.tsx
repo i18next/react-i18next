@@ -1,52 +1,60 @@
-import React from 'react';
-import {Text, View, TouchableOpacity} from 'react-native';
-import 'intl-pluralrules';
-import i18next, {LanguageDetectorAsyncModule} from 'i18next';
-import {initReactI18next, useTranslation} from 'react-i18next';
+import {Suspense, Component} from 'react';
+import {Text, Button, View} from 'react-native';
+import {useTranslation, withTranslation, Trans} from 'react-i18next';
+import type {TFunction} from 'i18next';
 
-const languageDetector: LanguageDetectorAsyncModule = {
-  type: 'languageDetector',
-  async: true,
-  detect: cb => cb('en'),
-  init: () => {},
-  cacheUserLanguage: () => {},
-};
+// use hoc for class based components
+class LegacyWelcomeClass extends Component<{t: TFunction}> {
+  render() {
+    const {t} = this.props;
+    return <Text>{t('title')}</Text>;
+  }
+}
+const Welcome = withTranslation()(LegacyWelcomeClass);
 
-i18next
-  .use(languageDetector)
-  .use(initReactI18next)
-  .init({
-    fallbackLng: 'en',
-    debug: true,
-    resources: {
-      en: {
-        translation: {
-          hello: 'Hello world',
-          change: 'Change language',
-        },
-      },
-      sv: {
-        translation: {
-          hello: 'Hej världen',
-          change: 'Byt språk',
-        },
-      },
-    },
-  });
+// Component using the Trans component
+function MyComponent() {
+  return (
+    <Text>
+      <Trans i18nKey="description.part1">
+        To get started, edit <Text>src/App.js</Text> and save to reload.
+      </Trans>
+    </Text>
+  );
+}
 
-export default function App() {
+function AppInner() {
   const {t, i18n} = useTranslation();
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+  };
 
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text style={{fontSize: 20, marginBottom: 20}}>{t('hello')}</Text>
+      <Welcome />
 
-      <TouchableOpacity
-        onPress={() =>
-          i18n.changeLanguage(i18n.language === 'sv' ? 'en' : 'sv')
-        }>
-        <Text>{t('change')}</Text>
-      </TouchableOpacity>
+      <Button
+        onPress={() => changeLanguage('en')}
+        title="en"
+        disabled={i18n.resolvedLanguage === 'en'}
+      />
+      <Button
+        onPress={() => changeLanguage('de')}
+        title="de"
+        disabled={i18n.resolvedLanguage === 'de'}
+      />
+
+      <MyComponent />
+      <Text>{t('description.part2')}</Text>
     </View>
+  );
+}
+
+export default function App() {
+  return (
+    <Suspense fallback={<Text>loading...</Text>}>
+      <AppInner />
+    </Suspense>
   );
 }
