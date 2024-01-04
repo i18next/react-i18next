@@ -147,7 +147,7 @@
     "pretest": "npm run lint",
     "test": "vitest run --typecheck --workspace vitest.workspace.mts",
     "test:runtime": "npm run test -- --project runtime",
-    "test:coverage": "npm run test:runtime -- --coverage --pool=forks --run",
+    "test:coverage": "npm run test:runtime -- --coverage --run",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
     "prettier": "prettier --write \"{,**/}*.{mts,ts,tsx,js,json,md}\"",
