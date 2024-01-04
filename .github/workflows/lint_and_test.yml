@@ -32,3 +32,5 @@ jobs:
         run: npm test
       - name: Coverage
         run: npm run test:coverage && cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
