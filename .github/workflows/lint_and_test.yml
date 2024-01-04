@@ -26,8 +26,9 @@ jobs:
           node-version: ${{ matrix.node }}
       - name: Install dependencies
         run: npm install
-      - name: Lint
-        run: npm run lint
+      # lint is included in pretest
+      # - name: Lint
+      #   run: npm run lint
       - name: Test
         run: npm test
       - name: Coverage
