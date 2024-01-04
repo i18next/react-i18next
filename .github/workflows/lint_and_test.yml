@@ -1,4 +1,4 @@
-name: node
+name: Lint & test
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   test:
-    name: Test on node ${{ matrix.node }} and ${{ matrix.os }}
+    name: Lint & test on node ${{ matrix.node }} and ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
