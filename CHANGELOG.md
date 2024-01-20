@@ -1,3 +1,7 @@
+### 14.0.1
+
+- types: fix typo in `CustomInstanceExtensions` [1713](https://github.com/i18next/react-i18next/pull/1713)
+
 ### 14.0.0
 
 - types: reportNamespaces is now optional, should fix [1693](https://github.com/i18next/react-i18next/issues/1693)
