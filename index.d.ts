@@ -37,7 +37,7 @@ declare module 'i18next' {
   // interface i18n {
   //   reportNamespaces?: ReportNamespaces;
   // }
-  interface CustomInstanceExtenstions {
+  interface CustomInstanceExtensions {
     reportNamespaces?: ReportNamespaces;
   }
 }
