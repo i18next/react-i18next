@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import { getI18n, getDefaults, ReportNamespaces, I18nContext } from './context.js';
 import { warnOnce, loadNamespaces, loadLanguages, hasLoadedNamespace } from './utils.js';
 
@@ -9,6 +9,19 @@ const usePrevious = (value, ignore) => {
   }, [value, ignore]);
   return ref.current;
 };
+
+function alwaysNewT(i18n, language, namespace, keyPrefix) {
+  return i18n.getFixedT(language, namespace, keyPrefix);
+}
+
+function useMemoizedT(i18n, language, namespace, keyPrefix) {
+  return useCallback(alwaysNewT(i18n, language, namespace, keyPrefix), [
+    i18n,
+    language,
+    namespace,
+    keyPrefix,
+  ]);
+}
 
 export function useTranslation(ns, props = {}) {
   // assert we have the needed i18nInstance
@@ -55,14 +68,20 @@ export function useTranslation(ns, props = {}) {
     (i18n.isInitialized || i18n.initializedStoreOnce) &&
     namespaces.every((n) => hasLoadedNamespace(n, i18n, i18nOptions));
 
-  // binding t function to namespace (acts also as rerender trigger)
-  function getT() {
-    return i18n.getFixedT(
-      props.lng || null,
-      i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
-      keyPrefix,
-    );
-  }
+  // binding t function to namespace (acts also as rerender trigger *when* args have changed)
+  const memoGetT = useMemoizedT(
+    i18n,
+    props.lng || null,
+    i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
+    keyPrefix,
+  );
+  // using useState with a function expects an initializer, not the function itself:
+  const getT = () => memoGetT;
+
+  console.log('useState(getT())');
+  console.log(getT);
+  console.log(getT());
+  // const [t, setT] = useState(()=>getT);
   const [t, setT] = useState(getT);
 
   let joinedNS = namespaces.join();
@@ -77,23 +96,48 @@ export function useTranslation(ns, props = {}) {
     // if not ready and not using suspense load the namespaces
     // in side effect and do not call resetT if unmounted
     if (!ready && !useSuspense) {
+      console.log('!ready !useSuspense');
       if (props.lng) {
+        console.log('!ready !useSuspense props.lng');
         loadLanguages(i18n, props.lng, namespaces, () => {
-          if (isMounted.current) setT(getT);
+          if (isMounted.current) {
+            console.log('1');
+            // setT(()=>getT);
+            setT(getT);
+          }
         });
       } else {
+        console.log('!ready !useSuspense !props.lng');
         loadNamespaces(i18n, namespaces, () => {
-          if (isMounted.current) setT(getT);
+          console.log('!ready !useSuspense !props.lng loadNamespacesCallback');
+          if (isMounted.current) {
+            console.log('2');
+            // despite that no memoization arguments changed, supply always new T to trigger rerender
+            setT(() =>
+              alwaysNewT(
+                i18n,
+                props.lng || null,
+                i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
+                keyPrefix,
+              ),
+            );
+          }
         });
       }
     }
 
     if (ready && previousJoinedNS && previousJoinedNS !== joinedNS && isMounted.current) {
+      console.log('3');
       setT(getT);
+      // setT(()=>getT);
     }
 
     function boundReset() {
-      if (isMounted.current) setT(getT);
+      if (isMounted.current) {
+        console.log('4');
+        setT(getT);
+        // setT(()=>getT);
+      }
     }
 
     // bind events to trigger change, like languageChanged
@@ -113,8 +157,11 @@ export function useTranslation(ns, props = {}) {
   // instance was replaced (for example in the provider).
   const isInitial = useRef(true);
   useEffect(() => {
+    console.log('8:09 before');
     if (isMounted.current && !isInitial.current) {
+      console.log('8:09 inside');
       setT(getT);
+      // setT(()=>getT);
     }
     isInitial.current = false;
   }, [i18n, keyPrefix]); // re-run when i18n instance or keyPrefix were replaced
@@ -125,10 +172,16 @@ export function useTranslation(ns, props = {}) {
   ret.ready = ready;
 
   // return hook stuff if ready
-  if (ready) return ret;
+  if (ready) {
+    console.log('returning 0', ret.t);
+    return ret;
+  }
 
   // not yet loaded namespaces -> load them -> and return if useSuspense option set false
-  if (!ready && !useSuspense) return ret;
+  if (!ready && !useSuspense) {
+    console.log('returning 1');
+    return ret;
+  }
 
   // not yet loaded namespaces -> load them -> and trigger suspense
   throw new Promise((resolve) => {
