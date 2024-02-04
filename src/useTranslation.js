@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import { getI18n, getDefaults, ReportNamespaces, I18nContext } from './context.js';
 import { warnOnce, loadNamespaces, loadLanguages, hasLoadedNamespace } from './utils.js';
 
@@ -9,6 +9,19 @@ const usePrevious = (value, ignore) => {
   }, [value, ignore]);
   return ref.current;
 };
+
+function alwaysNewT(i18n, language, namespace, keyPrefix) {
+  return i18n.getFixedT(language, namespace, keyPrefix);
+}
+
+function useMemoizedT(i18n, language, namespace, keyPrefix) {
+  return useCallback(alwaysNewT(i18n, language, namespace, keyPrefix), [
+    i18n,
+    language,
+    namespace,
+    keyPrefix,
+  ]);
+}
 
 export function useTranslation(ns, props = {}) {
   // assert we have the needed i18nInstance
@@ -55,14 +68,16 @@ export function useTranslation(ns, props = {}) {
     (i18n.isInitialized || i18n.initializedStoreOnce) &&
     namespaces.every((n) => hasLoadedNamespace(n, i18n, i18nOptions));
 
-  // binding t function to namespace (acts also as rerender trigger)
-  function getT() {
-    return i18n.getFixedT(
-      props.lng || null,
-      i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
-      keyPrefix,
-    );
-  }
+  // binding t function to namespace (acts also as rerender trigger *when* args have changed)
+  const memoGetT = useMemoizedT(
+    i18n,
+    props.lng || null,
+    i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
+    keyPrefix,
+  );
+  // using useState with a function expects an initializer, not the function itself:
+  const getT = () => memoGetT;
+
   const [t, setT] = useState(getT);
 
   let joinedNS = namespaces.join();
@@ -83,7 +98,17 @@ export function useTranslation(ns, props = {}) {
         });
       } else {
         loadNamespaces(i18n, namespaces, () => {
-          if (isMounted.current) setT(getT);
+          if (isMounted.current) {
+            // despite that no memoization arguments changed, supply always new T to trigger rerender
+            setT(() =>
+              alwaysNewT(
+                i18n,
+                props.lng || null,
+                i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
+                keyPrefix,
+              ),
+            );
+          }
         });
       }
     }
