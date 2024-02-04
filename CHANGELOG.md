@@ -1,3 +1,7 @@
+### 14.0.2
+
+- Fix/bug [1691](https://github.com/i18next/react-i18next/issues/1691) make returned t function identical upon second effect run in strict mode [1716](https://github.com/i18next/react-i18next/pull/1716)
+
 ### 14.0.1
 
 - types: fix typo in `CustomInstanceExtensions` [1713](https://github.com/i18next/react-i18next/pull/1713)
