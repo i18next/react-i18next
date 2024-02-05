@@ -612,12 +612,6 @@
 	  }, [value, ignore]);
 	  return ref.current;
 	};
-	function alwaysNewT(i18n, language, namespace, keyPrefix) {
-	  return i18n.getFixedT(language, namespace, keyPrefix);
-	}
-	function useMemoizedT(i18n, language, namespace, keyPrefix) {
-	  return react.useCallback(alwaysNewT(i18n, language, namespace, keyPrefix), [i18n, language, namespace, keyPrefix]);
-	}
 	function useTranslation(ns) {
 	  let props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 	  const {
@@ -656,8 +650,9 @@
 	  namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
 	  if (i18n.reportNamespaces.addUsedNamespaces) i18n.reportNamespaces.addUsedNamespaces(namespaces);
 	  const ready = (i18n.isInitialized || i18n.initializedStoreOnce) && namespaces.every(n => hasLoadedNamespace(n, i18n, i18nOptions));
-	  const memoGetT = useMemoizedT(i18n, props.lng || null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
-	  const getT = () => memoGetT;
+	  function getT() {
+	    return i18n.getFixedT(props.lng || null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
+	  }
 	  const [t, setT] = react.useState(getT);
 	  let joinedNS = namespaces.join();
 	  if (props.lng) joinedNS = `${props.lng}${joinedNS}`;
@@ -676,9 +671,7 @@
 	        });
 	      } else {
 	        loadNamespaces(i18n, namespaces, () => {
-	          if (isMounted.current) {
-	            setT(() => alwaysNewT(i18n, props.lng || null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix));
-	          }
+	          if (isMounted.current) setT(getT);
 	        });
 	      }
 	    }
