@@ -1,3 +1,7 @@
+### 14.0.3
+
+- revert changes done in v14.0.2 since it breaks normal language change render updates
+
 ### 14.0.2
 
 - Fix/bug [1691](https://github.com/i18next/react-i18next/issues/1691) make returned t function identical upon second effect run in strict mode [1716](https://github.com/i18next/react-i18next/pull/1716)
