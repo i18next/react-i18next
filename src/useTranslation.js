@@ -77,11 +77,17 @@ export function useTranslation(ns, props = {}) {
   );
   // using useState with a function expects an initializer, not the function itself:
   const getT = () => memoGetT;
+  const getNewT = () =>
+    alwaysNewT(
+      i18n,
+      props.lng || null,
+      i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
+      keyPrefix,
+    );
 
   console.log('useState(getT())');
   console.log(getT);
   console.log(getT());
-  // const [t, setT] = useState(()=>getT);
   const [t, setT] = useState(getT);
 
   let joinedNS = namespaces.join();
@@ -102,8 +108,7 @@ export function useTranslation(ns, props = {}) {
         loadLanguages(i18n, props.lng, namespaces, () => {
           if (isMounted.current) {
             console.log('1');
-            // setT(()=>getT);
-            setT(getT);
+            setT(getNewT);
           }
         });
       } else {
@@ -112,15 +117,7 @@ export function useTranslation(ns, props = {}) {
           console.log('!ready !useSuspense !props.lng loadNamespacesCallback');
           if (isMounted.current) {
             console.log('2');
-            // despite that no memoization arguments changed, supply always new T to trigger rerender
-            setT(() =>
-              alwaysNewT(
-                i18n,
-                props.lng || null,
-                i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
-                keyPrefix,
-              ),
-            );
+            setT(getNewT);
           }
         });
       }
@@ -128,15 +125,13 @@ export function useTranslation(ns, props = {}) {
 
     if (ready && previousJoinedNS && previousJoinedNS !== joinedNS && isMounted.current) {
       console.log('3');
-      setT(getT);
-      // setT(()=>getT);
+      setT(getNewT);
     }
 
     function boundReset() {
       if (isMounted.current) {
         console.log('4');
-        setT(getT);
-        // setT(()=>getT);
+        setT(getNewT);
       }
     }
 
@@ -160,8 +155,10 @@ export function useTranslation(ns, props = {}) {
     console.log('8:09 before');
     if (isMounted.current && !isInitial.current) {
       console.log('8:09 inside');
+      // not getNewT: depend on dependency list of the useCallback call within
+      // useMemoizedT to only provide a newly-bound t *iff* i18n instance was
+      // replaced; see bug 1691 https://github.com/i18next/react-i18next/issues/1691
       setT(getT);
-      // setT(()=>getT);
     }
     isInitial.current = false;
   }, [i18n, keyPrefix]); // re-run when i18n instance or keyPrefix were replaced
