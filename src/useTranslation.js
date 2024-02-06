@@ -85,9 +85,6 @@ export function useTranslation(ns, props = {}) {
       keyPrefix,
     );
 
-  console.log('useState(getT())');
-  console.log(getT);
-  console.log(getT());
   const [t, setT] = useState(getT);
 
   let joinedNS = namespaces.join();
@@ -102,37 +99,23 @@ export function useTranslation(ns, props = {}) {
     // if not ready and not using suspense load the namespaces
     // in side effect and do not call resetT if unmounted
     if (!ready && !useSuspense) {
-      console.log('!ready !useSuspense');
       if (props.lng) {
-        console.log('!ready !useSuspense props.lng');
         loadLanguages(i18n, props.lng, namespaces, () => {
-          if (isMounted.current) {
-            console.log('1');
-            setT(getNewT);
-          }
+          if (isMounted.current) setT(getNewT);
         });
       } else {
-        console.log('!ready !useSuspense !props.lng');
         loadNamespaces(i18n, namespaces, () => {
-          console.log('!ready !useSuspense !props.lng loadNamespacesCallback');
-          if (isMounted.current) {
-            console.log('2');
-            setT(getNewT);
-          }
+          if (isMounted.current) setT(getNewT);
         });
       }
     }
 
     if (ready && previousJoinedNS && previousJoinedNS !== joinedNS && isMounted.current) {
-      console.log('3');
       setT(getNewT);
     }
 
     function boundReset() {
-      if (isMounted.current) {
-        console.log('4');
-        setT(getNewT);
-      }
+      if (isMounted.current) setT(getNewT);
     }
 
     // bind events to trigger change, like languageChanged
@@ -152,9 +135,7 @@ export function useTranslation(ns, props = {}) {
   // instance was replaced (for example in the provider).
   const isInitial = useRef(true);
   useEffect(() => {
-    console.log('8:09 before');
     if (isMounted.current && !isInitial.current) {
-      console.log('8:09 inside');
       // not getNewT: depend on dependency list of the useCallback call within
       // useMemoizedT to only provide a newly-bound t *iff* i18n instance was
       // replaced; see bug 1691 https://github.com/i18next/react-i18next/issues/1691
@@ -169,16 +150,10 @@ export function useTranslation(ns, props = {}) {
   ret.ready = ready;
 
   // return hook stuff if ready
-  if (ready) {
-    console.log('returning 0', ret.t);
-    return ret;
-  }
+  if (ready) return ret;
 
   // not yet loaded namespaces -> load them -> and return if useSuspense option set false
-  if (!ready && !useSuspense) {
-    console.log('returning 1');
-    return ret;
-  }
+  if (!ready && !useSuspense) return ret;
 
   // not yet loaded namespaces -> load them -> and trigger suspense
   throw new Promise((resolve) => {

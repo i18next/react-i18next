@@ -612,6 +612,12 @@
 	  }, [value, ignore]);
 	  return ref.current;
 	};
+	function alwaysNewT(i18n, language, namespace, keyPrefix) {
+	  return i18n.getFixedT(language, namespace, keyPrefix);
+	}
+	function useMemoizedT(i18n, language, namespace, keyPrefix) {
+	  return react.useCallback(alwaysNewT(i18n, language, namespace, keyPrefix), [i18n, language, namespace, keyPrefix]);
+	}
 	function useTranslation(ns) {
 	  let props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 	  const {
@@ -650,9 +656,12 @@
 	  namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
 	  if (i18n.reportNamespaces.addUsedNamespaces) i18n.reportNamespaces.addUsedNamespaces(namespaces);
 	  const ready = (i18n.isInitialized || i18n.initializedStoreOnce) && namespaces.every(n => hasLoadedNamespace(n, i18n, i18nOptions));
-	  function getT() {
-	    return i18n.getFixedT(props.lng || null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
-	  }
+	  const memoGetT = useMemoizedT(i18n, props.lng || null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
+	  const getT = () => memoGetT;
+	  const getNewT = () => alwaysNewT(i18n, props.lng || null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
+	  console.log('useState(getT())');
+	  console.log(getT);
+	  console.log(getT());
 	  const [t, setT] = react.useState(getT);
 	  let joinedNS = namespaces.join();
 	  if (props.lng) joinedNS = `${props.lng}${joinedNS}`;
@@ -665,21 +674,35 @@
 	    } = i18nOptions;
 	    isMounted.current = true;
 	    if (!ready && !useSuspense) {
+	      console.log('!ready !useSuspense');
 	      if (props.lng) {
+	        console.log('!ready !useSuspense props.lng');
 	        loadLanguages(i18n, props.lng, namespaces, () => {
-	          if (isMounted.current) setT(getT);
+	          if (isMounted.current) {
+	            console.log('1');
+	            setT(getNewT);
+	          }
 	        });
 	      } else {
+	        console.log('!ready !useSuspense !props.lng');
 	        loadNamespaces(i18n, namespaces, () => {
-	          if (isMounted.current) setT(getT);
+	          console.log('!ready !useSuspense !props.lng loadNamespacesCallback');
+	          if (isMounted.current) {
+	            console.log('2');
+	            setT(getNewT);
+	          }
 	        });
 	      }
 	    }
 	    if (ready && previousJoinedNS && previousJoinedNS !== joinedNS && isMounted.current) {
-	      setT(getT);
+	      console.log('3');
+	      setT(getNewT);
 	    }
 	    function boundReset() {
-	      if (isMounted.current) setT(getT);
+	      if (isMounted.current) {
+	        console.log('4');
+	        setT(getNewT);
+	      }
 	    }
 	    if (bindI18n && i18n) i18n.on(bindI18n, boundReset);
 	    if (bindI18nStore && i18n) i18n.store.on(bindI18nStore, boundReset);
@@ -691,7 +714,9 @@
 	  }, [i18n, joinedNS]);
 	  const isInitial = react.useRef(true);
 	  react.useEffect(() => {
+	    console.log('8:09 before');
 	    if (isMounted.current && !isInitial.current) {
+	      console.log('8:09 inside');
 	      setT(getT);
 	    }
 	    isInitial.current = false;
@@ -700,8 +725,14 @@
 	  ret.t = t;
 	  ret.i18n = i18n;
 	  ret.ready = ready;
-	  if (ready) return ret;
-	  if (!ready && !useSuspense) return ret;
+	  if (ready) {
+	    console.log('returning 0', ret.t);
+	    return ret;
+	  }
+	  if (!ready && !useSuspense) {
+	    console.log('returning 1');
+	    return ret;
+	  }
 	  throw new Promise(resolve => {
 	    if (props.lng) {
 	      loadLanguages(i18n, props.lng, namespaces, () => resolve());
