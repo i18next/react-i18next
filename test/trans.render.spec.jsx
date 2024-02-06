@@ -193,6 +193,42 @@ describe('trans simple with custom html tag', () => {
   });
 });
 
+describe('trans bracketNotation', () => {
+  function TestComponent() {
+    const numOfItems = 4;
+    return (
+      <Trans i18nKey="bracketNotation" count={numOfItems} />
+    );
+  }
+
+  it('should render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        4
+      </div>
+    `);
+  });
+});
+
+describe('trans otherNotation', () => {
+  function TestComponent() {
+    const numOfItems = 4;
+    return (
+      <Trans i18nKey="otherNotation" count={numOfItems} />
+    );
+  }
+
+  it('should render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        #$?count?$#
+      </div>
+    `);
+  });
+});
+
 describe('trans testTransKey1 singular', () => {
   function TestComponent() {
     const numOfItems = 1;

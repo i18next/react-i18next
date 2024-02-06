@@ -54,6 +54,8 @@ i18n.init({
           deepKey1: 'value1',
         },
         transTestWithSelfClosing: 'interpolated component: <component/>',
+        bracketNotation: '{{count}}',
+        otherNotation: '#$?count?$#',
       },
       other: {
         transTest1: 'Another go <1>there</1>.',

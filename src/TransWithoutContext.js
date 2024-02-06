@@ -351,9 +351,10 @@ export function Trans({
         ? { ...values, ...i18n.options.interpolation.defaultVariables }
         : { ...i18n.options.interpolation.defaultVariables };
   }
-  const interpolationOverride = values
-    ? tOptions.interpolation
-    : { interpolation: { ...tOptions.interpolation, prefix: '#$?', suffix: '?$#' } };
+  const interpolationOverride =
+    values || count !== undefined
+      ? tOptions.interpolation
+      : { interpolation: { ...tOptions.interpolation, prefix: '#$?', suffix: '?$#' } };
   const combinedTOpts = {
     ...tOptions,
     count,

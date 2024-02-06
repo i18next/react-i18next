@@ -480,7 +480,7 @@
 	      ...i18n.options.interpolation.defaultVariables
 	    };
 	  }
-	  const interpolationOverride = values ? tOptions.interpolation : {
+	  const interpolationOverride = values || count !== undefined ? tOptions.interpolation : {
 	    interpolation: {
 	      ...tOptions.interpolation,
 	      prefix: '#$?',

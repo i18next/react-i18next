@@ -1,3 +1,7 @@
+### 14.0.4
+
+- fix interpolation of the count prop [1719](https://github.com/i18next/react-i18next/issues/1719)
+
 ### 14.0.3
 
 - revert changes done in v14.0.2 since it breaks normal language change render updates
