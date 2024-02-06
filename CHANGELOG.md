@@ -1,3 +1,7 @@
+### 14.0.5
+
+- Fix [1691](https://github.com/i18next/react-i18next/issues/1691) for strict mode, by preserving change language binding [1720](https://github.com/i18next/react-i18next/pull/1720)
+
 ### 14.0.4
 
 - fix interpolation of the count prop [1719](https://github.com/i18next/react-i18next/issues/1719)
