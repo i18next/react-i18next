@@ -659,9 +659,6 @@
 	  const memoGetT = useMemoizedT(i18n, props.lng || null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
 	  const getT = () => memoGetT;
 	  const getNewT = () => alwaysNewT(i18n, props.lng || null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
-	  console.log('useState(getT())');
-	  console.log(getT);
-	  console.log(getT());
 	  const [t, setT] = react.useState(getT);
 	  let joinedNS = namespaces.join();
 	  if (props.lng) joinedNS = `${props.lng}${joinedNS}`;
@@ -674,35 +671,21 @@
 	    } = i18nOptions;
 	    isMounted.current = true;
 	    if (!ready && !useSuspense) {
-	      console.log('!ready !useSuspense');
 	      if (props.lng) {
-	        console.log('!ready !useSuspense props.lng');
 	        loadLanguages(i18n, props.lng, namespaces, () => {
-	          if (isMounted.current) {
-	            console.log('1');
-	            setT(getNewT);
-	          }
+	          if (isMounted.current) setT(getNewT);
 	        });
 	      } else {
-	        console.log('!ready !useSuspense !props.lng');
 	        loadNamespaces(i18n, namespaces, () => {
-	          console.log('!ready !useSuspense !props.lng loadNamespacesCallback');
-	          if (isMounted.current) {
-	            console.log('2');
-	            setT(getNewT);
-	          }
+	          if (isMounted.current) setT(getNewT);
 	        });
 	      }
 	    }
 	    if (ready && previousJoinedNS && previousJoinedNS !== joinedNS && isMounted.current) {
-	      console.log('3');
 	      setT(getNewT);
 	    }
 	    function boundReset() {
-	      if (isMounted.current) {
-	        console.log('4');
-	        setT(getNewT);
-	      }
+	      if (isMounted.current) setT(getNewT);
 	    }
 	    if (bindI18n && i18n) i18n.on(bindI18n, boundReset);
 	    if (bindI18nStore && i18n) i18n.store.on(bindI18nStore, boundReset);
@@ -714,9 +697,7 @@
 	  }, [i18n, joinedNS]);
 	  const isInitial = react.useRef(true);
 	  react.useEffect(() => {
-	    console.log('8:09 before');
 	    if (isMounted.current && !isInitial.current) {
-	      console.log('8:09 inside');
 	      setT(getT);
 	    }
 	    isInitial.current = false;
@@ -725,14 +706,8 @@
 	  ret.t = t;
 	  ret.i18n = i18n;
 	  ret.ready = ready;
-	  if (ready) {
-	    console.log('returning 0', ret.t);
-	    return ret;
-	  }
-	  if (!ready && !useSuspense) {
-	    console.log('returning 1');
-	    return ret;
-	  }
+	  if (ready) return ret;
+	  if (!ready && !useSuspense) return ret;
 	  throw new Promise(resolve => {
 	    if (props.lng) {
 	      loadLanguages(i18n, props.lng, namespaces, () => resolve());
