@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import { getI18n, getDefaults, ReportNamespaces, I18nContext } from './context.js';
 import { warnOnce, loadNamespaces, loadLanguages, hasLoadedNamespace } from './utils.js';
 
@@ -9,6 +9,19 @@ const usePrevious = (value, ignore) => {
   }, [value, ignore]);
   return ref.current;
 };
+
+function alwaysNewT(i18n, language, namespace, keyPrefix) {
+  return i18n.getFixedT(language, namespace, keyPrefix);
+}
+
+function useMemoizedT(i18n, language, namespace, keyPrefix) {
+  return useCallback(alwaysNewT(i18n, language, namespace, keyPrefix), [
+    i18n,
+    language,
+    namespace,
+    keyPrefix,
+  ]);
+}
 
 export function useTranslation(ns, props = {}) {
   // assert we have the needed i18nInstance
@@ -55,14 +68,23 @@ export function useTranslation(ns, props = {}) {
     (i18n.isInitialized || i18n.initializedStoreOnce) &&
     namespaces.every((n) => hasLoadedNamespace(n, i18n, i18nOptions));
 
-  // binding t function to namespace (acts also as rerender trigger)
-  function getT() {
-    return i18n.getFixedT(
+  // binding t function to namespace (acts also as rerender trigger *when* args have changed)
+  const memoGetT = useMemoizedT(
+    i18n,
+    props.lng || null,
+    i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
+    keyPrefix,
+  );
+  // using useState with a function expects an initializer, not the function itself:
+  const getT = () => memoGetT;
+  const getNewT = () =>
+    alwaysNewT(
+      i18n,
       props.lng || null,
       i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
       keyPrefix,
     );
-  }
+
   const [t, setT] = useState(getT);
 
   let joinedNS = namespaces.join();
@@ -79,21 +101,21 @@ export function useTranslation(ns, props = {}) {
     if (!ready && !useSuspense) {
       if (props.lng) {
         loadLanguages(i18n, props.lng, namespaces, () => {
-          if (isMounted.current) setT(getT);
+          if (isMounted.current) setT(getNewT);
         });
       } else {
         loadNamespaces(i18n, namespaces, () => {
-          if (isMounted.current) setT(getT);
+          if (isMounted.current) setT(getNewT);
         });
       }
     }
 
     if (ready && previousJoinedNS && previousJoinedNS !== joinedNS && isMounted.current) {
-      setT(getT);
+      setT(getNewT);
     }
 
     function boundReset() {
-      if (isMounted.current) setT(getT);
+      if (isMounted.current) setT(getNewT);
     }
 
     // bind events to trigger change, like languageChanged
@@ -114,6 +136,9 @@ export function useTranslation(ns, props = {}) {
   const isInitial = useRef(true);
   useEffect(() => {
     if (isMounted.current && !isInitial.current) {
+      // not getNewT: depend on dependency list of the useCallback call within
+      // useMemoizedT to only provide a newly-bound t *iff* i18n instance was
+      // replaced; see bug 1691 https://github.com/i18next/react-i18next/issues/1691
       setT(getT);
     }
     isInitial.current = false;

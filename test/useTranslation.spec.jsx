@@ -23,6 +23,22 @@ describe('useTranslation', () => {
     });
   });
 
+  describe('proper object-equality of returned t function', () => {
+    it('should refresh t upon i18n.changeLanguage', () => {
+      const { result, rerender } = renderHook(() => useTranslation('translation', { i18n: i18nInstance }));
+      const { i18n, t } = result.current;
+      expect(i18n.language).toBe('en')
+      i18n.changeLanguage('fr');
+      try {
+        rerender();
+        const { t: refreshedT } = result.current
+        expect(refreshedT).not.toBe(t);
+      } finally {
+        i18n.changeLanguage('en');
+      }
+    });
+  });
+
   describe('array', () => {
     it('should render correct content', () => {
       const { result } = renderHook(() => useTranslation('translation', { i18n: i18nInstance }));
