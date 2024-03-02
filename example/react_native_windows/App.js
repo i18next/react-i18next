@@ -62,8 +62,7 @@ function Content() {
       <SafeAreaView>
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}
-        >
+          style={styles.scrollView}>
           <View style={styles.body}>
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>{t('hello')}</Text>

@@ -2,23 +2,12 @@ import { readdirSync } from 'node:fs';
 import { defineWorkspace } from 'vitest/config';
 import type { UserProjectConfigExport } from 'vitest/config';
 
-export default defineWorkspace([
-  {
-    test: {
-      name: 'runtime',
-      dir: './test',
-      exclude: ['**/typescript/**'],
-      environment: 'happy-dom',
-
-      setupFiles: ['./test/setup'],
-    },
-  },
-
+export default defineWorkspace(
   /**
    * If you need to test multiple typescript configurations (like misc) simply create a file named tsconfig.{customName}.json
    * and this script will automatically create a new workspace named with the dirName followed by `customName`
    */
-  ...readdirSync('./test/typescript', { withFileTypes: true })
+  readdirSync('./test/typescript', { withFileTypes: true })
     .filter((dir) => dir.isDirectory())
     .reduce<UserProjectConfigExport[]>((workspaces, dir) => {
       const dirPath = `test/typescript/${dir.name}` as const;
@@ -49,4 +38,4 @@ export default defineWorkspace([
 
       return workspaces;
     }, []),
-]);
+);
