@@ -687,13 +687,11 @@
 	      if (bindI18nStore && i18n) bindI18nStore.split(' ').forEach(e => i18n.store.off(e, boundReset));
 	    };
 	  }, [i18n, joinedNS]);
-	  const isInitial = react.useRef(true);
 	  react.useEffect(() => {
-	    if (isMounted.current && !isInitial.current) {
+	    if (isMounted.current && ready) {
 	      setT(getT);
 	    }
-	    isInitial.current = false;
-	  }, [i18n, keyPrefix]);
+	  }, [i18n, keyPrefix, ready]);
 	  const ret = [t, i18n, ready];
 	  ret.t = t;
 	  ret.i18n = i18n;

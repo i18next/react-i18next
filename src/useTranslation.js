@@ -133,16 +133,14 @@ export function useTranslation(ns, props = {}) {
 
   // t is correctly initialized by useState hook. We only need to update it after i18n
   // instance was replaced (for example in the provider).
-  const isInitial = useRef(true);
   useEffect(() => {
-    if (isMounted.current && !isInitial.current) {
+    if (isMounted.current && ready) {
       // not getNewT: depend on dependency list of the useCallback call within
       // useMemoizedT to only provide a newly-bound t *iff* i18n instance was
       // replaced; see bug 1691 https://github.com/i18next/react-i18next/issues/1691
       setT(getT);
     }
-    isInitial.current = false;
-  }, [i18n, keyPrefix]); // re-run when i18n instance or keyPrefix were replaced
+  }, [i18n, keyPrefix, ready]); // re-run when i18n instance or keyPrefix were replaced
 
   const ret = [t, i18n, ready];
   ret.t = t;
