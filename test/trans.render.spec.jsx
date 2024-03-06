@@ -835,6 +835,82 @@ describe('trans with context property', () => {
   });
 });
 
+describe('trans with undefined context property', () => {
+  function TestComponent({ parent }) {
+    return (
+      <Trans i18nKey="testTransWithCtx" context={undefined} parent={parent}>
+        Open <Link to="/msgs">here</Link>.
+      </Trans>
+    );
+  }
+
+  it('should render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Go 
+        <a
+          href="/msgs"
+        >
+          there
+        </a>
+        .
+      </div>
+    `);
+  });
+});
+
+describe('trans with context property but no children', () => {
+  function TestComponent({ parent }) {
+    return (
+      <Trans i18nKey="testTransNoChildrenWithCtx" context="home" parent={parent} />
+    );
+  }
+
+  it('should render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Go to Switzerland.
+      </div>
+    `);
+  });
+});
+
+describe('trans with undefined context property but no children', () => {
+  function TestComponent({ parent }) {
+    return (
+      <Trans i18nKey="testTransNoChildrenWithCtx" context={undefined} parent={parent} />
+    );
+  }
+
+  it('should render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Go .
+      </div>
+    `);
+  });
+});
+
+describe('trans with different context property but no children', () => {
+  function TestComponent({ parent }) {
+    return (
+      <Trans i18nKey="testTransNoChildrenWithCtx" context="somewhere" parent={parent} />
+    );
+  }
+
+  it('should render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Go somewhere.
+      </div>
+    `);
+  });
+});
+
 describe('trans with defaults property and children', () => {
   function TestComponent() {
     return (
