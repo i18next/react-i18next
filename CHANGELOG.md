@@ -1,3 +1,7 @@
+### 14.0.8
+
+- fix: issue [1728](https://github.com/i18next/react-i18next/issues/1728) when useSuspense is false and default ns [1731](https://github.com/i18next/react-i18next/pull/1731)
+
 ### 14.0.7
 
 - try to get rid of internal interpolationOverride handling for Trans component, fixes [1729](https://github.com/i18next/react-i18next/issues/1729)
