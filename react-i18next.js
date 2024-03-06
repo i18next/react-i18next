@@ -480,18 +480,10 @@
 	      ...i18n.options.interpolation.defaultVariables
 	    };
 	  }
-	  const interpolationOverride = values || count !== undefined ? tOptions.interpolation : {
-	    interpolation: {
-	      ...tOptions.interpolation,
-	      prefix: '#$?',
-	      suffix: '?$#'
-	    }
-	  };
 	  const combinedTOpts = {
 	    ...tOptions,
 	    count,
 	    ...values,
-	    ...interpolationOverride,
 	    defaultValue,
 	    ns: namespaces
 	  };
