@@ -1,3 +1,7 @@
+### 14.1.0
+
+- types(`Trans`): add typechecking on context prop [1732](https://github.com/i18next/react-i18next/pull/1732) (might brake if using "internal" `Trans` or `TransProps`)
+
 ### 14.0.8
 
 - fix: issue [1728](https://github.com/i18next/react-i18next/issues/1728) when useSuspense is false and default ns [1731](https://github.com/i18next/react-i18next/pull/1731)
