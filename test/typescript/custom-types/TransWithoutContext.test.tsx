@@ -1,4 +1,4 @@
-import { describe, it, expectTypeOf } from 'vitest';
+import { describe, it, expectTypeOf, assertType } from 'vitest';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Trans } from '../../../TransWithoutContext';
@@ -73,25 +73,25 @@ describe('<Trans />', () => {
       const { t } = useTranslation('alternate', { keyPrefix: 'foobar.deep' });
 
       // <Trans t={t} i18nKey="deeper.deeeeeper">foo</Trans>
-      expectTypeOf<
-        typeof Trans<'deeper.deeeeeper', 'alternate', {}, 'foobar.deep'>
-      >().toBeCallableWith({
-        t,
-        i18nKey: 'deeper.deeeeeper',
-      });
+      expectTypeOf<typeof Trans<'deeper.deeeeeper', 'alternate', 'foobar.deep'>>().toBeCallableWith(
+        {
+          t,
+          i18nKey: 'deeper.deeeeeper',
+        },
+      );
     });
 
     it('should throw error with `t` function with key prefix and wrong `i18nKey`', () => {
       const { t } = useTranslation('alternate', { keyPrefix: 'foobar.deep' });
 
       // <Trans t={t} i18nKey="xxx">foo</Trans>
-      expectTypeOf<
-        typeof Trans<'deeper.deeeeeper', 'alternate', {}, 'foobar.deep'>
-      >().toBeCallableWith({
-        t,
-        // @ts-expect-error
-        i18nKey: 'xxx',
-      });
+      expectTypeOf<typeof Trans<'deeper.deeeeeper', 'alternate', 'foobar.deep'>>().toBeCallableWith(
+        {
+          t,
+          // @ts-expect-error
+          i18nKey: 'xxx',
+        },
+      );
     });
   });
 
@@ -116,6 +116,52 @@ describe('<Trans />', () => {
       expectTypeOf(Trans).toBeCallableWith({
         children: <span>foo {{ var: '' }}</span>,
       });
+    });
+  });
+
+  describe('usage with context', () => {
+    it('should work with default namespace', () => {
+      assertType<React.ReactElement>(<Trans i18nKey="some" context="me" />);
+
+      // @ts-expect-error should throw error when context is not valid
+      assertType<React.ReactElement>(<Trans i18nKey="some" context="one" />);
+    });
+
+    it('should work with `ns` prop', () => {
+      assertType<React.ReactElement>(<Trans ns="context" i18nKey="beverage" />);
+
+      assertType<React.ReactElement>(
+        // @ts-expect-error should throw error when context is not valid
+        <Trans ns="context" i18nKey="beverage" context="strawberry" />,
+      );
+    });
+
+    it('should work with default `t` function', () => {
+      const { t } = useTranslation();
+
+      assertType<React.ReactElement>(<Trans t={t} i18nKey="some" context="me" />);
+
+      // @ts-expect-error should throw error when context is not valid
+      assertType<React.ReactElement>(<Trans t={t} i18nKey="some" context="Test1222" />);
+    });
+
+    it('should work with custom `t` function', () => {
+      const { t } = useTranslation('context');
+
+      assertType<React.ReactElement>(<Trans t={t} i18nKey="dessert" context="cake" />);
+
+      // @ts-expect-error should throw error when context is not valid
+      assertType<React.ReactElement>(<Trans t={t} i18nKey="dessert" context="sake" />);
+    });
+
+    it('should work with `ns` prop and `count` prop', () => {
+      const { t } = useTranslation('plurals');
+      assertType<React.ReactElement>(<Trans ns="plurals" i18nKey="foo" count={2} />);
+    });
+
+    it('should work with custom `t` function and `count` prop', () => {
+      const { t } = useTranslation('plurals');
+      assertType<React.ReactElement>(<Trans t={t} i18nKey="foo" count={2} />);
     });
   });
 });

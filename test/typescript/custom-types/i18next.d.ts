@@ -8,9 +8,11 @@ declare module 'i18next' {
       custom: {
         foo: 'foo';
         bar: 'bar';
+
         some: 'some';
         some_me: 'some context';
       };
+
       alternate: {
         baz: 'baz';
         foobar: {
@@ -22,12 +24,22 @@ declare module 'i18next' {
           };
         };
       };
+
       plurals: {
         foo_zero: 'foo';
         foo_one: 'foo';
         foo_two: 'foo';
         foo_many: 'foo';
         foo_other: 'foo';
+      };
+
+      context: {
+        dessert_cake: 'a nice cake';
+        dessert_muffin_one: 'a nice muffin';
+        dessert_muffin_other: '{{count}} nice muffins';
+
+        beverage: 'beverage';
+        beverage_beer: 'beer';
       };
     };
   }
