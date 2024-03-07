@@ -1,4 +1,4 @@
-import { describe, expectTypeOf, it } from 'vitest';
+import { assertType, describe, expectTypeOf, it } from 'vitest';
 import * as React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -95,14 +95,14 @@ describe('<Trans />', () => {
     );
     expectTypeOf(Trans).toBeCallableWith({ parent: CustomRedComponent, children: 'Foo' });
 
-    <Trans parent="div" style={{ color: 'green' }}>
-      Foo
-    </Trans>;
+    assertType<React.ReactElement>(
+      <Trans parent="div" style={{ color: 'green' }}>
+        Foo
+      </Trans>,
+    );
 
-    {
-      /* div is the default parent */
-    }
-    <Trans style={{ color: 'green' }}>Foo</Trans>;
+    /* div is the default parent */
+    assertType<React.ReactElement>(<Trans style={{ color: 'green' }}>Foo</Trans>);
   });
 
   it('should work with `tOptions`', () => {
@@ -124,9 +124,11 @@ describe('<Trans />', () => {
   });
 
   it('should not work with object child', () => {
-    <Trans>
-      {/* @ts-expect-error */}
-      <span>This {{ var: '' }} is an error since `allowObjectInHTMLChildren` is disabled</span>
-    </Trans>;
+    assertType<React.ReactElement>(
+      <Trans>
+        {/* @ts-expect-error */}
+        <span>This {{ var: '' }} is an error since `allowObjectInHTMLChildren` is disabled</span>
+      </Trans>,
+    );
   });
 });

@@ -72,25 +72,25 @@ describe('<Trans />', () => {
       const { t } = useTranslation('alternate', { keyPrefix: 'foobar.deep' });
 
       // <Trans t={t} i18nKey="deeper.deeeeeper">foo</Trans>
-      expectTypeOf<
-        typeof Trans<'deeper.deeeeeper', 'alternate', {}, 'foobar.deep'>
-      >().toBeCallableWith({
-        t,
-        i18nKey: 'deeper.deeeeeper',
-      });
+      expectTypeOf<typeof Trans<'deeper.deeeeeper', 'alternate', 'foobar.deep'>>().toBeCallableWith(
+        {
+          t,
+          i18nKey: 'deeper.deeeeeper',
+        },
+      );
     });
 
     it('should throw error with `t` function with key prefix and wrong `i18nKey`', () => {
       const { t } = useTranslation('alternate', { keyPrefix: 'foobar.deep' });
 
       // <Trans t={t} i18nKey="xxx">foo</Trans>
-      expectTypeOf<
-        typeof Trans<'deeper.deeeeeper', 'alternate', {}, 'foobar.deep'>
-      >().toBeCallableWith({
-        t,
-        // @ts-expect-error
-        i18nKey: 'xxx',
-      });
+      expectTypeOf<typeof Trans<'deeper.deeeeeper', 'alternate', 'foobar.deep'>>().toBeCallableWith(
+        {
+          t,
+          // @ts-expect-error
+          i18nKey: 'xxx',
+        },
+      );
     });
   });
 
