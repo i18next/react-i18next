@@ -1,6 +1,6 @@
 ### 14.1.0
 
-- types(`Trans`): add typechecking on context prop [1732](https://github.com/i18next/react-i18next/pull/1732) (might brake if using "internal" `Trans` or `TransProps`)
+- types(`Trans`): add typechecking on context prop [1732](https://github.com/i18next/react-i18next/pull/1732) (might break if using "internal" `Trans` or `TransProps`)
 
 ### 14.0.8
 
