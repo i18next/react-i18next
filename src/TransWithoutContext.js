@@ -329,8 +329,6 @@ export function Trans({
 
   const t = tFromProps || i18n.t.bind(i18n) || ((k) => k);
 
-  tOptions.context = context;
-
   const reactI18nextOptions = { ...getDefaults(), ...(i18n.options && i18n.options.react) };
 
   // prepare having a namespace
@@ -353,6 +351,7 @@ export function Trans({
   }
   const combinedTOpts = {
     ...tOptions,
+    context: context || tOptions.context, // Add `context` from the props or fallback to the value from `tOptions`
     count,
     ...values,
     defaultValue,

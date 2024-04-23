@@ -459,7 +459,6 @@
 	    return children;
 	  }
 	  const t = tFromProps || i18n.t.bind(i18n) || (k => k);
-	  tOptions.context = context;
 	  const reactI18nextOptions = {
 	    ...getDefaults(),
 	    ...(i18n.options && i18n.options.react)
@@ -482,6 +481,7 @@
 	  }
 	  const combinedTOpts = {
 	    ...tOptions,
+	    context: context || tOptions.context,
 	    count,
 	    ...values,
 	    defaultValue,

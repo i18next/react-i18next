@@ -810,6 +810,33 @@ describe('trans with custom unescape', () => {
   });
 });
 
+describe('trans with context via tOptions', () => {
+  const tOptions = { context: 'home' };
+  function TestComponent({ parent }) {
+    return (
+      <Trans i18nKey="testTransWithCtx" tOptions={tOptions} parent={parent}>
+        Open <Link to="/msgs">here</Link>.
+      </Trans>
+    );
+  }
+
+  it('should render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Go 
+        <a
+          href="/msgs"
+        >
+          home
+        </a>
+        .
+      </div>
+    `);
+    expect(tOptions).to.have.property('context', 'home');
+  });
+});
+
 describe('trans with context property', () => {
   function TestComponent({ parent }) {
     return (

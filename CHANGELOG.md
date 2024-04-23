@@ -1,3 +1,7 @@
+### 14.1.1
+
+- do not modify passed tOptions context property to address [1745](https://github.com/i18next/react-i18next/issues/1745)
+
 ### 14.1.0
 
 - types(`Trans`): add typechecking on context prop [1732](https://github.com/i18next/react-i18next/pull/1732) (might break if using "internal" `Trans` or `TransProps`)
