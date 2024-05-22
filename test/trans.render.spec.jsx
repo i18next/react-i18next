@@ -862,7 +862,7 @@ describe('trans with context property', () => {
   });
 });
 
-describe.only('trans with formatting', () => {
+describe('trans with formatting', () => {
   function TestComponent({ parent }) {
     return (
       <>
