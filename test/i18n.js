@@ -46,6 +46,8 @@ i18n.init({
         transTestEscapedHtml: 'Escaped html should unescape correctly <0>&lt;&nbsp;&amp;&gt;</0>.',
         transTestCustomUnescape: 'Text should be passed through custom unescape <0>&shy;</0>',
         transTestCustomUnescapeSecond: 'Vertrauens&shy;kennwert',
+        'trans-key-with-generic-var': 'Value as is: {{foo}}',
+        'trans-key-with-number-var': 'Treat value as number: {{foo, number}}',
         testTransWithCtx: 'Go <1>there</1>.',
         testTransWithCtx_home: 'Go <1>home</1>.',
         testTransNoChildrenWithCtx: 'Go {{context}}.',

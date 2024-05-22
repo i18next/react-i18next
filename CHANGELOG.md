@@ -1,3 +1,7 @@
+### 14.1.2
+
+- bring back internal interpolationOverride handling for Trans component (if there are childrens), fixes [1754](https://github.com/i18next/react-i18next/issues/1754)
+
 ### 14.1.1
 
 - do not modify passed tOptions context property to address [1745](https://github.com/i18next/react-i18next/issues/1745)

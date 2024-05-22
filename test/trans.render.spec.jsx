@@ -862,6 +862,47 @@ describe('trans with context property', () => {
   });
 });
 
+describe.only('trans with formatting', () => {
+  function TestComponent({ parent }) {
+    return (
+      <>
+        <Trans
+          parent={parent}
+          i18nKey="trans-key-with-generic-var"
+          values={{ foo: 1234 }}
+        />
+        <Trans
+          parent={parent}
+          i18nKey="trans-key-with-number-var"
+          values={{ foo: 1234 }}
+        />
+        <Trans parent={parent} i18nKey="trans-key-with-number-var">
+          {{ foo: 1234 }}
+        </Trans>
+      </>
+    );
+  }
+
+  it('should render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.childNodes[0]).toMatchInlineSnapshot(`
+      <div>
+        Value as is: 1234
+      </div>
+    `);
+    expect(container.childNodes[1]).toMatchInlineSnapshot(`
+      <div>
+        Treat value as number: 1234
+      </div>
+    `);
+    expect(container.childNodes[2]).toMatchInlineSnapshot(`
+      <div>
+        Treat value as number: 1234
+      </div>
+    `);
+  });
+});
+
 describe('trans with undefined context property', () => {
   function TestComponent({ parent }) {
     return (

@@ -349,11 +349,16 @@ export function Trans({
         ? { ...values, ...i18n.options.interpolation.defaultVariables }
         : { ...i18n.options.interpolation.defaultVariables };
   }
+  const interpolationOverride =
+    values || count !== undefined || !children // if !children gets problems in future, undo that fix: https://github.com/i18next/react-i18next/issues/1729 by removing !children from this condition
+      ? tOptions.interpolation
+      : { interpolation: { ...tOptions.interpolation, prefix: '#$?', suffix: '?$#' } };
   const combinedTOpts = {
     ...tOptions,
     context: context || tOptions.context, // Add `context` from the props or fallback to the value from `tOptions`
     count,
     ...values,
+    ...interpolationOverride,
     defaultValue,
     ns: namespaces,
   };

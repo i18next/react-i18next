@@ -479,11 +479,19 @@
 	      ...i18n.options.interpolation.defaultVariables
 	    };
 	  }
+	  const interpolationOverride = values || count !== undefined || !children ? tOptions.interpolation : {
+	    interpolation: {
+	      ...tOptions.interpolation,
+	      prefix: '#$?',
+	      suffix: '?$#'
+	    }
+	  };
 	  const combinedTOpts = {
 	    ...tOptions,
 	    context: context || tOptions.context,
 	    count,
 	    ...values,
+	    ...interpolationOverride,
 	    defaultValue,
 	    ns: namespaces
 	  };
