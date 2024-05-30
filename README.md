@@ -60,8 +60,6 @@ The general i18next documentation is published on [www.i18next.com](https://www.
 ...
 ```
 
-Head over to the **interactive playground** at [codesandbox](https://codesandbox.io/s/1zxox032q).
-
 ### 📖 What others say
 
 - [How to properly internationalize a React application using i18next](https://locize.com/blog/react-i18next/) by Adriano Raiano
