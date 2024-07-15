@@ -1,6 +1,6 @@
 import { Fragment, isValidElement, cloneElement, createElement, Children } from 'react';
 import HTML from 'html-parse-stringify';
-import { warn, warnOnce } from './utils.js';
+import { isString, warn, warnOnce } from './utils.js';
 import { getDefaults } from './defaults.js';
 import { getI18n } from './i18nInstance.js';
 
@@ -44,7 +44,7 @@ export const nodesToString = (children, i18nOptions) => {
 
   // e.g. lorem <br/> ipsum {{ messageCount, format }} dolor <strong>bold</strong> amet
   childrenArray.forEach((child, childIndex) => {
-    if (typeof child === 'string') {
+    if (isString(child)) {
       // actual e.g. lorem
       // expected e.g. lorem
       stringNode += `${child}`;
@@ -66,7 +66,7 @@ export const nodesToString = (children, i18nOptions) => {
         // e.g. <ul i18nIsDynamicList>{['a', 'b'].map(item => ( <li key={item}>{item}</li> ))}</ul>
         // expected e.g. "<0></0>", not e.g. "<0><0>a</0><1>b</1></0>"
         stringNode += `<${childIndex}></${childIndex}>`;
-      } else if (shouldKeepChild && childPropsCount === 1 && typeof childChildren === 'string') {
+      } else if (shouldKeepChild && childPropsCount === 1 && isString(childChildren)) {
         // actual e.g. dolor <strong>bold</strong> amet
         // expected e.g. dolor <strong>bold</strong> amet
         stringNode += `<${child.type}>${childChildren}</${child.type}>`;
@@ -121,7 +121,7 @@ const renderNodes = (children, targetString, i18n, i18nOptions, combinedTOpts, s
     const childrenArray = getAsArray(childs);
 
     childrenArray.forEach((child) => {
-      if (typeof child === 'string') return;
+      if (isString(child)) return;
       if (hasChildren(child)) getData(getChildren(child));
       else if (typeof child === 'object' && !isValidElement(child)) Object.assign(data, child);
     });
@@ -209,7 +209,7 @@ const renderNodes = (children, targetString, i18n, i18nOptions, combinedTOpts, s
           children !== null &&
           Object.hasOwnProperty.call(children, node.name);
 
-        if (typeof child === 'string') {
+        if (isString(child)) {
           const value = i18n.services.interpolator.interpolate(child, opts, i18n.language);
           mem.push(value);
         } else if (
@@ -331,7 +331,7 @@ export function Trans({
 
   // prepare having a namespace
   let namespaces = ns || t.ns || (i18n.options && i18n.options.defaultNS);
-  namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
+  namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
 
   const nodeAsString = nodesToString(children, reactI18nextOptions);
   const defaultValue =
