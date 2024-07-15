@@ -24,35 +24,18 @@ export class ReportNamespaces {
 }
 
 export function composeInitialProps(ForComponent) {
-  return (ctx) =>
-    new Promise((resolve) => {
-      const i18nInitialProps = getInitialProps();
+  return async (ctx) => {
+    const componentsInitialProps = ForComponent.getInitialProps
+      ? await ForComponent.getInitialProps(ctx)
+      : {};
 
-      if (ForComponent.getInitialProps) {
-        ForComponent.getInitialProps(ctx).then((componentsInitialProps) => {
-          resolve({
-            ...componentsInitialProps,
-            ...i18nInitialProps,
-          });
-        });
-      } else {
-        resolve(i18nInitialProps);
-      }
-    });
-  // Avoid async for now - so we do not need to pull in regenerator
+    const i18nInitialProps = getInitialProps();
 
-  // return async ctx => {
-  //   const componentsInitialProps = ForComponent.getInitialProps
-  //     ? await ForComponent.getInitialProps(ctx)
-  //     : {};
-
-  //   const i18nInitialProps = getInitialProps();
-
-  //   return {
-  //     ...componentsInitialProps,
-  //     ...i18nInitialProps,
-  //   };
-  // };
+    return {
+      ...componentsInitialProps,
+      ...i18nInitialProps,
+    };
+  };
 }
 
 export function getInitialProps() {
