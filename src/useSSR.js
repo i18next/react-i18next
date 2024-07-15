@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { getI18n, I18nContext } from './context.js';
 
-export function useSSR(initialI18nStore, initialLanguage, props = {}) {
+export const useSSR = (initialI18nStore, initialLanguage, props = {}) => {
   const { i18n: i18nFromProps } = props;
   const { i18n: i18nFromContext } = useContext(I18nContext) || {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
@@ -30,4 +30,4 @@ export function useSSR(initialI18nStore, initialLanguage, props = {}) {
     i18n.changeLanguage(initialLanguage);
     i18n.initializedLanguageOnce = true;
   }
-}
+};

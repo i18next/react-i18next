@@ -18,27 +18,23 @@ export class ReportNamespaces {
     });
   }
 
-  getUsedNamespaces() {
-    return Object.keys(this.usedNamespaces);
-  }
+  getUsedNamespaces = () => Object.keys(this.usedNamespaces);
 }
 
-export function composeInitialProps(ForComponent) {
-  return async (ctx) => {
-    const componentsInitialProps = ForComponent.getInitialProps
-      ? await ForComponent.getInitialProps(ctx)
-      : {};
+export const composeInitialProps = (ForComponent) => async (ctx) => {
+  const componentsInitialProps = ForComponent.getInitialProps
+    ? await ForComponent.getInitialProps(ctx)
+    : {};
 
-    const i18nInitialProps = getInitialProps();
+  const i18nInitialProps = getInitialProps();
 
-    return {
-      ...componentsInitialProps,
-      ...i18nInitialProps,
-    };
+  return {
+    ...componentsInitialProps,
+    ...i18nInitialProps,
   };
-}
+};
 
-export function getInitialProps() {
+export const getInitialProps = () => {
   const i18n = getI18n();
   const namespaces = i18n.reportNamespaces ? i18n.reportNamespaces.getUsedNamespaces() : [];
 
@@ -55,4 +51,4 @@ export function getInitialProps() {
   ret.initialLanguage = i18n.language;
 
   return ret;
-}
+};

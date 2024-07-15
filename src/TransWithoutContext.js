@@ -4,36 +4,34 @@ import { warn, warnOnce } from './utils.js';
 import { getDefaults } from './defaults.js';
 import { getI18n } from './i18nInstance.js';
 
-function hasChildren(node, checkLength) {
+const hasChildren = (node, checkLength) => {
   if (!node) return false;
   const base = node.props ? node.props.children : node.children;
   if (checkLength) return base.length > 0;
   return !!base;
-}
+};
 
-function getChildren(node) {
+const getChildren = (node) => {
   if (!node) return [];
   const children = node.props ? node.props.children : node.children;
   return node.props && node.props.i18nIsDynamicList ? getAsArray(children) : children;
-}
+};
 
-function hasValidReactChildren(children) {
+const hasValidReactChildren = (children) => {
   if (Object.prototype.toString.call(children) !== '[object Array]') return false;
   return children.every((child) => isValidElement(child));
-}
+};
 
-function getAsArray(data) {
-  return Array.isArray(data) ? data : [data];
-}
+const getAsArray = (data) => (Array.isArray(data) ? data : [data]);
 
-function mergeProps(source, target) {
+const mergeProps = (source, target) => {
   const newTarget = { ...target };
   // overwrite source.props when target.props already set
   newTarget.props = Object.assign(source.props, target.props);
   return newTarget;
-}
+};
 
-export function nodesToString(children, i18nOptions) {
+export const nodesToString = (children, i18nOptions) => {
   if (!children) return '';
   let stringNode = '';
 
@@ -103,9 +101,9 @@ export function nodesToString(children, i18nOptions) {
   });
 
   return stringNode;
-}
+};
 
-function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, shouldUnescape) {
+const renderNodes = (children, targetString, i18n, i18nOptions, combinedTOpts, shouldUnescape) => {
   if (targetString === '') return [];
 
   // check if contains tags we need to replace from html string to react nodes
@@ -119,7 +117,7 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
   // v2 -> interpolates upfront no need for "some <0>{{var}}</0>"" -> will be just "some {{var}}" in translation file
   const data = {};
 
-  function getData(childs) {
+  const getData = (childs) => {
     const childrenArray = getAsArray(childs);
 
     childrenArray.forEach((child) => {
@@ -127,7 +125,7 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
       if (hasChildren(child)) getData(getChildren(child));
       else if (typeof child === 'object' && !isValidElement(child)) Object.assign(data, child);
     });
-  }
+  };
 
   getData(children);
 
@@ -136,7 +134,7 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
   const ast = HTML.parse(`<0>${targetString}</0>`);
   const opts = { ...data, ...combinedTOpts };
 
-  function renderInner(child, node, rootReactNode) {
+  const renderInner = (child, node, rootReactNode) => {
     const childs = getChildren(child);
     const mappedChildren = mapAST(childs, node.children, rootReactNode);
     // `mappedChildren` will always be empty if using the `i18nIsDynamicList` prop,
@@ -145,9 +143,9 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
       (child.props && child.props.i18nIsDynamicList)
       ? childs
       : mappedChildren;
-  }
+  };
 
-  function pushTranslatedJSX(child, inner, mem, i, isVoid) {
+  const pushTranslatedJSX = (child, inner, mem, i, isVoid) => {
     if (child.dummy) {
       child.children = inner; // needed on preact!
       mem.push(cloneElement(child, { key: i }, isVoid ? undefined : inner));
@@ -169,12 +167,12 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
         }),
       );
     }
-  }
+  };
 
   // reactNode (the jsx root element or child)
   // astNode (the translation string as html ast)
   // rootReactNode (the most outer jsx children array or trans components prop)
-  function mapAST(reactNode, astNode, rootReactNode) {
+  const mapAST = (reactNode, astNode, rootReactNode) => {
     const reactNodes = getAsArray(reactNode);
     const astNodes = getAsArray(astNode);
 
@@ -291,7 +289,7 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
       }
       return mem;
     }, []);
-  }
+  };
 
   // call mapAST with having react nodes nested into additional node like
   // we did for the string ast from translation
@@ -302,7 +300,7 @@ function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, s
     getAsArray(children || []),
   );
   return getChildren(result[0]);
-}
+};
 
 export function Trans({
   children,

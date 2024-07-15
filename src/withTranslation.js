@@ -2,8 +2,8 @@ import { createElement, forwardRef as forwardRefReact } from 'react';
 import { useTranslation } from './useTranslation.js';
 import { getDisplayName } from './utils.js';
 
-export function withTranslation(ns, options = {}) {
-  return function Extend(WrappedComponent) {
+export const withTranslation = (ns, options = {}) =>
+  function Extend(WrappedComponent) {
     function I18nextWithTranslation({ forwardedRef, ...rest }) {
       const [t, i18n, ready] = useTranslation(ns, { ...rest, keyPrefix: options.keyPrefix });
 
@@ -33,4 +33,3 @@ export function withTranslation(ns, options = {}) {
 
     return options.withRef ? forwardRefReact(forwardRef) : I18nextWithTranslation;
   };
-}

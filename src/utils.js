@@ -1,3 +1,4 @@
+// Do not use arrow function here as it will break optimizations of arguments
 export function warn(...args) {
   if (console && console.warn) {
     if (typeof args[0] === 'string') args[0] = `react-i18next:: ${args[0]}`;
@@ -6,6 +7,7 @@ export function warn(...args) {
 }
 
 const alreadyWarned = {};
+// Do not use arrow function here as it will break optimizations of arguments
 export function warnOnce(...args) {
   if (typeof args[0] === 'string' && alreadyWarned[args[0]]) return;
   if (typeof args[0] === 'string') alreadyWarned[args[0]] = new Date();
@@ -37,22 +39,22 @@ const loadedClb = (i18n, cb) => () => {
   }
 };
 
-export function loadNamespaces(i18n, ns, cb) {
+export const loadNamespaces = (i18n, ns, cb) => {
   i18n.loadNamespaces(ns, loadedClb(i18n, cb));
-}
+};
 
 // should work with I18NEXT >= v22.5.0
-export function loadLanguages(i18n, lng, ns, cb) {
+export const loadLanguages = (i18n, lng, ns, cb) => {
   // eslint-disable-next-line no-param-reassign
   if (typeof ns === 'string') ns = [ns];
   ns.forEach((n) => {
     if (i18n.options.ns.indexOf(n) < 0) i18n.options.ns.push(n);
   });
   i18n.loadLanguages(lng, loadedClb(i18n, cb));
-}
+};
 
 // WAIT A LITTLE FOR I18NEXT BEING UPDATED IN THE WILD, before removing this old i18next version support
-function oldI18nextHasLoadedNamespace(ns, i18n, options = {}) {
+const oldI18nextHasLoadedNamespace = (ns, i18n, options = {}) => {
   const lng = i18n.languages[0];
   const fallbackLng = i18n.options ? i18n.options.fallbackLng : false;
   const lastLng = i18n.languages[i18n.languages.length - 1];
@@ -91,9 +93,9 @@ function oldI18nextHasLoadedNamespace(ns, i18n, options = {}) {
   if (loadNotPending(lng, ns) && (!fallbackLng || loadNotPending(lastLng, ns))) return true;
 
   return false;
-}
+};
 
-export function hasLoadedNamespace(ns, i18n, options = {}) {
+export const hasLoadedNamespace = (ns, i18n, options = {}) => {
   if (!i18n.languages || !i18n.languages.length) {
     warnOnce('i18n.languages were undefined or empty', i18n.languages);
     return true;
@@ -120,12 +122,9 @@ export function hasLoadedNamespace(ns, i18n, options = {}) {
         return false;
     },
   });
-}
+};
 
-export function getDisplayName(Component) {
-  return (
-    Component.displayName ||
-    Component.name ||
-    (typeof Component === 'string' && Component.length > 0 ? Component : 'Unknown')
-  );
-}
+export const getDisplayName = (Component) =>
+  Component.displayName ||
+  Component.name ||
+  (typeof Component === 'string' && Component.length > 0 ? Component : 'Unknown');
