@@ -1,6 +1,13 @@
 import { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import { getI18n, getDefaults, ReportNamespaces, I18nContext } from './context.js';
-import { warnOnce, loadNamespaces, loadLanguages, hasLoadedNamespace, isString } from './utils.js';
+import {
+  warnOnce,
+  loadNamespaces,
+  loadLanguages,
+  hasLoadedNamespace,
+  isString,
+  isObject,
+} from './utils.js';
 
 const usePrevious = (value, ignore) => {
   const ref = useRef();
@@ -31,11 +38,7 @@ export const useTranslation = (ns, props = {}) => {
     warnOnce('You will need to pass in an i18next instance by using initReactI18next');
     const notReadyT = (k, optsOrDefaultValue) => {
       if (isString(optsOrDefaultValue)) return optsOrDefaultValue;
-      if (
-        optsOrDefaultValue &&
-        typeof optsOrDefaultValue === 'object' &&
-        isString(optsOrDefaultValue.defaultValue)
-      )
+      if (isObject(optsOrDefaultValue) && isString(optsOrDefaultValue.defaultValue))
         return optsOrDefaultValue.defaultValue;
       return Array.isArray(k) ? k[k.length - 1] : k;
     };

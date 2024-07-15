@@ -130,3 +130,5 @@ export const getDisplayName = (Component) =>
   (isString(Component) && Component.length > 0 ? Component : 'Unknown');
 
 export const isString = (obj) => typeof obj === 'string';
+
+export const isObject = (obj) => typeof obj === 'object' && obj !== null;

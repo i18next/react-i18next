@@ -1,6 +1,6 @@
 import { Fragment, isValidElement, cloneElement, createElement, Children } from 'react';
 import HTML from 'html-parse-stringify';
-import { isString, warn, warnOnce } from './utils.js';
+import { isObject, isString, warn, warnOnce } from './utils.js';
 import { getDefaults } from './defaults.js';
 import { getI18n } from './i18nInstance.js';
 
@@ -75,7 +75,7 @@ export const nodesToString = (children, i18nOptions) => {
       }
     } else if (child === null) {
       warn(`Trans: the passed in value is invalid - seems you passed in a null child.`);
-    } else if (typeof child === 'object') {
+    } else if (isObject(child)) {
       // e.g. lorem {{ value, format }} ipsum
       const { format, ...clone } = child;
       const keys = Object.keys(clone);
@@ -121,7 +121,7 @@ const renderNodes = (children, targetString, i18n, i18nOptions, combinedTOpts, s
     childrenArray.forEach((child) => {
       if (isString(child)) return;
       if (hasChildren(child)) getData(getChildren(child));
-      else if (typeof child === 'object' && !isValidElement(child)) Object.assign(data, child);
+      else if (isObject(child) && !isValidElement(child)) Object.assign(data, child);
     });
   };
 
@@ -200,12 +200,10 @@ const renderNodes = (children, targetString, i18n, i18nOptions, combinedTOpts, s
           isElement && hasChildren(node, true) && !node.voidElement;
 
         const isEmptyTransWithHTML =
-          emptyChildrenButNeedsHandling && typeof child === 'object' && child.dummy && !isElement;
+          emptyChildrenButNeedsHandling && isObject(child) && child.dummy && !isElement;
 
         const isKnownComponent =
-          typeof children === 'object' &&
-          children !== null &&
-          Object.hasOwnProperty.call(children, node.name);
+          isObject(children) && Object.hasOwnProperty.call(children, node.name);
 
         if (isString(child)) {
           const value = i18n.services.interpolator.interpolate(child, opts, i18n.language);
@@ -253,7 +251,7 @@ const renderNodes = (children, targetString, i18n, i18nOptions, combinedTOpts, s
 
             mem.push(`<${node.name}>${inner}</${node.name}>`);
           }
-        } else if (typeof child === 'object' && !isElement) {
+        } else if (isObject(child) && !isElement) {
           const content = node.children[0] ? translationContent : null;
 
           // v1
