@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import { getI18n, getDefaults, ReportNamespaces, I18nContext } from './context.js';
-import { warnOnce, loadNamespaces, loadLanguages, hasLoadedNamespace } from './utils.js';
+import { warnOnce, loadNamespaces, loadLanguages, hasLoadedNamespace, isString } from './utils.js';
 
 const usePrevious = (value, ignore) => {
   const ref = useRef();
@@ -30,11 +30,11 @@ export const useTranslation = (ns, props = {}) => {
   if (!i18n) {
     warnOnce('You will need to pass in an i18next instance by using initReactI18next');
     const notReadyT = (k, optsOrDefaultValue) => {
-      if (typeof optsOrDefaultValue === 'string') return optsOrDefaultValue;
+      if (isString(optsOrDefaultValue)) return optsOrDefaultValue;
       if (
         optsOrDefaultValue &&
         typeof optsOrDefaultValue === 'object' &&
-        typeof optsOrDefaultValue.defaultValue === 'string'
+        isString(optsOrDefaultValue.defaultValue)
       )
         return optsOrDefaultValue.defaultValue;
       return Array.isArray(k) ? k[k.length - 1] : k;
@@ -56,7 +56,7 @@ export const useTranslation = (ns, props = {}) => {
 
   // prepare having a namespace
   let namespaces = ns || defaultNSFromContext || (i18n.options && i18n.options.defaultNS);
-  namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
+  namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
 
   // report namespaces as used
   if (i18n.reportNamespaces.addUsedNamespaces) i18n.reportNamespaces.addUsedNamespaces(namespaces);

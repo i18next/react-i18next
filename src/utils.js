@@ -1,7 +1,7 @@
 // Do not use arrow function here as it will break optimizations of arguments
 export function warn(...args) {
   if (console && console.warn) {
-    if (typeof args[0] === 'string') args[0] = `react-i18next:: ${args[0]}`;
+    if (isString(args[0])) args[0] = `react-i18next:: ${args[0]}`;
     console.warn(...args);
   }
 }
@@ -9,8 +9,8 @@ export function warn(...args) {
 const alreadyWarned = {};
 // Do not use arrow function here as it will break optimizations of arguments
 export function warnOnce(...args) {
-  if (typeof args[0] === 'string' && alreadyWarned[args[0]]) return;
-  if (typeof args[0] === 'string') alreadyWarned[args[0]] = new Date();
+  if (isString(args[0]) && alreadyWarned[args[0]]) return;
+  if (isString(args[0])) alreadyWarned[args[0]] = new Date();
   warn(...args);
 }
 
@@ -18,7 +18,7 @@ export function warnOnce(...args) {
 //
 // export function deprecated(...args) {
 //   if (process && process.env && (!process.env.NODE_ENV || process.env.NODE_ENV === 'development')) {
-//     if (typeof args[0] === 'string') args[0] = `deprecation warning -> ${args[0]}`;
+//     if (isString(args[0])) args[0] = `deprecation warning -> ${args[0]}`;
 //     warnOnce(...args);
 //   }
 // }
@@ -46,7 +46,7 @@ export const loadNamespaces = (i18n, ns, cb) => {
 // should work with I18NEXT >= v22.5.0
 export const loadLanguages = (i18n, lng, ns, cb) => {
   // eslint-disable-next-line no-param-reassign
-  if (typeof ns === 'string') ns = [ns];
+  if (isString(ns)) ns = [ns];
   ns.forEach((n) => {
     if (i18n.options.ns.indexOf(n) < 0) i18n.options.ns.push(n);
   });
@@ -127,4 +127,6 @@ export const hasLoadedNamespace = (ns, i18n, options = {}) => {
 export const getDisplayName = (Component) =>
   Component.displayName ||
   Component.name ||
-  (typeof Component === 'string' && Component.length > 0 ? Component : 'Unknown');
+  (isString(Component) && Component.length > 0 ? Component : 'Unknown');
+
+export const isString = (obj) => typeof obj === 'string';
