@@ -13,10 +13,8 @@ let defaultOptions = {
   unescape,
 };
 
-export function setDefaults(options = {}) {
+export const setDefaults = (options = {}) => {
   defaultOptions = { ...defaultOptions, ...options };
-}
+};
 
-export function getDefaults() {
-  return defaultOptions;
-}
+export const getDefaults = () => defaultOptions;

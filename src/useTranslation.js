@@ -10,20 +10,18 @@ const usePrevious = (value, ignore) => {
   return ref.current;
 };
 
-function alwaysNewT(i18n, language, namespace, keyPrefix) {
-  return i18n.getFixedT(language, namespace, keyPrefix);
-}
+const alwaysNewT = (i18n, language, namespace, keyPrefix) =>
+  i18n.getFixedT(language, namespace, keyPrefix);
 
-function useMemoizedT(i18n, language, namespace, keyPrefix) {
-  return useCallback(alwaysNewT(i18n, language, namespace, keyPrefix), [
+const useMemoizedT = (i18n, language, namespace, keyPrefix) =>
+  useCallback(alwaysNewT(i18n, language, namespace, keyPrefix), [
     i18n,
     language,
     namespace,
     keyPrefix,
   ]);
-}
 
-export function useTranslation(ns, props = {}) {
+export const useTranslation = (ns, props = {}) => {
   // assert we have the needed i18nInstance
   const { i18n: i18nFromProps } = props;
   const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = useContext(I18nContext) || {};
@@ -114,9 +112,9 @@ export function useTranslation(ns, props = {}) {
       setT(getNewT);
     }
 
-    function boundReset() {
+    const boundReset = () => {
       if (isMounted.current) setT(getNewT);
-    }
+    };
 
     // bind events to trigger change, like languageChanged
     if (bindI18n && i18n) i18n.on(bindI18n, boundReset);
@@ -161,4 +159,4 @@ export function useTranslation(ns, props = {}) {
       loadNamespaces(i18n, namespaces, () => resolve());
     }
   });
-}
+};

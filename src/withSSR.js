@@ -3,8 +3,8 @@ import { useSSR } from './useSSR.js';
 import { composeInitialProps } from './context.js';
 import { getDisplayName } from './utils.js';
 
-export function withSSR() {
-  return function Extend(WrappedComponent) {
+export const withSSR = () =>
+  function Extend(WrappedComponent) {
     function I18nextWithSSR({ initialI18nStore, initialLanguage, ...rest }) {
       useSSR(initialI18nStore, initialLanguage);
 
@@ -19,4 +19,3 @@ export function withSSR() {
 
     return I18nextWithSSR;
   };
-}
