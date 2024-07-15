@@ -123,7 +123,7 @@
 	    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
 	      args[_key] = arguments[_key];
 	    }
-	    if (typeof args[0] === 'string') args[0] = `react-i18next:: ${args[0]}`;
+	    if (isString(args[0])) args[0] = `react-i18next:: ${args[0]}`;
 	    console.warn(...args);
 	  }
 	}
@@ -132,8 +132,8 @@
 	  for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
 	    args[_key2] = arguments[_key2];
 	  }
-	  if (typeof args[0] === 'string' && alreadyWarned[args[0]]) return;
-	  if (typeof args[0] === 'string') alreadyWarned[args[0]] = new Date();
+	  if (isString(args[0]) && alreadyWarned[args[0]]) return;
+	  if (isString(args[0])) alreadyWarned[args[0]] = new Date();
 	  warn(...args);
 	}
 	const loadedClb = (i18n, cb) => () => {
@@ -149,17 +149,17 @@
 	    i18n.on('initialized', initialized);
 	  }
 	};
-	function loadNamespaces(i18n, ns, cb) {
+	const loadNamespaces = (i18n, ns, cb) => {
 	  i18n.loadNamespaces(ns, loadedClb(i18n, cb));
-	}
-	function loadLanguages(i18n, lng, ns, cb) {
-	  if (typeof ns === 'string') ns = [ns];
+	};
+	const loadLanguages = (i18n, lng, ns, cb) => {
+	  if (isString(ns)) ns = [ns];
 	  ns.forEach(n => {
 	    if (i18n.options.ns.indexOf(n) < 0) i18n.options.ns.push(n);
 	  });
 	  i18n.loadLanguages(lng, loadedClb(i18n, cb));
-	}
-	function oldI18nextHasLoadedNamespace(ns, i18n) {
+	};
+	const oldI18nextHasLoadedNamespace = function (ns, i18n) {
 	  let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 	  const lng = i18n.languages[0];
 	  const fallbackLng = i18n.options ? i18n.options.fallbackLng : false;
@@ -174,8 +174,8 @@
 	  if (!i18n.services.backendConnector.backend || i18n.options.resources && !i18n.options.partialBundledLanguages) return true;
 	  if (loadNotPending(lng, ns) && (!fallbackLng || loadNotPending(lastLng, ns))) return true;
 	  return false;
-	}
-	function hasLoadedNamespace(ns, i18n) {
+	};
+	const hasLoadedNamespace = function (ns, i18n) {
 	  let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 	  if (!i18n.languages || !i18n.languages.length) {
 	    warnOnce('i18n.languages were undefined or empty', i18n.languages);
@@ -191,10 +191,10 @@
 	      if (options.bindI18n && options.bindI18n.indexOf('languageChanging') > -1 && i18nInstance.services.backendConnector.backend && i18nInstance.isLanguageChangingTo && !loadNotPending(i18nInstance.isLanguageChangingTo, ns)) return false;
 	    }
 	  });
-	}
-	function getDisplayName(Component) {
-	  return Component.displayName || Component.name || (typeof Component === 'string' && Component.length > 0 ? Component : 'Unknown');
-	}
+	};
+	const getDisplayName = Component => Component.displayName || Component.name || (isString(Component) && Component.length > 0 ? Component : 'Unknown');
+	const isString = obj => typeof obj === 'string';
+	const isObject = obj => typeof obj === 'object' && obj !== null;
 
 	const matchHtmlEntity = /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34|nbsp|#160|copy|#169|reg|#174|hellip|#8230|#x2F|#47);/g;
 	const htmlEntities = {
@@ -232,77 +232,70 @@
 	  useSuspense: true,
 	  unescape
 	};
-	function setDefaults() {
+	const setDefaults = function () {
 	  let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	  defaultOptions = {
 	    ...defaultOptions,
 	    ...options
 	  };
-	}
-	function getDefaults() {
-	  return defaultOptions;
-	}
+	};
+	const getDefaults = () => defaultOptions;
 
 	let i18nInstance;
-	function setI18n(instance) {
+	const setI18n = instance => {
 	  i18nInstance = instance;
-	}
-	function getI18n() {
-	  return i18nInstance;
-	}
+	};
+	const getI18n = () => i18nInstance;
 
-	function hasChildren(node, checkLength) {
+	const hasChildren = (node, checkLength) => {
 	  if (!node) return false;
 	  const base = node.props ? node.props.children : node.children;
 	  if (checkLength) return base.length > 0;
 	  return !!base;
-	}
-	function getChildren(node) {
+	};
+	const getChildren = node => {
 	  if (!node) return [];
 	  const children = node.props ? node.props.children : node.children;
 	  return node.props && node.props.i18nIsDynamicList ? getAsArray(children) : children;
-	}
-	function hasValidReactChildren(children) {
-	  if (Object.prototype.toString.call(children) !== '[object Array]') return false;
-	  return children.every(child => react.isValidElement(child));
-	}
-	function getAsArray(data) {
-	  return Array.isArray(data) ? data : [data];
-	}
-	function mergeProps(source, target) {
+	};
+	const hasValidReactChildren = children => Array.isArray(children) && children.every(react.isValidElement);
+	const getAsArray = data => Array.isArray(data) ? data : [data];
+	const mergeProps = (source, target) => {
 	  const newTarget = {
 	    ...target
 	  };
 	  newTarget.props = Object.assign(source.props, target.props);
 	  return newTarget;
-	}
-	function nodesToString(children, i18nOptions) {
+	};
+	const nodesToString = (children, i18nOptions) => {
 	  if (!children) return '';
 	  let stringNode = '';
 	  const childrenArray = getAsArray(children);
 	  const keepArray = i18nOptions.transSupportBasicHtmlNodes && i18nOptions.transKeepBasicHtmlNodesFor ? i18nOptions.transKeepBasicHtmlNodesFor : [];
 	  childrenArray.forEach((child, childIndex) => {
-	    if (typeof child === 'string') {
+	    if (isString(child)) {
 	      stringNode += `${child}`;
 	    } else if (react.isValidElement(child)) {
-	      const childPropsCount = Object.keys(child.props).length;
-	      const shouldKeepChild = keepArray.indexOf(child.type) > -1;
-	      const childChildren = child.props.children;
-	      if (!childChildren && shouldKeepChild && childPropsCount === 0) {
-	        stringNode += `<${child.type}/>`;
-	      } else if (!childChildren && (!shouldKeepChild || childPropsCount !== 0)) {
+	      const {
+	        props,
+	        type
+	      } = child;
+	      const childPropsCount = Object.keys(props).length;
+	      const shouldKeepChild = keepArray.indexOf(type) > -1;
+	      const childChildren = props.children;
+	      if (!childChildren && shouldKeepChild && !childPropsCount) {
+	        stringNode += `<${type}/>`;
+	      } else if (!childChildren && (!shouldKeepChild || childPropsCount) || props.i18nIsDynamicList) {
 	        stringNode += `<${childIndex}></${childIndex}>`;
-	      } else if (child.props.i18nIsDynamicList) {
-	        stringNode += `<${childIndex}></${childIndex}>`;
-	      } else if (shouldKeepChild && childPropsCount === 1 && typeof childChildren === 'string') {
-	        stringNode += `<${child.type}>${childChildren}</${child.type}>`;
+	      } else if (shouldKeepChild && childPropsCount === 1 && isString(childChildren)) {
+	        stringNode += `<${type}>${childChildren}</${type}>`;
 	      } else {
 	        const content = nodesToString(childChildren, i18nOptions);
 	        stringNode += `<${childIndex}>${content}</${childIndex}>`;
 	      }
 	    } else if (child === null) {
 	      warn(`Trans: the passed in value is invalid - seems you passed in a null child.`);
-	    } else if (typeof child === 'object') {
+	    } else if (isObject(child)) {
 	      const {
 	        format,
 	        ...clone
@@ -319,32 +312,32 @@
 	    }
 	  });
 	  return stringNode;
-	}
-	function renderNodes(children, targetString, i18n, i18nOptions, combinedTOpts, shouldUnescape) {
+	};
+	const renderNodes = (children, targetString, i18n, i18nOptions, combinedTOpts, shouldUnescape) => {
 	  if (targetString === '') return [];
 	  const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
 	  const emptyChildrenButNeedsHandling = targetString && new RegExp(keepArray.map(keep => `<${keep}`).join('|')).test(targetString);
 	  if (!children && !emptyChildrenButNeedsHandling && !shouldUnescape) return [targetString];
 	  const data = {};
-	  function getData(childs) {
+	  const getData = childs => {
 	    const childrenArray = getAsArray(childs);
 	    childrenArray.forEach(child => {
-	      if (typeof child === 'string') return;
-	      if (hasChildren(child)) getData(getChildren(child));else if (typeof child === 'object' && !react.isValidElement(child)) Object.assign(data, child);
+	      if (isString(child)) return;
+	      if (hasChildren(child)) getData(getChildren(child));else if (isObject(child) && !react.isValidElement(child)) Object.assign(data, child);
 	    });
-	  }
+	  };
 	  getData(children);
 	  const ast = c.parse(`<0>${targetString}</0>`);
 	  const opts = {
 	    ...data,
 	    ...combinedTOpts
 	  };
-	  function renderInner(child, node, rootReactNode) {
+	  const renderInner = (child, node, rootReactNode) => {
 	    const childs = getChildren(child);
 	    const mappedChildren = mapAST(childs, node.children, rootReactNode);
 	    return hasValidReactChildren(childs) && mappedChildren.length === 0 || child.props && child.props.i18nIsDynamicList ? childs : mappedChildren;
-	  }
-	  function pushTranslatedJSX(child, inner, mem, i, isVoid) {
+	  };
+	  const pushTranslatedJSX = (child, inner, mem, i, isVoid) => {
 	    if (child.dummy) {
 	      child.children = inner;
 	      mem.push(react.cloneElement(child, {
@@ -363,8 +356,8 @@
 	        }, isVoid ? null : inner);
 	      }));
 	    }
-	  }
-	  function mapAST(reactNode, astNode, rootReactNode) {
+	  };
+	  const mapAST = (reactNode, astNode, rootReactNode) => {
 	    const reactNodes = getAsArray(reactNode);
 	    const astNodes = getAsArray(astNode);
 	    return astNodes.reduce((mem, node, i) => {
@@ -378,9 +371,9 @@
 	        }, tmp) : tmp;
 	        const isElement = react.isValidElement(child);
 	        const isValidTranslationWithChildren = isElement && hasChildren(node, true) && !node.voidElement;
-	        const isEmptyTransWithHTML = emptyChildrenButNeedsHandling && typeof child === 'object' && child.dummy && !isElement;
-	        const isKnownComponent = typeof children === 'object' && children !== null && Object.hasOwnProperty.call(children, node.name);
-	        if (typeof child === 'string') {
+	        const isEmptyTransWithHTML = emptyChildrenButNeedsHandling && isObject(child) && child.dummy && !isElement;
+	        const isKnownComponent = isObject(children) && Object.hasOwnProperty.call(children, node.name);
+	        if (isString(child)) {
 	          const value = i18n.services.interpolator.interpolate(child, opts, i18n.language);
 	          mem.push(value);
 	        } else if (hasChildren(child) || isValidTranslationWithChildren) {
@@ -410,7 +403,7 @@
 	            const inner = mapAST(reactNodes, node.children, rootReactNode);
 	            mem.push(`<${node.name}>${inner}</${node.name}>`);
 	          }
-	        } else if (typeof child === 'object' && !isElement) {
+	        } else if (isObject(child) && !isElement) {
 	          const content = node.children[0] ? translationContent : null;
 	          if (content) mem.push(content);
 	        } else {
@@ -429,13 +422,13 @@
 	      }
 	      return mem;
 	    }, []);
-	  }
+	  };
 	  const result = mapAST([{
 	    dummy: true,
 	    children: children || []
 	  }], ast, getAsArray(children || []));
 	  return getChildren(result[0]);
-	}
+	};
 	function Trans$1(_ref) {
 	  let {
 	    children,
@@ -464,7 +457,7 @@
 	    ...(i18n.options && i18n.options.react)
 	  };
 	  let namespaces = ns || t.ns || i18n.options && i18n.options.defaultNS;
-	  namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
+	  namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
 	  const nodeAsString = nodesToString(children, reactI18nextOptions);
 	  const defaultValue = defaults || nodeAsString || reactI18nextOptions.transEmptyNodeValue || i18nKey;
 	  const {
@@ -529,26 +522,17 @@
 	      if (!this.usedNamespaces[ns]) this.usedNamespaces[ns] = true;
 	    });
 	  }
-	  getUsedNamespaces() {
-	    return Object.keys(this.usedNamespaces);
-	  }
+	  getUsedNamespaces = () => Object.keys(this.usedNamespaces);
 	}
-	function composeInitialProps(ForComponent) {
-	  return ctx => new Promise(resolve => {
-	    const i18nInitialProps = getInitialProps();
-	    if (ForComponent.getInitialProps) {
-	      ForComponent.getInitialProps(ctx).then(componentsInitialProps => {
-	        resolve({
-	          ...componentsInitialProps,
-	          ...i18nInitialProps
-	        });
-	      });
-	    } else {
-	      resolve(i18nInitialProps);
-	    }
-	  });
-	}
-	function getInitialProps() {
+	const composeInitialProps = ForComponent => async ctx => {
+	  const componentsInitialProps = ForComponent.getInitialProps ? await ForComponent.getInitialProps(ctx) : {};
+	  const i18nInitialProps = getInitialProps();
+	  return {
+	    ...componentsInitialProps,
+	    ...i18nInitialProps
+	  };
+	};
+	const getInitialProps = () => {
 	  const i18n = getI18n();
 	  const namespaces = i18n.reportNamespaces ? i18n.reportNamespaces.getUsedNamespaces() : [];
 	  const ret = {};
@@ -562,7 +546,7 @@
 	  ret.initialI18nStore = initialI18nStore;
 	  ret.initialLanguage = i18n.language;
 	  return ret;
-	}
+	};
 
 	function Trans(_ref) {
 	  let {
@@ -612,13 +596,9 @@
 	  }, [value, ignore]);
 	  return ref.current;
 	};
-	function alwaysNewT(i18n, language, namespace, keyPrefix) {
-	  return i18n.getFixedT(language, namespace, keyPrefix);
-	}
-	function useMemoizedT(i18n, language, namespace, keyPrefix) {
-	  return react.useCallback(alwaysNewT(i18n, language, namespace, keyPrefix), [i18n, language, namespace, keyPrefix]);
-	}
-	function useTranslation(ns) {
+	const alwaysNewT = (i18n, language, namespace, keyPrefix) => i18n.getFixedT(language, namespace, keyPrefix);
+	const useMemoizedT = (i18n, language, namespace, keyPrefix) => react.useCallback(alwaysNewT(i18n, language, namespace, keyPrefix), [i18n, language, namespace, keyPrefix]);
+	const useTranslation = function (ns) {
 	  let props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 	  const {
 	    i18n: i18nFromProps
@@ -632,8 +612,8 @@
 	  if (!i18n) {
 	    warnOnce('You will need to pass in an i18next instance by using initReactI18next');
 	    const notReadyT = (k, optsOrDefaultValue) => {
-	      if (typeof optsOrDefaultValue === 'string') return optsOrDefaultValue;
-	      if (optsOrDefaultValue && typeof optsOrDefaultValue === 'object' && typeof optsOrDefaultValue.defaultValue === 'string') return optsOrDefaultValue.defaultValue;
+	      if (isString(optsOrDefaultValue)) return optsOrDefaultValue;
+	      if (isObject(optsOrDefaultValue) && isString(optsOrDefaultValue.defaultValue)) return optsOrDefaultValue.defaultValue;
 	      return Array.isArray(k) ? k[k.length - 1] : k;
 	    };
 	    const retNotReady = [notReadyT, {}, false];
@@ -653,7 +633,7 @@
 	    keyPrefix
 	  } = i18nOptions;
 	  let namespaces = ns || defaultNSFromContext || i18n.options && i18n.options.defaultNS;
-	  namespaces = typeof namespaces === 'string' ? [namespaces] : namespaces || ['translation'];
+	  namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
 	  if (i18n.reportNamespaces.addUsedNamespaces) i18n.reportNamespaces.addUsedNamespaces(namespaces);
 	  const ready = (i18n.isInitialized || i18n.initializedStoreOnce) && namespaces.every(n => hasLoadedNamespace(n, i18n, i18nOptions));
 	  const memoGetT = useMemoizedT(i18n, props.lng || null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
@@ -684,9 +664,9 @@
 	    if (ready && previousJoinedNS && previousJoinedNS !== joinedNS && isMounted.current) {
 	      setT(getNewT);
 	    }
-	    function boundReset() {
+	    const boundReset = () => {
 	      if (isMounted.current) setT(getNewT);
-	    }
+	    };
 	    if (bindI18n && i18n) i18n.on(bindI18n, boundReset);
 	    if (bindI18nStore && i18n) i18n.store.on(bindI18nStore, boundReset);
 	    return () => {
@@ -713,9 +693,9 @@
 	      loadNamespaces(i18n, namespaces, () => resolve());
 	    }
 	  });
-	}
+	};
 
-	function withTranslation(ns) {
+	const withTranslation = function (ns) {
 	  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 	  return function Extend(WrappedComponent) {
 	    function I18nextWithTranslation(_ref) {
@@ -747,7 +727,7 @@
 	    }));
 	    return options.withRef ? react.forwardRef(forwardRef) : I18nextWithTranslation;
 	  };
-	}
+	};
 
 	function Translation(props) {
 	  const {
@@ -777,7 +757,7 @@
 	  }, children);
 	}
 
-	function useSSR(initialI18nStore, initialLanguage) {
+	const useSSR = function (initialI18nStore, initialLanguage) {
 	  let props = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 	  const {
 	    i18n: i18nFromProps
@@ -802,27 +782,25 @@
 	    i18n.changeLanguage(initialLanguage);
 	    i18n.initializedLanguageOnce = true;
 	  }
-	}
+	};
 
-	function withSSR() {
-	  return function Extend(WrappedComponent) {
-	    function I18nextWithSSR(_ref) {
-	      let {
-	        initialI18nStore,
-	        initialLanguage,
-	        ...rest
-	      } = _ref;
-	      useSSR(initialI18nStore, initialLanguage);
-	      return react.createElement(WrappedComponent, {
-	        ...rest
-	      });
-	    }
-	    I18nextWithSSR.getInitialProps = composeInitialProps(WrappedComponent);
-	    I18nextWithSSR.displayName = `withI18nextSSR(${getDisplayName(WrappedComponent)})`;
-	    I18nextWithSSR.WrappedComponent = WrappedComponent;
-	    return I18nextWithSSR;
-	  };
-	}
+	const withSSR = () => function Extend(WrappedComponent) {
+	  function I18nextWithSSR(_ref) {
+	    let {
+	      initialI18nStore,
+	      initialLanguage,
+	      ...rest
+	    } = _ref;
+	    useSSR(initialI18nStore, initialLanguage);
+	    return react.createElement(WrappedComponent, {
+	      ...rest
+	    });
+	  }
+	  I18nextWithSSR.getInitialProps = composeInitialProps(WrappedComponent);
+	  I18nextWithSSR.displayName = `withI18nextSSR(${getDisplayName(WrappedComponent)})`;
+	  I18nextWithSSR.WrappedComponent = WrappedComponent;
+	  return I18nextWithSSR;
+	};
 
 	const date = () => '';
 	const time = () => '';

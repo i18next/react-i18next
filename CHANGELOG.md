@@ -1,3 +1,12 @@
+### 14.1.3
+
+- create a isObject helper function [1766](https://github.com/i18next/react-i18next/pull/1766)
+- optimize nodesToString [1765](https://github.com/i18next/react-i18next/pull/1765)
+- Simplifies hasValidReactChildren [1764](https://github.com/i18next/react-i18next/pull/1764)
+- create a isString helper to avoid code duplication [1763](https://github.com/i18next/react-i18next/pull/1763)
+- use arrow functions where possible [1762](https://github.com/i18next/react-i18next/pull/1762)
+- use the commented out async code [1761](https://github.com/i18next/react-i18next/pull/1761)
+
 ### 14.1.2
 
 - bring back internal interpolationOverride handling for Trans component (if there are childrens), fixes [1754](https://github.com/i18next/react-i18next/issues/1754)
