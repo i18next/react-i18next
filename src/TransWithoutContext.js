@@ -17,10 +17,8 @@ const getChildren = (node) => {
   return node.props && node.props.i18nIsDynamicList ? getAsArray(children) : children;
 };
 
-const hasValidReactChildren = (children) => {
-  if (Object.prototype.toString.call(children) !== '[object Array]') return false;
-  return children.every((child) => isValidElement(child));
-};
+const hasValidReactChildren = (children) =>
+  Array.isArray(children) && children.every(isValidElement);
 
 const getAsArray = (data) => (Array.isArray(data) ? data : [data]);
 
