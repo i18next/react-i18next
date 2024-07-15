@@ -47,19 +47,22 @@ export const nodesToString = (children, i18nOptions) => {
       // expected e.g. lorem
       stringNode += `${child}`;
     } else if (isValidElement(child)) {
-      const childPropsCount = Object.keys(child.props).length;
-      const shouldKeepChild = keepArray.indexOf(child.type) > -1;
-      const childChildren = child.props.children;
+      const { props, type } = child;
+      const childPropsCount = Object.keys(props).length;
+      const shouldKeepChild = keepArray.indexOf(type) > -1;
+      const childChildren = props.children;
 
-      if (!childChildren && shouldKeepChild && childPropsCount === 0) {
+      if (!childChildren && shouldKeepChild && !childPropsCount) {
         // actual e.g. lorem <br/> ipsum
         // expected e.g. lorem <br/> ipsum
-        stringNode += `<${child.type}/>`;
-      } else if (!childChildren && (!shouldKeepChild || childPropsCount !== 0)) {
+        stringNode += `<${type}/>`;
+      } else if (
+        (!childChildren && (!shouldKeepChild || childPropsCount)) ||
+        props.i18nIsDynamicList
+      ) {
         // actual e.g. lorem <hr className="test" /> ipsum
         // expected e.g. lorem <0></0> ipsum
-        stringNode += `<${childIndex}></${childIndex}>`;
-      } else if (child.props.i18nIsDynamicList) {
+        // or
         // we got a dynamic list like
         // e.g. <ul i18nIsDynamicList>{['a', 'b'].map(item => ( <li key={item}>{item}</li> ))}</ul>
         // expected e.g. "<0></0>", not e.g. "<0><0>a</0><1>b</1></0>"
@@ -67,7 +70,7 @@ export const nodesToString = (children, i18nOptions) => {
       } else if (shouldKeepChild && childPropsCount === 1 && isString(childChildren)) {
         // actual e.g. dolor <strong>bold</strong> amet
         // expected e.g. dolor <strong>bold</strong> amet
-        stringNode += `<${child.type}>${childChildren}</${child.type}>`;
+        stringNode += `<${type}>${childChildren}</${type}>`;
       } else {
         // regular case mapping the inner children
         const content = nodesToString(childChildren, i18nOptions);
