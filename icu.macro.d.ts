@@ -33,11 +33,11 @@ declare module 'react-i18next/icu.macro' {
       ? // support the standard properties of Plural
         PluralSubProps<Key, Ns>[P]
       : // this supports infinite $0={..} or $123={..}
-      // technically it also supports $-1={..} and $2.3={..} but we don't need to
-      // worry since that's invalid syntax.
-      P extends `$${number}`
-      ? string | ReactElement
-      : never;
+        // technically it also supports $-1={..} and $2.3={..} but we don't need to
+        // worry since that's invalid syntax.
+        P extends `$${number}`
+        ? string | ReactElement
+        : never;
   };
 
   interface SelectSubProps {
