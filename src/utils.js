@@ -1,22 +1,20 @@
-// Do not use arrow function here as it will break optimizations of arguments
-export function warn(...args) {
+export const warn = (...args) => {
   if (console && console.warn) {
     if (isString(args[0])) args[0] = `react-i18next:: ${args[0]}`;
     console.warn(...args);
   }
-}
+};
 
 const alreadyWarned = {};
-// Do not use arrow function here as it will break optimizations of arguments
-export function warnOnce(...args) {
+export const warnOnce = (...args) => {
   if (isString(args[0]) && alreadyWarned[args[0]]) return;
   if (isString(args[0])) alreadyWarned[args[0]] = new Date();
   warn(...args);
-}
+};
 
 // not needed right now
 //
-// export function deprecated(...args) {
+// export const deprecated = (...args) => {
 //   if (process && process.env && (!process.env.NODE_ENV || process.env.NODE_ENV === 'development')) {
 //     if (isString(args[0])) args[0] = `deprecation warning -> ${args[0]}`;
 //     warnOnce(...args);
