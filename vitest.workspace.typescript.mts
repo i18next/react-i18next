@@ -27,6 +27,17 @@ export default defineWorkspace(
           test: {
             dir: `./${dirPath}`,
             name: workspaceName,
+            alias: {
+              /**
+               * From `vitest` >= 2 imports are resolved even if we are running only typecheck tests.
+               * This will result in:
+               * ```text
+               * Error: Failed to resolve entry for package "react-i18next". The package may have incorrect main/module/exports specified in its package.json.
+               * ```
+               * To avoid a useless build process before running these tests an empty alias to `react-i18next` is added.
+               */
+              'react-i18next': '',
+            },
             typecheck: {
               enabled: true,
               include: [`**/${dirPath}/*.test.{ts,tsx}`],
