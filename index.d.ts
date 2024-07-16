@@ -95,8 +95,8 @@ export type UseTranslationResponse<Ns extends Namespace, KPrefix> = [
 export type FallbackNs<Ns> = Ns extends undefined
   ? _DefaultNamespace
   : Ns extends Namespace
-  ? Ns
-  : _DefaultNamespace;
+    ? Ns
+    : _DefaultNamespace;
 
 export function useTranslation<
   Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
