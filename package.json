@@ -137,7 +137,7 @@
     "format": "prettier \"{,**/}*.{ts,tsx,mts,js,json,md}\" --check",
     "format:fix": "prettier \"{,**/}*.{ts,tsx,mts,js,json,md}\" --write",
     "copy": "cp-cli ./dist/umd/react-i18next.min.js ./react-i18next.min.js && cp-cli ./dist/umd/react-i18next.js ./react-i18next.js && echo '{\"type\":\"module\"}' > dist/es/package.json",
-    "build:es": "cross-env BABEL_ENV=jsnext babel src --out-dir dist/es",
+    "build:es": "cross-env BABEL_ENV=ESNext babel src --out-dir dist/es",
     "build:cjs": "babel src --out-dir dist/commonjs",
     "build:umd": "rollup -c rollup.config.mjs --format umd && rollup -c rollup.config.mjs --format umd --uglify",
     "build:amd": "rollup -c rollup.config.mjs --format amd && rollup -c rollup.config.mjs --format amd --uglify",

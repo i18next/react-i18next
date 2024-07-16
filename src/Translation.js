@@ -1,7 +1,6 @@
 import { useTranslation } from './useTranslation.js';
 
-export function Translation(props) {
-  const { ns, children, ...options } = props;
+export const Translation = ({ ns, children, ...options }) => {
   const [t, i18n, ready] = useTranslation(ns, options);
 
   return children(
@@ -12,4 +11,4 @@ export function Translation(props) {
     },
     ready,
   );
-}
+};
