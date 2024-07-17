@@ -14,7 +14,7 @@ export class ReportNamespaces {
 
   addUsedNamespaces(namespaces) {
     namespaces.forEach((ns) => {
-      if (!this.usedNamespaces[ns]) this.usedNamespaces[ns] = true;
+      this.usedNamespaces[ns] ??= true;
     });
   }
 
@@ -22,9 +22,7 @@ export class ReportNamespaces {
 }
 
 export const composeInitialProps = (ForComponent) => async (ctx) => {
-  const componentsInitialProps = ForComponent.getInitialProps
-    ? await ForComponent.getInitialProps(ctx)
-    : {};
+  const componentsInitialProps = (await ForComponent.getInitialProps?.(ctx)) ?? {};
 
   const i18nInitialProps = getInitialProps();
 
@@ -36,7 +34,7 @@ export const composeInitialProps = (ForComponent) => async (ctx) => {
 
 export const getInitialProps = () => {
   const i18n = getI18n();
-  const namespaces = i18n.reportNamespaces ? i18n.reportNamespaces.getUsedNamespaces() : [];
+  const namespaces = i18n.reportNamespaces?.getUsedNamespaces() ?? [];
 
   const ret = {};
   const initialI18nStore = {};

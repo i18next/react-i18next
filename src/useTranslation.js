@@ -49,7 +49,7 @@ export const useTranslation = (ns, props = {}) => {
     return retNotReady;
   }
 
-  if (i18n.options.react && i18n.options.react.wait !== undefined)
+  if (i18n.options.react?.wait)
     warnOnce(
       'It seems you are still using the old wait option, you may migrate to the new useSuspense behaviour.',
     );
@@ -58,11 +58,11 @@ export const useTranslation = (ns, props = {}) => {
   const { useSuspense, keyPrefix } = i18nOptions;
 
   // prepare having a namespace
-  let namespaces = ns || defaultNSFromContext || (i18n.options && i18n.options.defaultNS);
+  let namespaces = ns || defaultNSFromContext || i18n.options?.defaultNS;
   namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
 
   // report namespaces as used
-  if (i18n.reportNamespaces.addUsedNamespaces) i18n.reportNamespaces.addUsedNamespaces(namespaces);
+  i18n.reportNamespaces.addUsedNamespaces?.(namespaces);
 
   // are we ready? yes if all namespaces in first language are loaded already (either with data or empty object on failed load)
   const ready =
@@ -120,13 +120,13 @@ export const useTranslation = (ns, props = {}) => {
     };
 
     // bind events to trigger change, like languageChanged
-    if (bindI18n && i18n) i18n.on(bindI18n, boundReset);
-    if (bindI18nStore && i18n) i18n.store.on(bindI18nStore, boundReset);
+    if (bindI18n) i18n?.on(bindI18n, boundReset);
+    if (bindI18nStore) i18n?.store.on(bindI18nStore, boundReset);
 
     // unbinding on unmount
     return () => {
       isMounted.current = false;
-      if (bindI18n && i18n) bindI18n.split(' ').forEach((e) => i18n.off(e, boundReset));
+      if (i18n) bindI18n?.split(' ').forEach((e) => i18n.off(e, boundReset));
       if (bindI18nStore && i18n)
         bindI18nStore.split(' ').forEach((e) => i18n.store.off(e, boundReset));
     };

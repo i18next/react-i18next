@@ -8,7 +8,7 @@ export const useSSR = (initialI18nStore, initialLanguage, props = {}) => {
 
   // opt out if is a cloned instance, eg. created by i18next-http-middleware on request
   // -> do not set initial stuff on server side
-  if (i18n.options && i18n.options.isClone) return;
+  if (i18n.options?.isClone) return;
 
   // nextjs / SSR: getting data from next.js or other ssr stack
   if (initialI18nStore && !i18n.initializedStoreOnce) {
