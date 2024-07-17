@@ -118,24 +118,24 @@
 	  }
 	};
 
-	function warn() {
-	  if (console && console.warn) {
+	const warn = function () {
+	  if (console?.warn) {
 	    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
 	      args[_key] = arguments[_key];
 	    }
 	    if (isString(args[0])) args[0] = `react-i18next:: ${args[0]}`;
 	    console.warn(...args);
 	  }
-	}
+	};
 	const alreadyWarned = {};
-	function warnOnce() {
+	const warnOnce = function () {
 	  for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
 	    args[_key2] = arguments[_key2];
 	  }
 	  if (isString(args[0]) && alreadyWarned[args[0]]) return;
 	  if (isString(args[0])) alreadyWarned[args[0]] = new Date();
 	  warn(...args);
-	}
+	};
 	const loadedClb = (i18n, cb) => () => {
 	  if (i18n.isInitialized) {
 	    cb();
@@ -159,36 +159,16 @@
 	  });
 	  i18n.loadLanguages(lng, loadedClb(i18n, cb));
 	};
-	const oldI18nextHasLoadedNamespace = function (ns, i18n) {
-	  let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-	  const lng = i18n.languages[0];
-	  const fallbackLng = i18n.options ? i18n.options.fallbackLng : false;
-	  const lastLng = i18n.languages[i18n.languages.length - 1];
-	  if (lng.toLowerCase() === 'cimode') return true;
-	  const loadNotPending = (l, n) => {
-	    const loadState = i18n.services.backendConnector.state[`${l}|${n}`];
-	    return loadState === -1 || loadState === 2;
-	  };
-	  if (options.bindI18n && options.bindI18n.indexOf('languageChanging') > -1 && i18n.services.backendConnector.backend && i18n.isLanguageChangingTo && !loadNotPending(i18n.isLanguageChangingTo, ns)) return false;
-	  if (i18n.hasResourceBundle(lng, ns)) return true;
-	  if (!i18n.services.backendConnector.backend || i18n.options.resources && !i18n.options.partialBundledLanguages) return true;
-	  if (loadNotPending(lng, ns) && (!fallbackLng || loadNotPending(lastLng, ns))) return true;
-	  return false;
-	};
 	const hasLoadedNamespace = function (ns, i18n) {
 	  let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 	  if (!i18n.languages || !i18n.languages.length) {
 	    warnOnce('i18n.languages were undefined or empty', i18n.languages);
 	    return true;
 	  }
-	  const isNewerI18next = i18n.options.ignoreJSONStructure !== undefined;
-	  if (!isNewerI18next) {
-	    return oldI18nextHasLoadedNamespace(ns, i18n, options);
-	  }
 	  return i18n.hasLoadedNamespace(ns, {
 	    lng: options.lng,
 	    precheck: (i18nInstance, loadNotPending) => {
-	      if (options.bindI18n && options.bindI18n.indexOf('languageChanging') > -1 && i18nInstance.services.backendConnector.backend && i18nInstance.isLanguageChangingTo && !loadNotPending(i18nInstance.isLanguageChangingTo, ns)) return false;
+	      if (options.bindI18n?.indexOf('languageChanging') > -1 && i18nInstance.services.backendConnector.backend && i18nInstance.isLanguageChangingTo && !loadNotPending(i18nInstance.isLanguageChangingTo, ns)) return false;
 	    }
 	  });
 	};
@@ -249,14 +229,14 @@
 
 	const hasChildren = (node, checkLength) => {
 	  if (!node) return false;
-	  const base = node.props ? node.props.children : node.children;
+	  const base = node.props?.children ?? node.children;
 	  if (checkLength) return base.length > 0;
 	  return !!base;
 	};
 	const getChildren = node => {
 	  if (!node) return [];
-	  const children = node.props ? node.props.children : node.children;
-	  return node.props && node.props.i18nIsDynamicList ? getAsArray(children) : children;
+	  const children = node.props?.children ?? node.children;
+	  return node.props?.i18nIsDynamicList ? getAsArray(children) : children;
 	};
 	const hasValidReactChildren = children => Array.isArray(children) && children.every(react.isValidElement);
 	const getAsArray = data => Array.isArray(data) ? data : [data];
@@ -271,7 +251,7 @@
 	  if (!children) return '';
 	  let stringNode = '';
 	  const childrenArray = getAsArray(children);
-	  const keepArray = i18nOptions.transSupportBasicHtmlNodes && i18nOptions.transKeepBasicHtmlNodesFor ? i18nOptions.transKeepBasicHtmlNodesFor : [];
+	  const keepArray = i18nOptions?.transSupportBasicHtmlNodes ? i18nOptions.transKeepBasicHtmlNodesFor ?? [] : [];
 	  childrenArray.forEach((child, childIndex) => {
 	    if (isString(child)) {
 	      stringNode += `${child}`;
@@ -335,7 +315,7 @@
 	  const renderInner = (child, node, rootReactNode) => {
 	    const childs = getChildren(child);
 	    const mappedChildren = mapAST(childs, node.children, rootReactNode);
-	    return hasValidReactChildren(childs) && mappedChildren.length === 0 || child.props && child.props.i18nIsDynamicList ? childs : mappedChildren;
+	    return hasValidReactChildren(childs) && mappedChildren.length === 0 || child.props?.i18nIsDynamicList ? childs : mappedChildren;
 	  };
 	  const pushTranslatedJSX = (child, inner, mem, i, isVoid) => {
 	    if (child.dummy) {
@@ -361,7 +341,7 @@
 	    const reactNodes = getAsArray(reactNode);
 	    const astNodes = getAsArray(astNode);
 	    return astNodes.reduce((mem, node, i) => {
-	      const translationContent = node.children && node.children[0] && node.children[0].content && i18n.services.interpolator.interpolate(node.children[0].content, opts, i18n.language);
+	      const translationContent = node.children?.[0]?.content && i18n.services.interpolator.interpolate(node.children[0].content, opts, i18n.language);
 	      if (node.type === 'tag') {
 	        let tmp = reactNodes[parseInt(node.name, 10)];
 	        if (rootReactNode.length === 1 && !tmp) tmp = rootReactNode[0][node.name];
@@ -454,9 +434,9 @@
 	  const t = tFromProps || i18n.t.bind(i18n) || (k => k);
 	  const reactI18nextOptions = {
 	    ...getDefaults(),
-	    ...(i18n.options && i18n.options.react)
+	    ...i18n.options?.react
 	  };
-	  let namespaces = ns || t.ns || i18n.options && i18n.options.defaultNS;
+	  let namespaces = ns || t.ns || i18n.options?.defaultNS;
 	  namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
 	  const nodeAsString = nodesToString(children, reactI18nextOptions);
 	  const defaultValue = defaults || nodeAsString || reactI18nextOptions.transEmptyNodeValue || i18nKey;
@@ -464,7 +444,7 @@
 	    hashTransKey
 	  } = reactI18nextOptions;
 	  const key = i18nKey || (hashTransKey ? hashTransKey(nodeAsString || defaultValue) : nodeAsString || defaultValue);
-	  if (i18n.options && i18n.options.interpolation && i18n.options.interpolation.defaultVariables) {
+	  if (i18n.options?.interpolation?.defaultVariables) {
 	    values = values && Object.keys(values).length > 0 ? {
 	      ...values,
 	      ...i18n.options.interpolation.defaultVariables
@@ -500,7 +480,7 @@
 	    });
 	  }
 	  const content = renderNodes(components || children, translation, i18n, reactI18nextOptions, combinedTOpts, shouldUnescape);
-	  const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
+	  const useAsParent = parent ?? reactI18nextOptions.defaultTransParent;
 	  return useAsParent ? react.createElement(useAsParent, additionalProps, content) : content;
 	}
 
@@ -519,13 +499,13 @@
 	  }
 	  addUsedNamespaces(namespaces) {
 	    namespaces.forEach(ns => {
-	      if (!this.usedNamespaces[ns]) this.usedNamespaces[ns] = true;
+	      this.usedNamespaces[ns] ??= true;
 	    });
 	  }
 	  getUsedNamespaces = () => Object.keys(this.usedNamespaces);
 	}
 	const composeInitialProps = ForComponent => async ctx => {
-	  const componentsInitialProps = ForComponent.getInitialProps ? await ForComponent.getInitialProps(ctx) : {};
+	  const componentsInitialProps = (await ForComponent.getInitialProps?.(ctx)) ?? {};
 	  const i18nInitialProps = getInitialProps();
 	  return {
 	    ...componentsInitialProps,
@@ -534,7 +514,7 @@
 	};
 	const getInitialProps = () => {
 	  const i18n = getI18n();
-	  const namespaces = i18n.reportNamespaces ? i18n.reportNamespaces.getUsedNamespaces() : [];
+	  const namespaces = i18n.reportNamespaces?.getUsedNamespaces() ?? [];
 	  const ret = {};
 	  const initialI18nStore = {};
 	  i18n.languages.forEach(l => {
@@ -570,7 +550,7 @@
 	    defaultNS: defaultNSFromContext
 	  } = react.useContext(I18nContext) || {};
 	  const i18n = i18nFromProps || i18nFromContext || getI18n();
-	  const t = tFromProps || i18n && i18n.t.bind(i18n);
+	  const t = tFromProps || i18n?.t.bind(i18n);
 	  return Trans$1({
 	    children,
 	    count,
@@ -581,7 +561,7 @@
 	    values,
 	    defaults,
 	    components,
-	    ns: ns || t && t.ns || defaultNSFromContext || i18n && i18n.options && i18n.options.defaultNS,
+	    ns: ns || t?.ns || defaultNSFromContext || i18n?.options?.defaultNS,
 	    i18n,
 	    t: tFromProps,
 	    shouldUnescape,
@@ -592,7 +572,7 @@
 	const usePrevious = (value, ignore) => {
 	  const ref = react.useRef();
 	  react.useEffect(() => {
-	    ref.current = ignore ? ref.current : value;
+	    ref.current = value;
 	  }, [value, ignore]);
 	  return ref.current;
 	};
@@ -622,7 +602,7 @@
 	    retNotReady.ready = false;
 	    return retNotReady;
 	  }
-	  if (i18n.options.react && i18n.options.react.wait !== undefined) warnOnce('It seems you are still using the old wait option, you may migrate to the new useSuspense behaviour.');
+	  if (i18n.options.react?.wait) warnOnce('It seems you are still using the old wait option, you may migrate to the new useSuspense behaviour.');
 	  const i18nOptions = {
 	    ...getDefaults(),
 	    ...i18n.options.react,
@@ -632,9 +612,9 @@
 	    useSuspense,
 	    keyPrefix
 	  } = i18nOptions;
-	  let namespaces = ns || defaultNSFromContext || i18n.options && i18n.options.defaultNS;
+	  let namespaces = ns || defaultNSFromContext || i18n.options?.defaultNS;
 	  namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
-	  if (i18n.reportNamespaces.addUsedNamespaces) i18n.reportNamespaces.addUsedNamespaces(namespaces);
+	  i18n.reportNamespaces.addUsedNamespaces?.(namespaces);
 	  const ready = (i18n.isInitialized || i18n.initializedStoreOnce) && namespaces.every(n => hasLoadedNamespace(n, i18n, i18nOptions));
 	  const memoGetT = useMemoizedT(i18n, props.lng || null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
 	  const getT = () => memoGetT;
@@ -667,11 +647,11 @@
 	    const boundReset = () => {
 	      if (isMounted.current) setT(getNewT);
 	    };
-	    if (bindI18n && i18n) i18n.on(bindI18n, boundReset);
-	    if (bindI18nStore && i18n) i18n.store.on(bindI18nStore, boundReset);
+	    if (bindI18n) i18n?.on(bindI18n, boundReset);
+	    if (bindI18nStore) i18n?.store.on(bindI18nStore, boundReset);
 	    return () => {
 	      isMounted.current = false;
-	      if (bindI18n && i18n) bindI18n.split(' ').forEach(e => i18n.off(e, boundReset));
+	      if (i18n) bindI18n?.split(' ').forEach(e => i18n.off(e, boundReset));
 	      if (bindI18nStore && i18n) bindI18nStore.split(' ').forEach(e => i18n.store.off(e, boundReset));
 	    };
 	  }, [i18n, joinedNS]);
@@ -729,18 +709,18 @@
 	  };
 	};
 
-	function Translation(props) {
-	  const {
+	const Translation = _ref => {
+	  let {
 	    ns,
 	    children,
 	    ...options
-	  } = props;
+	  } = _ref;
 	  const [t, i18n, ready] = useTranslation(ns, options);
 	  return children(t, {
 	    i18n,
 	    lng: i18n.language
 	  }, ready);
-	}
+	};
 
 	function I18nextProvider(_ref) {
 	  let {
@@ -766,7 +746,7 @@
 	    i18n: i18nFromContext
 	  } = react.useContext(I18nContext) || {};
 	  const i18n = i18nFromProps || i18nFromContext || getI18n();
-	  if (i18n.options && i18n.options.isClone) return;
+	  if (i18n.options?.isClone) return;
 	  if (initialI18nStore && !i18n.initializedStoreOnce) {
 	    i18n.services.resourceStore.data = initialI18nStore;
 	    i18n.options.ns = Object.values(initialI18nStore).reduce((mem, lngResources) => {
