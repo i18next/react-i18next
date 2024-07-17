@@ -1,5 +1,5 @@
 export const warn = (...args) => {
-  if (console && console.warn) {
+  if (console?.warn) {
     if (isString(args[0])) args[0] = `react-i18next:: ${args[0]}`;
     console.warn(...args);
   }
@@ -54,7 +54,7 @@ export const loadLanguages = (i18n, lng, ns, cb) => {
 // WAIT A LITTLE FOR I18NEXT BEING UPDATED IN THE WILD, before removing this old i18next version support
 const oldI18nextHasLoadedNamespace = (ns, i18n, options = {}) => {
   const lng = i18n.languages[0];
-  const fallbackLng = i18n.options ? i18n.options.fallbackLng : false;
+  const fallbackLng = i18n.options?.fallbackLng ?? false;
   const lastLng = i18n.languages[i18n.languages.length - 1];
 
   // we're in cimode so this shall pass
@@ -69,8 +69,7 @@ const oldI18nextHasLoadedNamespace = (ns, i18n, options = {}) => {
   // so set ready to false while we are changing the language
   // and namespace pending (depends on having a backend)
   if (
-    options.bindI18n &&
-    options.bindI18n.indexOf('languageChanging') > -1 &&
+    options.bindI18n?.indexOf('languageChanging') > -1 &&
     i18n.services.backendConnector.backend &&
     i18n.isLanguageChangingTo &&
     !loadNotPending(i18n.isLanguageChangingTo, ns)
@@ -111,8 +110,7 @@ export const hasLoadedNamespace = (ns, i18n, options = {}) => {
     lng: options.lng,
     precheck: (i18nInstance, loadNotPending) => {
       if (
-        options.bindI18n &&
-        options.bindI18n.indexOf('languageChanging') > -1 &&
+        options.bindI18n?.indexOf('languageChanging') > -1 &&
         i18nInstance.services.backendConnector.backend &&
         i18nInstance.isLanguageChangingTo &&
         !loadNotPending(i18nInstance.isLanguageChangingTo, ns)

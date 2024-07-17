@@ -6,15 +6,15 @@ import { getI18n } from './i18nInstance.js';
 
 const hasChildren = (node, checkLength) => {
   if (!node) return false;
-  const base = node.props ? node.props.children : node.children;
+  const base = node.props?.children ?? node.children;
   if (checkLength) return base.length > 0;
   return !!base;
 };
 
 const getChildren = (node) => {
   if (!node) return [];
-  const children = node.props ? node.props.children : node.children;
-  return node.props && node.props.i18nIsDynamicList ? getAsArray(children) : children;
+  const children = node.props?.children ?? node.children;
+  return node.props?.i18nIsDynamicList ? getAsArray(children) : children;
 };
 
 const hasValidReactChildren = (children) =>
@@ -35,10 +35,9 @@ export const nodesToString = (children, i18nOptions) => {
 
   // do not use `React.Children.toArray`, will fail at object children
   const childrenArray = getAsArray(children);
-  const keepArray =
-    i18nOptions.transSupportBasicHtmlNodes && i18nOptions.transKeepBasicHtmlNodesFor
-      ? i18nOptions.transKeepBasicHtmlNodesFor
-      : [];
+  const keepArray = i18nOptions?.transSupportBasicHtmlNodes
+    ? (i18nOptions.transKeepBasicHtmlNodesFor ?? [])
+    : [];
 
   // e.g. lorem <br/> ipsum {{ messageCount, format }} dolor <strong>bold</strong> amet
   childrenArray.forEach((child, childIndex) => {
@@ -141,7 +140,7 @@ const renderNodes = (children, targetString, i18n, i18nOptions, combinedTOpts, s
     // `mappedChildren` will always be empty if using the `i18nIsDynamicList` prop,
     // but the children might not necessarily be react components
     return (hasValidReactChildren(childs) && mappedChildren.length === 0) ||
-      (child.props && child.props.i18nIsDynamicList)
+      child.props?.i18nIsDynamicList
       ? childs
       : mappedChildren;
   };
@@ -179,9 +178,7 @@ const renderNodes = (children, targetString, i18n, i18nOptions, combinedTOpts, s
 
     return astNodes.reduce((mem, node, i) => {
       const translationContent =
-        node.children &&
-        node.children[0] &&
-        node.children[0].content &&
+        node.children?.[0]?.content &&
         i18n.services.interpolator.interpolate(node.children[0].content, opts, i18n.language);
 
       if (node.type === 'tag') {
@@ -326,10 +323,10 @@ export function Trans({
 
   const t = tFromProps || i18n.t.bind(i18n) || ((k) => k);
 
-  const reactI18nextOptions = { ...getDefaults(), ...(i18n.options && i18n.options.react) };
+  const reactI18nextOptions = { ...getDefaults(), ...i18n.options?.react };
 
   // prepare having a namespace
-  let namespaces = ns || t.ns || (i18n.options && i18n.options.defaultNS);
+  let namespaces = ns || t.ns || i18n.options?.defaultNS;
   namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
 
   const nodeAsString = nodesToString(children, reactI18nextOptions);
@@ -339,7 +336,7 @@ export function Trans({
   const key =
     i18nKey ||
     (hashTransKey ? hashTransKey(nodeAsString || defaultValue) : nodeAsString || defaultValue);
-  if (i18n.options && i18n.options.interpolation && i18n.options.interpolation.defaultVariables) {
+  if (i18n.options?.interpolation?.defaultVariables) {
     // eslint-disable-next-line no-param-reassign
     values =
       values && Object.keys(values).length > 0
@@ -393,7 +390,7 @@ export function Trans({
 
   // allows user to pass `null` to `parent`
   // and override `defaultTransParent` if is present
-  const useAsParent = parent !== undefined ? parent : reactI18nextOptions.defaultTransParent;
+  const useAsParent = parent ?? reactI18nextOptions.defaultTransParent;
 
   return useAsParent ? createElement(useAsParent, additionalProps, content) : content;
 }
