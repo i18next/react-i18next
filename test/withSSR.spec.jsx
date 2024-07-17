@@ -5,6 +5,7 @@ import i18n from './i18n';
 import { setI18n } from '../src/context';
 import { withSSR } from '../src/withSSR';
 import { useTranslation } from '../src/useTranslation';
+import hasLoadedNamespace from './hasLoadedNamespaceMock.js';
 
 vitest.unmock('../src/withSSR');
 
@@ -36,6 +37,7 @@ describe('withSSR', () => {
     hasResourceBundle: (lng, ns) => ns === 'alreadyLoadedNS',
     getResourceBundle: (lng, ns) => ({ lng, ns }),
     loadNamespaces: () => { },
+    hasLoadedNamespace: (ns) => hasLoadedNamespace(ns, mockI18n),
     on: () => { },
     off: () => { },
   };

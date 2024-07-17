@@ -3,6 +3,7 @@ import React from 'react';
 import { renderHook, cleanup as cleanupHook } from '@testing-library/react-hooks';
 import { render, cleanup } from '@testing-library/react';
 import { useTranslation } from '../src/useTranslation';
+import hasLoadedNamespace from './hasLoadedNamespaceMock.js';
 
 vitest.unmock('../src/useTranslation');
 
@@ -28,6 +29,7 @@ afterEach(() => {
       getFixedT: () => (message) => message,
       hasResourceBundle: (lng, ns) => ns === 'alreadyLoadedNS',
       loadNamespaces: () => {},
+      hasLoadedNamespace: (ns) => hasLoadedNamespace(ns, instance),
       on: () => {},
       off: () => {},
       options: {},

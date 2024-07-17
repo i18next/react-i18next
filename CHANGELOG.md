@@ -1,3 +1,10 @@
+### 15.0.0
+
+- use optional chaining, nullish coalescing and nullish coalescing assignment [1774](https://github.com/i18next/react-i18next/pull/1774)
+- Build config and optimizations [1769](https://github.com/i18next/react-i18next/pull/1769)
+- some dependency updates [1768](https://github.com/i18next/react-i18next/pull/1768)
+- use modern hasLoadedNamespace code (now requires at least i18next > v19.4.5 (introduced in june 2020))
+
 ### 14.1.3
 
 - create a isObject helper function [1766](https://github.com/i18next/react-i18next/pull/1766)

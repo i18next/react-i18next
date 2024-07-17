@@ -51,61 +51,12 @@ export const loadLanguages = (i18n, lng, ns, cb) => {
   i18n.loadLanguages(lng, loadedClb(i18n, cb));
 };
 
-// WAIT A LITTLE FOR I18NEXT BEING UPDATED IN THE WILD, before removing this old i18next version support
-const oldI18nextHasLoadedNamespace = (ns, i18n, options = {}) => {
-  const lng = i18n.languages[0];
-  const fallbackLng = i18n.options?.fallbackLng ?? false;
-  const lastLng = i18n.languages[i18n.languages.length - 1];
-
-  // we're in cimode so this shall pass
-  if (lng.toLowerCase() === 'cimode') return true;
-
-  const loadNotPending = (l, n) => {
-    const loadState = i18n.services.backendConnector.state[`${l}|${n}`];
-    return loadState === -1 || loadState === 2;
-  };
-
-  // bound to trigger on event languageChanging
-  // so set ready to false while we are changing the language
-  // and namespace pending (depends on having a backend)
-  if (
-    options.bindI18n?.indexOf('languageChanging') > -1 &&
-    i18n.services.backendConnector.backend &&
-    i18n.isLanguageChangingTo &&
-    !loadNotPending(i18n.isLanguageChangingTo, ns)
-  )
-    return false;
-
-  // loaded -> SUCCESS
-  if (i18n.hasResourceBundle(lng, ns)) return true;
-
-  // were not loading at all -> SEMI SUCCESS
-  if (
-    !i18n.services.backendConnector.backend ||
-    (i18n.options.resources && !i18n.options.partialBundledLanguages)
-  )
-    return true;
-
-  // failed loading ns - but at least fallback is not pending -> SEMI SUCCESS
-  if (loadNotPending(lng, ns) && (!fallbackLng || loadNotPending(lastLng, ns))) return true;
-
-  return false;
-};
-
 export const hasLoadedNamespace = (ns, i18n, options = {}) => {
   if (!i18n.languages || !i18n.languages.length) {
     warnOnce('i18n.languages were undefined or empty', i18n.languages);
     return true;
   }
 
-  // ignoreJSONStructure was introduced in v20.0.0 (MARCH 2021)
-  const isNewerI18next = i18n.options.ignoreJSONStructure !== undefined;
-  if (!isNewerI18next) {
-    // WAIT A LITTLE FOR I18NEXT BEING UPDATED IN THE WILD, before removing this old i18next version support
-    return oldI18nextHasLoadedNamespace(ns, i18n, options);
-  }
-
-  // IN I18NEXT > v19.4.5 WE CAN (INTRODUCED JUNE 2020)
   return i18n.hasLoadedNamespace(ns, {
     lng: options.lng,
     precheck: (i18nInstance, loadNotPending) => {

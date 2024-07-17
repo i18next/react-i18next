@@ -3,6 +3,7 @@ import React from 'react';
 import { render, screen, cleanup } from '@testing-library/react';
 import { I18nextProvider } from '../src/I18nextProvider';
 import { useTranslation } from '../src/useTranslation';
+import hasLoadedNamespace from './hasLoadedNamespaceMock.js';
 
 vitest.unmock('../src/useTranslation');
 vitest.unmock('../src/I18nextProvider');
@@ -21,6 +22,7 @@ const instance = {
   getFixedT: () => (message) => message,
   hasResourceBundle: (lng, ns) => ns === 'translation',
   loadNamespaces: () => {},
+  hasLoadedNamespace: (ns) => hasLoadedNamespace(ns, instance),
   on: () => {},
   off: () => {},
   options: {},
