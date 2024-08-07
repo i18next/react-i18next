@@ -502,7 +502,9 @@
 	      this.usedNamespaces[ns] ??= true;
 	    });
 	  }
-	  getUsedNamespaces = () => Object.keys(this.usedNamespaces);
+	  getUsedNamespaces() {
+	    return Object.keys(this.usedNamespaces);
+	  }
 	}
 	const composeInitialProps = ForComponent => async ctx => {
 	  const componentsInitialProps = (await ForComponent.getInitialProps?.(ctx)) ?? {};

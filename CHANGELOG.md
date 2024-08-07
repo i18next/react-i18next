@@ -1,3 +1,7 @@
+### 15.0.1
+
+- revert arrow function in class property to address [this](https://github.com/i18next/react-i18next/commit/46e8ea5ff69325b73087811a2ce6a2b1faffa971#r145061161)
+
 ### 15.0.0
 
 - use optional chaining, nullish coalescing and nullish coalescing assignment [1774](https://github.com/i18next/react-i18next/pull/1774)

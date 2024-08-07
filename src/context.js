@@ -18,7 +18,9 @@ export class ReportNamespaces {
     });
   }
 
-  getUsedNamespaces = () => Object.keys(this.usedNamespaces);
+  getUsedNamespaces() {
+    return Object.keys(this.usedNamespaces);
+  }
 }
 
 export const composeInitialProps = (ForComponent) => async (ctx) => {
