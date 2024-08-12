@@ -320,10 +320,8 @@ function processTrans(children, babel, componentStartIndex = 0) {
   return res;
 }
 
-// eslint-disable-next-line no-control-regex
-const leadingNewLineAndWhitespace = new RegExp('^\n\\s+', 'g');
-// eslint-disable-next-line no-control-regex
-const trailingNewLineAndWhitespace = new RegExp('\n\\s+$', 'g');
+const leadingNewLineAndWhitespace = /^\n\s+/g;
+const trailingNewLineAndWhitespace = /\n\s+$/g;
 function trimIndent(text) {
   const newText = text
     .replace(leadingNewLineAndWhitespace, '')

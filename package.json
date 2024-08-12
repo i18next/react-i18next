@@ -133,7 +133,8 @@
   },
   "scripts": {
     "clean": "rimraf dist && mkdirp dist",
-    "lint": "eslint ./src ./test",
+    "lint": "eslint --cache .",
+    "lint:fix": "eslint --cache --fix .",
     "format": "prettier . --check",
     "format:fix": "prettier . --write --list-different",
     "copy": "cpy ./dist/umd/react-i18next.min.js ./dist/umd/react-i18next.js . --flat && echo '{\"type\":\"module\"}' > dist/es/package.json",
