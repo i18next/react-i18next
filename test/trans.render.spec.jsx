@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach  } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import React from 'react';
 import { render, cleanup } from '@testing-library/react';
 import i18n from './i18n';
@@ -196,9 +196,7 @@ describe('trans simple with custom html tag', () => {
 describe('trans bracketNotation', () => {
   function TestComponent() {
     const numOfItems = 4;
-    return (
-      <Trans i18nKey="bracketNotation" count={numOfItems} />
-    );
+    return <Trans i18nKey="bracketNotation" count={numOfItems} />;
   }
 
   it('should render correct content', () => {
@@ -214,9 +212,7 @@ describe('trans bracketNotation', () => {
 describe('trans otherNotation', () => {
   function TestComponent() {
     const numOfItems = 4;
-    return (
-      <Trans i18nKey="otherNotation" count={numOfItems} />
-    );
+    return <Trans i18nKey="otherNotation" count={numOfItems} />;
   }
 
   it('should render correct content', () => {
@@ -866,16 +862,8 @@ describe('trans with formatting', () => {
   function TestComponent({ parent }) {
     return (
       <>
-        <Trans
-          parent={parent}
-          i18nKey="trans-key-with-generic-var"
-          values={{ foo: 1234 }}
-        />
-        <Trans
-          parent={parent}
-          i18nKey="trans-key-with-number-var"
-          values={{ foo: 1234 }}
-        />
+        <Trans parent={parent} i18nKey="trans-key-with-generic-var" values={{ foo: 1234 }} />
+        <Trans parent={parent} i18nKey="trans-key-with-number-var" values={{ foo: 1234 }} />
         <Trans parent={parent} i18nKey="trans-key-with-number-var">
           {{ foo: 1234 }}
         </Trans>
@@ -930,9 +918,7 @@ describe('trans with undefined context property', () => {
 
 describe('trans with context property but no children', () => {
   function TestComponent({ parent }) {
-    return (
-      <Trans i18nKey="testTransNoChildrenWithCtx" context="home" parent={parent} />
-    );
+    return <Trans i18nKey="testTransNoChildrenWithCtx" context="home" parent={parent} />;
   }
 
   it('should render correct content', () => {
@@ -947,9 +933,7 @@ describe('trans with context property but no children', () => {
 
 describe('trans with undefined context property but no children', () => {
   function TestComponent({ parent }) {
-    return (
-      <Trans i18nKey="testTransNoChildrenWithCtx" context={undefined} parent={parent} />
-    );
+    return <Trans i18nKey="testTransNoChildrenWithCtx" context={undefined} parent={parent} />;
   }
 
   it('should render correct content', () => {
@@ -964,9 +948,7 @@ describe('trans with undefined context property but no children', () => {
 
 describe('trans with different context property but no children', () => {
   function TestComponent({ parent }) {
-    return (
-      <Trans i18nKey="testTransNoChildrenWithCtx" context="somewhere" parent={parent} />
-    );
+    return <Trans i18nKey="testTransNoChildrenWithCtx" context="somewhere" parent={parent} />;
   }
 
   it('should render correct content', () => {

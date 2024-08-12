@@ -134,8 +134,8 @@
   "scripts": {
     "clean": "rimraf dist && mkdirp dist",
     "lint": "eslint ./src ./test",
-    "format": "prettier \"{,**/}*.{ts,tsx,mts,js,json,md}\" --check",
-    "format:fix": "prettier \"{,**/}*.{ts,tsx,mts,js,json,md}\" --write",
+    "format": "prettier . --check",
+    "format:fix": "prettier . --write --list-different",
     "copy": "cp-cli ./dist/umd/react-i18next.min.js ./react-i18next.min.js && cp-cli ./dist/umd/react-i18next.js ./react-i18next.js && echo '{\"type\":\"module\"}' > dist/es/package.json",
     "build:es": "cross-env BABEL_ENV=ESNext babel src --out-dir dist/es",
     "build:cjs": "babel src --out-dir dist/commonjs",

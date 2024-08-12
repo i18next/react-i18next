@@ -1,19 +1,18 @@
-  
 # Number of days of inactivity before an issue becomes stale
 daysUntilStale: 7
 # Number of days of inactivity before a stale issue is closed
 daysUntilClose: 7
 # Issues with these labels will never be considered stale
 exemptLabels:
-  - "discussion"
-  - "feature request"
-  - "bug"
-  - "breaking change"
-  - "doc"
-  - "issue"
-  - "help wanted"
-  - "good first issue"
-  - "pr hold"
+  - 'discussion'
+  - 'feature request'
+  - 'bug'
+  - 'breaking change'
+  - 'doc'
+  - 'issue'
+  - 'help wanted'
+  - 'good first issue'
+  - 'pr hold'
 # Label to use when marking an issue as stale
 staleLabel: stale
 # Comment to post when marking an issue as stale. Set to `false` to disable
