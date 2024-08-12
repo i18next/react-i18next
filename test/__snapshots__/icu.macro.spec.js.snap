@@ -8,10 +8,17 @@ const x = <Trans>Welcome, { name }!</Trans>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from "react-i18next";
-const x = <Trans defaults="Welcome, {name}!" components={[]} values={{
-  name
-}} />;
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="Welcome, {name}!"
+    components={[]}
+    values={{
+      name,
+    }}
+  />
+);
+
 "
 `;
 
@@ -23,10 +30,17 @@ const x = <Trans>Welcome, <strong>{ name }</strong>!</Trans>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from "react-i18next";
-const x = <Trans defaults="Welcome, <0>{name}</0>!" components={[<strong>{name}</strong>]} values={{
-  name
-}} />;
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="Welcome, <0>{name}</0>!"
+    components={[<strong>{name}</strong>]}
+    values={{
+      name,
+    }}
+  />
+);
+
 "
 `;
 
@@ -40,9 +54,16 @@ const x = <Trans>Trainers: { trainersCount, number }</Trans>
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { useTranslation, Trans } from 'react-i18next';
-const x = <Trans defaults="Trainers: {trainersCount, number}" components={[]} values={{
-  trainersCount
-}} />;
+const x = (
+  <Trans
+    defaults="Trainers: {trainersCount, number}"
+    components={[]}
+    values={{
+      trainersCount,
+    }}
+  />
+);
+
 "
 `;
 
@@ -54,10 +75,17 @@ const x = <Trans>Trainers: <strong>{ trainersCount, number }</strong>!</Trans>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from "react-i18next";
-const x = <Trans defaults="Trainers: <0>{trainersCount, number}</0>!" components={[<strong>{(trainersCount)}</strong>]} values={{
-  trainersCount
-}} />;
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="Trainers: <0>{trainersCount, number}</0>!"
+    components={[<strong>{trainersCount}</strong>]}
+    values={{
+      trainersCount,
+    }}
+  />
+);
+
 "
 `;
 
@@ -69,10 +97,17 @@ const x = <Trans>Caught on { catchDate, date, short }</Trans>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from "react-i18next";
-const x = <Trans defaults="Caught on {catchDate, date, short}" components={[]} values={{
-  catchDate
-}} />;
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="Caught on {catchDate, date, short}"
+    components={[]}
+    values={{
+      catchDate,
+    }}
+  />
+);
+
 "
 `;
 
@@ -84,10 +119,17 @@ const x = <Trans>Caught on <strong>{ catchDate, date, short }</strong>!</Trans>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from "react-i18next";
-const x = <Trans defaults="Caught on <0>{catchDate, date, short}</0>!" components={[<strong>{(catchDate)}</strong>]} values={{
-  catchDate
-}} />;
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="Caught on <0>{catchDate, date, short}</0>!"
+    components={[<strong>{catchDate}</strong>]}
+    values={{
+      catchDate,
+    }}
+  />
+);
+
 "
 `;
 
@@ -99,10 +141,17 @@ const x = <Trans defaults="Trainers: { trainersCount, number }" />
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from "react-i18next";
-const x = <Trans defaults="Trainers: {trainersCount, number}" components={[]} values={{
-  trainersCount
-}} />;
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="Trainers: {trainersCount, number}"
+    components={[]}
+    values={{
+      trainersCount,
+    }}
+  />
+);
+
 "
 `;
 
@@ -114,10 +163,18 @@ const x = <Trans i18nKey="trainersWithDefaults" defaults="Trainers: <strong>{ tr
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from "react-i18next";
-const x = <Trans i18nKey="trainersWithDefaults" defaults="Trainers: <0>{trainersCount, number}</0>!" components={[<strong>{(trainersCount)}</strong>]} values={{
-  trainersCount
-}} />;
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    i18nKey="trainersWithDefaults"
+    defaults="Trainers: <0>{trainersCount, number}</0>!"
+    components={[<strong>{trainersCount}</strong>]}
+    values={{
+      trainersCount,
+    }}
+  />
+);
+
 "
 `;
 
@@ -129,10 +186,18 @@ const x = <Trans i18nKey="caughtWithDefaults" defaults="Caught on { catchDate, d
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from "react-i18next";
-const x = <Trans i18nKey="caughtWithDefaults" defaults="Caught on {catchDate, date, short}" components={[]} values={{
-  catchDate
-}} />;
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    i18nKey="caughtWithDefaults"
+    defaults="Caught on {catchDate, date, short}"
+    components={[]}
+    values={{
+      catchDate,
+    }}
+  />
+);
+
 "
 `;
 
@@ -144,10 +209,17 @@ const x = <Trans defaults="Caught on <strong>{ catchDate, date, short }</strong>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from "react-i18next";
-const x = <Trans defaults="Caught on <0>{catchDate, date, short}</0>!" components={[<strong>{(catchDate)}</strong>]} values={{
-  catchDate
-}} />;
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="Caught on <0>{catchDate, date, short}</0>!"
+    components={[<strong>{catchDate}</strong>]}
+    values={{
+      catchDate,
+    }}
+  />
+);
+
 "
 `;
 
@@ -160,14 +232,18 @@ const x = <Trans defaults="Caught on <Link to='/dest'>{ catchDate, date, short }
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from "react-i18next";
-const Link = ({
-  to,
-  children
-}) => <a href={to}>{children}</a>;
-const x = <Trans values={{
-  catchDate: Date.now()
-}} defaults="Caught on <0>{catchDate, date, short}</0>!" components={[<Link to='/dest'>{(catchDate)}</Link>]} />;
+import { Trans } from 'react-i18next';
+const Link = ({ to, children }) => <a href={to}>{children}</a>;
+const x = (
+  <Trans
+    values={{
+      catchDate: Date.now(),
+    }}
+    defaults="Caught on <0>{catchDate, date, short}</0>!"
+    components={[<Link to="/dest">{catchDate}</Link>]}
+  />
+);
+
 "
 `;
 
@@ -179,10 +255,18 @@ const x = <Trans i18nKey="trainersWithDefaults" values={{trainersCount}} default
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from "react-i18next";
-const x = <Trans i18nKey="trainersWithDefaults" values={{
-  trainersCount
-}} defaults="Trainers: <strong>{ trainersCount, number }</strong>!" components={[]} />;
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    i18nKey="trainersWithDefaults"
+    values={{
+      trainersCount,
+    }}
+    defaults="Trainers: <strong>{ trainersCount, number }</strong>!"
+    components={[]}
+  />
+);
+
 "
 `;
 
@@ -200,10 +284,18 @@ const x = <Select
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from "react-i18next";
-const x = <Trans i18nKey="selectExample" defaults="{gender, select,  male {He avoids bugs.} female {She avoids bugs.} other {They avoid bugs.}}" components={[]} values={{
-  gender
-}} />;
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    i18nKey="selectExample"
+    defaults="{gender, select,  male {He avoids bugs.} female {She avoids bugs.} other {They avoid bugs.}}"
+    components={[]}
+    values={{
+      gender,
+    }}
+  />
+);
+
 "
 `;
 
@@ -220,10 +312,17 @@ const x = <Select
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from "react-i18next";
-const x = <Trans defaults="{gender, select,  male {<0>He</0> avoids bugs.} female {<1>She</1> avoids bugs.} other {<2>They</2> avoid bugs.}}" components={[<strong>He</strong>, <strong>She</strong>, <strong>They</strong>]} values={{
-  gender
-}} />;
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="{gender, select,  male {<0>He</0> avoids bugs.} female {<1>She</1> avoids bugs.} other {<2>They</2> avoid bugs.}}"
+    components={[<strong>He</strong>, <strong>She</strong>, <strong>They</strong>]}
+    values={{
+      gender,
+    }}
+  />
+);
+
 "
 `;
 
@@ -240,10 +339,17 @@ const x = <Plural
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from "react-i18next";
-const x = <Trans defaults="{itemsCount1, plural,  =0 {There are no items.} one {There is # item.} other {There are # items.}}" components={[]} values={{
-  itemsCount1
-}} />;
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="{itemsCount1, plural,  =0 {There are no items.} one {There is # item.} other {There are # items.}}"
+    components={[]}
+    values={{
+      itemsCount1,
+    }}
+  />
+);
+
 "
 `;
 
@@ -261,10 +367,18 @@ const x = <Plural
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from "react-i18next";
-const x = <Trans i18nKey="testKey" defaults="{itemsCount3, plural,  =0 {There is <0>no</0> item.} one {There is <1>#</1> item.} other {There are <2>#</2> items.}}" components={[<strong>no</strong>, <strong>#</strong>, <strong>#</strong>]} values={{
-  itemsCount3
-}} />;
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    i18nKey="testKey"
+    defaults="{itemsCount3, plural,  =0 {There is <0>no</0> item.} one {There is <1>#</1> item.} other {There are <2>#</2> items.}}"
+    components={[<strong>no</strong>, <strong>#</strong>, <strong>#</strong>]}
+    values={{
+      itemsCount3,
+    }}
+  />
+);
+
 "
 `;
 
@@ -283,11 +397,26 @@ const x = <Plural
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from "react-i18next";
-const x = <Trans i18nKey="testKey" defaults="{itemsCount3, plural,  =0 {There is <0>no</0> item on the <1>{location}</1>.} one {There is <2>#</2> item on the <3>{location}</3>.} other {There are <4>#</4> items on the <5>{location}</5>.}}" components={[<strong>no</strong>, <i>{location}</i>, <strong>#</strong>, <i>{location}</i>, <strong>#</strong>, <i>{location}</i>]} values={{
-  itemsCount3,
-  location: 'table'
-}} />;
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    i18nKey="testKey"
+    defaults="{itemsCount3, plural,  =0 {There is <0>no</0> item on the <1>{location}</1>.} one {There is <2>#</2> item on the <3>{location}</3>.} other {There are <4>#</4> items on the <5>{location}</5>.}}"
+    components={[
+      <strong>no</strong>,
+      <i>{location}</i>,
+      <strong>#</strong>,
+      <i>{location}</i>,
+      <strong>#</strong>,
+      <i>{location}</i>,
+    ]}
+    values={{
+      itemsCount3,
+      location: 'table',
+    }}
+  />
+);
+
 "
 `;
 
@@ -308,10 +437,17 @@ const x = <SelectOrdinal
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from "react-i18next";
-const x = <Trans defaults="{position, selectordinal,  zero {You are #th in line} one {You are #st in line} two {You are #nd in line} few {You are #rd in line} many {You are #th in line} other {You are #th in line} =7 {You are in the lucky #th place in line}}" components={[]} values={{
-  position
-}} />;
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="{position, selectordinal,  zero {You are #th in line} one {You are #st in line} two {You are #nd in line} few {You are #rd in line} many {You are #th in line} other {You are #th in line} =7 {You are in the lucky #th place in line}}"
+    components={[]}
+    values={{
+      position,
+    }}
+  />
+);
+
 "
 `;
 
@@ -331,10 +467,24 @@ const x = <SelectOrdinal
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from "react-i18next";
-const x = <Trans i18nKey="testKey" defaults="{position, selectordinal,  one {You are <0>#st in line</0>} two {You are <1>#nd in line</1>} few {You are <2>#rd in line</2>} other {You are <3>#th in line</3>} =0 {You are <4>#th in line</4>}}" components={[<strong>#st in line</strong>, <strong>#nd in line</strong>, <strong>#rd in line</strong>, <strong>#th in line</strong>, <strong>#th in line</strong>]} values={{
-  position
-}} />;
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    i18nKey="testKey"
+    defaults="{position, selectordinal,  one {You are <0>#st in line</0>} two {You are <1>#nd in line</1>} few {You are <2>#rd in line</2>} other {You are <3>#th in line</3>} =0 {You are <4>#th in line</4>}}"
+    components={[
+      <strong>#st in line</strong>,
+      <strong>#nd in line</strong>,
+      <strong>#rd in line</strong>,
+      <strong>#th in line</strong>,
+      <strong>#th in line</strong>,
+    ]}
+    values={{
+      position,
+    }}
+  />
+);
+
 "
 `;
 
@@ -451,66 +601,139 @@ export default function TestPage({count = 1}) {
 
 import React from 'react';
 import { useTranslation, Trans } from 'react-i18next';
-const Link = ({
-  to,
-  children
-}) => <a href={to}>{children}</a>;
-export default function TestPage({
-  count = 1
-}) {
+const Link = ({ to, children }) => <a href={to}>{children}</a>;
+export default function TestPage({ count = 1 }) {
   const [t] = useTranslation();
   const catchDate = Date.now();
   const completion = 0.75;
   const gender = Math.random() < 0.5 ? 'female' : 'male';
-  return <>
-      {t('sample.text', 'Some sample text with {word} {gender} {count, number} {catchDate, date} {completion, number, percent}', {
-      word: 'interpolation',
-      gender,
-      count,
-      catchDate,
-      completion
-    })}
-      <Trans i18nKey="plural" count={count} defaults="{count, plural,  =0 {<0>Your cart</0> is <1>empty</1>.} one {You have <2># item</2> in <3>your cart</3>.} other {You have <4># items</4> in <5>your cart</5>.}}" components={[<Link to='/cart'>Your cart</Link>, <strong>empty</strong>, <strong># item</strong>, <Link to='/cart'>your cart</Link>, <strong># items</strong>, <Link to='/cart'>your cart</Link>]} values={{
-      linkPath: "/item/" + count
-    }} />
-      <Trans i18nKey="select" defaults="{gender, select,  female {These are <0>her items</0>} male {These are <1>his items</1>} other {These are <2>their items</2>}}" components={[<Link to='/items'>her items</Link>, <Link to='/items'>his items</Link>, <Link to='/items'>their items</Link>]} values={{
-      gender
-    }} />
-      <Trans i18nKey="ordinal" count={itemIndex + 1} defaults="{count, selectordinal,  one {Your <0><0>#st</0> item</0>} two {Your <1><0>#nd</0> item</1>} few {Your <2><0>#rd</0> item</2>} other {Your <3><0>#th</0> item</3>}}" components={[<Link to={linkPath}><strong>#st</strong> item</Link>, <Link to={linkPath}><strong>#nd</strong> item</Link>, <Link to={linkPath}><strong>#rd</strong> item</Link>, <Link to={linkPath}><strong>#th</strong> item</Link>]} values={{
-      linkPath: "/item/" + itemIndex
-    }} />
-      <Trans i18nKey="percent" defaults="You've completed <0>{completion, number, percent} of your tasks</0>." components={[<Link to='/tasks'>{(completion)} of your tasks</Link>]} values={{
-      completion
-    }} />
-      <Trans i18nKey="date" defaults="Caught on <0>{catchDate, date, short}</0>!" components={[<Link to='/dest'>{(catchDate)}</Link>]} values={{
-      catchDate
-    }} />
-      <Trans i18nKey="ordinal.prettier" count={count} defaults="{count, selectordinal,  one {Your <0><0>#st</0> {type}</0>} two {Your <1><0>#nd</0> {type}</1>} few {Your <2><0>#rd</0> {type}</2>} other {Your <3><0>#th</0> {type}</3>}}" components={[<Link to={linkPath}>
-              <strong>#st</strong> {type}
-            </Link>, <Link to={linkPath}>
-              <strong>#nd</strong> {type}
-            </Link>, <Link to={linkPath}>
-              <strong>#rd</strong> {type}
-            </Link>, <Link to={linkPath}>
-              <strong>#th</strong> {type}
-            </Link>]} values={{
-      linkPath: \`/item/\${count}\`,
-      type: 'item',
-      prop
-    }} />
-      <Trans i18nKey="select.expr.prettier" defaults="{selectKey, select,  malePerson {<0><0>He</0></0> avoids {type}.} femalePerson {<1><0>She</0></1> avoids {type}.} other {<2><0>They</0></2> avoid {type}.}}" components={[<Link to={linkPath}>
-              <strong>He</strong>
-            </Link>, <Link to={linkPath}>
-              <strong>She</strong>
-            </Link>, <Link to={linkPath}>
-              <strong>They</strong>
-            </Link>]} values={{
-      selectKey: \`\${gender}Person\`,
-      linkPath: \`/users/\${number}\`,
-      type: 'bugs'
-    }} />
-    </>;
+  return (
+    <>
+      {t(
+        'sample.text',
+        'Some sample text with {word} {gender} {count, number} {catchDate, date} {completion, number, percent}',
+        {
+          word: 'interpolation',
+          gender,
+          count,
+          catchDate,
+          completion,
+        },
+      )}
+      <Trans
+        i18nKey="plural"
+        count={count}
+        defaults="{count, plural,  =0 {<0>Your cart</0> is <1>empty</1>.} one {You have <2># item</2> in <3>your cart</3>.} other {You have <4># items</4> in <5>your cart</5>.}}"
+        components={[
+          <Link to="/cart">Your cart</Link>,
+          <strong>empty</strong>,
+          <strong># item</strong>,
+          <Link to="/cart">your cart</Link>,
+          <strong># items</strong>,
+          <Link to="/cart">your cart</Link>,
+        ]}
+        values={{
+          linkPath: '/item/' + count,
+        }}
+      />
+      <Trans
+        i18nKey="select"
+        defaults="{gender, select,  female {These are <0>her items</0>} male {These are <1>his items</1>} other {These are <2>their items</2>}}"
+        components={[
+          <Link to="/items">her items</Link>,
+          <Link to="/items">his items</Link>,
+          <Link to="/items">their items</Link>,
+        ]}
+        values={{
+          gender,
+        }}
+      />
+      <Trans
+        i18nKey="ordinal"
+        count={itemIndex + 1}
+        defaults="{count, selectordinal,  one {Your <0><0>#st</0> item</0>} two {Your <1><0>#nd</0> item</1>} few {Your <2><0>#rd</0> item</2>} other {Your <3><0>#th</0> item</3>}}"
+        components={[
+          <Link to={linkPath}>
+            <strong>#st</strong> item
+          </Link>,
+          <Link to={linkPath}>
+            <strong>#nd</strong> item
+          </Link>,
+          <Link to={linkPath}>
+            <strong>#rd</strong> item
+          </Link>,
+          <Link to={linkPath}>
+            <strong>#th</strong> item
+          </Link>,
+        ]}
+        values={{
+          linkPath: '/item/' + itemIndex,
+        }}
+      />
+      <Trans
+        i18nKey="percent"
+        defaults="You've completed <0>{completion, number, percent} of your tasks</0>."
+        components={[<Link to="/tasks">{completion} of your tasks</Link>]}
+        values={{
+          completion,
+        }}
+      />
+      <Trans
+        i18nKey="date"
+        defaults="Caught on <0>{catchDate, date, short}</0>!"
+        components={[<Link to="/dest">{catchDate}</Link>]}
+        values={{
+          catchDate,
+        }}
+      />
+      <Trans
+        i18nKey="ordinal.prettier"
+        count={count}
+        defaults="{count, selectordinal,  one {Your <0><0>#st</0> {type}</0>} two {Your <1><0>#nd</0> {type}</1>} few {Your <2><0>#rd</0> {type}</2>} other {Your <3><0>#th</0> {type}</3>}}"
+        components={[
+          <Link to={linkPath}>
+            <strong>#st</strong> {type}
+          </Link>,
+          <Link to={linkPath}>
+            <strong>#nd</strong> {type}
+          </Link>,
+          <Link to={linkPath}>
+            <strong>#rd</strong> {type}
+          </Link>,
+          <Link to={linkPath}>
+            <strong>#th</strong> {type}
+          </Link>,
+        ]}
+        values={{
+          linkPath: \`/item/\${count}\`,
+          type: 'item',
+          prop,
+        }}
+      />
+      <Trans
+        i18nKey="select.expr.prettier"
+        defaults="{selectKey, select,  malePerson {<0><0>He</0></0> avoids {type}.} femalePerson {<1><0>She</0></1> avoids {type}.} other {<2><0>They</0></2> avoid {type}.}}"
+        components={[
+          <Link to={linkPath}>
+            <strong>He</strong>
+          </Link>,
+          <Link to={linkPath}>
+            <strong>She</strong>
+          </Link>,
+          <Link to={linkPath}>
+            <strong>They</strong>
+          </Link>,
+        ]}
+        values={{
+          selectKey: \`\${gender}Person\`,
+          linkPath: \`/users/\${number}\`,
+          type: 'bugs',
+        }}
+      />
+    </>
+  );
 }
+
 "
 `;
 
@@ -542,28 +765,39 @@ const x = (
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans, number, date, plural, select } from "react-i18next";
-import React from "react";
-function Component({
-  children,
-  style
-}) {
+import { Trans, number, date, plural, select } from 'react-i18next';
+import React from 'react';
+function Component({ children, style }) {
   return <div style={style}>{children}</div>;
 }
 const count = 2;
 const numbers = 34;
-const selectInput = "thing";
+const selectInput = 'thing';
 const now = new Date();
-const x = <Trans i18nKey="key" defaults="<0>exciting!</0>{count, plural, =0 { hi there <1>friend</1> } other { woweee even supports nested {numbers, number} } } and{selectInput, select, thing { another nested <2>with regular text and a date: <0>{now, date}</0></2>} }" components={[<strong>exciting!</strong>, <strong>friend</strong>, <Component style={{
-  color: "red"
-}}>
-       with regular text and a date: <pre>{date\`\${now}\`}</pre>
-     </Component>]} values={{
-  count,
-  numbers,
-  selectInput,
-  now
-}} />;
+const x = (
+  <Trans
+    i18nKey="key"
+    defaults="<0>exciting!</0>{count, plural, =0 { hi there <1>friend</1> } other { woweee even supports nested {numbers, number} } } and{selectInput, select, thing { another nested <2>with regular text and a date: <0>{now, date}</0></2>} }"
+    components={[
+      <strong>exciting!</strong>,
+      <strong>friend</strong>,
+      <Component
+        style={{
+          color: 'red',
+        }}
+      >
+        with regular text and a date: <pre>{date\`\${now}\`}</pre>
+      </Component>,
+    ]}
+    values={{
+      count,
+      numbers,
+      selectInput,
+      now,
+    }}
+  />
+);
+
 "
 `;
 
@@ -575,9 +809,839 @@ const x = <Trans>Welcome, &quot;{ name }&quot;!</Trans>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from "react-i18next";
-const x = <Trans defaults={"Welcome, \\"{name}\\"!"} components={[]} values={{
-  name
-}} />;
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults={'Welcome, "{name}"!'}
+    components={[]}
+    values={{
+      name,
+    }}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 1. unknown plugin > 1. unknown plugin 1`] = `
+"
+import { Trans } from '../icu.macro'
+
+const x = <Trans>Welcome, { name }!</Trans>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="Welcome, {name}!"
+    components={[]}
+    values={{
+      name,
+    }}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 2. unknown plugin > 2. unknown plugin 1`] = `
+"
+import { Trans } from '../icu.macro'
+
+const x = <Trans>Welcome, <strong>{ name }</strong>!</Trans>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="Welcome, <0>{name}</0>!"
+    components={[<strong>{name}</strong>]}
+    values={{
+      name,
+    }}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 3. unknown plugin > 3. unknown plugin 1`] = `
+"
+import { Trans } from '../icu.macro'
+import { useTranslation } from 'react-i18next'
+
+const x = <Trans>Trainers: { trainersCount, number }</Trans>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useTranslation, Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="Trainers: {trainersCount, number}"
+    components={[]}
+    values={{
+      trainersCount,
+    }}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 4. unknown plugin > 4. unknown plugin 1`] = `
+"
+import { Trans } from '../icu.macro'
+
+const x = <Trans>Trainers: <strong>{ trainersCount, number }</strong>!</Trans>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="Trainers: <0>{trainersCount, number}</0>!"
+    components={[<strong>{trainersCount}</strong>]}
+    values={{
+      trainersCount,
+    }}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 5. unknown plugin > 5. unknown plugin 1`] = `
+"
+import { Trans } from '../icu.macro'
+
+const x = <Trans>Caught on { catchDate, date, short }</Trans>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="Caught on {catchDate, date, short}"
+    components={[]}
+    values={{
+      catchDate,
+    }}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 6. unknown plugin > 6. unknown plugin 1`] = `
+"
+import { Trans } from '../icu.macro'
+
+const x = <Trans>Caught on <strong>{ catchDate, date, short }</strong>!</Trans>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="Caught on <0>{catchDate, date, short}</0>!"
+    components={[<strong>{catchDate}</strong>]}
+    values={{
+      catchDate,
+    }}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 7. unknown plugin > 7. unknown plugin 1`] = `
+"
+import { Trans } from '../icu.macro'
+
+const x = <Trans defaults="Trainers: { trainersCount, number }" />
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="Trainers: {trainersCount, number}"
+    components={[]}
+    values={{
+      trainersCount,
+    }}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 8. unknown plugin > 8. unknown plugin 1`] = `
+"
+import { Trans } from '../icu.macro'
+
+const x = <Trans i18nKey="trainersWithDefaults" defaults="Trainers: <strong>{ trainersCount, number }</strong>!" />
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    i18nKey="trainersWithDefaults"
+    defaults="Trainers: <0>{trainersCount, number}</0>!"
+    components={[<strong>{trainersCount}</strong>]}
+    values={{
+      trainersCount,
+    }}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 9. unknown plugin > 9. unknown plugin 1`] = `
+"
+import { Trans } from '../icu.macro'
+
+const x = <Trans i18nKey="caughtWithDefaults" defaults="Caught on { catchDate, date, short }" />
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    i18nKey="caughtWithDefaults"
+    defaults="Caught on {catchDate, date, short}"
+    components={[]}
+    values={{
+      catchDate,
+    }}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 10. unknown plugin > 10. unknown plugin 1`] = `
+"
+import { Trans } from '../icu.macro'
+
+const x = <Trans defaults="Caught on <strong>{ catchDate, date, short }</strong>!" />
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="Caught on <0>{catchDate, date, short}</0>!"
+    components={[<strong>{catchDate}</strong>]}
+    values={{
+      catchDate,
+    }}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 11. unknown plugin > 11. unknown plugin 1`] = `
+"
+import { Trans } from '../icu.macro'
+const Link = ({to, children}) => (<a href={to}>{children}</a>)
+
+const x = <Trans defaults="Caught on <Link to='/dest'>{ catchDate, date, short }</Link>!" values={{catchDate: Date.now()}}>This should be overridden by defaults</Trans>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from 'react-i18next';
+const Link = ({ to, children }) => <a href={to}>{children}</a>;
+const x = (
+  <Trans
+    values={{
+      catchDate: Date.now(),
+    }}
+    defaults="Caught on <0>{catchDate, date, short}</0>!"
+    components={[<Link to="/dest">{catchDate}</Link>]}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 12. unknown plugin > 12. unknown plugin 1`] = `
+"
+import { Trans } from '../icu.macro'
+
+const x = <Trans i18nKey="trainersWithDefaults" values={{trainersCount}} defaults="Trainers: <strong>{ trainersCount, number }</strong>!" components={[]} />
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    i18nKey="trainersWithDefaults"
+    values={{
+      trainersCount,
+    }}
+    defaults="Trainers: <strong>{ trainersCount, number }</strong>!"
+    components={[]}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 13. unknown plugin > 13. unknown plugin 1`] = `
+"
+import { Select } from '../icu.macro'
+
+const x = <Select
+  i18nKey="selectExample"
+  switch={gender}
+  male="He avoids bugs."
+  female="She avoids bugs."
+  other="They avoid bugs."
+/>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    i18nKey="selectExample"
+    defaults="{gender, select,  male {He avoids bugs.} female {She avoids bugs.} other {They avoid bugs.}}"
+    components={[]}
+    values={{
+      gender,
+    }}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 14. unknown plugin > 14. unknown plugin 1`] = `
+"
+import { Select } from '../icu.macro'
+
+const x = <Select
+  switch={gender}
+  male={<Trans><strong>He</strong> avoids bugs.</Trans>}
+  female={<Trans><strong>She</strong> avoids bugs.</Trans>}
+  other={<Trans><strong>They</strong> avoid bugs.</Trans>}
+/>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="{gender, select,  male {<0>He</0> avoids bugs.} female {<1>She</1> avoids bugs.} other {<2>They</2> avoid bugs.}}"
+    components={[<strong>He</strong>, <strong>She</strong>, <strong>They</strong>]}
+    values={{
+      gender,
+    }}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 15. unknown plugin > 15. unknown plugin 1`] = `
+"
+import { Plural } from '../icu.macro'
+
+const x = <Plural
+  count={itemsCount1}
+  $0="There are no items."
+  one="There is # item."
+  other="There are # items."
+/>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="{itemsCount1, plural,  =0 {There are no items.} one {There is # item.} other {There are # items.}}"
+    components={[]}
+    values={{
+      itemsCount1,
+    }}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 16. unknown plugin > 16. unknown plugin 1`] = `
+"
+import { Plural } from '../icu.macro'
+
+const x = <Plural
+  i18nKey="testKey"
+  count={itemsCount3}
+  $0={<Trans>There is <strong>no</strong> item.</Trans>}
+  one={<Trans>There is <strong>#</strong> item.</Trans>}
+  other={<Trans>There are <strong>#</strong> items.</Trans>}
+/>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    i18nKey="testKey"
+    defaults="{itemsCount3, plural,  =0 {There is <0>no</0> item.} one {There is <1>#</1> item.} other {There are <2>#</2> items.}}"
+    components={[<strong>no</strong>, <strong>#</strong>, <strong>#</strong>]}
+    values={{
+      itemsCount3,
+    }}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 17. unknown plugin > 17. unknown plugin 1`] = `
+"
+import { Plural } from '../icu.macro'
+
+const x = <Plural
+  i18nKey="testKey"
+  count={itemsCount3}
+  values={{location: 'table'}}
+  $0={<Trans>There is <strong>no</strong> item on the <i>{location}</i>.</Trans>}
+  one={<Trans>There is <strong>#</strong> item on the <i>{location}</i>.</Trans>}
+  other={<Trans>There are <strong>#</strong> items on the <i>{location}</i>.</Trans>}
+/>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    i18nKey="testKey"
+    defaults="{itemsCount3, plural,  =0 {There is <0>no</0> item on the <1>{location}</1>.} one {There is <2>#</2> item on the <3>{location}</3>.} other {There are <4>#</4> items on the <5>{location}</5>.}}"
+    components={[
+      <strong>no</strong>,
+      <i>{location}</i>,
+      <strong>#</strong>,
+      <i>{location}</i>,
+      <strong>#</strong>,
+      <i>{location}</i>,
+    ]}
+    values={{
+      itemsCount3,
+      location: 'table',
+    }}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 18. unknown plugin > 18. unknown plugin 1`] = `
+"
+import { SelectOrdinal } from '../icu.macro'
+
+const x = <SelectOrdinal
+  count={position}
+  zero="You are #th in line"
+  one="You are #st in line"
+  two="You are #nd in line"
+  few="You are #rd in line"
+  many="You are #th in line"
+  other="You are #th in line"
+  $7="You are in the lucky #th place in line"
+/>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults="{position, selectordinal,  zero {You are #th in line} one {You are #st in line} two {You are #nd in line} few {You are #rd in line} many {You are #th in line} other {You are #th in line} =7 {You are in the lucky #th place in line}}"
+    components={[]}
+    values={{
+      position,
+    }}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 19. unknown plugin > 19. unknown plugin 1`] = `
+"
+import { SelectOrdinal } from '../icu.macro'
+
+const x = <SelectOrdinal
+  i18nKey="testKey"
+  count={position}
+  one={<Trans>You are <strong>#st in line</strong></Trans>}
+  two={<Trans>You are <strong>#nd in line</strong></Trans>}
+  few={<Trans>You are <strong>#rd in line</strong></Trans>}
+  other={<Trans>You are <strong>#th in line</strong></Trans>}
+  $0={<Trans>You are <strong>#th in line</strong></Trans>}
+/>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    i18nKey="testKey"
+    defaults="{position, selectordinal,  one {You are <0>#st in line</0>} two {You are <1>#nd in line</1>} few {You are <2>#rd in line</2>} other {You are <3>#th in line</3>} =0 {You are <4>#th in line</4>}}"
+    components={[
+      <strong>#st in line</strong>,
+      <strong>#nd in line</strong>,
+      <strong>#rd in line</strong>,
+      <strong>#th in line</strong>,
+      <strong>#th in line</strong>,
+    ]}
+    values={{
+      position,
+    }}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 20. unknown plugin > 20. unknown plugin 1`] = `
+"
+import React from 'react'
+import { useTranslation } from 'react-i18next'
+import { Plural, Select, SelectOrdinal, Trans } from '../icu.macro'
+const Link = ({to, children}) => (<a href={to}>{children}</a>)
+
+export default function TestPage({count = 1}) {
+  const [t] = useTranslation()
+  const catchDate = Date.now()
+  const completion = 0.75
+  const gender = Math.random() < 0.5 ? 'female' : 'male'
+  return (
+    <>
+      {t('sample.text', 'Some sample text with {word} {gender} {count, number} {catchDate, date} {completion, number, percent}', {word: 'interpolation', gender, count, catchDate, completion})}
+      <Plural i18nKey="plural"
+        count={count}
+        values={{linkPath: "/item/" + count}}
+        $0={<Trans><Link to='/cart'>Your cart</Link> is <strong>empty</strong>.</Trans>}
+        one={<Trans>You have <strong># item</strong> in <Link to='/cart'>your cart</Link>.</Trans>}
+        other={<Trans>You have <strong># items</strong> in <Link to='/cart'>your cart</Link>.</Trans>}
+      />
+      <Select
+        i18nKey="select"
+        switch={gender}
+        female={<Trans>These are <Link to='/items'>her items</Link></Trans>}
+        male={<Trans>These are <Link to='/items'>his items</Link></Trans>}
+        other={<Trans>These are <Link to='/items'>their items</Link></Trans>}
+      />
+      <SelectOrdinal i18nKey="ordinal"
+        count={itemIndex+1}
+        values={{linkPath: "/item/" + itemIndex}}
+        one={<Trans>Your <Link to={linkPath}><strong>#st</strong> item</Link></Trans>}
+        two={<Trans>Your <Link to={linkPath}><strong>#nd</strong> item</Link></Trans>}
+        few={<Trans>Your <Link to={linkPath}><strong>#rd</strong> item</Link></Trans>}
+        other={<Trans>Your <Link to={linkPath}><strong>#th</strong> item</Link></Trans>}
+      />
+      <Trans i18nKey="percent" defaults="You&apos;ve completed <Link to='/tasks'>{completion, number, percent} of your tasks</Link>."/>
+      <Trans i18nKey="date" defaults="Caught on <Link to='/dest'>{ catchDate, date, short }</Link>!"/>
+      <SelectOrdinal
+        i18nKey="ordinal.prettier"
+        count={count}
+        values={{ linkPath: \`/item/\${count}\`, type: 'item', prop }}
+        one={
+          <Trans>
+            Your{' '}
+            <Link to={linkPath}>
+              <strong>#st</strong> {type}
+            </Link>
+          </Trans>
+        }
+        two={
+          <Trans>
+            Your{' '}
+            <Link to={linkPath}>
+              <strong>#nd</strong> {type}
+            </Link>
+          </Trans>
+        }
+        few={
+          <Trans>
+            Your{' '}
+            <Link to={linkPath}>
+              <strong>#rd</strong> {type}
+            </Link>
+          </Trans>
+        }
+        other={
+          <Trans>
+            Your{' '}
+            <Link to={linkPath}>
+              <strong>#th</strong> {type}
+            </Link>
+          </Trans>
+        }
+      />
+      <Select
+        i18nKey="select.expr.prettier"
+        switch={\`\${gender}Person\`}
+        values={{ linkPath: \`/users/\${number}\`, type: 'bugs' }}
+        malePerson={
+          <Trans>
+            <Link to={linkPath}>
+              <strong>He</strong>
+            </Link>{' '}
+            avoids {type}.
+          </Trans>
+        }
+        femalePerson={
+          <Trans>
+            <Link to={linkPath}>
+              <strong>She</strong>
+            </Link>{' '}
+            avoids {type}.
+          </Trans>
+        }
+        other={
+          <Trans>
+            <Link to={linkPath}>
+              <strong>They</strong>
+            </Link>{' '}
+            avoid {type}.
+          </Trans>
+        }
+      />
+    </>
+  )
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import React from 'react';
+import { useTranslation, Trans } from 'react-i18next';
+const Link = ({ to, children }) => <a href={to}>{children}</a>;
+export default function TestPage({ count = 1 }) {
+  const [t] = useTranslation();
+  const catchDate = Date.now();
+  const completion = 0.75;
+  const gender = Math.random() < 0.5 ? 'female' : 'male';
+  return (
+    <>
+      {t(
+        'sample.text',
+        'Some sample text with {word} {gender} {count, number} {catchDate, date} {completion, number, percent}',
+        {
+          word: 'interpolation',
+          gender,
+          count,
+          catchDate,
+          completion,
+        },
+      )}
+      <Trans
+        i18nKey="plural"
+        count={count}
+        defaults="{count, plural,  =0 {<0>Your cart</0> is <1>empty</1>.} one {You have <2># item</2> in <3>your cart</3>.} other {You have <4># items</4> in <5>your cart</5>.}}"
+        components={[
+          <Link to="/cart">Your cart</Link>,
+          <strong>empty</strong>,
+          <strong># item</strong>,
+          <Link to="/cart">your cart</Link>,
+          <strong># items</strong>,
+          <Link to="/cart">your cart</Link>,
+        ]}
+        values={{
+          linkPath: '/item/' + count,
+        }}
+      />
+      <Trans
+        i18nKey="select"
+        defaults="{gender, select,  female {These are <0>her items</0>} male {These are <1>his items</1>} other {These are <2>their items</2>}}"
+        components={[
+          <Link to="/items">her items</Link>,
+          <Link to="/items">his items</Link>,
+          <Link to="/items">their items</Link>,
+        ]}
+        values={{
+          gender,
+        }}
+      />
+      <Trans
+        i18nKey="ordinal"
+        count={itemIndex + 1}
+        defaults="{count, selectordinal,  one {Your <0><0>#st</0> item</0>} two {Your <1><0>#nd</0> item</1>} few {Your <2><0>#rd</0> item</2>} other {Your <3><0>#th</0> item</3>}}"
+        components={[
+          <Link to={linkPath}>
+            <strong>#st</strong> item
+          </Link>,
+          <Link to={linkPath}>
+            <strong>#nd</strong> item
+          </Link>,
+          <Link to={linkPath}>
+            <strong>#rd</strong> item
+          </Link>,
+          <Link to={linkPath}>
+            <strong>#th</strong> item
+          </Link>,
+        ]}
+        values={{
+          linkPath: '/item/' + itemIndex,
+        }}
+      />
+      <Trans
+        i18nKey="percent"
+        defaults="You've completed <0>{completion, number, percent} of your tasks</0>."
+        components={[<Link to="/tasks">{completion} of your tasks</Link>]}
+        values={{
+          completion,
+        }}
+      />
+      <Trans
+        i18nKey="date"
+        defaults="Caught on <0>{catchDate, date, short}</0>!"
+        components={[<Link to="/dest">{catchDate}</Link>]}
+        values={{
+          catchDate,
+        }}
+      />
+      <Trans
+        i18nKey="ordinal.prettier"
+        count={count}
+        defaults="{count, selectordinal,  one {Your <0><0>#st</0> {type}</0>} two {Your <1><0>#nd</0> {type}</1>} few {Your <2><0>#rd</0> {type}</2>} other {Your <3><0>#th</0> {type}</3>}}"
+        components={[
+          <Link to={linkPath}>
+            <strong>#st</strong> {type}
+          </Link>,
+          <Link to={linkPath}>
+            <strong>#nd</strong> {type}
+          </Link>,
+          <Link to={linkPath}>
+            <strong>#rd</strong> {type}
+          </Link>,
+          <Link to={linkPath}>
+            <strong>#th</strong> {type}
+          </Link>,
+        ]}
+        values={{
+          linkPath: \`/item/\${count}\`,
+          type: 'item',
+          prop,
+        }}
+      />
+      <Trans
+        i18nKey="select.expr.prettier"
+        defaults="{selectKey, select,  malePerson {<0><0>He</0></0> avoids {type}.} femalePerson {<1><0>She</0></1> avoids {type}.} other {<2><0>They</0></2> avoid {type}.}}"
+        components={[
+          <Link to={linkPath}>
+            <strong>He</strong>
+          </Link>,
+          <Link to={linkPath}>
+            <strong>She</strong>
+          </Link>,
+          <Link to={linkPath}>
+            <strong>They</strong>
+          </Link>,
+        ]}
+        values={{
+          selectKey: \`\${gender}Person\`,
+          linkPath: \`/users/\${number}\`,
+          type: 'bugs',
+        }}
+      />
+    </>
+  );
+}
+
+"
+`;
+
+exports[`unknown plugin > 21. unknown plugin > 21. unknown plugin 1`] = `
+"
+import React from "react"
+import { Trans, number, date, time, plural, select, selectOrdinal } from "../icu.macro";
+
+function Component({ children, style }) {
+  return <div style={style}>{children}</div>
+}
+
+const count = 2;
+const numbers = 34;
+const selectInput = "thing"
+const now = new Date()
+const x = (
+  <Trans i18nKey="key">
+    <strong>exciting!</strong>
+    {plural\`\${count},
+    =0 { hi there \${<strong>friend</strong>} }
+    other { woweee even supports nested \${number\`\${numbers}\`} } \`} and
+    {select\`\${selectInput},
+     thing { another nested \${<Component style={{ color: "red" }}>
+       with regular text and a date: <pre>{date\`\${now}\`}</pre>
+     </Component>}} \`}
+  </Trans>
+);
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans, number, date, plural, select } from 'react-i18next';
+import React from 'react';
+function Component({ children, style }) {
+  return <div style={style}>{children}</div>;
+}
+const count = 2;
+const numbers = 34;
+const selectInput = 'thing';
+const now = new Date();
+const x = (
+  <Trans
+    i18nKey="key"
+    defaults="<0>exciting!</0>{count, plural, =0 { hi there <1>friend</1> } other { woweee even supports nested {numbers, number} } } and{selectInput, select, thing { another nested <2>with regular text and a date: <0>{now, date}</0></2>} }"
+    components={[
+      <strong>exciting!</strong>,
+      <strong>friend</strong>,
+      <Component
+        style={{
+          color: 'red',
+        }}
+      >
+        with regular text and a date: <pre>{date\`\${now}\`}</pre>
+      </Component>,
+    ]}
+    values={{
+      count,
+      numbers,
+      selectInput,
+      now,
+    }}
+  />
+);
+
+"
+`;
+
+exports[`unknown plugin > 22. unknown plugin > 22. unknown plugin 1`] = `
+"
+import { Trans } from "../icu.macro";
+
+const x = <Trans>Welcome, &quot;{ name }&quot;!</Trans>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { Trans } from 'react-i18next';
+const x = (
+  <Trans
+    defaults={'Welcome, "{name}"!'}
+    components={[]}
+    values={{
+      name,
+    }}
+  />
+);
+
 "
 `;
