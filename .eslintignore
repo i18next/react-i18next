@@ -1,6 +1,5 @@
-**/dist/*
-**/node_modules/*
-**/*.min.*
-**/*.ts
-**/*.tsx
+**/dist/
+**/node_modules/
 example/**/*
+**/react-i18next.js
+**/react-i18next.min.js
