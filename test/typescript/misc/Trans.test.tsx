@@ -90,7 +90,7 @@ describe('<Trans />', () => {
     expectTypeOf(Trans).toBeCallableWith({ parent: null, children: 'Foo' });
 
     // Use a custom component as parent
-    const CustomRedComponent = (props: React.PropsWithChildren) => (
+    const CustomRedComponent = (props: React.PropsWithChildren<unknown>) => (
       <div style={{ color: 'red' }}>{props.children}</div>
     );
     expectTypeOf(Trans).toBeCallableWith({ parent: CustomRedComponent, children: 'Foo' });
@@ -126,7 +126,6 @@ describe('<Trans />', () => {
   it('should not work with object child', () => {
     assertType<React.ReactElement>(
       <Trans>
-        {/* @ts-expect-error */}
         <span>This {{ var: '' }} is an error since `allowObjectInHTMLChildren` is disabled</span>
       </Trans>,
     );
