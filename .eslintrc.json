@@ -56,5 +56,17 @@
     "jsx-a11y/href-no-hash": "off",
     "jsx-a11y/anchor-is-valid": ["warn", { "aspects": ["invalidHref"] }],
     "react/jsx-props-no-spreading": 0
-  }
+  },
+  "overrides": [
+    {
+      "files": ["test/*"],
+      "extends": ["plugin:testing-library/react", "plugin:jest-dom/recommended"],
+      "globals": {
+        "globalThis": false
+      },
+      "rules": {
+        "testing-library/no-node-access": ["error", { "allowContainerFirstChild": true }]
+      }
+    }
+  ]
 }
