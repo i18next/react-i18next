@@ -105,7 +105,7 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-testing-library": "^5.11.0",
     "happy-dom": "^12.10.3",
-    "husky": "^8.0.3",
+    "husky": "^9.1.4",
     "i18next": "^23.12.2",
     "lint-staged": "^15.2.7",
     "mkdirp": "^1.0.4",
@@ -151,7 +151,7 @@
     "test:typescript": "vitest --workspace vitest.workspace.typescript.mts",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "author": "Jan Mühlemann <jan.muehlemann@gmail.com> (https://github.com/jamuhl)",
   "license": "MIT",
