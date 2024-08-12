@@ -16,7 +16,7 @@ const babelOptions = {
       '@babel/preset-env',
       {
         targets: {
-          browsers:['defaults']
+          browsers: ['defaults'],
         },
       },
     ],

@@ -8,10 +8,10 @@ import hasLoadedNamespace from './hasLoadedNamespaceMock.js';
 vitest.unmock('../src/useTranslation');
 
 describe('useTranslation', () => {
-afterEach(() => {
-  cleanup();
-  cleanupHook();
-})
+  afterEach(() => {
+    cleanup();
+    cleanupHook();
+  });
 
   let instance;
   beforeEach(() => {

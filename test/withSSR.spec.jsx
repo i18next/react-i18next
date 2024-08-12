@@ -9,11 +9,10 @@ import hasLoadedNamespace from './hasLoadedNamespaceMock.js';
 
 vitest.unmock('../src/withSSR');
 
-
 describe('withSSR', () => {
   afterEach(() => {
     cleanup();
-  })
+  });
 
   const mockI18n = {
     language: 'en',
@@ -36,10 +35,10 @@ describe('withSSR', () => {
     getFixedT: () => (message) => message,
     hasResourceBundle: (lng, ns) => ns === 'alreadyLoadedNS',
     getResourceBundle: (lng, ns) => ({ lng, ns }),
-    loadNamespaces: () => { },
+    loadNamespaces: () => {},
     hasLoadedNamespace: (ns) => hasLoadedNamespace(ns, mockI18n),
-    on: () => { },
-    off: () => { },
+    on: () => {},
+    off: () => {},
   };
 
   function TestComponent() {

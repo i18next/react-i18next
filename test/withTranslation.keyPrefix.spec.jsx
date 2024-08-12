@@ -9,7 +9,7 @@ vitest.unmock('../src/withTranslation');
 describe('withTranslation', () => {
   afterEach(() => {
     cleanup();
-  })
+  });
 
   class TestComponentKeyPrefix extends React.Component {
     render() {

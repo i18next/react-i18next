@@ -7,9 +7,9 @@ import { withTranslation } from '../src/withTranslation';
 vitest.unmock('../src/withTranslation');
 
 describe('withTranslation', () => {
-afterEach(() => {
-  cleanup();
-})
+  afterEach(() => {
+    cleanup();
+  });
 
   class TestComponent extends React.Component {
     render() {
