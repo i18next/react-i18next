@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import pluginTester from 'babel-plugin-tester';
+// Unsure why ESLint can't resolve it but tests run correctly
+// eslint-disable-next-line import/no-unresolved
+import { pluginTester } from 'babel-plugin-tester';
 import plugin from 'babel-plugin-macros';
 
 /**
