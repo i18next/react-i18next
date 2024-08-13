@@ -1,5 +1,5 @@
 import { describe, it, vitest, expect, afterEach } from 'vitest';
-import { renderHook, cleanup } from '@testing-library/react-hooks';
+import { renderHook, cleanup } from '@testing-library/react-hooks/server';
 import { useTranslation } from '../src/useTranslation';
 
 vitest.unmock('../src/useTranslation');
