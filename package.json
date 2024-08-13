@@ -93,7 +93,7 @@
     "all-contributors-cli": "^6.26.1",
     "babel-core": "^7.0.0-bridge.0",
     "babel-plugin-macros": "^3.1.0",
-    "babel-plugin-tester": "^7.0.4",
+    "babel-plugin-tester": "^10.1.0",
     "coveralls": "^3.1.1",
     "cpy-cli": "^5.0.0",
     "cross-env": "^7.0.3",
