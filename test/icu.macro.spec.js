@@ -19,81 +19,81 @@ pluginTester({
   babelOptions: { filename: __filename, parserOpts: { plugins: ['jsx'] } },
   tests: [
     `
-      import { Trans } from '../icu.macro'
+      import { Trans } from '../../../icu.macro'
 
       const x = <Trans>Welcome, { name }!</Trans>
     `,
 
     `
-      import { Trans } from '../icu.macro'
+      import { Trans } from '../../../icu.macro'
 
       const x = <Trans>Welcome, <strong>{ name }</strong>!</Trans>
     `,
 
     `
-      import { Trans } from '../icu.macro'
+      import { Trans } from '../../../icu.macro'
       import { useTranslation } from 'react-i18next'
 
       const x = <Trans>Trainers: { trainersCount, number }</Trans>
     `,
 
     `
-      import { Trans } from '../icu.macro'
+      import { Trans } from '../../../icu.macro'
 
       const x = <Trans>Trainers: <strong>{ trainersCount, number }</strong>!</Trans>
     `,
 
     `
-      import { Trans } from '../icu.macro'
+      import { Trans } from '../../../icu.macro'
 
       const x = <Trans>Caught on { catchDate, date, short }</Trans>
     `,
 
     `
-      import { Trans } from '../icu.macro'
+      import { Trans } from '../../../icu.macro'
 
       const x = <Trans>Caught on <strong>{ catchDate, date, short }</strong>!</Trans>
     `,
 
     `
-      import { Trans } from '../icu.macro'
+      import { Trans } from '../../../icu.macro'
 
       const x = <Trans defaults="Trainers: { trainersCount, number }" />
     `,
 
     `
-      import { Trans } from '../icu.macro'
+      import { Trans } from '../../../icu.macro'
 
       const x = <Trans i18nKey="trainersWithDefaults" defaults="Trainers: <strong>{ trainersCount, number }</strong>!" />
     `,
 
     `
-      import { Trans } from '../icu.macro'
+      import { Trans } from '../../../icu.macro'
 
       const x = <Trans i18nKey="caughtWithDefaults" defaults="Caught on { catchDate, date, short }" />
     `,
 
     `
-      import { Trans } from '../icu.macro'
+      import { Trans } from '../../../icu.macro'
 
       const x = <Trans defaults="Caught on <strong>{ catchDate, date, short }</strong>!" />
     `,
 
     `
-      import { Trans } from '../icu.macro'
+      import { Trans } from '../../../icu.macro'
       const Link = ({to, children}) => (<a href={to}>{children}</a>)
-      
+
       const x = <Trans defaults="Caught on <Link to='/dest'>{ catchDate, date, short }</Link>!" values={{catchDate: Date.now()}}>This should be overridden by defaults</Trans>
     `,
 
     `
-      import { Trans } from '../icu.macro'
-      
+      import { Trans } from '../../../icu.macro'
+
       const x = <Trans i18nKey="trainersWithDefaults" values={{trainersCount}} defaults="Trainers: <strong>{ trainersCount, number }</strong>!" components={[]} />
     `,
 
     `
-      import { Select } from '../icu.macro'
+      import { Select } from '../../../icu.macro'
 
       const x = <Select
         i18nKey="selectExample"
@@ -105,7 +105,7 @@ pluginTester({
     `,
 
     `
-      import { Select } from '../icu.macro'
+      import { Select } from '../../../icu.macro'
 
       const x = <Select
         switch={gender}
@@ -116,7 +116,7 @@ pluginTester({
     `,
 
     `
-      import { Plural } from '../icu.macro'
+      import { Plural } from '../../../icu.macro'
 
       const x = <Plural
         count={itemsCount1}
@@ -127,7 +127,7 @@ pluginTester({
     `,
 
     `
-      import { Plural } from '../icu.macro'
+      import { Plural } from '../../../icu.macro'
 
       const x = <Plural
         i18nKey="testKey"
@@ -139,7 +139,7 @@ pluginTester({
     `,
 
     `
-      import { Plural } from '../icu.macro'
+      import { Plural } from '../../../icu.macro'
 
       const x = <Plural
         i18nKey="testKey"
@@ -152,7 +152,7 @@ pluginTester({
     `,
 
     `
-      import { SelectOrdinal } from '../icu.macro'
+      import { SelectOrdinal } from '../../../icu.macro'
 
       const x = <SelectOrdinal
         count={position}
@@ -167,7 +167,7 @@ pluginTester({
     `,
 
     `
-      import { SelectOrdinal } from '../icu.macro'
+      import { SelectOrdinal } from '../../../icu.macro'
 
       const x = <SelectOrdinal
         i18nKey="testKey"
@@ -183,9 +183,9 @@ pluginTester({
     `
       import React from 'react'
       import { useTranslation } from 'react-i18next'
-      import { Plural, Select, SelectOrdinal, Trans } from '../icu.macro'
+      import { Plural, Select, SelectOrdinal, Trans } from '../../../icu.macro'
       const Link = ({to, children}) => (<a href={to}>{children}</a>)
-      
+
       export default function TestPage({count = 1}) {
         const [t] = useTranslation()
         const catchDate = Date.now()
@@ -290,7 +290,7 @@ pluginTester({
     `,
     `
       import React from "react"
-      import { Trans, number, date, time, plural, select, selectOrdinal } from "../icu.macro";
+      import { Trans, number, date, time, plural, select, selectOrdinal } from "../../../icu.macro";
 
       function Component({ children, style }) {
         return <div style={style}>{children}</div>
@@ -314,80 +314,80 @@ pluginTester({
       );
     `,
     `
-      import { Trans } from "../icu.macro";
+      import { Trans } from "../../../icu.macro";
 
       const x = <Trans>Welcome, &quot;{ name }&quot;!</Trans>
     `,
     {
       code: `
         import React from "react"
-        import { Trans, number } from "../icu.macro";
+        import { Trans, number } from "../../../icu.macro";
 
         const count = 2;
         const outside = number\`\${count}\`;
       `,
       snapshot: false,
-      error: /"number``" can only be used inside <Trans> in "[^"]+" on line 5/,
+      error: /"number``" can only be used inside <Trans> in "[^"]+" on line 6/,
     },
     {
       code: `
         import React from "react"
-        import { Trans, date } from "../icu.macro";
+        import { Trans, date } from "../../../icu.macro";
 
         const d = new Date;
         const outside = date\`\${d}\`;
       `,
       snapshot: false,
-      error: /"date``" can only be used inside <Trans> in "[^"]+" on line 5/,
+      error: /"date``" can only be used inside <Trans> in "[^"]+" on line 6/,
     },
     {
       code: `
         import React from "react"
-        import { Trans, time } from "../icu.macro";
+        import { Trans, time } from "../../../icu.macro";
 
         const d = new Date;
         const outside = time\`\${d}\`;
       `,
       snapshot: false,
-      error: /"time``" can only be used inside <Trans> in "[^"]+" on line 5/,
+      error: /"time``" can only be used inside <Trans> in "[^"]+" on line 6/,
     },
     {
       code: `
         import React from "react"
-        import { Trans, select } from "../icu.macro";
+        import { Trans, select } from "../../../icu.macro";
 
         const d = "f";
         const outside = select\`\${d}, f { chose f } other { chose something else }\`;
       `,
       snapshot: false,
-      error: /"select``" can only be used inside <Trans> in "[^"]+" on line 5/,
+      error: /"select``" can only be used inside <Trans> in "[^"]+" on line 6/,
     },
     {
       code: `
         import React from "react"
-        import { Trans, selectOrdinal } from "../icu.macro";
+        import { Trans, selectOrdinal } from "../../../icu.macro";
 
         const d = 1;
         const outside = selectOrdinal\`\${d}, =0 { # } other { chose # }\`;
       `,
       snapshot: false,
-      error: /"selectOrdinal``" can only be used inside <Trans> in "[^"]+" on line 5/,
+      error: /"selectOrdinal``" can only be used inside <Trans> in "[^"]+" on line 6/,
     },
     {
       code: `
         import React from "react"
-        import { Trans, plural } from "../icu.macro";
+        import { Trans, plural } from "../../../icu.macro";
 
         const d = 1;
         const outside = plural\`\${d}, =0 { # } other { chose # }\`;
       `,
       snapshot: false,
-      error: /"plural``" can only be used inside <Trans> in "[^"]+" on line 5/,
+      error: /"plural``" can only be used inside <Trans> in "[^"]+" on line 6/,
     },
     {
       code: `
         import React from "react"
-        import { Trans, plural } from "../icu.macro";
+        import { Trans, plural } from "../../../icu.macro";
 
         const d = 1;
         const x = (
@@ -398,12 +398,12 @@ pluginTester({
       `,
       snapshot: false,
       error:
-        /Unsupported tagged template literal "fail", must be one of date, time, number, plural, select, selectOrdinal in "[^"]+" on line 7/,
+        /Unsupported tagged template literal "fail", must be one of date, time, number, plural, select, selectOrdinal in "[^"]+" on line 8/,
     },
     {
       code: `
         import React from "react"
-        import { Trans, date } from "../icu.macro";
+        import { Trans, date } from "../../../icu.macro";
 
         const d = 1;
         const x = (
@@ -413,12 +413,12 @@ pluginTester({
         );
       `,
       snapshot: false,
-      error: /date argument must be interpolated in "date``" in "[^"]+" on line 7/,
+      error: /date argument must be interpolated in "date``" in "[^"]+" on line 8/,
     },
     {
       code: `
         import React from "react"
-        import { Trans, date } from "../icu.macro";
+        import { Trans, date } from "../../../icu.macro";
 
         const tooLate = new Date();
         const x = (
@@ -428,12 +428,12 @@ pluginTester({
         );
       `,
       snapshot: false,
-      error: /date argument must be interpolated at the beginning of "date``" in "[^"]+" on line 7/,
+      error: /date argument must be interpolated at the beginning of "date``" in "[^"]+" on line 8/,
     },
     {
       code: `
         import React from "react"
-        import { Trans, number } from "../icu.macro";
+        import { Trans, number } from "../../../icu.macro";
 
         const tooLate = funcThatReturnsNumberOrUndefined;
         const x = (
@@ -443,7 +443,7 @@ pluginTester({
         );
       `,
       snapshot: false,
-      error: /Must pass a variable, not an expression to "number``" in "[^"]+" on line 7/,
+      error: /Must pass a variable, not an expression to "number``" in "[^"]+" on line 8/,
     },
   ],
 });
