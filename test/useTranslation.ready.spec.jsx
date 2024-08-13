@@ -1,7 +1,6 @@
 import { describe, it, vitest, expect, beforeEach, afterEach } from 'vitest';
-import React from 'react';
-import { renderHook, cleanup as cleanupHook } from '@testing-library/react-hooks';
-import { render, cleanup } from '@testing-library/react';
+import React, { Suspense } from 'react';
+import { render, renderHook, cleanup, screen } from '@testing-library/react';
 import { useTranslation } from '../src/useTranslation';
 import hasLoadedNamespace from './hasLoadedNamespaceMock.js';
 
@@ -10,7 +9,6 @@ vitest.unmock('../src/useTranslation');
 describe('useTranslation', () => {
   afterEach(() => {
     cleanup();
-    cleanupHook();
   });
 
   let instance;
@@ -42,15 +40,14 @@ describe('useTranslation', () => {
     return <div>{t('keyOne')}</div>;
   }
 
-  it('should throw a suspense if not ready (having not all ns)', async () => {
-    expect(() => {
-      console.error = vitest.fn(); // silent down the error boundary error from react-dom
-
-      render(<TestComponentNotReady i18n={instance} />);
-    }).toThrow(
-      'TestComponentNotReady suspended while rendering, but no fallback UI was specified.',
+  it('should render suspense if not ready (having not all ns)', async () => {
+    render(
+      <Suspense fallback="Suspended">
+        <TestComponentNotReady i18n={instance} />
+      </Suspense>,
     );
-    expect(console.error).toHaveBeenCalled(); // silent down the error boundary error from react-dom
+
+    expect(screen.getByText('Suspended')).toBeInTheDocument();
   });
 
   it('should render correct content if ready (having all ns)', () => {
