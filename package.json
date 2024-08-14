@@ -108,7 +108,7 @@
     "happy-dom": "^14.12.3",
     "husky": "^9.1.4",
     "i18next": "^23.12.2",
-    "lint-staged": "^15.2.8",
+    "lint-staged": "^15.2.9",
     "mkdirp": "^3.0.1",
     "prettier": "^3.3.3",
     "react": "^18.3.1",
