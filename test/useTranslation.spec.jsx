@@ -1,6 +1,6 @@
 import { describe, it, vitest, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import React from 'react';
-import { renderHook, cleanup } from '@testing-library/react-hooks';
+import { renderHook, cleanup } from '@testing-library/react';
 import i18nInstance from './i18n';
 import { useTranslation } from '../src/useTranslation';
 import { setI18n } from '../src/context';
@@ -162,25 +162,19 @@ describe('useTranslation', () => {
   describe('replacing i18n instance in provider', () => {
     i18nInstance.addResource('fr', 'translation', 'key1', 'test2');
     const i18nInstanceClone = i18nInstance.cloneInstance({ lng: 'fr' });
-    const wrapper = ({ children, i18n }) => (
-      <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+    const wrapper = ({ children }) => (
+      <I18nextProvider i18n={children?.props?.renderCallbackProps.i18n}>{children}</I18nextProvider>
     );
 
-    it('should render correct content', () => {
+    it('should render correct content', async () => {
       const { result, rerender } = renderHook(() => useTranslation(), {
         wrapper,
-        initialProps: {
-          i18n: i18nInstance,
-        },
+        initialProps: { i18n: i18nInstance },
       });
 
-      const { t: t1 } = result.current;
-      expect(t1('key1')).toBe('test');
-
+      expect(result.current.t('key1')).toBe('test');
       rerender({ i18n: i18nInstanceClone });
-
-      const { t: t2 } = result.current;
-      expect(t2('key1')).toBe('test2');
+      expect(result.current.t('key1')).toBe('test2');
     });
   });
 

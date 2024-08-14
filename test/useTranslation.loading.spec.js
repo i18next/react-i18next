@@ -1,5 +1,5 @@
 import { describe, it, vitest, beforeEach, expect } from 'vitest';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, waitFor } from '@testing-library/react';
 import i18n from './i18n';
 import { BackendMock } from './backendMock';
 import { useTranslation } from '../src/useTranslation';
@@ -23,26 +23,26 @@ describe('useTranslation loading ns', () => {
   });
 
   it('should wait for correct translation with suspense', async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useTranslation('common', { i18n: newI18n, useSuspense: true }),
-    );
-    expect(result.all).toHaveLength(0);
+    const all = [];
+    const { result } = renderHook(() => {
+      const value = useTranslation('common', { i18n: newI18n, useSuspense: true });
+      all.push(value);
+      return value;
+    });
+
+    expect(all).toHaveLength(0);
     backend.flush();
-    await waitForNextUpdate();
-    const { t } = result.current;
-    expect(t('key1')).toBe('test');
+    await waitFor(() => expect(result.current.t('key1')).toBe('test'));
   });
 
   it('should wait for correct translation without suspense', async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
+    const { result } = renderHook(() =>
       useTranslation('common', { i18n: newI18n, useSuspense: false }),
     );
-    const { t } = result.current;
-    expect(t('key1')).toBe('key1');
 
+    expect(result.current.t('key1')).toBe('key1');
     backend.flush();
-    await waitForNextUpdate();
-    expect(t('key1')).toBe('test');
+    await waitFor(() => expect(result.current.t('key1')).toBe('test'));
   });
 
   it('should return defaultValue if i18n instance not found', async () => {

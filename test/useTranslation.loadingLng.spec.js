@@ -1,5 +1,5 @@
 import { describe, it, vitest, beforeEach, afterEach, expect } from 'vitest';
-import { renderHook, cleanup } from '@testing-library/react-hooks';
+import { renderHook, cleanup, waitFor } from '@testing-library/react';
 import i18n from './i18n';
 import { BackendLngAwareMock } from './backendLngAwareMock';
 import { useTranslation } from '../src/useTranslation';
@@ -23,14 +23,16 @@ describe('useTranslation loading ns with lng via props', () => {
   afterEach(cleanup);
 
   it('should wait for correct translation with suspense', async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useTranslation('common', { i18n: newI18n, useSuspense: true, lng: 'de' }),
-    );
-    expect(result.all).toHaveLength(0);
+    const all = [];
+    const { result } = renderHook(() => {
+      const value = useTranslation('common', { i18n: newI18n, useSuspense: true, lng: 'de' });
+      all.push(value);
+      return value;
+    });
+
+    expect(all).toHaveLength(0);
     backend.flush();
-    await waitForNextUpdate();
-    const { t } = result.current;
-    expect(t('key1')).toBe('de/common for key1');
+    await waitFor(() => expect(result.current.t('key1')).toBe('de/common for key1'));
   });
 
   it('should wait for correct translation without suspense', async () => {
@@ -63,24 +65,21 @@ describe('useTranslation loading ns with lng via props', () => {
 
   it('should correctly return and render correct translations in multiple useTranslation usages', async () => {
     {
-      const { result, waitForNextUpdate } = renderHook(() =>
+      const { result } = renderHook(() =>
         useTranslation('newns', { i18n: newI18n, useSuspense: true, lng: 'pt' }),
       );
 
       backend.flush();
-      await waitForNextUpdate();
-      const { t } = result.current;
-      expect(t('key1')).toBe('pt/newns for key1');
+      await waitFor(() => expect(result.current.t('key1')).toBe('pt/newns for key1'));
     }
 
     {
-      const { result, waitForNextUpdate } = renderHook(() =>
+      const { result } = renderHook(() =>
         useTranslation('newns', { i18n: newI18n, useSuspense: true, lng: 'de' }),
       );
+
       backend.flush({ language: 'de' });
-      await waitForNextUpdate();
-      const { t } = result.current;
-      expect(t('key1')).toBe('de/newns for key1');
+      await waitFor(() => expect(result.current.t('key1')).toBe('de/newns for key1'));
     }
 
     {
