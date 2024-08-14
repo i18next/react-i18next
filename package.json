@@ -104,7 +104,7 @@
     "eslint-plugin-jest-dom": "^5.4.0",
     "eslint-plugin-jsx-a11y": "^6.9.0",
     "eslint-plugin-react": "^7.35.0",
-    "eslint-plugin-testing-library": "^5.11.1",
+    "eslint-plugin-testing-library": "^6.3.0",
     "happy-dom": "^14.12.3",
     "husky": "^9.1.4",
     "i18next": "^23.12.2",

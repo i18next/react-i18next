@@ -65,7 +65,8 @@
         "globalThis": false
       },
       "rules": {
-        "testing-library/no-node-access": ["error", { "allowContainerFirstChild": true }]
+        "testing-library/no-node-access": ["error", { "allowContainerFirstChild": true }],
+        "testing-library/no-manual-cleanup": "off"
       }
     }
   ]
