@@ -13,6 +13,7 @@
     "browser": true,
     "node": true
   },
+  "reportUnusedDisableDirectives": true,
   "rules": {
     "no-debugger": 0,
     "no-alert": 0,

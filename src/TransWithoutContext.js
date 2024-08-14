@@ -369,7 +369,7 @@ export function Trans({
       )
         return;
 
-      // eslint-disable-next-line react/no-unstable-nested-components, no-inner-declarations
+      // eslint-disable-next-line react/no-unstable-nested-components
       function Componentized() {
         // <>{comp}</>
         return createElement(Fragment, null, comp);
