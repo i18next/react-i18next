@@ -112,16 +112,16 @@ Some basics of i18next and some cool possibilities on how to optimize your local
 
 #### v9 samples
 
-- [Example react](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/react)
-- [Example preact](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/preact)
-- [Example react-native](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/reactnative-expo)
-- [Example expo.io](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/reactnative-expo)
-- [Example next.js](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/nextjs)
-- [Example razzle](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/razzle-ssr)
-- [Example hashbase / beaker browser](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/dat)
-- [Example storybook](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/storybook)
-- [Example locize.com](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/locize)
-- [Example test with jest](https://github.com/i18next/react-i18next/tree/master/example/v9.x.x/test-jest)
+- [Example react](https://github.com/i18next/react-i18next/tree/v9.x.x/example/react)
+- [Example preact](https://github.com/i18next/react-i18next/tree/v9.x.x/example/preact)
+- [Example react-native](https://github.com/i18next/react-i18next/tree/v9.x.x/example/reactnative-expo)
+- [Example expo.io](https://github.com/i18next/react-i18next/tree/v9.x.x/example/reactnative-expo)
+- [Example next.js](https://github.com/i18next/react-i18next/tree/v9.x.x/example/nextjs)
+- [Example razzle](https://github.com/i18next/react-i18next/tree/v9.x.x/example/razzle-ssr)
+- [Example hashbase / beaker browser](https://github.com/i18next/react-i18next/tree/v9.x.x/example/dat)
+- [Example storybook](https://github.com/i18next/react-i18next/tree/v9.x.x/example/storybook)
+- [Example locize.com](https://github.com/i18next/react-i18next/tree/v9.x.x/example/locize)
+- [Example test with jest](https://github.com/i18next/react-i18next/tree/v9.x.x/example/test-jest)
 
 ### Requirements
 
