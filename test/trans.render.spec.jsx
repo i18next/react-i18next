@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach } from 'vitest';
 import React from 'react';
 import { render, cleanup } from '@testing-library/react';
 import i18n from './i18n';
@@ -886,6 +886,43 @@ describe('trans with formatting', () => {
     expect(container.childNodes[2]).toMatchInlineSnapshot(`
       <div>
         Treat value as number: 1234
+      </div>
+    `);
+  });
+});
+
+describe('trans with formatting with alwaysFormat', () => {
+  let newI18n;
+
+  beforeEach(() => {
+    newI18n = i18n.createInstance();
+    newI18n.init({
+      interpolation: {
+        alwaysFormat: true,
+        escapeValue: false,
+        format: (value) => `(formatted ${value})`,
+      },
+    });
+  });
+
+  function TestComponent({ parent }) {
+    const name = 'Fritz';
+    return (
+      <Trans parent={parent} i18n={newI18n} count={3}>
+        number: {'{{count, INTEGER}}'}
+        <br />
+        name: {{ name }}
+      </Trans>
+    );
+  }
+
+  it('should render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container).toMatchInlineSnapshot(`
+      <div>
+        number: (formatted 3)
+        <br />
+        name: (formatted Fritz)
       </div>
     `);
   });

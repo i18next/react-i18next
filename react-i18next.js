@@ -452,7 +452,7 @@
 	      ...i18n.options.interpolation.defaultVariables
 	    };
 	  }
-	  const interpolationOverride = values || count !== undefined || !children ? tOptions.interpolation : {
+	  const interpolationOverride = values || count !== undefined && !i18n.options?.interpolation?.alwaysFormat || !children ? tOptions.interpolation : {
 	    interpolation: {
 	      ...tOptions.interpolation,
 	      prefix: '#$?',

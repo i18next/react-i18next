@@ -1,3 +1,7 @@
+### 15.0.2
+
+- try to fix Trans handling with alwaysFormat set to true [1801](https://github.com/i18next/react-i18next/issues/1801)
+
 ### 15.0.1
 
 - revert arrow function in class property to address [this](https://github.com/i18next/react-i18next/commit/46e8ea5ff69325b73087811a2ce6a2b1faffa971#r145061161)

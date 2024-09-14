@@ -344,7 +344,9 @@ export function Trans({
         : { ...i18n.options.interpolation.defaultVariables };
   }
   const interpolationOverride =
-    values || count !== undefined || !children // if !children gets problems in future, undo that fix: https://github.com/i18next/react-i18next/issues/1729 by removing !children from this condition
+    values ||
+    (count !== undefined && !i18n.options?.interpolation?.alwaysFormat) || // https://github.com/i18next/react-i18next/issues/1719 + https://github.com/i18next/react-i18next/issues/1801
+    !children // if !children gets problems in future, undo that fix: https://github.com/i18next/react-i18next/issues/1729 by removing !children from this condition
       ? tOptions.interpolation
       : { interpolation: { ...tOptions.interpolation, prefix: '#$?', suffix: '?$#' } };
   const combinedTOpts = {
