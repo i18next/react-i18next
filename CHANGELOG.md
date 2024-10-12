@@ -1,3 +1,7 @@
+### 15.0.3
+
+- try to fix [unexpected token issue](https://github.com/i18next/next-i18next/issues/2302)
+
 ### 15.0.2
 
 - try to fix Trans handling with alwaysFormat set to true [1801](https://github.com/i18next/react-i18next/issues/1801)

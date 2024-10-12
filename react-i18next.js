@@ -499,7 +499,7 @@
 	  }
 	  addUsedNamespaces(namespaces) {
 	    namespaces.forEach(ns => {
-	      this.usedNamespaces[ns] ??= true;
+	      if (!this.usedNamespaces[ns]) this.usedNamespaces[ns] = true;
 	    });
 	  }
 	  getUsedNamespaces() {
