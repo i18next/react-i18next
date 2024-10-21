@@ -471,6 +471,9 @@
 	  const translation = key ? t(key, combinedTOpts) : defaultValue;
 	  if (components) {
 	    Object.keys(components).forEach(c => {
+	      if (!components[c].key) components[c] = react.cloneElement(components[c], {
+	        key: c
+	      });
 	      const comp = components[c];
 	      if (typeof comp.type === 'function' || !comp.props || !comp.props.children || translation.indexOf(`${c}/>`) < 0 && translation.indexOf(`${c} />`) < 0) return;
 	      function Componentized() {

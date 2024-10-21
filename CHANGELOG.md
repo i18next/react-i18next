@@ -1,3 +1,7 @@
+### 15.1.0
+
+- fix: `<Trans />` warns 'Each child in a list should have a unique "key" prop.' for react 19 [1806](https://github.com/i18next/next-i18next/pull/1806)
+
 ### 15.0.3
 
 - try to fix [unexpected token issue](https://github.com/i18next/next-i18next/issues/2302)
