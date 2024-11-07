@@ -1,3 +1,7 @@
+### 15.1.1
+
+- fix: Not all namespaces are loaded when passing the lng option to useTranslate [1809](https://github.com/i18next/next-i18next/issues/1809)
+
 ### 15.1.0
 
 - fix: `<Trans />` warns 'Each child in a list should have a unique "key" prop.' for react 19 [1806](https://github.com/i18next/next-i18next/pull/1806)

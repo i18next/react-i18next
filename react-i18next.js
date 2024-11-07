@@ -154,6 +154,7 @@
 	};
 	const loadLanguages = (i18n, lng, ns, cb) => {
 	  if (isString(ns)) ns = [ns];
+	  if (i18n.options.preload && i18n.options.preload.indexOf(lng) > -1) return loadNamespaces(i18n, ns, cb);
 	  ns.forEach(n => {
 	    if (i18n.options.ns.indexOf(n) < 0) i18n.options.ns.push(n);
 	  });
