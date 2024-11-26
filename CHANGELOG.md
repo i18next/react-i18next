@@ -1,3 +1,7 @@
+### 15.1.2
+
+- fix: Attempted to assign to readonly property [1813](https://github.com/i18next/next-i18next/pull/1813)
+
 ### 15.1.1
 
 - fix: Not all namespaces are loaded when passing the lng option to useTranslate [1809](https://github.com/i18next/next-i18next/issues/1809)
