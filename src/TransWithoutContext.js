@@ -363,7 +363,7 @@ export function Trans({
   if (components) {
     Object.keys(components).forEach((c) => {
       const componentKey = components[c].key || c;
-      const comp  = cloneElement(components[c], { key: componentKey });
+      const comp = cloneElement(components[c], { key: componentKey });
       if (
         typeof comp.type === 'function' ||
         !comp.props ||
