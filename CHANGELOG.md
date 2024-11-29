@@ -1,3 +1,7 @@
+### 15.1.3
+
+- fix: Self-closing REACT components in translation strings should not attempt to replace the component's children [1815](https://github.com/i18next/react-i18next/issues/1815) [1816](https://github.com/i18next/react-i18next/pull/1816)
+
 ### 15.1.2
 
 - fix: Attempted to assign to readonly property [1813](https://github.com/i18next/next-i18next/pull/1813)
