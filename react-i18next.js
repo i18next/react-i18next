@@ -476,7 +476,7 @@
 	      const comp = react.cloneElement(components[c], {
 	        key: componentKey
 	      });
-	      if (typeof comp.type === 'function' || !comp.props || !comp.props.children || translation.indexOf(`${c}/>`) < 0 && translation.indexOf(`${c} />`) < 0) return;
+	      if (!comp.props || !comp.props.children || translation.indexOf(`${c}/>`) < 0 && translation.indexOf(`${c} />`) < 0) return;
 	      function Componentized() {
 	        return react.createElement(react.Fragment, null, comp);
 	      }

@@ -365,7 +365,6 @@ export function Trans({
       const componentKey = components[c].key || c;
       const comp = cloneElement(components[c], { key: componentKey });
       if (
-        typeof comp.type === 'function' ||
         !comp.props ||
         !comp.props.children ||
         (translation.indexOf(`${c}/>`) < 0 && translation.indexOf(`${c} />`) < 0)
