@@ -648,6 +648,70 @@ describe('trans should work with selfclosing elements in components', () => {
   });
 });
 
+describe('trans should work with self closing elements with react components', () => {
+  function Component({ children }) {
+    return <div>{children}</div>;
+  }
+  it('should render component children', () => {
+    const { container } = render(
+      <Trans
+        i18nKey="transTestWithSelfClosing"
+        components={{
+          component: <Component>These children will be preserved</Component>,
+        }}
+      />,
+    );
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        interpolated component: 
+        <div>
+          These children will be preserved
+        </div>
+      </div>
+    `);
+  });
+  it('should render Link component children', () => {
+    const { container } = render(
+      <Trans
+        i18nKey="transTestWithSelfClosing"
+        components={{
+          component: <Link to="#">These children will be preserved</Link>,
+        }}
+      />,
+    );
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        interpolated component: 
+        <a
+          href="#"
+        >
+          These children will be preserved
+        </a>
+      </div>
+    `);
+  });
+  it('should render anchor tag children', () => {
+    const { container } = render(
+      <Trans
+        i18nKey="transTestWithSelfClosing"
+        components={{
+          component: <a href="#">These children will be preserved</a>,
+        }}
+      />,
+    );
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        interpolated component: 
+        <a
+          href="#"
+        >
+          These children will be preserved
+        </a>
+      </div>
+    `);
+  });
+});
+
 describe('trans with null child', () => {
   function TestComponent() {
     return (
