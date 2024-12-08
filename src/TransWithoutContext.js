@@ -347,7 +347,7 @@ const generateComponents = (components, translation) => {
 
   // if components is not an array or an object, warn the user
   // and return null
-  console.warn('<Trans /> component prop expects an object or an array');
+  warnOnce('<Trans /> component prop expects an object or an array');
   return null;
 };
 
