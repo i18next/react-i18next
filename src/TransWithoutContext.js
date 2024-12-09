@@ -298,6 +298,59 @@ const renderNodes = (children, targetString, i18n, i18nOptions, combinedTOpts, s
   return getChildren(result[0]);
 };
 
+const fixComponentProps = (component, index, translation) => {
+  const componentKey = component.key || index;
+  const comp = cloneElement(component, { key: componentKey });
+  if (
+    !comp.props ||
+    !comp.props.children ||
+    (translation.indexOf(`${index}/>`) < 0 && translation.indexOf(`${index} />`) < 0)
+  ) {
+    return comp;
+  }
+
+  function Componentized() {
+    // <>{comp}</>
+    return createElement(Fragment, null, comp);
+  }
+  // <Componentized />
+  return createElement(Componentized);
+};
+
+const generateArrayComponents = (components, translation) =>
+  components.map((c, index) => fixComponentProps(c, index, translation));
+
+const generateObjectComponents = (components, translation) => {
+  const componentMap = {};
+
+  Object.keys(components).forEach((c) => {
+    Object.assign(componentMap, {
+      [c]: fixComponentProps(components[c], c, translation),
+    });
+  });
+
+  return componentMap;
+};
+
+const generateComponents = (components, translation) => {
+  if (!components) return null;
+
+  // components could be either an array or an object
+
+  if (Array.isArray(components)) {
+    return generateArrayComponents(components, translation);
+  }
+
+  if (isObject(components)) {
+    return generateObjectComponents(components, translation);
+  }
+
+  // if components is not an array or an object, warn the user
+  // and return null
+  warnOnce('<Trans /> component prop expects an object or an array');
+  return null;
+};
+
 export function Trans({
   children,
   count,
@@ -360,29 +413,10 @@ export function Trans({
   };
   const translation = key ? t(key, combinedTOpts) : defaultValue;
 
-  if (components) {
-    Object.keys(components).forEach((c) => {
-      const componentKey = components[c].key || c;
-      const comp = cloneElement(components[c], { key: componentKey });
-      if (
-        !comp.props ||
-        !comp.props.children ||
-        (translation.indexOf(`${c}/>`) < 0 && translation.indexOf(`${c} />`) < 0)
-      )
-        return;
-
-      // eslint-disable-next-line react/no-unstable-nested-components
-      function Componentized() {
-        // <>{comp}</>
-        return createElement(Fragment, null, comp);
-      }
-      // <Componentized />
-      components[c] = createElement(Componentized);
-    });
-  }
+  const generatedComponents = generateComponents(components, translation);
 
   const content = renderNodes(
-    components || children,
+    generatedComponents || children,
     translation,
     i18n,
     reactI18nextOptions,
