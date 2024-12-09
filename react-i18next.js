@@ -410,6 +410,40 @@
 	  }], ast, getAsArray(children || []));
 	  return getChildren(result[0]);
 	};
+	const fixComponentProps = (component, index, translation) => {
+	  const componentKey = component.key || index;
+	  const comp = react.cloneElement(component, {
+	    key: componentKey
+	  });
+	  if (!comp.props || !comp.props.children || translation.indexOf(`${index}/>`) < 0 && translation.indexOf(`${index} />`) < 0) {
+	    return comp;
+	  }
+	  function Componentized() {
+	    return react.createElement(react.Fragment, null, comp);
+	  }
+	  return react.createElement(Componentized);
+	};
+	const generateArrayComponents = (components, translation) => components.map((c, index) => fixComponentProps(c, index, translation));
+	const generateObjectComponents = (components, translation) => {
+	  const componentMap = {};
+	  Object.keys(components).forEach(c => {
+	    Object.assign(componentMap, {
+	      [c]: fixComponentProps(components[c], c, translation)
+	    });
+	  });
+	  return componentMap;
+	};
+	const generateComponents = (components, translation) => {
+	  if (!components) return null;
+	  if (Array.isArray(components)) {
+	    return generateArrayComponents(components, translation);
+	  }
+	  if (isObject(components)) {
+	    return generateObjectComponents(components, translation);
+	  }
+	  warnOnce('<Trans /> component prop expects an object or an array');
+	  return null;
+	};
 	function Trans$1(_ref) {
 	  let {
 	    children,
@@ -470,20 +504,8 @@
 	    ns: namespaces
 	  };
 	  const translation = key ? t(key, combinedTOpts) : defaultValue;
-	  if (components) {
-	    Object.keys(components).forEach(c => {
-	      const componentKey = components[c].key || c;
-	      const comp = react.cloneElement(components[c], {
-	        key: componentKey
-	      });
-	      if (!comp.props || !comp.props.children || translation.indexOf(`${c}/>`) < 0 && translation.indexOf(`${c} />`) < 0) return;
-	      function Componentized() {
-	        return react.createElement(react.Fragment, null, comp);
-	      }
-	      components[c] = react.createElement(Componentized);
-	    });
-	  }
-	  const content = renderNodes(components || children, translation, i18n, reactI18nextOptions, combinedTOpts, shouldUnescape);
+	  const generatedComponents = generateComponents(components, translation);
+	  const content = renderNodes(generatedComponents || children, translation, i18n, reactI18nextOptions, combinedTOpts, shouldUnescape);
 	  const useAsParent = parent ?? reactI18nextOptions.defaultTransParent;
 	  return useAsParent ? react.createElement(useAsParent, additionalProps, content) : content;
 	}
