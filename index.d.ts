@@ -42,14 +42,6 @@ declare module 'i18next' {
   }
 }
 
-declare global {
-  namespace JSX {
-    interface IntrinsicAttributes {
-      i18nIsDynamicList?: boolean;
-    }
-  }
-}
-
 type ObjectOrNever = TypeOptions['allowObjectInHTMLChildren'] extends true
   ? Record<string, unknown>
   : never;
@@ -57,6 +49,12 @@ type ObjectOrNever = TypeOptions['allowObjectInHTMLChildren'] extends true
 type ReactI18NextChildren = React.ReactNode | ObjectOrNever;
 
 declare module 'react' {
+  namespace JSX {
+    interface IntrinsicAttributes {
+      i18nIsDynamicList?: boolean;
+    }
+  }
+
   interface HTMLAttributes<T> {
     // This union is inspired by the typings for React.ReactNode. We do this to fix "This JSX tag's 'children' prop
     // expects a single child of type 'ReactI18NextChildren', but multiple children were provided":
@@ -144,7 +142,7 @@ export function withTranslation<
   },
 ): <
   C extends React.ComponentType<React.ComponentProps<any> & WithTranslationProps>,
-  ResolvedProps = JSX.LibraryManagedAttributes<
+  ResolvedProps = React.JSX.LibraryManagedAttributes<
     C,
     $Subtract<React.ComponentProps<C>, WithTranslationProps>
   >,
