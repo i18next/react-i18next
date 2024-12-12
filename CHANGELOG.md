@@ -1,3 +1,10 @@
+### 15.2.0
+
+This version may be breaking if you still use React < v18 with TypeScript.
+For JS users this version is equal to v15.1.4
+
+- fix: Global JSX namespace is deprecated [1823](https://github.com/i18next/react-i18next/issues/1823) with [1822](https://github.com/i18next/react-i18next/pull/1822)
+
 ### 15.1.4
 
 - Fix: warning each child should have a unique key [1820](https://github.com/i18next/react-i18next/pull/1820)
