@@ -29,7 +29,7 @@ const mergeProps = (source, target) => {
   return newTarget;
 };
 
-export const nodesToString = (children, i18nOptions) => {
+export const nodesToString = (children, i18nOptions, i18nKey) => {
   if (!children) return '';
   let stringNode = '';
 
@@ -72,11 +72,13 @@ export const nodesToString = (children, i18nOptions) => {
         stringNode += `<${type}>${childChildren}</${type}>`;
       } else {
         // regular case mapping the inner children
-        const content = nodesToString(childChildren, i18nOptions);
+        const content = nodesToString(childChildren, i18nOptions, i18nKey);
         stringNode += `<${childIndex}>${content}</${childIndex}>`;
       }
     } else if (child === null) {
-      warn(`Trans: the passed in value is invalid - seems you passed in a null child.`);
+      if (!i18nOptions?.silentReactInterpolationWarning) {
+        warn(`Trans: the passed in value is invalid - seems you passed in a null child.`, i18nKey);
+      }
     } else if (isObject(child)) {
       // e.g. lorem {{ value, format }} ipsum
       const { format, ...clone } = child;
@@ -85,17 +87,19 @@ export const nodesToString = (children, i18nOptions) => {
       if (keys.length === 1) {
         const value = format ? `${keys[0]}, ${format}` : keys[0];
         stringNode += `{{${value}}}`;
-      } else {
+      } else if (!i18nOptions?.silentReactInterpolationWarning) {
         // not a valid interpolation object (can only contain one value plus format)
         warn(
           `react-i18next: the passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.`,
           child,
+          i18nKey,
         );
       }
-    } else {
+    } else if (!i18nOptions?.silentReactInterpolationWarning) {
       warn(
         `Trans: the passed in value is invalid - seems you passed in a variable like {number} - please pass in variables for interpolation as full objects like {{number}}.`,
         child,
+        i18nKey,
       );
     }
   });
@@ -382,7 +386,7 @@ export function Trans({
   let namespaces = ns || t.ns || i18n.options?.defaultNS;
   namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
 
-  const nodeAsString = nodesToString(children, reactI18nextOptions);
+  const nodeAsString = nodesToString(children, reactI18nextOptions, i18nKey);
   const defaultValue =
     defaults || nodeAsString || reactI18nextOptions.transEmptyNodeValue || i18nKey;
   const { hashTransKey } = reactI18nextOptions;
