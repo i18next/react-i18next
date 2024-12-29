@@ -1,23 +1,28 @@
-export const warn = (...args) => {
-  if (console?.warn) {
+export const warn = (i18n, ...args) => {
+  if (i18n?.services?.logger?.forward) {
+    i18n.services.logger.forward(args, 'warn', 'react-i18next::', true);
+  } else if (i18n?.services?.logger?.warn) {
+    if (isString(args[0])) args[0] = `react-i18next:: ${args[0]}`;
+    i18n.services.logger.warn(...args);
+  } else if (console?.warn) {
     if (isString(args[0])) args[0] = `react-i18next:: ${args[0]}`;
     console.warn(...args);
   }
 };
 
 const alreadyWarned = {};
-export const warnOnce = (...args) => {
+export const warnOnce = (i18n, ...args) => {
   if (isString(args[0]) && alreadyWarned[args[0]]) return;
   if (isString(args[0])) alreadyWarned[args[0]] = new Date();
-  warn(...args);
+  warn(i18n, ...args);
 };
 
 // not needed right now
 //
-// export const deprecated = (...args) => {
+// export const deprecated = (i18n, ...args) => {
 //   if (process && process.env && (!process.env.NODE_ENV || process.env.NODE_ENV === 'development')) {
 //     if (isString(args[0])) args[0] = `deprecation warning -> ${args[0]}`;
-//     warnOnce(...args);
+//     warnOnce(i18n, ...args);
 //   }
 // }
 
@@ -55,7 +60,7 @@ export const loadLanguages = (i18n, lng, ns, cb) => {
 
 export const hasLoadedNamespace = (ns, i18n, options = {}) => {
   if (!i18n.languages || !i18n.languages.length) {
-    warnOnce('i18n.languages were undefined or empty', i18n.languages);
+    warnOnce(i18n, 'i18n.languages were undefined or empty', i18n.languages);
     return true;
   }
 

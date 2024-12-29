@@ -1,3 +1,7 @@
+### 15.3.0
+
+Uses the i18next logger instead of the default console logger, if there is a valid i18next instance. Now the debug i18next option is respected, and you can also inject your own logger module: https://www.i18next.com/misc/creating-own-plugins#logger
+
 ### 15.2.0
 
 This version may be breaking if you still use React < v18 with TypeScript.

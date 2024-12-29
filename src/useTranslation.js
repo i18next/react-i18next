@@ -35,7 +35,7 @@ export const useTranslation = (ns, props = {}) => {
   const i18n = i18nFromProps || i18nFromContext || getI18n();
   if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
   if (!i18n) {
-    warnOnce('You will need to pass in an i18next instance by using initReactI18next');
+    warnOnce(i18n, 'You will need to pass in an i18next instance by using initReactI18next');
     const notReadyT = (k, optsOrDefaultValue) => {
       if (isString(optsOrDefaultValue)) return optsOrDefaultValue;
       if (isObject(optsOrDefaultValue) && isString(optsOrDefaultValue.defaultValue))
@@ -51,6 +51,7 @@ export const useTranslation = (ns, props = {}) => {
 
   if (i18n.options.react?.wait)
     warnOnce(
+      i18n,
       'It seems you are still using the old wait option, you may migrate to the new useSuspense behaviour.',
     );
 
