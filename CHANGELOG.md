@@ -1,3 +1,7 @@
+### 15.4.0
+
+feat: add meta with codes on warnings to allow conditional logging [1826](https://github.com/i18next/react-i18next/pull/1826)
+
 ### 15.3.0
 
 Uses the i18next logger instead of the default console logger, if there is a valid i18next instance. Now the debug i18next option is respected, and you can also inject your own logger module: https://www.i18next.com/misc/creating-own-plugins#logger

@@ -118,28 +118,26 @@
 	  }
 	};
 
-	const warn = function (i18n) {
-	  for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-	    args[_key - 1] = arguments[_key];
-	  }
+	const warn = (i18n, code, msg, rest) => {
+	  const args = [msg, {
+	    code,
+	    ...(rest || {})
+	  }];
 	  if (i18n?.services?.logger?.forward) {
-	    i18n.services.logger.forward(args, 'warn', 'react-i18next::', true);
-	  } else if (i18n?.services?.logger?.warn) {
-	    if (isString(args[0])) args[0] = `react-i18next:: ${args[0]}`;
+	    return i18n.services.logger.forward(args, 'warn', 'react-i18next::', true);
+	  }
+	  if (isString(args[0])) args[0] = `react-i18next:: ${args[0]}`;
+	  if (i18n?.services?.logger?.warn) {
 	    i18n.services.logger.warn(...args);
 	  } else if (console?.warn) {
-	    if (isString(args[0])) args[0] = `react-i18next:: ${args[0]}`;
 	    console.warn(...args);
 	  }
 	};
 	const alreadyWarned = {};
-	const warnOnce = function (i18n) {
-	  for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-	    args[_key2 - 1] = arguments[_key2];
-	  }
-	  if (isString(args[0]) && alreadyWarned[args[0]]) return;
-	  if (isString(args[0])) alreadyWarned[args[0]] = new Date();
-	  warn(i18n, ...args);
+	const warnOnce = (i18n, code, msg, rest) => {
+	  if (isString(msg) && alreadyWarned[msg]) return;
+	  if (isString(msg)) alreadyWarned[msg] = new Date();
+	  warn(i18n, code, msg, rest);
 	};
 	const loadedClb = (i18n, cb) => () => {
 	  if (i18n.isInitialized) {
@@ -168,7 +166,9 @@
 	const hasLoadedNamespace = function (ns, i18n) {
 	  let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 	  if (!i18n.languages || !i18n.languages.length) {
-	    warnOnce(i18n, 'i18n.languages were undefined or empty', i18n.languages);
+	    warnOnce(i18n, 'NO_LANGUAGES', 'i18n.languages were undefined or empty', {
+	      languages: i18n.languages
+	    });
 	    return true;
 	  }
 	  return i18n.hasLoadedNamespace(ns, {
@@ -261,7 +261,9 @@
 	  childrenArray.forEach((child, childIndex) => {
 	    if (isString(child)) {
 	      stringNode += `${child}`;
-	    } else if (react.isValidElement(child)) {
+	      return;
+	    }
+	    if (react.isValidElement(child)) {
 	      const {
 	        props,
 	        type
@@ -271,17 +273,27 @@
 	      const childChildren = props.children;
 	      if (!childChildren && shouldKeepChild && !childPropsCount) {
 	        stringNode += `<${type}/>`;
-	      } else if (!childChildren && (!shouldKeepChild || childPropsCount) || props.i18nIsDynamicList) {
-	        stringNode += `<${childIndex}></${childIndex}>`;
-	      } else if (shouldKeepChild && childPropsCount === 1 && isString(childChildren)) {
-	        stringNode += `<${type}>${childChildren}</${type}>`;
-	      } else {
-	        const content = nodesToString(childChildren, i18nOptions, i18n, i18nKey);
-	        stringNode += `<${childIndex}>${content}</${childIndex}>`;
+	        return;
 	      }
-	    } else if (child === null) {
-	      warn(i18n, `Trans: the passed in value is invalid - seems you passed in a null child.`);
-	    } else if (isObject(child)) {
+	      if (!childChildren && (!shouldKeepChild || childPropsCount) || props.i18nIsDynamicList) {
+	        stringNode += `<${childIndex}></${childIndex}>`;
+	        return;
+	      }
+	      if (shouldKeepChild && childPropsCount === 1 && isString(childChildren)) {
+	        stringNode += `<${type}>${childChildren}</${type}>`;
+	        return;
+	      }
+	      const content = nodesToString(childChildren, i18nOptions, i18n, i18nKey);
+	      stringNode += `<${childIndex}>${content}</${childIndex}>`;
+	      return;
+	    }
+	    if (child === null) {
+	      warn(i18n, 'TRANS_NULL_VALUE', `Passed in a null value as child`, {
+	        i18nKey
+	      });
+	      return;
+	    }
+	    if (isObject(child)) {
 	      const {
 	        format,
 	        ...clone
@@ -290,12 +302,18 @@
 	      if (keys.length === 1) {
 	        const value = format ? `${keys[0]}, ${format}` : keys[0];
 	        stringNode += `{{${value}}}`;
-	      } else {
-	        warn(i18n, `react-i18next: the passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.`, child, i18nKey);
+	        return;
 	      }
-	    } else {
-	      warn(i18n, `Trans: the passed in value is invalid - seems you passed in a variable like {number} - please pass in variables for interpolation as full objects like {{number}}.`, child, i18nKey);
+	      warn(i18n, 'TRANS_INVALID_OBJ', `Invalid child - Object should only have keys {{ value, format }} (format is optional).`, {
+	        i18nKey,
+	        child
+	      });
+	      return;
 	    }
+	    warn(i18n, 'TRANS_INVALID_VAR', `Passed in a variable like {number} - pass variables for interpolation as full objects like {{number}}.`, {
+	      i18nKey,
+	      child
+	    });
 	  });
 	  return stringNode;
 	};
@@ -438,7 +456,7 @@
 	  });
 	  return componentMap;
 	};
-	const generateComponents = (components, translation, i18n) => {
+	const generateComponents = (components, translation, i18n, i18nKey) => {
 	  if (!components) return null;
 	  if (Array.isArray(components)) {
 	    return generateArrayComponents(components, translation);
@@ -446,7 +464,9 @@
 	  if (isObject(components)) {
 	    return generateObjectComponents(components, translation);
 	  }
-	  warnOnce(i18n, '<Trans /> component prop expects an object or an array');
+	  warnOnce(i18n, 'TRANS_INVALID_COMPONENTS', `<Trans /> "components" prop expects an object or array`, {
+	    i18nKey
+	  });
 	  return null;
 	};
 	function Trans$1(_ref) {
@@ -468,7 +488,9 @@
 	  } = _ref;
 	  const i18n = i18nFromProps || getI18n();
 	  if (!i18n) {
-	    warnOnce(i18n, 'You will need to pass in an i18next instance by using i18nextReactModule');
+	    warnOnce(i18n, 'NO_I18NEXT_INSTANCE', `Trans: You need to pass in an i18next instance using i18nextReactModule`, {
+	      i18nKey
+	    });
 	    return children;
 	  }
 	  const t = tFromProps || i18n.t.bind(i18n) || (k => k);
@@ -509,7 +531,7 @@
 	    ns: namespaces
 	  };
 	  const translation = key ? t(key, combinedTOpts) : defaultValue;
-	  const generatedComponents = generateComponents(components, translation, i18n);
+	  const generatedComponents = generateComponents(components, translation, i18n, i18nKey);
 	  const content = renderNodes(generatedComponents || children, translation, i18n, reactI18nextOptions, combinedTOpts, shouldUnescape);
 	  const useAsParent = parent ?? reactI18nextOptions.defaultTransParent;
 	  return useAsParent ? react.createElement(useAsParent, additionalProps, content) : content;
@@ -623,7 +645,7 @@
 	  const i18n = i18nFromProps || i18nFromContext || getI18n();
 	  if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
 	  if (!i18n) {
-	    warnOnce(i18n, 'You will need to pass in an i18next instance by using initReactI18next');
+	    warnOnce(i18n, 'NO_I18NEXT_INSTANCE', 'useTranslation: You will need to pass in an i18next instance by using initReactI18next');
 	    const notReadyT = (k, optsOrDefaultValue) => {
 	      if (isString(optsOrDefaultValue)) return optsOrDefaultValue;
 	      if (isObject(optsOrDefaultValue) && isString(optsOrDefaultValue.defaultValue)) return optsOrDefaultValue.defaultValue;
@@ -635,7 +657,7 @@
 	    retNotReady.ready = false;
 	    return retNotReady;
 	  }
-	  if (i18n.options.react?.wait) warnOnce(i18n, 'It seems you are still using the old wait option, you may migrate to the new useSuspense behaviour.');
+	  if (i18n.options.react?.wait) warnOnce(i18n, 'DEPRECATED_OPTION', 'useTranslation: It seems you are still using the old wait option, you may migrate to the new useSuspense behaviour.');
 	  const i18nOptions = {
 	    ...getDefaults(),
 	    ...i18n.options.react,
