@@ -45,7 +45,9 @@ export const nodesToString = (children, i18nOptions, i18n, i18nKey) => {
       // actual e.g. lorem
       // expected e.g. lorem
       stringNode += `${child}`;
-    } else if (isValidElement(child)) {
+      return;
+    }
+    if (isValidElement(child)) {
       const { props, type } = child;
       const childPropsCount = Object.keys(props).length;
       const shouldKeepChild = keepArray.indexOf(type) > -1;
@@ -55,10 +57,9 @@ export const nodesToString = (children, i18nOptions, i18n, i18nKey) => {
         // actual e.g. lorem <br/> ipsum
         // expected e.g. lorem <br/> ipsum
         stringNode += `<${type}/>`;
-      } else if (
-        (!childChildren && (!shouldKeepChild || childPropsCount)) ||
-        props.i18nIsDynamicList
-      ) {
+        return;
+      }
+      if ((!childChildren && (!shouldKeepChild || childPropsCount)) || props.i18nIsDynamicList) {
         // actual e.g. lorem <hr className="test" /> ipsum
         // expected e.g. lorem <0></0> ipsum
         // or
@@ -66,18 +67,24 @@ export const nodesToString = (children, i18nOptions, i18n, i18nKey) => {
         // e.g. <ul i18nIsDynamicList>{['a', 'b'].map(item => ( <li key={item}>{item}</li> ))}</ul>
         // expected e.g. "<0></0>", not e.g. "<0><0>a</0><1>b</1></0>"
         stringNode += `<${childIndex}></${childIndex}>`;
-      } else if (shouldKeepChild && childPropsCount === 1 && isString(childChildren)) {
+        return;
+      }
+      if (shouldKeepChild && childPropsCount === 1 && isString(childChildren)) {
         // actual e.g. dolor <strong>bold</strong> amet
         // expected e.g. dolor <strong>bold</strong> amet
         stringNode += `<${type}>${childChildren}</${type}>`;
-      } else {
-        // regular case mapping the inner children
-        const content = nodesToString(childChildren, i18nOptions, i18n, i18nKey);
-        stringNode += `<${childIndex}>${content}</${childIndex}>`;
+        return;
       }
-    } else if (child === null) {
-      warn(i18n, `Trans: the passed in value is invalid - seems you passed in a null child.`);
-    } else if (isObject(child)) {
+      // regular case mapping the inner children
+      const content = nodesToString(childChildren, i18nOptions, i18n, i18nKey);
+      stringNode += `<${childIndex}>${content}</${childIndex}>`;
+      return;
+    }
+    if (child === null) {
+      warn(i18n, 'TRANS_NULL_VALUE', `Passed in a null value as child`, { i18nKey });
+      return;
+    }
+    if (isObject(child)) {
       // e.g. lorem {{ value, format }} ipsum
       const { format, ...clone } = child;
       const keys = Object.keys(clone);
@@ -85,23 +92,22 @@ export const nodesToString = (children, i18nOptions, i18n, i18nKey) => {
       if (keys.length === 1) {
         const value = format ? `${keys[0]}, ${format}` : keys[0];
         stringNode += `{{${value}}}`;
-      } else {
-        // not a valid interpolation object (can only contain one value plus format)
-        warn(
-          i18n,
-          `react-i18next: the passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.`,
-          child,
-          i18nKey,
-        );
+        return;
       }
-    } else {
       warn(
         i18n,
-        `Trans: the passed in value is invalid - seems you passed in a variable like {number} - please pass in variables for interpolation as full objects like {{number}}.`,
-        child,
-        i18nKey,
+        'TRANS_INVALID_OBJ',
+        `Invalid child - Object should only have keys {{ value, format }} (format is optional).`,
+        { i18nKey, child },
       );
+      return;
     }
+    warn(
+      i18n,
+      'TRANS_INVALID_VAR',
+      `Passed in a variable like {number} - pass variables for interpolation as full objects like {{number}}.`,
+      { i18nKey, child },
+    );
   });
 
   return stringNode;
@@ -336,7 +342,7 @@ const generateObjectComponents = (components, translation) => {
   return componentMap;
 };
 
-const generateComponents = (components, translation, i18n) => {
+const generateComponents = (components, translation, i18n, i18nKey) => {
   if (!components) return null;
 
   // components could be either an array or an object
@@ -351,7 +357,12 @@ const generateComponents = (components, translation, i18n) => {
 
   // if components is not an array or an object, warn the user
   // and return null
-  warnOnce(i18n, '<Trans /> component prop expects an object or an array');
+  warnOnce(
+    i18n,
+    'TRANS_INVALID_COMPONENTS',
+    `<Trans /> "components" prop expects an object or array`,
+    { i18nKey },
+  );
   return null;
 };
 
@@ -374,7 +385,12 @@ export function Trans({
   const i18n = i18nFromProps || getI18n();
 
   if (!i18n) {
-    warnOnce(i18n, 'You will need to pass in an i18next instance by using i18nextReactModule');
+    warnOnce(
+      i18n,
+      'NO_I18NEXT_INSTANCE',
+      `Trans: You need to pass in an i18next instance using i18nextReactModule`,
+      { i18nKey },
+    );
     return children;
   }
 
@@ -417,7 +433,7 @@ export function Trans({
   };
   const translation = key ? t(key, combinedTOpts) : defaultValue;
 
-  const generatedComponents = generateComponents(components, translation, i18n);
+  const generatedComponents = generateComponents(components, translation, i18n, i18nKey);
 
   const content = renderNodes(
     generatedComponents || children,

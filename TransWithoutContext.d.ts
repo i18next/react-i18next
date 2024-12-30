@@ -35,3 +35,39 @@ export function Trans<
   TOpt extends TOptions & { context?: TContext } = { context: TContext },
   E = React.HTMLProps<HTMLDivElement>,
 >(props: TransProps<Key, Ns, KPrefix, TContext, TOpt, E>): React.ReactElement;
+
+export type ErrorCode =
+  | 'NO_I18NEXT_INSTANCE'
+  | 'NO_LANGUAGES'
+  | 'DEPRECATED_OPTION'
+  | 'TRANS_NULL_VALUE'
+  | 'TRANS_INVALID_OBJ'
+  | 'TRANS_INVALID_VAR'
+  | 'TRANS_INVALID_COMPONENTS';
+
+export type ErrorMeta = {
+  code: ErrorCode;
+  i18nKey?: string;
+  [x: string]: any;
+};
+
+/**
+ * Use to type the logger arguments
+ * @example
+ * ```
+ * import type { ErrorArgs } from 'react-i18next';
+ *
+ * const logger = {
+ *   // ....
+ *   warn: function (...args: ErrorArgs) {
+ *      if (args[1]?.code === 'TRANS_INVALID_OBJ') {
+ *        const [msg, { i18nKey, ...rest }] = args;
+ *        return log(i18nKey, msg, rest);
+ *      }
+ *      log(...args);
+ *   }
+ * }
+ * i18n.use(logger).use(i18nReactPlugin).init({...});
+ * ```
+ */
+export type ErrorArgs = readonly [string, ErrorMeta | undefined, ...any[]];
