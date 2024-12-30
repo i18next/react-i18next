@@ -1,20 +1,22 @@
-export const warn = (i18n, ...args) => {
+/** @type {(i18n:any,code:import('../TransWithoutContext').ErrorCode,msg?:string, rest?:{[key:string]: any})=>void} */
+export const warn = (i18n, code, msg, rest) => {
+  const args = [msg, { code, ...(rest || {}) }];
   if (i18n?.services?.logger?.forward) {
-    i18n.services.logger.forward(args, 'warn', 'react-i18next::', true);
-  } else if (i18n?.services?.logger?.warn) {
-    if (isString(args[0])) args[0] = `react-i18next:: ${args[0]}`;
+    return i18n.services.logger.forward(args, 'warn', 'react-i18next::', true);
+  }
+  if (isString(args[0])) args[0] = `react-i18next:: ${args[0]}`;
+  if (i18n?.services?.logger?.warn) {
     i18n.services.logger.warn(...args);
   } else if (console?.warn) {
-    if (isString(args[0])) args[0] = `react-i18next:: ${args[0]}`;
     console.warn(...args);
   }
 };
-
 const alreadyWarned = {};
-export const warnOnce = (i18n, ...args) => {
-  if (isString(args[0]) && alreadyWarned[args[0]]) return;
-  if (isString(args[0])) alreadyWarned[args[0]] = new Date();
-  warn(i18n, ...args);
+/** @type {typeof warn} */
+export const warnOnce = (i18n, code, msg, rest) => {
+  if (isString(msg) && alreadyWarned[msg]) return;
+  if (isString(msg)) alreadyWarned[msg] = new Date();
+  warn(i18n, code, msg, rest);
 };
 
 // not needed right now
@@ -60,7 +62,9 @@ export const loadLanguages = (i18n, lng, ns, cb) => {
 
 export const hasLoadedNamespace = (ns, i18n, options = {}) => {
   if (!i18n.languages || !i18n.languages.length) {
-    warnOnce(i18n, 'i18n.languages were undefined or empty', i18n.languages);
+    warnOnce(i18n, 'NO_LANGUAGES', 'i18n.languages were undefined or empty', {
+      languages: i18n.languages,
+    });
     return true;
   }
 
