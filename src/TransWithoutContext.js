@@ -324,7 +324,7 @@ const fixComponentProps = (component, index, translation) => {
     return createElement(Fragment, null, comp);
   }
   // <Componentized />
-  return createElement(Componentized);
+  return createElement(Componentized, { key: componentKey });
 };
 
 const generateArrayComponents = (components, translation) =>
