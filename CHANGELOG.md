@@ -1,3 +1,7 @@
+### 15.4.1
+
+fix: unique key warning on componentized element [1835](https://github.com/i18next/react-i18next/pull/1835)
+
 ### 15.4.0
 
 feat: add meta with codes on warnings to allow conditional logging [1826](https://github.com/i18next/react-i18next/pull/1826)

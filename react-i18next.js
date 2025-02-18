@@ -444,7 +444,9 @@
 	  function Componentized() {
 	    return react.createElement(react.Fragment, null, comp);
 	  }
-	  return react.createElement(Componentized);
+	  return react.createElement(Componentized, {
+	    key: componentKey
+	  });
 	};
 	const generateArrayComponents = (components, translation) => components.map((c, index) => fixComponentProps(c, index, translation));
 	const generateObjectComponents = (components, translation) => {
