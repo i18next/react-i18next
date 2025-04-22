@@ -67,6 +67,14 @@
     "@babel/runtime": "^7.25.0",
     "html-parse-stringify": "^3.0.1"
   },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@babel/cli": "^7.24.8",
     "@babel/core": "^7.25.2",
