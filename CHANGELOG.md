@@ -1,3 +1,7 @@
+### 15.5.1
+
+add typescript as optional peer dependency [1843](https://github.com/i18next/react-i18next/pull/1843)
+
 ### 15.5.0
 
 feat: use const type parameters for useTranslation() [1842](https://github.com/i18next/react-i18next/pull/1842)
