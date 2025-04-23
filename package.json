@@ -1,6 +1,6 @@
 {
   "name": "react-i18next",
-  "version": "15.4.1",
+  "version": "15.5.0",
   "description": "Internationalization for react done right. Using the i18next i18n ecosystem.",
   "main": "dist/commonjs/index.js",
   "types": "./index.d.mts",
@@ -68,10 +68,14 @@
     "html-parse-stringify": "^3.0.1"
   },
   "peerDependencies": {
-    "typescript": "^5"
+    "i18next": ">= 23.2.3",
+    "react": ">= 16.8.0"
   },
   "peerDependenciesMeta": {
-    "typescript": {
+    "react-dom": {
+      "optional": true
+    },
+    "react-native": {
       "optional": true
     }
   },
@@ -127,18 +131,6 @@
     "typescript": "~5.5.4",
     "vitest": "^2.0.5",
     "yargs": "^17.7.2"
-  },
-  "peerDependencies": {
-    "i18next": ">= 23.2.3",
-    "react": ">= 16.8.0"
-  },
-  "peerDependenciesMeta": {
-    "react-dom": {
-      "optional": true
-    },
-    "react-native": {
-      "optional": true
-    }
   },
   "scripts": {
     "clean": "rimraf dist && mkdirp dist",
