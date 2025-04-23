@@ -97,8 +97,8 @@ export type FallbackNs<Ns> = Ns extends undefined
     : _DefaultNamespace;
 
 export function useTranslation<
-  Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
-  KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined,
+  const Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
+  const KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined,
 >(
   ns?: Ns,
   options?: UseTranslationOptions<KPrefix>,
