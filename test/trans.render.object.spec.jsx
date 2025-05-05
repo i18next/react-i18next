@@ -62,6 +62,33 @@ describe('trans using no children but components (object) - using index', () => 
   });
 });
 
+describe.skip('trans using no children but components (object) - using names', () => {
+  function TestComponent() {
+    return (
+      <Trans
+        defaults="hello <italic>under ten</italic><10 this text after the sign should be rendered <bold>{{what}}</bold>"
+        values={{ what: 'world' }}
+        components={{ italic: <i>just dummy</i>, bold: <strong>univers</strong> }}
+      />
+    );
+  }
+  it('should render translated string', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        hello 
+        <i>
+          under ten
+        </i>
+        &lt;10 this text after the sign should be rendered 
+        <strong>
+          world
+        </strong>
+      </div>
+    `);
+  });
+});
+
 describe('trans using no children but components (object) - using names', () => {
   function TestComponent() {
     return (
