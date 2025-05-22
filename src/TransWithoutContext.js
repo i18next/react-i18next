@@ -170,7 +170,7 @@ const renderNodes = (children, targetString, i18n, i18nOptions, combinedTOpts, s
             {
               ...props,
               key: i,
-              ref: c.ref,
+              ref: c.props.ref ?? c.ref, // ref is a prop in react >= v19
             },
             isVoid ? null : inner,
           );
