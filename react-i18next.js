@@ -356,7 +356,7 @@
 	        return react.createElement(c.type, {
 	          ...props,
 	          key: i,
-	          ref: c.ref
+	          ref: c.props.ref ?? c.ref
 	        }, isVoid ? null : inner);
 	      }));
 	    }

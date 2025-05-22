@@ -1,3 +1,7 @@
+### 15.5.2
+
+fix element.ref access issue with react 19 [1846](https://github.com/i18next/react-i18next/pull/1846)
+
 ### 15.5.1
 
 add typescript as optional peer dependency [1843](https://github.com/i18next/react-i18next/pull/1843)
