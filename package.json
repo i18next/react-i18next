@@ -64,7 +64,7 @@
     "url": "https://github.com/i18next/react-i18next.git"
   },
   "dependencies": {
-    "@babel/runtime": "^7.26.10",
+    "@babel/runtime": "^7.27.6",
     "html-parse-stringify": "^3.0.1"
   },
   "peerDependencies": {
@@ -84,17 +84,17 @@
     }
   },
   "devDependencies": {
-    "@babel/cli": "^7.24.8",
-    "@babel/core": "^7.25.2",
-    "@babel/eslint-parser": "^7.25.1",
+    "@babel/cli": "^7.27.2",
+    "@babel/core": "^7.27.4",
+    "@babel/eslint-parser": "^7.27.5",
     "@babel/plugin-proposal-async-generator-functions": "^7.20.7",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
-    "@babel/plugin-transform-modules-commonjs": "^7.24.8",
-    "@babel/plugin-transform-runtime": "^7.24.7",
+    "@babel/plugin-transform-modules-commonjs": "^7.27.1",
+    "@babel/plugin-transform-runtime": "^7.27.4",
     "@babel/polyfill": "^7.12.1",
-    "@babel/preset-env": "^7.25.3",
-    "@babel/preset-react": "^7.24.7",
-    "@babel/register": "^7.24.6",
+    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/register": "^7.27.1",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
@@ -123,7 +123,7 @@
     "eslint-plugin-testing-library": "^6.3.0",
     "happy-dom": "^14.12.3",
     "husky": "^9.1.4",
-    "i18next": "^23.12.2",
+    "i18next": "^25.2.1",
     "lint-staged": "^15.2.9",
     "mkdirp": "^3.0.1",
     "prettier": "^3.3.3",
