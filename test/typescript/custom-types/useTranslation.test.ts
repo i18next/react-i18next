@@ -105,7 +105,7 @@ describe('useTranslation', () => {
   it('should work with json format v4 plurals', () => {
     const [t] = useTranslation('plurals');
 
-    expectTypeOf(t('foo')).toEqualTypeOf<'foo'>();
+    expectTypeOf(t('foo', { count: 0 })).toEqualTypeOf<'foo'>();
     expectTypeOf(t('foo_one')).toEqualTypeOf<'foo'>();
   });
 });
