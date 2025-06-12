@@ -163,8 +163,7 @@
 	  });
 	  i18n.loadLanguages(lng, loadedClb(i18n, cb));
 	};
-	const hasLoadedNamespace = function (ns, i18n) {
-	  let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+	const hasLoadedNamespace = (ns, i18n, options = {}) => {
 	  if (!i18n.languages || !i18n.languages.length) {
 	    warnOnce(i18n, 'NO_LANGUAGES', 'i18n.languages were undefined or empty', {
 	      languages: i18n.languages
@@ -218,8 +217,7 @@
 	  useSuspense: true,
 	  unescape
 	};
-	const setDefaults = function () {
-	  let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	const setDefaults = (options = {}) => {
 	  defaultOptions = {
 	    ...defaultOptions,
 	    ...options
@@ -471,23 +469,22 @@
 	  });
 	  return null;
 	};
-	function Trans$1(_ref) {
-	  let {
-	    children,
-	    count,
-	    parent,
-	    i18nKey,
-	    context,
-	    tOptions = {},
-	    values,
-	    defaults,
-	    components,
-	    ns,
-	    i18n: i18nFromProps,
-	    t: tFromProps,
-	    shouldUnescape,
-	    ...additionalProps
-	  } = _ref;
+	function Trans$1({
+	  children,
+	  count,
+	  parent,
+	  i18nKey,
+	  context,
+	  tOptions = {},
+	  values,
+	  defaults,
+	  components,
+	  ns,
+	  i18n: i18nFromProps,
+	  t: tFromProps,
+	  shouldUnescape,
+	  ...additionalProps
+	}) {
 	  const i18n = i18nFromProps || getI18n();
 	  if (!i18n) {
 	    warnOnce(i18n, 'NO_I18NEXT_INSTANCE', `Trans: You need to pass in an i18next instance using i18nextReactModule`, {
@@ -585,23 +582,22 @@
 	  return ret;
 	};
 
-	function Trans(_ref) {
-	  let {
-	    children,
-	    count,
-	    parent,
-	    i18nKey,
-	    context,
-	    tOptions = {},
-	    values,
-	    defaults,
-	    components,
-	    ns,
-	    i18n: i18nFromProps,
-	    t: tFromProps,
-	    shouldUnescape,
-	    ...additionalProps
-	  } = _ref;
+	function Trans({
+	  children,
+	  count,
+	  parent,
+	  i18nKey,
+	  context,
+	  tOptions = {},
+	  values,
+	  defaults,
+	  components,
+	  ns,
+	  i18n: i18nFromProps,
+	  t: tFromProps,
+	  shouldUnescape,
+	  ...additionalProps
+	}) {
 	  const {
 	    i18n: i18nFromContext,
 	    defaultNS: defaultNSFromContext
@@ -635,8 +631,7 @@
 	};
 	const alwaysNewT = (i18n, language, namespace, keyPrefix) => i18n.getFixedT(language, namespace, keyPrefix);
 	const useMemoizedT = (i18n, language, namespace, keyPrefix) => react.useCallback(alwaysNewT(i18n, language, namespace, keyPrefix), [i18n, language, namespace, keyPrefix]);
-	const useTranslation = function (ns) {
-	  let props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	const useTranslation = (ns, props = {}) => {
 	  const {
 	    i18n: i18nFromProps
 	  } = props;
@@ -732,46 +727,41 @@
 	  });
 	};
 
-	const withTranslation = function (ns) {
-	  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-	  return function Extend(WrappedComponent) {
-	    function I18nextWithTranslation(_ref) {
-	      let {
-	        forwardedRef,
-	        ...rest
-	      } = _ref;
-	      const [t, i18n, ready] = useTranslation(ns, {
-	        ...rest,
-	        keyPrefix: options.keyPrefix
-	      });
-	      const passDownProps = {
-	        ...rest,
-	        t,
-	        i18n,
-	        tReady: ready
-	      };
-	      if (options.withRef && forwardedRef) {
-	        passDownProps.ref = forwardedRef;
-	      } else if (!options.withRef && forwardedRef) {
-	        passDownProps.forwardedRef = forwardedRef;
-	      }
-	      return react.createElement(WrappedComponent, passDownProps);
+	const withTranslation = (ns, options = {}) => function Extend(WrappedComponent) {
+	  function I18nextWithTranslation({
+	    forwardedRef,
+	    ...rest
+	  }) {
+	    const [t, i18n, ready] = useTranslation(ns, {
+	      ...rest,
+	      keyPrefix: options.keyPrefix
+	    });
+	    const passDownProps = {
+	      ...rest,
+	      t,
+	      i18n,
+	      tReady: ready
+	    };
+	    if (options.withRef && forwardedRef) {
+	      passDownProps.ref = forwardedRef;
+	    } else if (!options.withRef && forwardedRef) {
+	      passDownProps.forwardedRef = forwardedRef;
 	    }
-	    I18nextWithTranslation.displayName = `withI18nextTranslation(${getDisplayName(WrappedComponent)})`;
-	    I18nextWithTranslation.WrappedComponent = WrappedComponent;
-	    const forwardRef = (props, ref) => react.createElement(I18nextWithTranslation, Object.assign({}, props, {
-	      forwardedRef: ref
-	    }));
-	    return options.withRef ? react.forwardRef(forwardRef) : I18nextWithTranslation;
-	  };
+	    return react.createElement(WrappedComponent, passDownProps);
+	  }
+	  I18nextWithTranslation.displayName = `withI18nextTranslation(${getDisplayName(WrappedComponent)})`;
+	  I18nextWithTranslation.WrappedComponent = WrappedComponent;
+	  const forwardRef = (props, ref) => react.createElement(I18nextWithTranslation, Object.assign({}, props, {
+	    forwardedRef: ref
+	  }));
+	  return options.withRef ? react.forwardRef(forwardRef) : I18nextWithTranslation;
 	};
 
-	const Translation = _ref => {
-	  let {
-	    ns,
-	    children,
-	    ...options
-	  } = _ref;
+	const Translation = ({
+	  ns,
+	  children,
+	  ...options
+	}) => {
 	  const [t, i18n, ready] = useTranslation(ns, options);
 	  return children(t, {
 	    i18n,
@@ -779,12 +769,11 @@
 	  }, ready);
 	};
 
-	function I18nextProvider(_ref) {
-	  let {
-	    i18n,
-	    defaultNS,
-	    children
-	  } = _ref;
+	function I18nextProvider({
+	  i18n,
+	  defaultNS,
+	  children
+	}) {
 	  const value = react.useMemo(() => ({
 	    i18n,
 	    defaultNS
@@ -794,8 +783,7 @@
 	  }, children);
 	}
 
-	const useSSR = function (initialI18nStore, initialLanguage) {
-	  let props = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+	const useSSR = (initialI18nStore, initialLanguage, props = {}) => {
 	  const {
 	    i18n: i18nFromProps
 	  } = props;
@@ -822,12 +810,11 @@
 	};
 
 	const withSSR = () => function Extend(WrappedComponent) {
-	  function I18nextWithSSR(_ref) {
-	    let {
-	      initialI18nStore,
-	      initialLanguage,
-	      ...rest
-	    } = _ref;
+	  function I18nextWithSSR({
+	    initialI18nStore,
+	    initialLanguage,
+	    ...rest
+	  }) {
 	    useSSR(initialI18nStore, initialLanguage);
 	    return react.createElement(WrappedComponent, {
 	      ...rest

@@ -1,3 +1,7 @@
+### 15.5.3
+
+chore: update `@babel/runtime` [1851](https://github.com/i18next/react-i18next/pull/1851)
+
 ### 15.5.2
 
 fix element.ref access issue with react 19 [1846](https://github.com/i18next/react-i18next/pull/1846)
