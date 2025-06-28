@@ -18,11 +18,12 @@ type _EnableSelector = TypeOptions['enableSelector'];
 type TransChild = React.ReactNode | Record<string, unknown>;
 
 /**
- * This type functionally replaces {@link TransProps}, and should replace it
- * when cut over from the string-based to the selector API (tentatively v27).
+ * This type functionally replaces {@link TransProps}, and should replace
+ * it when cut over from the string-based to the selector API
+ * (tentatively v27).
  *
- * So if you depend on this type directly, just be aware that it will be renamed
- * to `TransProps` in a future major version.
+ * So if you depend on this type directly, just be aware that it will be
+ * renamed to `TransProps` in a future major release.
  */
 interface TransPropsInterface<
   Key,
@@ -112,8 +113,9 @@ export type ErrorMeta = {
 export type ErrorArgs = readonly [string, ErrorMeta | undefined, ...any[]];
 
 /**
- * This type left here in case anyone in userland depends on it -- it's no longer used internally,
- * and can/should be removed when we cut over to the selector API (tentatively v27)
+ * This type left here in case anyone in userland depends on it.
+ * It's no longer used internally, and can/should be removed when
+ * we cut over to the selector API (tentatively v27)
  */
 export type TransProps<
   Key extends ParseKeys<Ns, TOpt, KPrefix>,
