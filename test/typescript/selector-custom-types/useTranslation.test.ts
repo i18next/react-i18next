@@ -35,7 +35,7 @@ describe('useTranslation', () => {
 
     it(`raises a TypeError given a namespace that doesn't exist`, () => {
       // @ts-expect-error
-      const [t] = useTranslation(($) => $.fake);
+      useTranslation('fake');
     });
 
     it(`raises a TypeError given a key that's not in the namespace`, () => {
