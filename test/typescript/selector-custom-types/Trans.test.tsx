@@ -37,6 +37,10 @@ describe('<Trans />', () => {
         />
         <Trans
           ns={['alternate', 'custom']}
+          i18nKey={($) => (expectTypeOf($.alternate.baz).toEqualTypeOf<'baz'>(), $.baz)}
+        />
+        <Trans
+          ns={['alternate', 'custom']}
           i18nKey={($) => (expectTypeOf($.custom.bar).toEqualTypeOf<'bar'>(), $.custom.bar)}
         />
         <Trans
@@ -46,6 +50,10 @@ describe('<Trans />', () => {
         <Trans
           ns={['custom', 'alternate']}
           i18nKey={($) => (expectTypeOf($.bar).toEqualTypeOf<'bar'>(), $.bar)}
+        />
+        <Trans
+          ns={['custom', 'alternate']}
+          i18nKey={($) => (expectTypeOf($.custom.bar).toEqualTypeOf<'bar'>(), $.bar)}
         />
         <Trans
           ns={['custom', 'alternate']}
@@ -59,7 +67,7 @@ describe('<Trans />', () => {
 
     it(`raises a TypeError given a key that's not present inside any namespace`, () => {
       // @ts-expect-error
-      <Trans ns={['alternate', 'custom']} i18nKey={($) => $.alternate.baz} />;
+      <Trans ns={['alternate', 'custom']} i18nKey={($) => $.bar} />;
       // @ts-expect-error
       <Trans ns={['alternate', 'custom']} i18nKey={($) => $.custom.baz} />;
     });

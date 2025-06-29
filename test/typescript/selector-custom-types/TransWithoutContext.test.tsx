@@ -36,7 +36,9 @@ describe('<Trans />', () => {
     it('should work with array namespace', () => {
       <Trans ns={['alternate', 'custom']} i18nKey={($) => $.baz} />;
       <Trans ns={['alternate', 'custom']} i18nKey={($) => $.custom.bar} />;
+      <Trans ns={['alternate', 'custom']} i18nKey={($) => $.alternate.baz} />;
       <Trans ns={['custom', 'alternate']} i18nKey={($) => $.bar} />;
+      <Trans ns={['custom', 'alternate']} i18nKey={($) => $.custom.bar} />;
       <Trans ns={['custom', 'alternate']} i18nKey={($) => $.alternate.baz} />;
 
       /**
@@ -55,12 +57,6 @@ describe('<Trans />', () => {
     });
 
     it('raises a TypeError given a key not present inside the current namespace', () => {
-      // @ts-expect-error
-      <Trans ns={['alternate', 'custom']} i18nKey={($) => $.alternate.baz} />;
-      // @ts-expect-error
-      <Trans ns={['alternate', 'custom']} i18nKey={($) => $.bar} />;
-      // @ts-expect-error
-      <Trans ns={['custom', 'alternate']} i18nKey={($) => $.custom.bar} />;
       // @ts-expect-error
       <Trans ns={['custom', 'alternate']} i18nKey={($) => $.baz} />;
     });
