@@ -33,28 +33,16 @@ describe('<Trans />', () => {
   });
 
   describe('array namespace', () => {
-    it('should work with array namespace', () => {
-      <Trans ns={['alternate', 'custom']} i18nKey={($) => $.baz} />;
-      <Trans ns={['alternate', 'custom']} i18nKey={($) => $.custom.bar} />;
-      <Trans ns={['alternate', 'custom']} i18nKey={($) => $.alternate.baz} />;
-      <Trans ns={['custom', 'alternate']} i18nKey={($) => $.bar} />;
-      <Trans ns={['custom', 'alternate']} i18nKey={($) => $.custom.bar} />;
-      <Trans ns={['custom', 'alternate']} i18nKey={($) => $.alternate.baz} />;
-
-      /**
-       * TODO: figure out what to do about default/fallback values?
-       *
-       * Currently, `Trans` doesn't accept a 'defaultValue' prop, like the
-       * `t` function does.
-       *
-       * I could add that, or we could try something different -- wanted to get
-       * feedback on this before starting down any particular path
-       */
-      // expectTypeOf(Trans).toBeCallableWith({
-      //   ns: ['alternate', 'custom'],
-      //   i18nKey: ['alternate:baz', 'custom:bar'],
-      // });
-    });
+    it('should work with array namespace', () => (
+      <>
+        <Trans ns={['alternate', 'custom']} i18nKey={($) => $.baz} />
+        <Trans ns={['alternate', 'custom']} i18nKey={($) => $.custom.bar} />
+        <Trans ns={['alternate', 'custom']} i18nKey={($) => $.alternate.baz} />
+        <Trans ns={['custom', 'alternate']} i18nKey={($) => $.bar} />
+        <Trans ns={['custom', 'alternate']} i18nKey={($) => $.custom.bar} />
+        <Trans ns={['custom', 'alternate']} i18nKey={($) => $.alternate.baz} />
+      </>
+    ));
 
     it('raises a TypeError given a key not present inside the current namespace', () => {
       // @ts-expect-error
