@@ -132,8 +132,8 @@
     "react-test-renderer": "^19.1.0",
     "rimraf": "^6.0.1",
     "rollup": "^4.44.1",
-    "typescript": "~5.8.3",
-    "vitest": "^2.1.9",
+    "typescript": "5.5.4",
+    "vitest": "2.0.5",
     "yargs": "^17.7.2"
   },
   "scripts": {
