@@ -1,3 +1,7 @@
+### 15.6.0
+
+fix: passing components as object should still allow for indexed matching of children [1854](https://github.com/i18next/react-i18next/pull/1854)
+
 ### 15.5.3
 
 chore: update `@babel/runtime` [1851](https://github.com/i18next/react-i18next/pull/1851)
