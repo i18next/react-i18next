@@ -1,3 +1,7 @@
+### 15.6.1
+
+avoid exception when passing bindI18n: false [1856](https://github.com/i18next/react-i18next/pull/1856)
+
 ### 15.6.0
 
 fix: passing components as object should still allow for indexed matching of children [1854](https://github.com/i18next/react-i18next/pull/1854)

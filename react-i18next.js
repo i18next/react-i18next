@@ -173,7 +173,7 @@
 	  return i18n.hasLoadedNamespace(ns, {
 	    lng: options.lng,
 	    precheck: (i18nInstance, loadNotPending) => {
-	      if (options.bindI18n?.indexOf('languageChanging') > -1 && i18nInstance.services.backendConnector.backend && i18nInstance.isLanguageChangingTo && !loadNotPending(i18nInstance.isLanguageChangingTo, ns)) return false;
+	      if (options.bindI18n && options.bindI18n.indexOf('languageChanging') > -1 && i18nInstance.services.backendConnector.backend && i18nInstance.isLanguageChangingTo && !loadNotPending(i18nInstance.isLanguageChangingTo, ns)) return false;
 	    }
 	  });
 	};
@@ -715,7 +715,7 @@
 	    if (bindI18nStore) i18n?.store.on(bindI18nStore, boundReset);
 	    return () => {
 	      isMounted.current = false;
-	      if (i18n) bindI18n?.split(' ').forEach(e => i18n.off(e, boundReset));
+	      if (i18n && bindI18n) bindI18n?.split(' ').forEach(e => i18n.off(e, boundReset));
 	      if (bindI18nStore && i18n) bindI18nStore.split(' ').forEach(e => i18n.store.off(e, boundReset));
 	    };
 	  }, [i18n, joinedNS]);
