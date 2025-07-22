@@ -132,7 +132,7 @@ export const useTranslation = (ns, props = {}) => {
     // unbinding on unmount
     return () => {
       isMounted.current = false;
-      if (i18n) bindI18n?.split(' ').forEach((e) => i18n.off(e, boundReset));
+      if (i18n && bindI18n) bindI18n?.split(' ').forEach((e) => i18n.off(e, boundReset));
       if (bindI18nStore && i18n)
         bindI18nStore.split(' ').forEach((e) => i18n.store.off(e, boundReset));
     };
