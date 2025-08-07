@@ -57,7 +57,7 @@ export type GetTransProps<
   E = React.HTMLProps<HTMLDivElement>,
 > = E &
   TransPropsInterface<
-    _EnableSelector extends true
+    _EnableSelector extends NonNullable<TypeOptions['enableSelector']>
       ? SelectorFn<GetSource<NoInfer<Ns>, KPrefix>, ApplyTarget<Target, TOpt>, TOpt>
       : Key | Key[],
     Ns,
