@@ -273,6 +273,34 @@ describe('trans using children but components (object) - self closing tag', () =
   });
 });
 
+describe('trans using children and components (object) - should still allow for use of indexed basic html tags in children', () => {
+  function TestComponent() {
+    return (
+      <Trans
+        i18nKey="some key"
+        defaults="Click <1>here</1> to continue"
+        components={{ unused: <span /> }}
+      >
+        pre <a href="#">link</a> post
+      </Trans>
+    );
+  }
+  it('should render translated string', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Click 
+        <a
+          href="#"
+        >
+          here
+        </a>
+         to continue
+      </div>
+    `);
+  });
+});
+
 describe('trans using no children but components (object) - interpolated component with children', () => {
   function Button({ children }) {
     return <button type="button">{children}</button>;

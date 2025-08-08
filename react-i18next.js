@@ -32,12 +32,12 @@
 	  var r = {
 	      type: "tag",
 	      name: "",
-	      voidElement: !1,
+	      voidElement: false,
 	      attrs: {},
 	      children: []
 	    },
 	    i = n.match(/<\/?([^\s]+?)[/\s>]/);
-	  if (i && (r.name = i[1], (e[i[1]] || "/" === n.charAt(n.length - 2)) && (r.voidElement = !0), r.name.startsWith("!--"))) {
+	  if (i && (r.name = i[1], (e[i[1]] || "/" === n.charAt(n.length - 2)) && (r.voidElement = true), r.name.startsWith("!--"))) {
 	    var s = n.indexOf("--\x3e");
 	    return {
 	      type: "comment",
@@ -75,7 +75,7 @@
 	      c = [],
 	      o = [],
 	      l = -1,
-	      m = !1;
+	      m = false;
 	    if (0 !== e.indexOf("<")) {
 	      var u = e.indexOf("<");
 	      c.push({
@@ -86,7 +86,7 @@
 	    return e.replace(r, function (r, s) {
 	      if (m) {
 	        if (r !== "</" + a.name + ">") return;
-	        m = !1;
+	        m = false;
 	      }
 	      var u,
 	        f = "/" !== r.charAt(1),
@@ -97,7 +97,7 @@
 	        var v = n(r);
 	        return l < 0 ? (c.push(v), c) : ((u = o[l]).children.push(v), c);
 	      }
-	      if (f && (l++, "tag" === (a = n(r)).type && t.components[a.name] && (a.type = "component", m = !0), a.voidElement || m || !d || "<" === d || a.children.push({
+	      if (f && (l++, "tag" === (a = n(r)).type && t.components[a.name] && (a.type = "component", m = true), a.voidElement || m || !d || "<" === d || a.children.push({
 	        type: "text",
 	        content: e.slice(p, e.indexOf("<", p))
 	      }), 0 === l && c.push(a), (u = o[l - 1]) && u.children.push(a), o[l] = a), (!f || a.voidElement) && (l > -1 && (a.voidElement || a.name === r.slice(2, -1)) && (l--, a = -1 === l ? c : o[l]), !m && "<" !== d && d)) {
@@ -173,7 +173,7 @@
 	  return i18n.hasLoadedNamespace(ns, {
 	    lng: options.lng,
 	    precheck: (i18nInstance, loadNotPending) => {
-	      if (options.bindI18n?.indexOf('languageChanging') > -1 && i18nInstance.services.backendConnector.backend && i18nInstance.isLanguageChangingTo && !loadNotPending(i18nInstance.isLanguageChangingTo, ns)) return false;
+	      if (options.bindI18n && options.bindI18n.indexOf('languageChanging') > -1 && i18nInstance.services.backendConnector.backend && i18nInstance.isLanguageChangingTo && !loadNotPending(i18nInstance.isLanguageChangingTo, ns)) return false;
 	    }
 	  });
 	};
@@ -315,12 +315,12 @@
 	  });
 	  return stringNode;
 	};
-	const renderNodes = (children, targetString, i18n, i18nOptions, combinedTOpts, shouldUnescape) => {
+	const renderNodes = (children, knownComponentsMap, targetString, i18n, i18nOptions, combinedTOpts, shouldUnescape) => {
 	  if (targetString === '') return [];
 	  const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
 	  const emptyChildrenButNeedsHandling = targetString && new RegExp(keepArray.map(keep => `<${keep}`).join('|')).test(targetString);
-	  if (!children && !emptyChildrenButNeedsHandling && !shouldUnescape) return [targetString];
-	  const data = {};
+	  if (!children && !knownComponentsMap && !emptyChildrenButNeedsHandling && !shouldUnescape) return [targetString];
+	  const data = knownComponentsMap ?? {};
 	  const getData = childs => {
 	    const childrenArray = getAsArray(childs);
 	    childrenArray.forEach(child => {
@@ -366,6 +366,7 @@
 	      const translationContent = node.children?.[0]?.content && i18n.services.interpolator.interpolate(node.children[0].content, opts, i18n.language);
 	      if (node.type === 'tag') {
 	        let tmp = reactNodes[parseInt(node.name, 10)];
+	        if (!tmp && knownComponentsMap) tmp = knownComponentsMap[node.name];
 	        if (rootReactNode.length === 1 && !tmp) tmp = rootReactNode[0][node.name];
 	        if (!tmp) tmp = {};
 	        const child = Object.keys(node.attrs).length !== 0 ? mergeProps({
@@ -374,7 +375,7 @@
 	        const isElement = react.isValidElement(child);
 	        const isValidTranslationWithChildren = isElement && hasChildren(node, true) && !node.voidElement;
 	        const isEmptyTransWithHTML = emptyChildrenButNeedsHandling && isObject(child) && child.dummy && !isElement;
-	        const isKnownComponent = isObject(children) && Object.hasOwnProperty.call(children, node.name);
+	        const isKnownComponent = isObject(knownComponentsMap) && Object.hasOwnProperty.call(knownComponentsMap, node.name);
 	        if (isString(child)) {
 	          const value = i18n.services.interpolator.interpolate(child, opts, i18n.language);
 	          mem.push(value);
@@ -469,6 +470,11 @@
 	  });
 	  return null;
 	};
+	const isComponentsMap = object => {
+	  if (!isObject(object)) return false;
+	  if (Array.isArray(object)) return false;
+	  return Object.keys(object).reduce((acc, key) => acc && Number.isNaN(Number.parseFloat(key)), true);
+	};
 	function Trans$1({
 	  children,
 	  count,
@@ -531,7 +537,13 @@
 	  };
 	  const translation = key ? t(key, combinedTOpts) : defaultValue;
 	  const generatedComponents = generateComponents(components, translation, i18n, i18nKey);
-	  const content = renderNodes(generatedComponents || children, translation, i18n, reactI18nextOptions, combinedTOpts, shouldUnescape);
+	  let indexedChildren = generatedComponents || children;
+	  let componentsMap = null;
+	  if (isComponentsMap(generatedComponents)) {
+	    componentsMap = generatedComponents;
+	    indexedChildren = children;
+	  }
+	  const content = renderNodes(indexedChildren, componentsMap, translation, i18n, reactI18nextOptions, combinedTOpts, shouldUnescape);
 	  const useAsParent = parent ?? reactI18nextOptions.defaultTransParent;
 	  return useAsParent ? react.createElement(useAsParent, additionalProps, content) : content;
 	}
@@ -703,7 +715,7 @@
 	    if (bindI18nStore) i18n?.store.on(bindI18nStore, boundReset);
 	    return () => {
 	      isMounted.current = false;
-	      if (i18n) bindI18n?.split(' ').forEach(e => i18n.off(e, boundReset));
+	      if (i18n && bindI18n) bindI18n?.split(' ').forEach(e => i18n.off(e, boundReset));
 	      if (bindI18nStore && i18n) bindI18nStore.split(' ').forEach(e => i18n.store.off(e, boundReset));
 	    };
 	  }, [i18n, joinedNS]);

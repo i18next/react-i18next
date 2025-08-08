@@ -113,7 +113,15 @@ export const nodesToString = (children, i18nOptions, i18n, i18nKey) => {
   return stringNode;
 };
 
-const renderNodes = (children, targetString, i18n, i18nOptions, combinedTOpts, shouldUnescape) => {
+const renderNodes = (
+  children,
+  knownComponentsMap,
+  targetString,
+  i18n,
+  i18nOptions,
+  combinedTOpts,
+  shouldUnescape,
+) => {
   if (targetString === '') return [];
 
   // check if contains tags we need to replace from html string to react nodes
@@ -122,10 +130,11 @@ const renderNodes = (children, targetString, i18n, i18nOptions, combinedTOpts, s
     targetString && new RegExp(keepArray.map((keep) => `<${keep}`).join('|')).test(targetString);
 
   // no need to replace tags in the targetstring
-  if (!children && !emptyChildrenButNeedsHandling && !shouldUnescape) return [targetString];
+  if (!children && !knownComponentsMap && !emptyChildrenButNeedsHandling && !shouldUnescape)
+    return [targetString];
 
   // v2 -> interpolates upfront no need for "some <0>{{var}}</0>"" -> will be just "some {{var}}" in translation file
-  const data = {};
+  const data = knownComponentsMap ?? {};
 
   const getData = (childs) => {
     const childrenArray = getAsArray(childs);
@@ -194,6 +203,7 @@ const renderNodes = (children, targetString, i18n, i18nOptions, combinedTOpts, s
       if (node.type === 'tag') {
         // regular array (components or children)
         let tmp = reactNodes[parseInt(node.name, 10)];
+        if (!tmp && knownComponentsMap) tmp = knownComponentsMap[node.name];
 
         // trans components is an object
         if (rootReactNode.length === 1 && !tmp) tmp = rootReactNode[0][node.name];
@@ -213,7 +223,7 @@ const renderNodes = (children, targetString, i18n, i18nOptions, combinedTOpts, s
           emptyChildrenButNeedsHandling && isObject(child) && child.dummy && !isElement;
 
         const isKnownComponent =
-          isObject(children) && Object.hasOwnProperty.call(children, node.name);
+          isObject(knownComponentsMap) && Object.hasOwnProperty.call(knownComponentsMap, node.name);
 
         if (isString(child)) {
           const value = i18n.services.interpolator.interpolate(child, opts, i18n.language);
@@ -366,6 +376,16 @@ const generateComponents = (components, translation, i18n, i18nKey) => {
   return null;
 };
 
+// A component map is an object like: { Button: <button> }, but not an object like { 1: <button> }
+const isComponentsMap = (object) => {
+  if (!isObject(object)) return false;
+  if (Array.isArray(object)) return false;
+  return Object.keys(object).reduce(
+    (acc, key) => acc && Number.isNaN(Number.parseFloat(key)),
+    true,
+  );
+};
+
 export function Trans({
   children,
   count,
@@ -434,9 +454,16 @@ export function Trans({
   const translation = key ? t(key, combinedTOpts) : defaultValue;
 
   const generatedComponents = generateComponents(components, translation, i18n, i18nKey);
+  let indexedChildren = generatedComponents || children;
+  let componentsMap = null;
+  if (isComponentsMap(generatedComponents)) {
+    componentsMap = generatedComponents;
+    indexedChildren = children;
+  }
 
   const content = renderNodes(
-    generatedComponents || children,
+    indexedChildren,
+    componentsMap,
     translation,
     i18n,
     reactI18nextOptions,

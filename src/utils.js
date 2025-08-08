@@ -72,7 +72,8 @@ export const hasLoadedNamespace = (ns, i18n, options = {}) => {
     lng: options.lng,
     precheck: (i18nInstance, loadNotPending) => {
       if (
-        options.bindI18n?.indexOf('languageChanging') > -1 &&
+        options.bindI18n &&
+        options.bindI18n.indexOf('languageChanging') > -1 &&
         i18nInstance.services.backendConnector.backend &&
         i18nInstance.isLanguageChangingTo &&
         !loadNotPending(i18nInstance.isLanguageChangingTo, ns)

@@ -186,6 +186,15 @@ describe('useTranslation', () => {
       <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
     );
 
+    it('should not fail when passing bindI18n: false or undefined', () => {
+      expect(() =>
+        renderHook(() => useTranslation('translation', { bindI18n: false })),
+      ).to.not.throw();
+      expect(() =>
+        renderHook(() => useTranslation('translation', { bindI18n: undefined })),
+      ).to.not.throw();
+    });
+
     it('should render correct content', () => {
       const { result: resultNoLng } = renderHook(() => useTranslation('translation'), {
         wrapper,
