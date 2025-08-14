@@ -89,7 +89,8 @@ describe('<Trans />', () => {
       <Trans
         t={t}
         i18nKey={($) => (
-          expectTypeOf($.deeper.deeeeeper).toEqualTypeOf<'foobar'>(), $.deeper.deeeeeper
+          expectTypeOf($.deeper.deeeeeper).toEqualTypeOf<'foobar'>(),
+          $.deeper.deeeeeper
         )}
       />;
     });

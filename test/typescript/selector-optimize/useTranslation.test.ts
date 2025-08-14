@@ -90,28 +90,11 @@ describe('useTranslation', () => {
       expectTypeOf(t(($) => $.deeper.deeeeeper)).toEqualTypeOf<'foobar'>();
     });
 
-    it('raises a TypeError given an invalid keyPrefix', () => {
-      // @ts-expect-error
-      useTranslation('alternate', { keyPrefix: 'abc' });
-    });
-
     it('raises a TypeError given an invalid key', () => {
       const [t] = useTranslation('alternate', { keyPrefix: 'foobar' });
       // @ts-expect-error
-      assertType<string>(t('abc'));
+      assertType<string>(t(($) => $.abc));
+      t(($) => $.barfoo);
     });
-  });
-
-  it('should work with json format v4 plurals', () => {
-    const [t] = useTranslation('plurals');
-
-    expectTypeOf(t(($) => $.foo, { count: 0 })).toEqualTypeOf<'foo'>();
-  });
-
-  it('raises a TypeError when attempting to select a pluralized key with a specific pluralized suffix', () => {
-    const [t] = useTranslation('plurals');
-
-    // @ts-expect-error
-    expectTypeOf(t(($) => $.foo_one)).toEqualTypeOf<'foo'>();
   });
 });

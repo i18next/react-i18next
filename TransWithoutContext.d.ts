@@ -9,7 +9,9 @@ import type {
   TypeOptions,
   TOptions,
   TFunction,
+  DefaultNamespace,
 } from 'i18next';
+import { $NoInfer } from 'node_modules/i18next/typescript/helpers';
 import * as React from 'react';
 
 type _DefaultNamespace = TypeOptions['defaultNS'];
@@ -17,15 +19,43 @@ type _EnableSelector = TypeOptions['enableSelector'];
 
 type TransChild = React.ReactNode | Record<string, unknown>;
 
-/**
- * This type functionally replaces {@link TransProps}, and should replace
- * it when cut over from the string-based to the selector API
- * (tentatively v27).
- *
- * So if you depend on this type directly, just be aware that it will be
- * renamed to `TransProps` in a future major release.
- */
-interface TransPropsInterface<
+export type TransProps<
+  Key extends ParseKeys<Ns, TOpt, KPrefix>,
+  Ns extends Namespace = _DefaultNamespace,
+  KPrefix = undefined,
+  TContext extends string | undefined = undefined,
+  TOpt extends TOptions & { context?: TContext } = { context: TContext },
+  E = React.HTMLProps<HTMLDivElement>,
+> = E & {
+  children?: TransChild | readonly TransChild[];
+  components?: readonly React.ReactElement[] | { readonly [tagName: string]: React.ReactElement };
+  count?: number;
+  context?: TContext;
+  defaults?: string;
+  i18n?: i18n;
+  i18nKey?: Key | Key[];
+  ns?: Ns;
+  parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
+  tOptions?: TOpt;
+  values?: {};
+  shouldUnescape?: boolean;
+  t?: TFunction<Ns, KPrefix>;
+};
+
+export interface TransLegacy {
+  <
+    Key extends ParseKeys<Ns, TOpt, KPrefix>,
+    Ns extends Namespace = _DefaultNamespace,
+    KPrefix = undefined,
+    TContext extends string | undefined = undefined,
+    TOpt extends TOptions & { context?: TContext } = { context: TContext },
+    E = React.HTMLProps<HTMLDivElement>,
+  >(
+    props: TransProps<Key, Ns, KPrefix, TContext, TOpt, E>,
+  ): React.ReactElement;
+}
+
+export interface TransSelectorProps<
   Key,
   Ns extends Namespace = _DefaultNamespace,
   KPrefix = undefined,
@@ -47,34 +77,21 @@ interface TransPropsInterface<
   t?: TFunction<Ns, KPrefix>;
 }
 
-export type GetTransProps<
-  Target extends ConstrainTarget<TOpt>,
-  Key extends ParseKeys<Ns, TOpt, KPrefix>,
-  Ns extends Namespace = _DefaultNamespace,
-  KPrefix = undefined,
-  TContext extends string | undefined = undefined,
-  TOpt extends TOptions & { context?: TContext } = { context: TContext },
-  E = React.HTMLProps<HTMLDivElement>,
-> = E &
-  TransPropsInterface<
-    _EnableSelector extends NonNullable<TypeOptions['enableSelector']>
-      ? SelectorFn<GetSource<NoInfer<Ns>, KPrefix>, ApplyTarget<Target, TOpt>, TOpt>
-      : Key | Key[],
-    Ns,
-    KPrefix,
-    TContext,
-    TOpt
-  >;
+export interface TransSelector {
+  <
+    Target extends ConstrainTarget<TOpt>,
+    Key extends SelectorFn<GetSource<$NoInfer<Ns>, KPrefix>, ApplyTarget<Target, TOpt>, TOpt>,
+    const Ns extends Namespace = _DefaultNamespace,
+    KPrefix = undefined,
+    TContext extends string | undefined = undefined,
+    TOpt extends TOptions & { context?: TContext } = { context: TContext },
+    E = React.HTMLProps<HTMLDivElement>,
+  >(
+    props: TransSelectorProps<Key, Ns, KPrefix, TContext, TOpt> & E,
+  ): React.ReactElement;
+}
 
-export declare function Trans<
-  Key extends ParseKeys<Ns, TOpt, KPrefix>,
-  const Ns extends Namespace = _DefaultNamespace,
-  KPrefix = undefined,
-  TContext extends string | undefined = undefined,
-  TOpt extends TOptions & { context?: TContext } = { context: TContext },
-  E = React.HTMLProps<HTMLDivElement>,
-  Target extends ConstrainTarget<TOpt> = ConstrainTarget<TOpt>,
->(props: GetTransProps<Target, Key, Ns, KPrefix, TContext, TOpt, E>): React.ReactElement;
+export const Trans: _EnableSelector extends true | 'optimize' ? TransSelector : TransLegacy;
 
 export type ErrorCode =
   | 'NO_I18NEXT_INSTANCE'
@@ -111,31 +128,3 @@ export type ErrorMeta = {
  * ```
  */
 export type ErrorArgs = readonly [string, ErrorMeta | undefined, ...any[]];
-
-/**
- * This type left here in case anyone in userland depends on it.
- * It's no longer used internally, and can/should be removed when
- * we cut over to the selector API (tentatively v27)
- */
-export type TransProps<
-  Key extends ParseKeys<Ns, TOpt, KPrefix>,
-  Ns extends Namespace = _DefaultNamespace,
-  KPrefix = undefined,
-  TContext extends string | undefined = undefined,
-  TOpt extends TOptions & { context?: TContext } = { context: TContext },
-  E = React.HTMLProps<HTMLDivElement>,
-> = E & {
-  children?: TransChild | readonly TransChild[];
-  components?: readonly React.ReactElement[] | { readonly [tagName: string]: React.ReactElement };
-  count?: number;
-  context?: TContext;
-  defaults?: string;
-  i18n?: i18n;
-  i18nKey?: Key | Key[];
-  ns?: Ns;
-  parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
-  tOptions?: TOpt;
-  values?: {};
-  shouldUnescape?: boolean;
-  t?: TFunction<Ns, KPrefix>;
-};

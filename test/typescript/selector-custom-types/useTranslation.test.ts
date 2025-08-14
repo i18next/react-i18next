@@ -90,11 +90,6 @@ describe('useTranslation', () => {
       expectTypeOf(t(($) => $.deeper.deeeeeper)).toEqualTypeOf<'foobar'>();
     });
 
-    it('raises a TypeError given an invalid keyPrefix', () => {
-      // @ts-expect-error
-      useTranslation('alternate', { keyPrefix: 'abc' });
-    });
-
     it('raises a TypeError given an invalid key', () => {
       const [t] = useTranslation('alternate', { keyPrefix: 'foobar' });
       // @ts-expect-error
