@@ -66,10 +66,12 @@ describe('<Trans />', () => {
     ));
 
     it(`raises a TypeError given a key that's not present inside any namespace`, () => {
-      // @ts-expect-error
-      <Trans ns={['alternate', 'custom']} i18nKey={($) => $.bar} />;
-      // @ts-expect-error
-      <Trans ns={['alternate', 'custom']} i18nKey={($) => $.custom.baz} />;
+      <>
+        {/* @ts-expect-error */}
+        <Trans ns={['alternate', 'custom']} i18nKey={($) => $.bar} />
+        {/* @ts-expect-error */}
+        <Trans ns={['alternate', 'custom']} i18nKey={($) => $.custom.baz} />
+      </>;
     });
   });
 
