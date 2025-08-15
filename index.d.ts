@@ -122,22 +122,6 @@ interface UseTranslationSelector {
   ): UseTranslationResponse<FallbackNs<Ns>, KPrefix>;
 }
 
-// export function useTranslation<
-//   const Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
-//   const KPrefix = undefined,
-// >(
-//   ns?: Ns,
-//   options?: [_EnableSelector] extends [false] ? UseTranslationOptions<Ns, KPrefix> : UseTranslationSelectorOptions<Ns, KPrefix>,
-// ): UseTranslationResponse<FallbackNs<Ns>, KPrefix>;
-
-// export function useTranslation<
-//   const Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
-//   const KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined,
-// >(
-//   ns?: Ns,
-//   options?: UseTranslationOptions<KPrefix>,
-// ): UseTranslationResponse<FallbackNs<Ns>, KPrefix>;
-
 // Need to see usage to improve this
 export function withSSR(): <Props>(WrappedComponent: React.ComponentType<Props>) => {
   ({
