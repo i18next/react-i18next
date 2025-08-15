@@ -67,7 +67,9 @@ type _DefaultNamespace = TypeOptions['defaultNS'];
 
 export function useSSR(initialI18nStore: Resource, initialLanguage: string): void;
 
-export interface UseTranslationOptions<KPrefix> {
+type _EnableSelector = TypeOptions['enableSelector'];
+
+export type UseTranslationOptions<KPrefix> = {
   i18n?: i18n;
   useSuspense?: boolean;
   keyPrefix?: KPrefix;
@@ -75,7 +77,7 @@ export interface UseTranslationOptions<KPrefix> {
   nsMode?: 'fallback' | 'default';
   lng?: string;
   // other of these options might also work: https://github.com/i18next/i18next/blob/master/index.d.ts#L127
-}
+};
 
 export type UseTranslationResponse<Ns extends Namespace, KPrefix> = [
   t: TFunction<Ns, KPrefix>,
@@ -96,13 +98,29 @@ export type FallbackNs<Ns> = Ns extends undefined
     ? Ns
     : _DefaultNamespace;
 
-export function useTranslation<
-  const Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
-  const KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined,
->(
-  ns?: Ns,
-  options?: UseTranslationOptions<KPrefix>,
-): UseTranslationResponse<FallbackNs<Ns>, KPrefix>;
+export const useTranslation: _EnableSelector extends true | 'optimize'
+  ? UseTranslationSelector
+  : UseTranslationLegacy;
+
+interface UseTranslationLegacy {
+  <
+    const Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
+    const KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined,
+  >(
+    ns?: Ns,
+    options?: UseTranslationOptions<KPrefix>,
+  ): UseTranslationResponse<FallbackNs<Ns>, KPrefix>;
+}
+
+interface UseTranslationSelector {
+  <
+    const Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
+    const KPrefix = undefined,
+  >(
+    ns?: Ns,
+    options?: UseTranslationOptions<KPrefix>,
+  ): UseTranslationResponse<FallbackNs<Ns>, KPrefix>;
+}
 
 // Need to see usage to improve this
 export function withSSR(): <Props>(WrappedComponent: React.ComponentType<Props>) => {
