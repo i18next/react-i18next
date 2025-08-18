@@ -9,15 +9,14 @@ import type {
   TypeOptions,
   TOptions,
   TFunction,
-  DefaultNamespace,
 } from 'i18next';
-import { $NoInfer } from 'node_modules/i18next/typescript/helpers';
 import * as React from 'react';
 
 type _DefaultNamespace = TypeOptions['defaultNS'];
 type _EnableSelector = TypeOptions['enableSelector'];
 
 type TransChild = React.ReactNode | Record<string, unknown>;
+type $NoInfer<T> = [T][T extends T ? 0 : never];
 
 export type TransProps<
   Key extends ParseKeys<Ns, TOpt, KPrefix>,
