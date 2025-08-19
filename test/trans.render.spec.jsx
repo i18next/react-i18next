@@ -1080,3 +1080,18 @@ describe('trans with defaults property and children', () => {
     `);
   });
 });
+
+describe('trans with nesting $t()', () => {
+  function TestComponent({ parent }) {
+    return <Trans i18nKey="nestingKey1" ns="other" parent={parent} />;
+  }
+
+  it('should render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        This is key1 value and This is key2 value
+      </div>
+    `);
+  });
+});
