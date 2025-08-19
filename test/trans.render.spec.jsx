@@ -1095,3 +1095,25 @@ describe('trans with nesting $t()', () => {
     `);
   });
 });
+
+describe('trans with nesting $t() and interpolation', () => {
+  function TestComponent({ parent }) {
+    return (
+      <Trans
+        i18nKey="nestingInterKey3"
+        ns="other"
+        parent={parent}
+        tOptions={{ interpolation: { skipOnVariables: false } }}
+      />
+    );
+  }
+
+  it('should render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        should work This is key2 value
+      </div>
+    `);
+  });
+});

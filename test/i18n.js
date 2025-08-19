@@ -65,6 +65,7 @@ i18n.init({
         transTest1: 'Another go <1>there</1>.',
         nestingKey1: 'This is key1 value and $t(nestedKey2)',
         nestedKey2: 'This is key2 value',
+        nestingInterKey3: 'should work {{check_this}}',
       },
     },
   },
@@ -79,6 +80,7 @@ i18n.init({
     defaultVariables: {
       defaultInsert: 'first',
       defaultUp: 'second',
+      check_this: '$t(nestedKey2)',
     },
   },
 
