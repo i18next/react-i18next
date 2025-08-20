@@ -1,3 +1,8 @@
+### 15.7.0
+
+- add new selector API to improve TypeScript IDE performance [1852](https://github.com/i18next/react-i18next/pull/1852)
+  - read more about it [here](https://github.com/i18next/i18next/blob/master/CHANGELOG.md#2540)
+
 ### 15.6.1
 
 avoid exception when passing bindI18n: false [1856](https://github.com/i18next/react-i18next/pull/1856)
