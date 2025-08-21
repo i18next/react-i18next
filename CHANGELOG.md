@@ -1,3 +1,7 @@
+### 15.7.1
+
+- Fix: \_EnableSelector type (for compatibility, enableSelector does not exist in TypeOptions) [1858](https://github.com/i18next/react-i18next/pull/1858)
+
 ### 15.7.0
 
 - add new selector API to improve TypeScript IDE performance [1852](https://github.com/i18next/react-i18next/pull/1852)
