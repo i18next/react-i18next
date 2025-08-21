@@ -67,7 +67,8 @@ type _DefaultNamespace = TypeOptions['defaultNS'];
 
 export function useSSR(initialI18nStore: Resource, initialLanguage: string): void;
 
-type _EnableSelector = TypeOptions['enableSelector'];
+// If the version is earlier than i18next v25.4.0, enableSelector does not exist in TypeOptions, so a conditional type is used to maintain type compatibility.
+type _EnableSelector = TypeOptions extends { enableSelector: infer U } ? U : false;
 
 export type UseTranslationOptions<KPrefix> = {
   i18n?: i18n;
