@@ -19,6 +19,7 @@ describe('useTranslation', () => {
       const { result } = renderHook(() => useTranslation('translation', { i18n: i18nInstance }));
       const { t, i18n } = result.current;
       expect(t('key1')).toBe('test');
+      expect(t(($) => $.key1)).toBe('test');
       expect(i18nInstance).toBe(i18n);
     });
   });
@@ -149,6 +150,7 @@ describe('useTranslation', () => {
       const { t: t1 } = result.current;
       expect(t1('key')).toBe('here_a!');
       expect(t1.keyPrefix).toBe('deeply.nested_a');
+      expect(t1(($) => $.key)).toBe('here_a!');
 
       keyPrefix = 'deeply.nested_b';
       rerender();
@@ -156,6 +158,7 @@ describe('useTranslation', () => {
       const { t: t2 } = result.current;
       expect(t2('key')).toBe('here_b!');
       expect(t2.keyPrefix).toBe('deeply.nested_b');
+      expect(t2(($) => $.key)).toBe('here_b!');
     });
   });
 
