@@ -21,76 +21,85 @@ const alwaysNewT = (i18n, language, namespace, keyPrefix) =>
   i18n.getFixedT(language, namespace, keyPrefix);
 
 const useMemoizedT = (i18n, language, namespace, keyPrefix) =>
-  useCallback(alwaysNewT(i18n, language, namespace, keyPrefix), [
-    i18n,
-    language,
-    namespace,
-    keyPrefix,
-  ]);
+  useCallback(
+    i18n
+      ? alwaysNewT(i18n, language, namespace, keyPrefix)
+      : (k) => (Array.isArray(k) ? k[k.length - 1] : k),
+    [i18n, language, namespace, keyPrefix],
+  );
 
 export const useTranslation = (ns, props = {}) => {
   // assert we have the needed i18nInstance
   const { i18n: i18nFromProps } = props;
   const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = useContext(I18nContext) || {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
+
+  // Set up reportNamespaces if i18n exists
   if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
+
+  // Prepare notReadyT function for when i18n doesn't exist
+  const notReadyT = useCallback((k, optsOrDefaultValue) => {
+    if (isString(optsOrDefaultValue)) return optsOrDefaultValue;
+    if (isObject(optsOrDefaultValue) && isString(optsOrDefaultValue.defaultValue))
+      return optsOrDefaultValue.defaultValue;
+    return Array.isArray(k) ? k[k.length - 1] : k;
+  }, []);
+
+  // Show warning if no i18n instance (but don't return early)
   if (!i18n) {
     warnOnce(
       i18n,
       'NO_I18NEXT_INSTANCE',
       'useTranslation: You will need to pass in an i18next instance by using initReactI18next',
     );
-    const notReadyT = (k, optsOrDefaultValue) => {
-      if (isString(optsOrDefaultValue)) return optsOrDefaultValue;
-      if (isObject(optsOrDefaultValue) && isString(optsOrDefaultValue.defaultValue))
-        return optsOrDefaultValue.defaultValue;
-      return Array.isArray(k) ? k[k.length - 1] : k;
-    };
-    const retNotReady = [notReadyT, {}, false];
-    retNotReady.t = notReadyT;
-    retNotReady.i18n = {};
-    retNotReady.ready = false;
-    return retNotReady;
   }
 
-  if (i18n.options.react?.wait)
+  if (i18n?.options.react?.wait)
     warnOnce(
       i18n,
       'DEPRECATED_OPTION',
       'useTranslation: It seems you are still using the old wait option, you may migrate to the new useSuspense behaviour.',
     );
 
-  const i18nOptions = { ...getDefaults(), ...i18n.options.react, ...props };
+  const i18nOptions = { ...getDefaults(), ...i18n?.options?.react, ...props };
   const { useSuspense, keyPrefix } = i18nOptions;
 
   // prepare having a namespace
-  let namespaces = ns || defaultNSFromContext || i18n.options?.defaultNS;
+  let namespaces = ns || defaultNSFromContext || i18n?.options?.defaultNS;
   namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
 
-  // report namespaces as used
-  i18n.reportNamespaces.addUsedNamespaces?.(namespaces);
+  // report namespaces as used (only if i18n exists)
+  i18n?.reportNamespaces?.addUsedNamespaces?.(namespaces);
 
   // are we ready? yes if all namespaces in first language are loaded already (either with data or empty object on failed load)
-  const ready =
-    (i18n.isInitialized || i18n.initializedStoreOnce) &&
-    namespaces.every((n) => hasLoadedNamespace(n, i18n, i18nOptions));
+  const ready = i18n
+    ? (i18n.isInitialized || i18n.initializedStoreOnce) &&
+      namespaces.every((n) => hasLoadedNamespace(n, i18n, i18nOptions))
+    : false;
 
   // binding t function to namespace (acts also as rerender trigger *when* args have changed)
+  // Use notReadyT if no i18n instance
   const memoGetT = useMemoizedT(
     i18n,
     props.lng || null,
     i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
     keyPrefix,
   );
-  // using useState with a function expects an initializer, not the function itself:
-  const getT = () => memoGetT;
-  const getNewT = () =>
-    alwaysNewT(
-      i18n,
-      props.lng || null,
-      i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
-      keyPrefix,
-    );
+
+  // Always call useState - but use appropriate initializer
+  const getT = useCallback(() => (i18n ? memoGetT : notReadyT), [i18n, memoGetT, notReadyT]);
+  const getNewT = useCallback(
+    () =>
+      i18n
+        ? alwaysNewT(
+            i18n,
+            props.lng || null,
+            i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
+            keyPrefix,
+          )
+        : notReadyT,
+    [i18n, props.lng, namespaces, keyPrefix, i18nOptions.nsMode, notReadyT],
+  );
 
   const [t, setT] = useState(getT);
 
@@ -100,6 +109,9 @@ export const useTranslation = (ns, props = {}) => {
 
   const isMounted = useRef(true);
   useEffect(() => {
+    // Only proceed if i18n exists
+    if (!i18n) return;
+
     const { bindI18n, bindI18nStore } = i18nOptions;
     isMounted.current = true;
 
@@ -141,7 +153,7 @@ export const useTranslation = (ns, props = {}) => {
   // t is correctly initialized by useState hook. We only need to update it after i18n
   // instance was replaced (for example in the provider).
   useEffect(() => {
-    if (isMounted.current && ready) {
+    if (isMounted.current && ready && i18n) {
       // not getNewT: depend on dependency list of the useCallback call within
       // useMemoizedT to only provide a newly-bound t *iff* i18n instance was
       // replaced; see bug 1691 https://github.com/i18next/react-i18next/issues/1691
@@ -149,10 +161,15 @@ export const useTranslation = (ns, props = {}) => {
     }
   }, [i18n, keyPrefix, ready]); // re-run when i18n instance or keyPrefix were replaced
 
-  const ret = [t, i18n, ready];
+  const ret = [t, i18n || {}, ready];
   ret.t = t;
-  ret.i18n = i18n;
+  ret.i18n = i18n || {};
   ret.ready = ready;
+
+  // If no i18n instance, return the "not ready" state
+  if (!i18n) {
+    return ret;
+  }
 
   // return hook stuff if ready
   if (ready) return ret;
