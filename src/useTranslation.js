@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef, useCallback } from 'react';
+import { useState, useEffect, useContext, useRef, useCallback, useMemo } from 'react';
 import { getI18n, getDefaults, ReportNamespaces, I18nContext } from './context.js';
 import {
   warnOnce,
@@ -17,16 +17,12 @@ const usePrevious = (value, ignore) => {
   return ref.current;
 };
 
-const alwaysNewT = (i18n, language, namespace, keyPrefix) =>
-  i18n.getFixedT(language, namespace, keyPrefix);
-
-const useMemoizedT = (i18n, language, namespace, keyPrefix) =>
-  useCallback(
-    i18n
-      ? alwaysNewT(i18n, language, namespace, keyPrefix)
-      : (k) => (Array.isArray(k) ? k[k.length - 1] : k),
-    [i18n, language, namespace, keyPrefix],
-  );
+const notReadyT = (k, optsOrDefaultValue) => {
+  if (isString(optsOrDefaultValue)) return optsOrDefaultValue;
+  if (isObject(optsOrDefaultValue) && isString(optsOrDefaultValue.defaultValue))
+    return optsOrDefaultValue.defaultValue;
+  return Array.isArray(k) ? k[k.length - 1] : k;
+};
 
 export const useTranslation = (ns, props = {}) => {
   // assert we have the needed i18nInstance
@@ -37,14 +33,6 @@ export const useTranslation = (ns, props = {}) => {
   // Set up reportNamespaces if i18n exists
   if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
 
-  // Prepare notReadyT function for when i18n doesn't exist
-  const notReadyT = useCallback((k, optsOrDefaultValue) => {
-    if (isString(optsOrDefaultValue)) return optsOrDefaultValue;
-    if (isObject(optsOrDefaultValue) && isString(optsOrDefaultValue.defaultValue))
-      return optsOrDefaultValue.defaultValue;
-    return Array.isArray(k) ? k[k.length - 1] : k;
-  }, []);
-
   // Show warning if no i18n instance (but don't return early)
   if (!i18n) {
     warnOnce(
@@ -54,135 +42,104 @@ export const useTranslation = (ns, props = {}) => {
     );
   }
 
-  if (i18n?.options.react?.wait)
-    warnOnce(
-      i18n,
-      'DEPRECATED_OPTION',
-      'useTranslation: It seems you are still using the old wait option, you may migrate to the new useSuspense behaviour.',
-    );
-
   const i18nOptions = { ...getDefaults(), ...i18n?.options?.react, ...props };
   const { useSuspense, keyPrefix } = i18nOptions;
 
-  // prepare having a namespace
-  let namespaces = ns || defaultNSFromContext || i18n?.options?.defaultNS;
-  namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
+  const namespaces = useMemo(() => {
+    const nsOrContext = ns || defaultNSFromContext || i18n?.options?.defaultNS;
+    return isString(nsOrContext) ? [nsOrContext] : nsOrContext || ['translation'];
+  }, [ns, defaultNSFromContext, i18n]);
 
-  // report namespaces as used (only if i18n exists)
   i18n?.reportNamespaces?.addUsedNamespaces?.(namespaces);
 
-  // are we ready? yes if all namespaces in first language are loaded already (either with data or empty object on failed load)
-  const ready = i18n
-    ? (i18n.isInitialized || i18n.initializedStoreOnce) &&
-      namespaces.every((n) => hasLoadedNamespace(n, i18n, i18nOptions))
-    : false;
+  const ready =
+    !!i18n &&
+    !!(i18n.isInitialized || i18n.initializedStoreOnce) &&
+    !!namespaces.every((n) => hasLoadedNamespace(n, i18n, i18nOptions));
 
-  // binding t function to namespace (acts also as rerender trigger *when* args have changed)
-  // Use notReadyT if no i18n instance
-  const memoGetT = useMemoizedT(
-    i18n,
-    props.lng || null,
-    i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
-    keyPrefix,
+  const t = useCallback(
+    i18n
+      ? i18n.getFixedT(
+          props.lng || i18n.language,
+          i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
+          keyPrefix,
+        )
+      : notReadyT,
+    [i18n, props.lng, i18n?.language, namespaces, keyPrefix, i18nOptions.nsMode],
   );
 
-  // Always call useState - but use appropriate initializer
-  const getT = useCallback(() => (i18n ? memoGetT : notReadyT), [i18n, memoGetT, notReadyT]);
-  const getNewT = useCallback(
-    () =>
-      i18n
-        ? alwaysNewT(
-            i18n,
-            props.lng || null,
-            i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
-            keyPrefix,
-          )
-        : notReadyT,
-    [i18n, props.lng, namespaces, keyPrefix, i18nOptions.nsMode, notReadyT],
-  );
-
-  const [t, setT] = useState(getT);
-
-  let joinedNS = namespaces.join();
-  if (props.lng) joinedNS = `${props.lng}${joinedNS}`;
-  const previousJoinedNS = usePrevious(joinedNS);
+  const [, setForceUpdate] = useState(0);
 
   const isMounted = useRef(true);
   useEffect(() => {
-    // Only proceed if i18n exists
+    isMounted.current = true;
+    const { bindI18n, bindI18nStore } = i18nOptions;
     if (!i18n) return;
 
-    const { bindI18n, bindI18nStore } = i18nOptions;
-    isMounted.current = true;
-
-    // if not ready and not using suspense load the namespaces
-    // in side effect and do not call resetT if unmounted
     if (!ready && !useSuspense) {
+      const onLoaded = () => {
+        if (isMounted.current) setForceUpdate((c) => c + 1);
+      };
       if (props.lng) {
-        loadLanguages(i18n, props.lng, namespaces, () => {
-          if (isMounted.current) setT(getNewT);
-        });
+        loadLanguages(i18n, props.lng, namespaces, onLoaded);
       } else {
-        loadNamespaces(i18n, namespaces, () => {
-          if (isMounted.current) setT(getNewT);
-        });
+        loadNamespaces(i18n, namespaces, onLoaded);
       }
     }
 
-    if (ready && previousJoinedNS && previousJoinedNS !== joinedNS && isMounted.current) {
-      setT(getNewT);
-    }
-
     const boundReset = () => {
-      if (isMounted.current) setT(getNewT);
+      if (isMounted.current) setForceUpdate((c) => c + 1);
     };
 
-    // bind events to trigger change, like languageChanged
-    if (bindI18n) i18n?.on(bindI18n, boundReset);
-    if (bindI18nStore) i18n?.store.on(bindI18nStore, boundReset);
+    if (bindI18n) i18n.on(bindI18n, boundReset);
+    if (bindI18nStore) i18n.store.on(bindI18nStore, boundReset);
 
-    // unbinding on unmount
     return () => {
       isMounted.current = false;
-      if (i18n && bindI18n) bindI18n?.split(' ').forEach((e) => i18n.off(e, boundReset));
+      if (bindI18n && i18n) bindI18n.split(' ').forEach((e) => i18n.off(e, boundReset));
       if (bindI18nStore && i18n)
         bindI18nStore.split(' ').forEach((e) => i18n.store.off(e, boundReset));
     };
-  }, [i18n, joinedNS]); // re-run effect whenever list of namespaces changes
+  }, [
+    i18n,
+    namespaces,
+    props.lng,
+    ready,
+    useSuspense,
+    i18nOptions.bindI18n,
+    i18nOptions.bindI18nStore,
+  ]);
 
-  // t is correctly initialized by useState hook. We only need to update it after i18n
-  // instance was replaced (for example in the provider).
+  const previousI18n = usePrevious(i18n);
+  const previousKeyPrefix = usePrevious(keyPrefix);
   useEffect(() => {
-    if (isMounted.current && ready && i18n) {
-      // not getNewT: depend on dependency list of the useCallback call within
-      // useMemoizedT to only provide a newly-bound t *iff* i18n instance was
-      // replaced; see bug 1691 https://github.com/i18next/react-i18next/issues/1691
-      setT(getT);
+    // This is the fix: only trigger an update if `previousI18n` exists.
+    // This prevents the effect from firing on the initial mount.
+    if (previousI18n && (previousI18n !== i18n || previousKeyPrefix !== keyPrefix)) {
+      if (isMounted.current) setForceUpdate((c) => c + 1);
     }
-  }, [i18n, keyPrefix, ready]); // re-run when i18n instance or keyPrefix were replaced
+  }, [i18n, keyPrefix, previousI18n, previousKeyPrefix]);
 
-  const ret = [t, i18n || {}, ready];
-  ret.t = t;
-  ret.i18n = i18n || {};
-  ret.ready = ready;
+  const finalI18n = i18n || {};
 
-  // If no i18n instance, return the "not ready" state
-  if (!i18n) {
-    return ret;
+  const ret = useMemo(() => {
+    const arr = [t, finalI18n, ready];
+    arr.t = t;
+    arr.i18n = finalI18n;
+    arr.ready = ready;
+    return arr;
+  }, [t, finalI18n, ready]);
+
+  if (i18n && useSuspense && !ready) {
+    throw new Promise((resolve) => {
+      const onLoaded = () => resolve();
+      if (props.lng) {
+        loadLanguages(i18n, props.lng, namespaces, onLoaded);
+      } else {
+        loadNamespaces(i18n, namespaces, onLoaded);
+      }
+    });
   }
 
-  // return hook stuff if ready
-  if (ready) return ret;
-
-  // not yet loaded namespaces -> load them -> and return if useSuspense option set false
-  if (!ready && !useSuspense) return ret;
-
-  // not yet loaded namespaces -> load them -> and trigger suspense
-  throw new Promise((resolve) => {
-    if (props.lng) {
-      loadLanguages(i18n, props.lng, namespaces, () => resolve());
-    } else {
-      loadNamespaces(i18n, namespaces, () => resolve());
-    }
-  });
+  return ret;
 };
