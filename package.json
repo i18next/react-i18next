@@ -68,7 +68,7 @@
     "html-parse-stringify": "^3.0.1"
   },
   "peerDependencies": {
-    "i18next": ">= 23.4.0",
+    "i18next": ">= 25.5.2",
     "react": ">= 16.8.0",
     "typescript": "^5"
   },

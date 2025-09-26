@@ -1,3 +1,7 @@
+### 16.0.0
+
+- major upgrade i18next dep to address [1865](https://github.com/i18next/react-i18next/issues/1865)
+
 ### 15.7.4
 
 - downgrade i18next dep to address [1865](https://github.com/i18next/react-i18next/issues/1865)
