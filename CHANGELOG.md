@@ -1,3 +1,7 @@
+### 15.7.4
+
+- downgrade i18next dep to address [1865](https://github.com/i18next/react-i18next/issues/1865)
+
 ### 15.7.3
 
 - exports TransSelectorProps [1862](https://github.com/i18next/react-i18next/pull/1862) to address [1861](https://github.com/i18next/react-i18next/issues/1861)
