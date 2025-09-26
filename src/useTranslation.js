@@ -1,4 +1,12 @@
-import { useState, useEffect, useContext, useRef, useCallback, useMemo } from 'react';
+import {
+  useContext,
+  useCallback,
+  useMemo,
+  useEffect,
+  useSyncExternalStore,
+  useRef,
+  useState,
+} from 'react';
 import { getI18n, getDefaults, ReportNamespaces, I18nContext } from './context.js';
 import {
   warnOnce,
@@ -9,14 +17,6 @@ import {
   isObject,
 } from './utils.js';
 
-const usePrevious = (value, ignore) => {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = ignore ? ref.current : value;
-  }, [value, ignore]);
-  return ref.current;
-};
-
 const notReadyT = (k, optsOrDefaultValue) => {
   if (isString(optsOrDefaultValue)) return optsOrDefaultValue;
   if (isObject(optsOrDefaultValue) && isString(optsOrDefaultValue.defaultValue))
@@ -24,16 +24,16 @@ const notReadyT = (k, optsOrDefaultValue) => {
   return Array.isArray(k) ? k[k.length - 1] : k;
 };
 
+const notReadySnapshot = { t: notReadyT, ready: false };
+const dummySubscribe = () => () => {};
+
 export const useTranslation = (ns, props = {}) => {
-  // assert we have the needed i18nInstance
   const { i18n: i18nFromProps } = props;
   const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = useContext(I18nContext) || {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
 
-  // Set up reportNamespaces if i18n exists
   if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
 
-  // Show warning if no i18n instance (but don't return early)
   if (!i18n) {
     warnOnce(
       i18n,
@@ -42,7 +42,11 @@ export const useTranslation = (ns, props = {}) => {
     );
   }
 
-  const i18nOptions = { ...getDefaults(), ...i18n?.options?.react, ...props };
+  const i18nOptions = useMemo(
+    () => ({ ...getDefaults(), ...i18n?.options?.react, ...props }),
+    [i18n, props],
+  );
+
   const { useSuspense, keyPrefix } = i18nOptions;
 
   const namespaces = useMemo(() => {
@@ -52,73 +56,66 @@ export const useTranslation = (ns, props = {}) => {
 
   i18n?.reportNamespaces?.addUsedNamespaces?.(namespaces);
 
-  const ready =
-    !!i18n &&
-    !!(i18n.isInitialized || i18n.initializedStoreOnce) &&
-    !!namespaces.every((n) => hasLoadedNamespace(n, i18n, i18nOptions));
-
-  const t = useCallback(
-    i18n
-      ? i18n.getFixedT(
-          props.lng || i18n.language,
-          i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
-          keyPrefix,
-        )
-      : notReadyT,
-    [i18n, props.lng, i18n?.language, namespaces, keyPrefix, i18nOptions.nsMode],
+  const subscribe = useCallback(
+    (callback) => {
+      if (!i18n) return dummySubscribe;
+      const { bindI18n, bindI18nStore } = i18nOptions;
+      if (bindI18n) i18n.on(bindI18n, callback);
+      if (bindI18nStore) i18n.store.on(bindI18nStore, callback);
+      return () => {
+        if (bindI18n) bindI18n.split(' ').forEach((e) => i18n.off(e, callback));
+        if (bindI18nStore) bindI18nStore.split(' ').forEach((e) => i18n.store.off(e, callback));
+      };
+    },
+    [i18n, i18nOptions],
   );
 
-  const [, setForceUpdate] = useState(0);
+  const snapshotRef = useRef();
+  const getSnapshot = useCallback(() => {
+    if (!i18n) {
+      return notReadySnapshot;
+    }
+    const calculatedReady =
+      !!(i18n.isInitialized || i18n.initializedStoreOnce) &&
+      namespaces.every((n) => hasLoadedNamespace(n, i18n, i18nOptions));
+    const calculatedT = i18n.getFixedT(
+      props.lng || i18n.language,
+      i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0],
+      keyPrefix,
+    );
+    const lastSnapshot = snapshotRef.current;
+    if (
+      lastSnapshot &&
+      lastSnapshot.ready === calculatedReady &&
+      lastSnapshot.lng === (props.lng || i18n.language) &&
+      lastSnapshot.keyPrefix === keyPrefix
+    ) {
+      return lastSnapshot;
+    }
+    const newSnapshot = {
+      t: calculatedT,
+      ready: calculatedReady,
+      lng: props.lng || i18n.language,
+      keyPrefix,
+    };
+    snapshotRef.current = newSnapshot;
+    return newSnapshot;
+  }, [i18n, namespaces, keyPrefix, i18nOptions, props.lng]);
 
-  const isMounted = useRef(true);
+  // We still need a state to manually trigger a re-render on load when the store doesn't emit an event.
+  const [loadCount, setLoadCount] = useState(0);
+  const { t, ready } = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+
   useEffect(() => {
-    isMounted.current = true;
-    const { bindI18n, bindI18nStore } = i18nOptions;
-    if (!i18n) return;
-
-    if (!ready && !useSuspense) {
-      const onLoaded = () => {
-        if (isMounted.current) setForceUpdate((c) => c + 1);
-      };
+    if (i18n && !ready && !useSuspense) {
+      const onLoaded = () => setLoadCount((c) => c + 1);
       if (props.lng) {
         loadLanguages(i18n, props.lng, namespaces, onLoaded);
       } else {
         loadNamespaces(i18n, namespaces, onLoaded);
       }
     }
-
-    const boundReset = () => {
-      if (isMounted.current) setForceUpdate((c) => c + 1);
-    };
-
-    if (bindI18n) i18n.on(bindI18n, boundReset);
-    if (bindI18nStore) i18n.store.on(bindI18nStore, boundReset);
-
-    return () => {
-      isMounted.current = false;
-      if (bindI18n && i18n) bindI18n.split(' ').forEach((e) => i18n.off(e, boundReset));
-      if (bindI18nStore && i18n)
-        bindI18nStore.split(' ').forEach((e) => i18n.store.off(e, boundReset));
-    };
-  }, [
-    i18n,
-    namespaces,
-    props.lng,
-    ready,
-    useSuspense,
-    i18nOptions.bindI18n,
-    i18nOptions.bindI18nStore,
-  ]);
-
-  const previousI18n = usePrevious(i18n);
-  const previousKeyPrefix = usePrevious(keyPrefix);
-  useEffect(() => {
-    // This is the fix: only trigger an update if `previousI18n` exists.
-    // This prevents the effect from firing on the initial mount.
-    if (previousI18n && (previousI18n !== i18n || previousKeyPrefix !== keyPrefix)) {
-      if (isMounted.current) setForceUpdate((c) => c + 1);
-    }
-  }, [i18n, keyPrefix, previousI18n, previousKeyPrefix]);
+  }, [i18n, props.lng, namespaces, ready, useSuspense, loadCount]);
 
   const finalI18n = i18n || {};
 
