@@ -415,6 +415,7 @@ export function Trans({
     return children;
   }
 
+  // eslint-disable-next-line no-param-reassign
   if (typeof i18nKey === 'function') i18nKey = keyFromSelector(i18nKey);
 
   const t = tFromProps || i18n.t.bind(i18n) || ((k) => k);
@@ -454,7 +455,6 @@ export function Trans({
     defaultValue,
     ns: namespaces,
   };
-
   const translation = key ? t(key, combinedTOpts) : defaultValue;
 
   const generatedComponents = generateComponents(components, translation, i18n, i18nKey);

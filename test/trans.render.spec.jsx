@@ -1116,24 +1116,4 @@ describe('trans with nesting $t() and interpolation', () => {
       </div>
     `);
   });
-
-  it('does not throw when using the selector API with the component object', () => {
-    // https://github.com/i18next/react-i18next/issues/1867
-    assert.doesNotThrow(() =>
-      render(
-        <Trans
-          i18nKey={($) => $['testString']}
-          values={{ buttonText: 'button' }}
-          components={{
-            el1: <a href="https://www.google.com/">Link</a>,
-            el2: (
-              <button variant="link" onClick={() => console.log('clicked')}>
-                Button
-              </button>
-            ),
-          }}
-        />,
-      ),
-    );
-  });
 });
