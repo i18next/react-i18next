@@ -1,4 +1,5 @@
 import { Fragment, isValidElement, cloneElement, createElement, Children } from 'react';
+import { keyFromSelector } from 'i18next';
 import HTML from 'html-parse-stringify';
 import { isObject, isString, warn, warnOnce } from './utils.js';
 import { getDefaults } from './defaults.js';
@@ -424,7 +425,10 @@ export function Trans({
 
   const nodeAsString = nodesToString(children, reactI18nextOptions, i18n, i18nKey);
   const defaultValue =
-    defaults || nodeAsString || reactI18nextOptions.transEmptyNodeValue || i18nKey;
+    defaults ||
+    nodeAsString ||
+    reactI18nextOptions.transEmptyNodeValue ||
+    (typeof i18nKey === 'function' ? keyFromSelector(i18nKey) : i18nKey);
   const { hashTransKey } = reactI18nextOptions;
   const key =
     i18nKey ||
