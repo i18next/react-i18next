@@ -1,4 +1,5 @@
 import { Fragment, isValidElement, cloneElement, createElement, Children } from 'react';
+import { keyFromSelector } from 'i18next';
 import HTML from 'html-parse-stringify';
 import { isObject, isString, warn, warnOnce } from './utils.js';
 import { getDefaults } from './defaults.js';
@@ -324,9 +325,7 @@ const fixComponentProps = (component, index, translation) => {
   if (
     !comp.props ||
     !comp.props.children ||
-    (typeof translation === 'string' &&
-      translation.indexOf(`${index}/>`) < 0 &&
-      translation?.indexOf(`${index} />`) < 0)
+    (translation.indexOf(`${index}/>`) < 0 && translation?.indexOf(`${index} />`) < 0)
   ) {
     return comp;
   }
@@ -416,6 +415,8 @@ export function Trans({
     return children;
   }
 
+  if (typeof i18nKey === 'function') i18nKey = keyFromSelector(i18nKey);
+
   const t = tFromProps || i18n.t.bind(i18n) || ((k) => k);
 
   const reactI18nextOptions = { ...getDefaults(), ...i18n.options?.react };
@@ -453,6 +454,7 @@ export function Trans({
     defaultValue,
     ns: namespaces,
   };
+
   const translation = key ? t(key, combinedTOpts) : defaultValue;
 
   const generatedComponents = generateComponents(components, translation, i18n, i18nKey);
