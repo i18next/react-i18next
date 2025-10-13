@@ -1,6 +1,6 @@
 {
   "name": "react-i18next",
-  "version": "16.0.0",
+  "version": "16.0.1",
   "description": "Internationalization for react done right. Using the i18next i18n ecosystem.",
   "main": "dist/commonjs/index.js",
   "types": "./index.d.mts",
