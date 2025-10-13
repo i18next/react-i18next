@@ -1,3 +1,7 @@
+### 16.0.1
+
+- fix: Using <Trans> component with named tags throws error when Selector API is enabled [1867](https://github.com/i18next/react-i18next/issues/1867) with [1868](https://github.com/i18next/react-i18next/pull/1868)
+
 ### 16.0.0
 
 - major upgrade i18next dep to address [1865](https://github.com/i18next/react-i18next/issues/1865)
