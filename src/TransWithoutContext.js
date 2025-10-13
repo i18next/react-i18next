@@ -415,9 +415,6 @@ export function Trans({
     return children;
   }
 
-  // eslint-disable-next-line no-param-reassign
-  if (typeof i18nKey === 'function') i18nKey = keyFromSelector(i18nKey);
-
   const t = tFromProps || i18n.t.bind(i18n) || ((k) => k);
 
   const reactI18nextOptions = { ...getDefaults(), ...i18n.options?.react };
@@ -428,7 +425,10 @@ export function Trans({
 
   const nodeAsString = nodesToString(children, reactI18nextOptions, i18n, i18nKey);
   const defaultValue =
-    defaults || nodeAsString || reactI18nextOptions.transEmptyNodeValue || i18nKey;
+    defaults ||
+    nodeAsString ||
+    reactI18nextOptions.transEmptyNodeValue ||
+    (typeof i18nKey === 'function' ? keyFromSelector(i18nKey) : i18nKey);
   const { hashTransKey } = reactI18nextOptions;
   const key =
     i18nKey ||
