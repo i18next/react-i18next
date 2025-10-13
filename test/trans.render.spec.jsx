@@ -1117,7 +1117,7 @@ describe('trans with nesting $t() and interpolation', () => {
     `);
   });
 
-  it.only('does not throw when using the selector API with the component object', () => {
+  it('does not throw when using the selector API with the component object', () => {
     // https://github.com/i18next/react-i18next/issues/1867
     assert.doesNotThrow(() =>
       render(
