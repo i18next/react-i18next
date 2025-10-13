@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach } from 'vitest';
+import { assert, describe, it, expect, beforeAll, afterAll, beforeEach, afterEach } from 'vitest';
 import React from 'react';
 import { render, cleanup } from '@testing-library/react';
 import i18n from './i18n';
@@ -1115,5 +1115,25 @@ describe('trans with nesting $t() and interpolation', () => {
         should work This is key2 value
       </div>
     `);
+  });
+
+  it.only('does not throw when using the selector API with the component object', () => {
+    // https://github.com/i18next/react-i18next/issues/1867
+    assert.doesNotThrow(() =>
+      render(
+        <Trans
+          i18nKey={($) => $['testString']}
+          values={{ buttonText: 'button' }}
+          components={{
+            el1: <a href="https://www.google.com/">Link</a>,
+            el2: (
+              <button variant="link" onClick={() => console.log('clicked')}>
+                Button
+              </button>
+            ),
+          }}
+        />,
+      ),
+    );
   });
 });

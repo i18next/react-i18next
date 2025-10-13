@@ -324,7 +324,9 @@ const fixComponentProps = (component, index, translation) => {
   if (
     !comp.props ||
     !comp.props.children ||
-    (translation.indexOf(`${index}/>`) < 0 && translation.indexOf(`${index} />`) < 0)
+    (typeof translation === 'string' &&
+      translation.indexOf(`${index}/>`) < 0 &&
+      translation?.indexOf(`${index} />`) < 0)
   ) {
     return comp;
   }
