@@ -1,4 +1,4 @@
-import { assert, describe, it, afterEach } from 'vitest';
+import { describe, it, afterEach, assert } from 'vitest';
 import React from 'react';
 import { render, cleanup } from '@testing-library/react';
 import './i18nNoLng';
