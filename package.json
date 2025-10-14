@@ -51,10 +51,10 @@
     },
     "./icu.macro": {
       "types": {
-        "require": "./icu.macro..d.ts",
-        "import": "./icu.macro..d.mts"
+        "require": "./icu.macro.d.ts",
+        "import": "./icu.macro.d.mts"
       },
-      "default": "./icu.macro.js"
+      "default": "./dist/commonjs/icu.macro.js"
     }
   },
   "homepage": "https://github.com/i18next/react-i18next",
@@ -94,6 +94,7 @@
     "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.28.0",
     "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.24.0",
     "@babel/register": "^7.27.1",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^26.0.3",
@@ -103,8 +104,14 @@
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.4.8",
     "@testing-library/react": "^16.1.0",
+    "@types/babel__core": "^7.20.5",
+    "@types/babel__traverse": "^7.20.6",
+    "@types/babel-plugin-macros": "^3.1.3",
+    "@types/babel-plugin-tester": "^9.0.9",
     "@types/jest": "^29.5.12",
     "@types/react": "^19.1.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
     "@vitest/coverage-v8": "^2.0.5",
     "all-contributors-cli": "^6.26.1",
     "babel-core": "^7.0.0-bridge.0",
@@ -143,8 +150,8 @@
     "format": "prettier . --check",
     "format:fix": "prettier . --write --list-different",
     "copy": "cpy ./dist/umd/react-i18next.min.js ./dist/umd/react-i18next.js . --flat && echo '{\"type\":\"module\"}' > dist/es/package.json",
-    "build:es": "cross-env BABEL_ENV=ESNext babel src --out-dir dist/es",
-    "build:cjs": "babel src --out-dir dist/commonjs",
+    "build:es": "cross-env BABEL_ENV=ESNext babel src --out-dir dist/es --extensions '.js,.ts'",
+    "build:cjs": "babel src --out-dir dist/commonjs --extensions '.js,.ts'",
     "build:umd": "rollup -c rollup.config.mjs --format umd && rollup -c rollup.config.mjs --format umd --uglify",
     "build:amd": "rollup -c rollup.config.mjs --format amd && rollup -c rollup.config.mjs --format amd --uglify",
     "build:iife": "rollup -c rollup.config.mjs --format iife && rollup -c rollup.config.mjs --format iife --uglify",
@@ -163,5 +170,10 @@
   "license": "MIT",
   "lock": false,
   "sideEffects": false,
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
+  "overrides": {
+    "babel-plugin-tester": {
+      "@types/babel__core": "^7.20.5"
+    }
+  }
 }

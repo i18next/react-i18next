@@ -1,18 +1,19 @@
 import { describe, it, expect } from 'vitest';
-// Unsure why ESLint can't resolve it but tests run correctly
-// eslint-disable-next-line import/no-unresolved
 import { pluginTester } from 'babel-plugin-tester';
 import plugin from 'babel-plugin-macros';
 
 /**
- * babel-plugin-tester in icu.macro.spec.js need test function exposed in globals scope.
+ * babel-plugin-tester requires test functions exposed in global scope.
  *
- * Instead of exposing globals using relative --globals flag I exposed utilities only for this file
+ * Instead of exposing globals using relative --globals flag, we expose utilities only for this file.
  * @see https://github.com/babel-utils/babel-plugin-tester#vitest
  */
 
+// @ts-expect-error - this is the correct way to re-assign to use vitest in babel-plugin-tester
 globalThis.describe = describe;
+// @ts-expect-error - this is the correct way to re-assign to use vitest in babel-plugin-tester
 globalThis.it = it;
+// @ts-expect-error - this is the correct way to re-assign to use vitest in babel-plugin-tester
 globalThis.expect = expect;
 
 pluginTester({
@@ -21,81 +22,81 @@ pluginTester({
   babelOptions: { filename: __filename, parserOpts: { plugins: ['jsx'] } },
   tests: [
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../../../dist/commonjs/icu.macro'
 
       const x = <Trans>Welcome, { name }!</Trans>
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../../../dist/commonjs/icu.macro'
 
       const x = <Trans>Welcome, <strong>{ name }</strong>!</Trans>
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../../../dist/commonjs/icu.macro'
       import { useTranslation } from 'react-i18next'
 
       const x = <Trans>Trainers: { trainersCount, number }</Trans>
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../../../dist/commonjs/icu.macro'
 
       const x = <Trans>Trainers: <strong>{ trainersCount, number }</strong>!</Trans>
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../../../dist/commonjs/icu.macro'
 
       const x = <Trans>Caught on { catchDate, date, short }</Trans>
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../../../dist/commonjs/icu.macro'
 
       const x = <Trans>Caught on <strong>{ catchDate, date, short }</strong>!</Trans>
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../../../dist/commonjs/icu.macro'
 
       const x = <Trans defaults="Trainers: { trainersCount, number }" />
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../../../dist/commonjs/icu.macro'
 
       const x = <Trans i18nKey="trainersWithDefaults" defaults="Trainers: <strong>{ trainersCount, number }</strong>!" />
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../../../dist/commonjs/icu.macro'
 
       const x = <Trans i18nKey="caughtWithDefaults" defaults="Caught on { catchDate, date, short }" />
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../../../dist/commonjs/icu.macro'
 
       const x = <Trans defaults="Caught on <strong>{ catchDate, date, short }</strong>!" />
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../../../dist/commonjs/icu.macro'
       const Link = ({to, children}) => (<a href={to}>{children}</a>)
 
       const x = <Trans defaults="Caught on <Link to='/dest'>{ catchDate, date, short }</Link>!" values={{catchDate: Date.now()}}>This should be overridden by defaults</Trans>
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../../../dist/commonjs/icu.macro'
 
       const x = <Trans i18nKey="trainersWithDefaults" values={{trainersCount}} defaults="Trainers: <strong>{ trainersCount, number }</strong>!" components={[]} />
     `,
 
     `
-      import { Select } from '../../../icu.macro'
+      import { Select } from '../../../dist/commonjs/icu.macro'
 
       const x = <Select
         i18nKey="selectExample"
@@ -107,7 +108,7 @@ pluginTester({
     `,
 
     `
-      import { Select } from '../../../icu.macro'
+      import { Select } from '../../../dist/commonjs/icu.macro'
 
       const x = <Select
         switch={gender}
@@ -118,7 +119,7 @@ pluginTester({
     `,
 
     `
-      import { Plural } from '../../../icu.macro'
+      import { Plural } from '../../../dist/commonjs/icu.macro'
 
       const x = <Plural
         count={itemsCount1}
@@ -129,7 +130,7 @@ pluginTester({
     `,
 
     `
-      import { Plural } from '../../../icu.macro'
+      import { Plural } from '../../../dist/commonjs/icu.macro'
 
       const x = <Plural
         i18nKey="testKey"
@@ -141,7 +142,7 @@ pluginTester({
     `,
 
     `
-      import { Plural } from '../../../icu.macro'
+      import { Plural } from '../../../dist/commonjs/icu.macro'
 
       const x = <Plural
         i18nKey="testKey"
@@ -154,7 +155,7 @@ pluginTester({
     `,
 
     `
-      import { SelectOrdinal } from '../../../icu.macro'
+      import { SelectOrdinal } from '../../../dist/commonjs/icu.macro'
 
       const x = <SelectOrdinal
         count={position}
@@ -169,7 +170,7 @@ pluginTester({
     `,
 
     `
-      import { SelectOrdinal } from '../../../icu.macro'
+      import { SelectOrdinal } from '../../../dist/commonjs/icu.macro'
 
       const x = <SelectOrdinal
         i18nKey="testKey"
@@ -185,7 +186,7 @@ pluginTester({
     `
       import React from 'react'
       import { useTranslation } from 'react-i18next'
-      import { Plural, Select, SelectOrdinal, Trans } from '../../../icu.macro'
+      import { Plural, Select, SelectOrdinal, Trans } from '../../../dist/commonjs/icu.macro'
       const Link = ({to, children}) => (<a href={to}>{children}</a>)
 
       export default function TestPage({count = 1}) {
@@ -292,7 +293,7 @@ pluginTester({
     `,
     `
       import React from "react"
-      import { Trans, number, date, time, plural, select, selectOrdinal } from "../../../icu.macro";
+      import { Trans, number, date, time, plural, select, selectOrdinal } from "../../../dist/commonjs/icu.macro";
 
       function Component({ children, style }) {
         return <div style={style}>{children}</div>
@@ -316,14 +317,14 @@ pluginTester({
       );
     `,
     `
-      import { Trans } from "../../../icu.macro";
+      import { Trans } from "../../../dist/commonjs/icu.macro";
 
       const x = <Trans>Welcome, &quot;{ name }&quot;!</Trans>
     `,
     {
       code: `
         import React from "react"
-        import { Trans, number } from "../../../icu.macro";
+        import { Trans, number } from "../../../dist/commonjs/icu.macro";
 
         const count = 2;
         const outside = number\`\${count}\`;
@@ -334,7 +335,7 @@ pluginTester({
     {
       code: `
         import React from "react"
-        import { Trans, date } from "../../../icu.macro";
+        import { Trans, date } from "../../../dist/commonjs/icu.macro";
 
         const d = new Date;
         const outside = date\`\${d}\`;
@@ -345,7 +346,7 @@ pluginTester({
     {
       code: `
         import React from "react"
-        import { Trans, time } from "../../../icu.macro";
+        import { Trans, time } from "../../../dist/commonjs/icu.macro";
 
         const d = new Date;
         const outside = time\`\${d}\`;
@@ -356,7 +357,7 @@ pluginTester({
     {
       code: `
         import React from "react"
-        import { Trans, select } from "../../../icu.macro";
+        import { Trans, select } from "../../../dist/commonjs/icu.macro";
 
         const d = "f";
         const outside = select\`\${d}, f { chose f } other { chose something else }\`;
@@ -367,7 +368,7 @@ pluginTester({
     {
       code: `
         import React from "react"
-        import { Trans, selectOrdinal } from "../../../icu.macro";
+        import { Trans, selectOrdinal } from "../../../dist/commonjs/icu.macro";
 
         const d = 1;
         const outside = selectOrdinal\`\${d}, =0 { # } other { chose # }\`;
@@ -378,7 +379,7 @@ pluginTester({
     {
       code: `
         import React from "react"
-        import { Trans, plural } from "../../../icu.macro";
+        import { Trans, plural } from "../../../dist/commonjs/icu.macro";
 
         const d = 1;
         const outside = plural\`\${d}, =0 { # } other { chose # }\`;
@@ -389,7 +390,7 @@ pluginTester({
     {
       code: `
         import React from "react"
-        import { Trans, plural } from "../../../icu.macro";
+        import { Trans, plural } from "../../../dist/commonjs/icu.macro";
 
         const d = 1;
         const x = (
@@ -405,7 +406,7 @@ pluginTester({
     {
       code: `
         import React from "react"
-        import { Trans, date } from "../../../icu.macro";
+        import { Trans, date } from "../../../dist/commonjs/icu.macro";
 
         const d = 1;
         const x = (
@@ -420,7 +421,7 @@ pluginTester({
     {
       code: `
         import React from "react"
-        import { Trans, date } from "../../../icu.macro";
+        import { Trans, date } from "../../../dist/commonjs/icu.macro";
 
         const tooLate = new Date();
         const x = (
@@ -435,7 +436,7 @@ pluginTester({
     {
       code: `
         import React from "react"
-        import { Trans, number } from "../../../icu.macro";
+        import { Trans, number } from "../../../dist/commonjs/icu.macro";
 
         const tooLate = funcThatReturnsNumberOrUndefined;
         const x = (

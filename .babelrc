@@ -5,10 +5,40 @@
         [
           "@babel/env",
           {
-            "targets": { "browsers": ["defaults"] }
+            "targets": {
+              "browsers": ["defaults"]
+            }
           }
         ],
-        "@babel/react"
+        "@babel/react",
+        [
+          "@babel/typescript",
+          {
+            "onlyRemoveTypeImports": true
+          }
+        ]
+      ],
+      "plugins": ["@babel/plugin-transform-runtime"]
+    },
+    "ESNext": {
+      "presets": [
+        [
+          "@babel/env",
+          {
+            "targets": {
+              "browsers": ["defaults"]
+            },
+            "modules": false,
+            "useBuiltIns": false
+          }
+        ],
+        "@babel/react",
+        [
+          "@babel/typescript",
+          {
+            "onlyRemoveTypeImports": true
+          }
+        ]
       ],
       "plugins": ["@babel/plugin-transform-runtime"]
     },
@@ -17,12 +47,20 @@
         [
           "@babel/env",
           {
-            "targets": { "browsers": ["defaults"] },
+            "targets": {
+              "browsers": ["defaults"]
+            },
             "modules": false,
             "useBuiltIns": false
           }
         ],
-        "@babel/react"
+        "@babel/react",
+        [
+          "@babel/typescript",
+          {
+            "onlyRemoveTypeImports": true
+          }
+        ]
       ],
       "plugins": ["@babel/plugin-transform-runtime"]
     }
