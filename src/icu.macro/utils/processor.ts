@@ -12,9 +12,11 @@ export function processTrans(
   babel: typeof Babel,
   componentStartIndex = 0,
 ): ProcessedTransResult {
+  const [defaults, finalComponentIndex] = mergeChildren(children, babel, componentStartIndex);
   return {
-    defaults: mergeChildren(children, babel, componentStartIndex),
+    defaults,
     components: getComponents(children, babel),
     values: getValues(children, babel),
+    finalComponentIndex,
   };
 }

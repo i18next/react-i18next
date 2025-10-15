@@ -80,7 +80,7 @@ export function pluralAsJSX(
         mem.defaults = `${mem.defaults} ${pluralForm} {${thisTrans.defaults}}`;
         mem.components = mem.components.concat(thisTrans.components);
 
-        componentStartIndex += thisTrans.components.length;
+        componentStartIndex = thisTrans.finalComponentIndex;
       }
       return mem;
     },

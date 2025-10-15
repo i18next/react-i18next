@@ -11,6 +11,7 @@ export interface ProcessedTransResult {
   defaults: string;
   components: BabelTypes.JSXElement[];
   values: BabelTypes.ObjectProperty[];
+  finalComponentIndex: number;
 }
 
 export type JSXChild =

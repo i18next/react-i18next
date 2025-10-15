@@ -21,6 +21,7 @@ interface FormatterContext {
 
 /**
  * Merge JSX children into an ICU message format string
+ * Returns [formattedString, finalComponentIndex]
  */
 export function mergeChildren(
   children: (
@@ -31,9 +32,10 @@ export function mergeChildren(
   )[],
   babel: typeof Babel,
   componentStartIndex = 0,
-): string {
+): [string, number] {
   const ctx: FormatterContext = { babel, componentIndex: componentStartIndex };
-  return processNodes(children, ctx).text;
+  const { text } = processNodes(children, ctx);
+  return [text, ctx.componentIndex];
 }
 
 /**
@@ -96,9 +98,12 @@ function processNodes(
 
     if (t.isJSXElement(node)) {
       const filtered = filterJSXChildren(node.children);
-      const innerText = processNodes(filtered, ctx).text;
-      result += `<${ctx.componentIndex}>${innerText}</${ctx.componentIndex}>`;
+      const currentIndex = ctx.componentIndex;
       ctx.componentIndex += 1;
+      // For nested components, start numbering from 0
+      const nestedCtx: FormatterContext = { babel: ctx.babel, componentIndex: 0 };
+      const innerText = processNodes(filtered, nestedCtx).text;
+      result += `<${currentIndex}>${innerText}</${currentIndex}>`;
       continue;
     }
 
@@ -185,9 +190,12 @@ function processTemplateExpression(
   // JSXElement: ${<Component/>} → "<0>...</0>"
   if (expr.type === 'JSXElement') {
     const filtered = filterJSXChildren(expr.children);
-    const innerText = processNodes(filtered, ctx).text;
-    const text = `<${ctx.componentIndex}>${innerText}</${ctx.componentIndex}>`;
+    const currentIndex = ctx.componentIndex;
     ctx.componentIndex += 1;
+    // For nested components, start numbering from 0
+    const nestedCtx: FormatterContext = { babel: ctx.babel, componentIndex: 0 };
+    const innerText = processNodes(filtered, nestedCtx).text;
+    const text = `<${currentIndex}>${innerText}</${currentIndex}>`;
     const variables = extractVariableNamesFromJSX(expr, ctx.babel);
     return { text, variables };
   }
@@ -228,6 +236,19 @@ function extractVariableNamesFromJSX(
           names.push(first.name);
         } else if (first.type === 'NumericLiteral' || first.type === 'StringLiteral') {
           names.push(String(first.value));
+        }
+      }
+      // Handle tagged template expressions like date`${now}`
+      if (child.expression.type === 'TaggedTemplateExpression') {
+        const { expressions } = child.expression.quasi;
+        for (const expr of expressions) {
+          if (expr.type === 'Identifier') {
+            names.push(expr.name);
+          }
+          // Handle nested JSXElements in tagged templates
+          if (expr.type === 'JSXElement') {
+            names.push(...extractVariableNamesFromJSX(expr, babel));
+          }
         }
       }
     }

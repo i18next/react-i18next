@@ -76,7 +76,7 @@ export function selectAsJSX(
         mem.defaults = `${mem.defaults} ${selectOption} {${thisTrans.defaults}}`;
         mem.components = mem.components.concat(thisTrans.components);
 
-        componentStartIndex += thisTrans.components.length;
+        componentStartIndex = thisTrans.finalComponentIndex;
       }
       return mem;
     },

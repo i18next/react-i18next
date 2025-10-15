@@ -78,5 +78,5 @@ function processJSXElement(
     return clonedChildren;
   }, []);
 
-  components.push(jsxElement);
+  components.push(clone);
 }
