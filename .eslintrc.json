@@ -115,8 +115,8 @@
   },
   "overrides": [
     {
-      "files": ["**/*.ts", "**/*.tsx"],
-      "excludedFiles": ["**/*.d.ts", "**/*.d.mts"],
+      "files": ["src/icu.macro.ts", "src/icu.macro/**/*.ts"],
+      "excludedFiles": ["test/**/*"],
       "parser": "@typescript-eslint/parser",
       "parserOptions": {
         "project": "./tsconfig.json"
@@ -131,12 +131,30 @@
           }
         ],
         "no-unused-vars": "off",
-        "import/no-extraneous-dependencies": [
+        "no-restricted-syntax": "off",
+        "no-continue": "off",
+        "no-plusplus": [
           "error",
           {
-            "devDependencies": ["src/icu.macro.ts", "src/icu.macro/**/*.ts", "test/**/*.ts"]
+            "allowForLoopAfterthoughts": true
           }
-        ]
+        ],
+        "import/no-unresolved": "off",
+        "import/no-extraneous-dependencies": "off"
+      }
+    },
+    {
+      "files": ["test/icu.macro/**/*.ts"],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "project": "./tsconfig.json"
+      },
+      "extends": ["plugin:@typescript-eslint/recommended"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "no-restricted-syntax": "off",
+        "import/no-unresolved": "off",
+        "import/no-extraneous-dependencies": "off"
       }
     },
     {
@@ -153,7 +171,8 @@
           }
         ],
         "testing-library/no-manual-cleanup": "off",
-        "import/no-extraneous-dependencies": "off"
+        "import/no-extraneous-dependencies": "off",
+        "import/no-unresolved": "off"
       }
     }
   ]

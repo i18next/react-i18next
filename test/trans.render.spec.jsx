@@ -695,7 +695,7 @@ describe('trans should work with self closing elements with react components', (
       <Trans
         i18nKey="transTestWithSelfClosing"
         components={{
-          component: <a href="#">These children will be preserved</a>,
+          component: <a href="#anchor">These children will be preserved</a>,
         }}
       />,
     );
@@ -703,7 +703,7 @@ describe('trans should work with self closing elements with react components', (
       <div>
         interpolated component: 
         <a
-          href="#"
+          href="#anchor"
         >
           These children will be preserved
         </a>

@@ -97,12 +97,12 @@ describe('trans nodeToString', () => {
     it('should create normal inner children if not set to ignore them', () => {
       const fragment = (
         <>
-          {'lorem ' /* eslint-disable-line react/jsx-curly-brace-presence */}
+          {'lorem '}
           <ul>
             <li>a</li>
             <li>b</li>
           </ul>
-          {' ipsum' /* eslint-disable-line react/jsx-curly-brace-presence */}
+          {' ipsum'}
         </>
       );
       const expected = 'lorem <1><0>a</0><1>b</1></1> ipsum';
@@ -113,12 +113,12 @@ describe('trans nodeToString', () => {
     it('should omit inner children if set', () => {
       const fragment = (
         <>
-          {'lorem ' /* eslint-disable-line react/jsx-curly-brace-presence */}
+          {'lorem '}
           <ul i18nIsDynamicList>
             <li>a</li>
             <li>b</li>
           </ul>
-          {' ipsum' /* eslint-disable-line react/jsx-curly-brace-presence */}
+          {' ipsum'}
         </>
       );
       const expected = 'lorem <1></1> ipsum';

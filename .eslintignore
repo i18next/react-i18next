@@ -5,3 +5,4 @@ example/**/*
 **/react-i18next.min.js
 **/*.d.ts
 **/*.d.mts
+test/typescript/**/*

@@ -281,7 +281,7 @@ describe('trans using children and components (object) - should still allow for 
         defaults="Click <1>here</1> to continue"
         components={{ unused: <span /> }}
       >
-        pre <a href="#">link</a> post
+        pre <a href="#link">link</a> post
       </Trans>
     );
   }
@@ -291,7 +291,7 @@ describe('trans using children and components (object) - should still allow for 
       <div>
         Click 
         <a
-          href="#"
+          href="#link"
         >
           here
         </a>

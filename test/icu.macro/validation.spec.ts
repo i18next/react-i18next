@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import * as BabelTypes from '@babel/types';
 import * as Babel from '@babel/core';
 import { parse } from '@babel/parser';
 import traverse from '@babel/traverse';

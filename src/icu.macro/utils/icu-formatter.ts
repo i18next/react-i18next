@@ -98,7 +98,7 @@ function processNodes(
       const filtered = filterJSXChildren(node.children);
       const innerText = processNodes(filtered, ctx).text;
       result += `<${ctx.componentIndex}>${innerText}</${ctx.componentIndex}>`;
-      ctx.componentIndex++;
+      ctx.componentIndex += 1;
       continue;
     }
 
@@ -187,7 +187,7 @@ function processTemplateExpression(
     const filtered = filterJSXChildren(expr.children);
     const innerText = processNodes(filtered, ctx).text;
     const text = `<${ctx.componentIndex}>${innerText}</${ctx.componentIndex}>`;
-    ctx.componentIndex++;
+    ctx.componentIndex += 1;
     const variables = extractVariableNamesFromJSX(expr, ctx.babel);
     return { text, variables };
   }

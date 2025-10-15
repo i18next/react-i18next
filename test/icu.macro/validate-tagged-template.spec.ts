@@ -10,7 +10,10 @@ describe('validateTaggedTemplateType', () => {
     BabelTypes.taggedTemplateExpression(
       BabelTypes.identifier(tagName),
       BabelTypes.templateLiteral(
-        [BabelTypes.templateElement({ raw: '', cooked: '' }, false)],
+        [
+          BabelTypes.templateElement({ raw: '', cooked: '' }, false),
+          BabelTypes.templateElement({ raw: '', cooked: '' }, true),
+        ],
         [BabelTypes.identifier('x')],
       ),
     );

@@ -14,12 +14,12 @@ describe('trans simple', () => {
     assert.doesNotThrow(() =>
       render(
         <Trans
-          i18nKey={($) => $['testString']}
+          i18nKey={($) => $.testString}
           values={{ buttonText: 'button' }}
           components={{
             el1: <a href="https://www.google.com/">Link</a>,
             el2: (
-              <button variant="link" onClick={() => console.log('clicked')}>
+              <button type="button" onClick={() => console.log('clicked')}>
                 Button
               </button>
             ),
