@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import * as BabelTypes from '@babel/types';
-import { NodePath } from '@babel/traverse';
 import { extractExistingValues } from '../../src/icu.macro/utils/extract-existing-values';
 
 describe('extractExistingValues', () => {

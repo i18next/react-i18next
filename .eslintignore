@@ -3,3 +3,5 @@
 example/**/*
 **/react-i18next.js
 **/react-i18next.min.js
+**/*.d.ts
+**/*.d.mts

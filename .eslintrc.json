@@ -116,6 +116,7 @@
   "overrides": [
     {
       "files": ["**/*.ts", "**/*.tsx"],
+      "excludedFiles": ["**/*.d.ts", "**/*.d.mts"],
       "parser": "@typescript-eslint/parser",
       "parserOptions": {
         "project": "./tsconfig.json"
@@ -129,11 +130,17 @@
             "argsIgnorePattern": "res|next|^err|^_"
           }
         ],
-        "no-unused-vars": "off"
+        "no-unused-vars": "off",
+        "import/no-extraneous-dependencies": [
+          "error",
+          {
+            "devDependencies": ["src/icu.macro.ts", "src/icu.macro/**/*.ts", "test/**/*.ts"]
+          }
+        ]
       }
     },
     {
-      "files": ["test/*"],
+      "files": ["test/**/*.ts", "test/**/*.tsx", "test/**/*.js", "test/**/*.jsx"],
       "extends": ["plugin:testing-library/react", "plugin:jest-dom/recommended"],
       "globals": {
         "globalThis": false
@@ -145,7 +152,8 @@
             "allowContainerFirstChild": true
           }
         ],
-        "testing-library/no-manual-cleanup": "off"
+        "testing-library/no-manual-cleanup": "off",
+        "import/no-extraneous-dependencies": "off"
       }
     }
   ]
