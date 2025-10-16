@@ -10,7 +10,7 @@ export default defineConfig({
 
     coverage: {
       reporter: ['text', 'html', 'json', 'lcov'],
-      include: ['**/src/*.{js,jsx}', '*.macro.js'],
+      include: ['**/src/**/*.{js,jsx}', '*.macro.js'],
       exclude: [
         '**/src/index.js',
         '**/src/shallowEqual.js',
