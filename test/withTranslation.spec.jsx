@@ -48,4 +48,13 @@ describe('withTranslation', () => {
     render(<HocElement ref={hocRef} />);
     expect(hocRef.current).not.toBeNull();
   });
+
+  it('should pass forwardedRef when ref is provided without withRef option', () => {
+    const HocElement = withTranslation()(TestComponent);
+    const forwardedRef = React.createRef();
+    const { container } = render(<HocElement ref={forwardedRef} />);
+
+    // Should still render correctly
+    expect(container.firstChild).toBeTruthy();
+  });
 });

@@ -158,6 +158,7 @@ function processExpressionContainer(
     return formatted;
   }
 
+  // Unknown expression type - return empty string for forward compatibility
   return '';
 }
 
@@ -212,7 +213,8 @@ function processTemplateExpression(
     return { text: formatted, variables: vars };
   }
 
-  return { text: '', variables: [] };
+  // This should never be reached due to validation above
+  throw new Error('Unreachable code in processTemplateExpression');
 }
 
 /**

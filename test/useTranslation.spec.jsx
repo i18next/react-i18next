@@ -229,4 +229,23 @@ describe('useTranslation', () => {
       expect(t3('myKey')).toBe('deuxième essai');
     });
   });
+
+  describe('dynamic namespace changes', () => {
+    it('should update t function when namespace changes after mount', () => {
+      const { result, rerender } = renderHook(
+        ({ ns }) => useTranslation(ns, { i18n: i18nInstance }),
+        { initialProps: { ns: 'translation' } },
+      );
+
+      const { t: originalT } = result.current;
+      expect(originalT('key1')).toBe('test');
+
+      // Change namespace
+      rerender({ ns: 'other' });
+
+      const { t: updatedT } = result.current;
+      // T function should be updated for the new namespace
+      expect(updatedT).not.toBe(originalT);
+    });
+  });
 });

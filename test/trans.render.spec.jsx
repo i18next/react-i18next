@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach, vi } from 'vitest';
 import React from 'react';
 import { render, cleanup } from '@testing-library/react';
 import i18n from './i18n';
@@ -359,7 +359,7 @@ describe('trans complex - count only in props', () => {
     // prettier-ignore
     return (
       <Trans i18nKey="transTest2" count={count}>
-        Hello <strong>{{ name }}</strong>, you have {{n: count}} message. Open <Link to="/msgs">here</Link>.
+        Hello <strong>{{ name }}</strong>, you have {{ n: count }} message. Open <Link to="/msgs">here</Link>.
       </Trans>
     );
   }
@@ -1115,5 +1115,68 @@ describe('trans with nesting $t() and interpolation', () => {
         should work This is key2 value
       </div>
     `);
+  });
+});
+
+describe('trans with empty children and HTML nodes', () => {
+  it('should render basic HTML nodes when transSupportBasicHtmlNodes is enabled', () => {
+    const customI18n = i18n.cloneInstance();
+    customI18n.options.react = {
+      ...customI18n.options.react,
+      transSupportBasicHtmlNodes: true,
+      transKeepBasicHtmlNodesFor: ['br', 'strong', 'i'],
+    };
+
+    customI18n.addResourceBundle('en', 'translation', {
+      htmlTest: 'Line 1<br/>Line 2<strong>bold</strong>',
+    });
+
+    const { container } = render(<Trans i18nKey="htmlTest" />);
+
+    expect(container.querySelector('br')).toBeTruthy();
+    expect(container.querySelector('strong')).toBeTruthy();
+  });
+
+  it('should render nested HTML tags correctly', () => {
+    const customI18n = i18n.cloneInstance();
+    customI18n.options.react = {
+      ...customI18n.options.react,
+      transSupportBasicHtmlNodes: true,
+      transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'b'],
+    };
+
+    customI18n.addResourceBundle('en', 'translation', {
+      nestedHtml: 'Text with<br/><strong>nested <i>tags</i></strong>',
+    });
+
+    const { container } = render(<Trans i18nKey="nestedHtml" />);
+
+    expect(container.querySelector('br')).toBeTruthy();
+    expect(container.querySelector('strong')).toBeTruthy();
+    expect(container.querySelector('i')).toBeTruthy();
+  });
+
+  it('should render without wrapper when parent is null despite defaultTransParent setting', () => {
+    const customI18n = i18n.cloneInstance();
+    customI18n.options.react = {
+      ...customI18n.options.react,
+      defaultTransParent: 'span',
+    };
+
+    customI18n.addResourceBundle('en', 'translation', {
+      nullParentTest: 'Content without parent',
+    });
+
+    const { container } = render(
+      <Trans i18nKey="nullParentTest" parent={null}>
+        Test
+      </Trans>,
+    );
+
+    // When parent is null, content should be rendered without a parent wrapper
+    // The container will have the content directly
+    expect(container.textContent).toBe('Content without parent');
+    // Should not be wrapped in a span (the default parent)
+    expect(container.querySelector('span')).toBeNull();
   });
 });
