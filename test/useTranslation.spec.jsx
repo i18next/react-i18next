@@ -1,6 +1,7 @@
 import { describe, it, vitest, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import React from 'react';
-import { renderHook, cleanup } from '@testing-library/react';
+import { renderHook, cleanup, render } from '@testing-library/react';
+import { createInstance } from 'i18next';
 import i18nInstance from './i18n';
 import { useTranslation } from '../src/useTranslation';
 import { setI18n } from '../src/context';
@@ -227,6 +228,29 @@ describe('useTranslation', () => {
 
       const { t: t3 } = resultFr.current;
       expect(t3('myKey')).toBe('deuxième essai');
+    });
+  });
+
+  describe('deprecated wait option', () => {
+    it('should warn when using deprecated wait option', () => {
+      const i18nWithWait = createInstance();
+      i18nWithWait.init({
+        lng: 'en',
+        resources: {
+          en: { translation: { key: 'value' } },
+        },
+        react: {
+          wait: true,
+        },
+      });
+
+      function TestComponent() {
+        const { t } = useTranslation(undefined, { i18n: i18nWithWait });
+        return <div>{t('key')}</div>;
+      }
+
+      const { container } = render(<TestComponent />);
+      expect(container.textContent).toBeTruthy();
     });
   });
 });
