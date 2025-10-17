@@ -1,3 +1,7 @@
+### 16.1.0
+
+- Introduce `IcuTrans` component [1869](https://github.com/i18next/react-i18next/issues/1869)
+
 ### 16.0.1
 
 - fix: Using <Trans> component with named tags throws error when Selector API is enabled [1867](https://github.com/i18next/react-i18next/issues/1867) with [1868](https://github.com/i18next/react-i18next/pull/1868)
