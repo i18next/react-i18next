@@ -18,7 +18,7 @@ function ICUMacro({ references, state, babel }) {
     time = [],
   } = references;
 
-  // assert we have the react-i18next Trans component imported
+  // assert we have the react-i18next IcuTrans component imported
   addNeededImports(state, babel, references);
 
   // transform Plural and SelectOrdinal
@@ -63,7 +63,6 @@ function ICUMacro({ references, state, babel }) {
           children: referencePath.parentPath.parentPath.get('children'),
         },
         babel,
-        state,
       );
     } else {
       // throw a helpful error message or something :)
@@ -82,16 +81,25 @@ function ICUMacro({ references, state, babel }) {
     node.forEach((item) => {
       let f = item.parentPath;
       while (f) {
-        if (babel.types.isJSXElement(f)) {
-          if (f.node.openingElement.name.name === 'Trans') {
+        if (babel.types.isJSXElement(f.node)) {
+          const { openingElement } = f.node;
+          const elementName = openingElement.name;
+          const isMemberExpression = babel.types.isJSXMemberExpression(elementName);
+
+          if (!isMemberExpression && elementName.name === 'IcuTrans') {
             // this is a valid use of number/date/time/etc.
+            // Only check IcuTrans since Trans transformation (lines 57-71) happens before this validation
             return;
           }
         }
         f = f.parentPath;
       }
+      const { loc } = item.node;
+      if (!loc) {
+        throw new Error(`"${name}\`\`" can only be used inside <Trans> in "unknown file"`);
+      }
       throw new Error(
-        `"${name}\`\`" can only be used inside <Trans> in "${item.node.loc.filename}" on line ${item.node.loc.start.line}`,
+        `"${name}\`\`" can only be used inside <Trans> in "${loc.filename}" on line ${loc.start.line}`,
       );
     });
   });
@@ -124,7 +132,7 @@ function pluralAsJSX(parentPath, { attributes }, babel) {
           exprName = 'count';
         }
         if (exprName === 'count') {
-          // if the prop expression name is also "count", copy it instead: <Plural count={count} --> <Trans count={count}
+          // if the prop expression name is also "count", copy it instead: <Plural count={count} --> <IcuTrans count={count}
           mem.attributesToCopy.push(attr.node);
         } else {
           mem.values.unshift(toObjectProperty(exprName));
@@ -155,7 +163,7 @@ function pluralAsJSX(parentPath, { attributes }, babel) {
     { attributesToCopy: [], values: existingValues, components: [], defaults: '' },
   );
 
-  // replace the node with the new Trans
+  // replace the node with the new IcuTrans
   parentPath.replaceWith(buildTransElement(extracted, extracted.attributesToCopy, t, true));
 }
 
@@ -207,23 +215,24 @@ function selectAsJSX(parentPath, { attributes }, babel) {
     { attributesToCopy: [], values: existingValues, components: [], defaults: '' },
   );
 
-  // replace the node with the new Trans
+  // replace the node with the new IcuTrans
   parentPath.replaceWith(buildTransElement(extracted, extracted.attributesToCopy, t, true));
 }
 
-function transAsJSX(parentPath, { attributes, children }, babel, { filename }) {
+function transAsJSX(parentPath, { attributes, children }, babel) {
   const defaultsAttr = findAttribute('defaults', attributes);
+  const contentAttr = findAttribute('content', attributes);
   const componentsAttr = findAttribute('components', attributes);
-  // if there is "defaults" attribute and no "components" attribute, parse defaults and extract from the parsed defaults instead of children
-  // if a "components" attribute has been provided, we assume they have already constructed a valid "defaults" and it does not need to be parsed
-  const parseDefaults = defaultsAttr && !componentsAttr;
+  // if there is "defaults" attribute and no "content"/"components" attribute, parse defaults and extract from the parsed defaults instead of children
+  // if a "content" or "components" attribute has been provided, we assume they have already constructed a valid "defaults" and it does not need to be parsed
+  const parseDefaults = defaultsAttr && !contentAttr && !componentsAttr;
 
   let extracted;
   if (parseDefaults) {
     const defaultsExpression = defaultsAttr.node.value.value;
     const parsed = babel.parse(`<>${defaultsExpression}</>`, {
       presets: ['@babel/react'],
-      filename,
+      filename: babel.state?.filename || 'unknown',
     }).program.body[0].expression.children;
 
     extracted = processTrans(parsed, babel);
@@ -237,7 +246,7 @@ function transAsJSX(parentPath, { attributes, children }, babel, { filename }) {
     clonedAttributes = clonedAttributes.filter((node) => node.name.name !== 'defaults');
   }
 
-  // replace the node with the new Trans
+  // replace the node with the new IcuTrans
   const replacePath = children.length ? children[0].parentPath : parentPath;
   replacePath.replaceWith(
     buildTransElement(extracted, clonedAttributes, babel.types, false, !!children.length),
@@ -251,50 +260,153 @@ function buildTransElement(
   closeDefaults = false,
   wasElementWithChildren = false,
 ) {
-  const nodeName = t.jSXIdentifier('Trans');
+  const nodeName = t.jSXIdentifier('IcuTrans');
 
   // plural, select open { but do not close it while reduce
   if (closeDefaults) extracted.defaults += '}';
 
-  // convert arrays into needed expressions
-  extracted.components = t.arrayExpression(extracted.components);
-  extracted.values = t.objectExpression(extracted.values);
+  // convert JSX elements to declaration objects: { type: Component, props: {...} }
+  const contentDeclarations = extracted.components.map((component) =>
+    jsxElementToDeclaration(component, t),
+  );
 
-  // add generated Trans attributes
-  if (!attributeExistsAlready('defaults', finalAttributes))
-    if (extracted.defaults.includes(`"`)) {
-      // wrap defaults that contain double quotes in brackets
+  const content = t.arrayExpression(contentDeclarations);
+  const values = t.objectExpression(extracted.values);
+
+  // add generated IcuTrans attributes
+  if (!attributeExistsAlready('defaultTranslation', finalAttributes)) {
+    if (extracted.defaults.includes('"')) {
+      // wrap defaultTranslation that contains double quotes in expression container
       finalAttributes.push(
         t.jSXAttribute(
-          t.jSXIdentifier('defaults'),
-          t.jSXExpressionContainer(t.StringLiteral(extracted.defaults)),
+          t.jSXIdentifier('defaultTranslation'),
+          t.jSXExpressionContainer(t.stringLiteral(extracted.defaults)),
         ),
       );
     } else {
       finalAttributes.push(
-        t.jSXAttribute(t.jSXIdentifier('defaults'), t.StringLiteral(extracted.defaults)),
+        t.jSXAttribute(t.jSXIdentifier('defaultTranslation'), t.stringLiteral(extracted.defaults)),
       );
     }
+  }
 
-  if (!attributeExistsAlready('components', finalAttributes))
+  if (!attributeExistsAlready('content', finalAttributes))
     finalAttributes.push(
-      t.jSXAttribute(t.jSXIdentifier('components'), t.jSXExpressionContainer(extracted.components)),
+      t.jSXAttribute(t.jSXIdentifier('content'), t.jSXExpressionContainer(content)),
     );
+
   if (!attributeExistsAlready('values', finalAttributes))
     finalAttributes.push(
-      t.jSXAttribute(t.jSXIdentifier('values'), t.jSXExpressionContainer(extracted.values)),
+      t.jSXAttribute(t.jSXIdentifier('values'), t.jSXExpressionContainer(values)),
     );
 
-  // create selfclosing Trans component
+  // create selfclosing IcuTrans component
   const openElement = t.jSXOpeningElement(nodeName, finalAttributes, true);
   if (!wasElementWithChildren) return openElement;
 
   return t.jSXElement(openElement, null, [], true);
 }
 
+/**
+ * Convert a JSX element to a declaration object: { type: Component, props: {...} }
+ */
+function jsxElementToDeclaration(jsxElement, t) {
+  // Handle case where jsxElement is not actually a JSXElement
+  if (!jsxElement || !jsxElement.openingElement) {
+    console.error('Invalid JSXElement passed to jsxElementToDeclaration:', jsxElement);
+    return t.objectExpression([t.objectProperty(t.identifier('type'), t.stringLiteral('div'))]);
+  }
+
+  const elementName = jsxElement.openingElement.name;
+
+  // Get the type - either a string for HTML elements or identifier for components
+  let typeValue;
+
+  if (t.isJSXIdentifier(elementName)) {
+    // For HTML elements like 'div', 'strong', use string literal
+    if (elementName.name.toLowerCase() === elementName.name) {
+      typeValue = t.stringLiteral(elementName.name);
+    } else {
+      // For React components, use identifier
+      typeValue = t.identifier(elementName.name);
+    }
+  } else if (t.isJSXMemberExpression(elementName)) {
+    // For member expressions like Icon.Svg
+    const objectName = t.isJSXIdentifier(elementName.object) ? elementName.object.name : 'unknown';
+    const propertyName = elementName.property.name;
+
+    typeValue = t.memberExpression(t.identifier(objectName), t.identifier(propertyName));
+  } else {
+    // Fallback
+    typeValue = t.stringLiteral('div');
+  }
+
+  const properties = [t.objectProperty(t.identifier('type'), typeValue)];
+
+  // Convert JSX attributes to props object
+  const propsProperties = [];
+
+  jsxElement.openingElement.attributes.forEach((attr) => {
+    if (t.isJSXAttribute(attr)) {
+      const propName = t.isJSXIdentifier(attr.name) ? attr.name.name : String(attr.name);
+
+      let propValue;
+
+      if (attr.value === null) {
+        // Boolean prop like <Component disabled />
+        propValue = t.booleanLiteral(true);
+      } else if (t.isStringLiteral(attr.value)) {
+        propValue = attr.value;
+      } else if (t.isJSXExpressionContainer(attr.value)) {
+        propValue = attr.value.expression;
+      } else {
+        // fallback
+        propValue = t.nullLiteral();
+      }
+
+      propsProperties.push(t.objectProperty(t.identifier(propName), propValue));
+    }
+  });
+
+  // Handle nested children if any
+  if (jsxElement.children && jsxElement.children.length > 0) {
+    const childDeclarations = jsxElement.children
+      .filter((child) =>
+        // Only include JSXElements in the declaration tree
+        // JSXText content is already captured in the defaults string
+        t.isJSXElement(child),
+      )
+      .map((child) => jsxElementToDeclaration(child, t));
+
+    if (childDeclarations.length > 0) {
+      propsProperties.push(
+        t.objectProperty(t.identifier('children'), t.arrayExpression(childDeclarations)),
+      );
+    }
+  }
+
+  if (propsProperties.length > 0) {
+    properties.push(t.objectProperty(t.identifier('props'), t.objectExpression(propsProperties)));
+  }
+
+  return t.objectExpression(properties);
+}
+
 function cloneExistingAttributes(attributes) {
   return attributes.reduce((mem, attr) => {
-    mem.push(attr.node);
+    const node = attr.node ? attr.node : attr;
+
+    // Skip 'defaults' attribute as we're replacing it with 'defaultTranslation'
+    if (node.type === 'JSXAttribute' && node.name && node.name.name === 'defaults') {
+      return mem;
+    }
+
+    // Skip 'components' attribute as we're replacing it with 'content'
+    if (node.type === 'JSXAttribute' && node.name && node.name.name === 'components') {
+      return mem;
+    }
+
+    mem.push(node);
     return mem;
   }, []);
 }
@@ -409,7 +521,7 @@ const extractTaggedTemplateValues = (ele, babel, toObjectProperty) => {
 };
 
 /**
- * Extract the names of interpolated value as object properties to pass to Trans
+ * Extract the names of interpolated value as object properties to pass to IcuTrans
  */
 function getValues(children, babel) {
   const t = babel.types;
@@ -463,7 +575,7 @@ const processJSXElement = (jsxElement, mem, t) => {
 };
 
 /**
- * Extract the React components to pass to Trans as components
+ * Extract the React components to pass to IcuTrans as content
  */
 function getComponents(children, babel) {
   const t = babel.types;
@@ -497,7 +609,7 @@ function getComponents(children, babel) {
 }
 
 const icuInterpolators = ['date', 'time', 'number', 'plural', 'select', 'selectOrdinal'];
-const importsToAdd = ['Trans'];
+const importsToAdd = ['IcuTrans'];
 
 /**
  * helper split out of addNeededImports to make codeclimate happy
@@ -506,7 +618,7 @@ const importsToAdd = ['Trans'];
  * creating a new one if it doesn't exist
  */
 function addImports(state, existingImport, allImportsToAdd, t) {
-  // append imports to existing or add a new react-i18next import for the Trans and icu tagged template literals
+  // append imports to existing or add a new react-i18next import for the IcuTrans and icu tagged template literals
   if (existingImport) {
     allImportsToAdd.forEach((name) => {
       if (
@@ -528,7 +640,7 @@ function addImports(state, existingImport, allImportsToAdd, t) {
 }
 
 /**
- * Add `import { Trans, number, date, <etc.> } from "react-i18next"` as needed
+ * Add `import { IcuTrans, number, date, <etc.> } from "react-i18next"` as needed
  */
 function addNeededImports(state, babel, references) {
   const t = babel.types;
@@ -546,7 +658,7 @@ function addNeededImports(state, babel, references) {
     return references[importName].length;
   });
 
-  // combine Trans + any tagged template literals
+  // combine IcuTrans + any tagged template literals
   const allImportsToAdd = importsToAdd.concat(usedRefs);
 
   addImports(state, existingImport, allImportsToAdd, t);
@@ -578,8 +690,9 @@ const extractNestedTemplatesAndComponents = (
     stringOutput.push(subText);
   } else if (node.type === 'TaggedTemplateExpression') {
     // a nested date``/number``/plural`` etc., extract whatever is inside of it
+    const tagName = babel.types.isIdentifier(node.tag) && node.tag.name ? node.tag.name : 'unknown';
     const [variableNames, childText, newIndex] = getTextAndInterpolatedVariables(
-      node.tag.name,
+      tagName,
       node,
       componentFoundIndex,
       babel,
@@ -589,10 +702,12 @@ const extractNestedTemplatesAndComponents = (
     stringOutput.push(childText);
   } else if (node.type === 'Identifier') {
     // turn date`${thing}` into `thing, date`
-    stringOutput.push(`${node.name}, ${type}`);
+    const nodeName = node.name || 'unknown';
+    stringOutput.push(`${nodeName}, ${type}`);
   } else if (node.type === 'TemplateElement') {
     // convert all whitespace into a single space for the text in the tagged template literal
-    stringOutput.push(node.value.cooked.replace(/\s+/g, ' '));
+    const cookedValue = node.value.cooked || '';
+    stringOutput.push(cookedValue.replace(/\s+/g, ' '));
   } else {
     // unknown node type, ignore
   }
@@ -625,11 +740,10 @@ const filterNodes = (node) => {
 const errorOnInvalidQuasiNodes = (primaryNode) => {
   const noInterpolationError = !primaryNode.quasi.expressions.length;
   const wrongOrderError = primaryNode.quasi.quasis[0].value.raw.length;
-  const message = `${primaryNode.tag.name} argument must be interpolated ${
+  const tagName = primaryNode.tag.name || 'unknown';
+  const message = `${tagName} argument must be interpolated ${
     noInterpolationError ? 'in' : 'at the beginning of'
-  } "${primaryNode.tag.name}\`\`" in "${primaryNode.loc.filename}" on line ${
-    primaryNode.loc.start.line
-  }`;
+  } "${tagName}\`\`" in "${primaryNode.loc?.filename}" on line ${primaryNode.loc?.start.line}`;
   if (noInterpolationError || wrongOrderError) {
     throw new Error(message);
   }
@@ -640,7 +754,12 @@ const extractNodeVariableNames = (varNode, babel) => {
   if (varNode.type === 'JSXElement') {
     // extract inner interpolated variables and add to the list
     interpolatedVariableNames.push(
-      ...getValues(varNode.children, babel).map((value) => value.value.name),
+      ...getValues(varNode.children, babel).map((value) => {
+        if (babel.types.isIdentifier(value.value)) {
+          return value.value.name;
+        }
+        return String(value.value);
+      }),
     );
   } else if (varNode.type === 'Identifier') {
     // the name of the interpolated variable
@@ -654,7 +773,7 @@ const extractVariableNamesFromQuasiNodes = (primaryNode, babel) => {
   // this will contain all the nodes to convert to the ICU messageformat text
   // at first they are unsorted, but will be ordered correctly at the end of the function
   const text = [];
-  // the variable names. These are converted to object references as required for the Trans values
+  // the variable names. These are converted to object references as required for the IcuTrans values
   // in getValues() (toObjectProperty helper function)
   const interpolatedVariableNames = [];
   primaryNode.quasi.expressions.forEach((varNode) => {
@@ -663,8 +782,9 @@ const extractVariableNamesFromQuasiNodes = (primaryNode, babel) => {
       !babel.types.isTaggedTemplateExpression(varNode) &&
       !babel.types.isJSXElement(varNode)
     ) {
+      const tagName = primaryNode.tag.name || 'unknown';
       throw new Error(
-        `Must pass a variable, not an expression to "${primaryNode.tag.name}\`\`" in "${primaryNode.loc.filename}" on line ${primaryNode.loc.start.line}`,
+        `Must pass a variable, not an expression to "${tagName}\`\`" in "${primaryNode.loc?.filename}" on line ${primaryNode.loc?.start.line}`,
       );
     }
     text.push(varNode);
@@ -682,7 +802,7 @@ const extractVariableNamesFromQuasiNodes = (primaryNode, babel) => {
 const throwOnInvalidType = (type, primaryNode) => {
   if (!icuInterpolators.includes(type)) {
     throw new Error(
-      `Unsupported tagged template literal "${type}", must be one of date, time, number, plural, select, selectOrdinal in "${primaryNode.loc.filename}" on line ${primaryNode.loc.start.line}`,
+      `Unsupported tagged template literal "${type}", must be one of date, time, number, plural, select, selectOrdinal in "${primaryNode.loc?.filename}" on line ${primaryNode.loc?.start.line}`,
     );
   }
 };
@@ -710,7 +830,9 @@ function getTextAndInterpolatedVariables(type, primaryNode, index, babel) {
     .filter(filterNodes)
     // sort by the order they appear in the source code
     .sort((a, b) => {
-      if (a.start > b.start) return 1;
+      const aStart = a.start != null ? a.start : null;
+      const bStart = b.start != null ? b.start : null;
+      if (aStart != null && bStart != null && aStart > bStart) return 1;
       return -1;
     })
     .reduce(extractNestedTemplatesAndComponents, {

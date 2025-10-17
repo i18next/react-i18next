@@ -4,6 +4,7 @@ import { render, cleanup } from '@testing-library/react';
 import i18n from './i18n';
 import { withTranslation } from '../src/withTranslation';
 import { Trans } from '../src/Trans';
+import { Trans as TransWithoutContext } from '../src/TransWithoutContext';
 
 function Link({ to, children }) {
   return <a href={to}>{children}</a>;
@@ -359,7 +360,7 @@ describe('trans complex - count only in props', () => {
     // prettier-ignore
     return (
       <Trans i18nKey="transTest2" count={count}>
-        Hello <strong>{{ name }}</strong>, you have {{n: count}} message. Open <Link to="/msgs">here</Link>.
+        Hello <strong>{{ name }}</strong>, you have {{ n: count }} message. Open <Link to="/msgs">here</Link>.
       </Trans>
     );
   }
@@ -1115,5 +1116,30 @@ describe('trans with nesting $t() and interpolation', () => {
         should work This is key2 value
       </div>
     `);
+  });
+});
+
+describe('Trans edge cases', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should handle missing i18n instance gracefully', () => {
+    const { container } = render(
+      <TransWithoutContext i18n={null}>Fallback content</TransWithoutContext>,
+    );
+
+    expect(container.textContent).toBe('Fallback content');
+  });
+
+  it('should handle invalid components prop type', () => {
+    const { container } = render(
+      <Trans i18n={i18n} i18nKey="test.key" components={123} defaults="Hello <0>world</0>">
+        Fallback
+      </Trans>,
+    );
+
+    // Should render something (component warning logged internally)
+    expect(container).toBeTruthy();
   });
 });

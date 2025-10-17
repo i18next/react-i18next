@@ -51,9 +51,12 @@
     },
     "./icu.macro": {
       "types": {
-        "require": "./icu.macro..d.ts",
-        "import": "./icu.macro..d.mts"
+        "require": "./icu.macro.d.ts",
+        "import": "./icu.macro.d.mts"
       },
+      "module": "./icu.macro.js",
+      "import": "./icu.macro.js",
+      "require": "./icu.macro.js",
       "default": "./icu.macro.js"
     }
   },

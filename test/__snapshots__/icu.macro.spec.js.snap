@@ -10,11 +10,11 @@ const x = <Trans>Welcome, { name }!</Trans>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from 'react-i18next';
+import { IcuTrans } from 'react-i18next';
 const x = (
-  <Trans
-    defaults="Welcome, {name}!"
-    components={[]}
+  <IcuTrans
+    defaultTranslation="Welcome, {name}!"
+    content={[]}
     values={{
       name,
     }}
@@ -33,11 +33,15 @@ const x = <Trans>Welcome, <strong>{ name }</strong>!</Trans>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from 'react-i18next';
+import { IcuTrans } from 'react-i18next';
 const x = (
-  <Trans
-    defaults="Welcome, <0>{name}</0>!"
-    components={[<strong>{name}</strong>]}
+  <IcuTrans
+    defaultTranslation="Welcome, <0>{name}</0>!"
+    content={[
+      {
+        type: 'strong',
+      },
+    ]}
     values={{
       name,
     }}
@@ -57,11 +61,11 @@ const x = <Trans>Trainers: { trainersCount, number }</Trans>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { useTranslation, Trans } from 'react-i18next';
+import { useTranslation, IcuTrans } from 'react-i18next';
 const x = (
-  <Trans
-    defaults="Trainers: {trainersCount, number}"
-    components={[]}
+  <IcuTrans
+    defaultTranslation="Trainers: {trainersCount, number}"
+    content={[]}
     values={{
       trainersCount,
     }}
@@ -80,11 +84,15 @@ const x = <Trans>Trainers: <strong>{ trainersCount, number }</strong>!</Trans>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from 'react-i18next';
+import { IcuTrans } from 'react-i18next';
 const x = (
-  <Trans
-    defaults="Trainers: <0>{trainersCount, number}</0>!"
-    components={[<strong>{trainersCount}</strong>]}
+  <IcuTrans
+    defaultTranslation="Trainers: <0>{trainersCount, number}</0>!"
+    content={[
+      {
+        type: 'strong',
+      },
+    ]}
     values={{
       trainersCount,
     }}
@@ -103,11 +111,11 @@ const x = <Trans>Caught on { catchDate, date, short }</Trans>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from 'react-i18next';
+import { IcuTrans } from 'react-i18next';
 const x = (
-  <Trans
-    defaults="Caught on {catchDate, date, short}"
-    components={[]}
+  <IcuTrans
+    defaultTranslation="Caught on {catchDate, date, short}"
+    content={[]}
     values={{
       catchDate,
     }}
@@ -126,11 +134,15 @@ const x = <Trans>Caught on <strong>{ catchDate, date, short }</strong>!</Trans>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from 'react-i18next';
+import { IcuTrans } from 'react-i18next';
 const x = (
-  <Trans
-    defaults="Caught on <0>{catchDate, date, short}</0>!"
-    components={[<strong>{catchDate}</strong>]}
+  <IcuTrans
+    defaultTranslation="Caught on <0>{catchDate, date, short}</0>!"
+    content={[
+      {
+        type: 'strong',
+      },
+    ]}
     values={{
       catchDate,
     }}
@@ -149,11 +161,11 @@ const x = <Trans defaults="Trainers: { trainersCount, number }" />
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from 'react-i18next';
+import { IcuTrans } from 'react-i18next';
 const x = (
-  <Trans
-    defaults="Trainers: {trainersCount, number}"
-    components={[]}
+  <IcuTrans
+    defaultTranslation="Trainers: {trainersCount, number}"
+    content={[]}
     values={{
       trainersCount,
     }}
@@ -172,12 +184,16 @@ const x = <Trans i18nKey="trainersWithDefaults" defaults="Trainers: <strong>{ tr
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from 'react-i18next';
+import { IcuTrans } from 'react-i18next';
 const x = (
-  <Trans
+  <IcuTrans
     i18nKey="trainersWithDefaults"
-    defaults="Trainers: <0>{trainersCount, number}</0>!"
-    components={[<strong>{trainersCount}</strong>]}
+    defaultTranslation="Trainers: <0>{trainersCount, number}</0>!"
+    content={[
+      {
+        type: 'strong',
+      },
+    ]}
     values={{
       trainersCount,
     }}
@@ -196,12 +212,12 @@ const x = <Trans i18nKey="caughtWithDefaults" defaults="Caught on { catchDate, d
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from 'react-i18next';
+import { IcuTrans } from 'react-i18next';
 const x = (
-  <Trans
+  <IcuTrans
     i18nKey="caughtWithDefaults"
-    defaults="Caught on {catchDate, date, short}"
-    components={[]}
+    defaultTranslation="Caught on {catchDate, date, short}"
+    content={[]}
     values={{
       catchDate,
     }}
@@ -220,11 +236,15 @@ const x = <Trans defaults="Caught on <strong>{ catchDate, date, short }</strong>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from 'react-i18next';
+import { IcuTrans } from 'react-i18next';
 const x = (
-  <Trans
-    defaults="Caught on <0>{catchDate, date, short}</0>!"
-    components={[<strong>{catchDate}</strong>]}
+  <IcuTrans
+    defaultTranslation="Caught on <0>{catchDate, date, short}</0>!"
+    content={[
+      {
+        type: 'strong',
+      },
+    ]}
     values={{
       catchDate,
     }}
@@ -244,15 +264,22 @@ const x = <Trans defaults="Caught on <Link to='/dest'>{ catchDate, date, short }
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from 'react-i18next';
+import { IcuTrans } from 'react-i18next';
 const Link = ({ to, children }) => <a href={to}>{children}</a>;
 const x = (
-  <Trans
+  <IcuTrans
     values={{
       catchDate: Date.now(),
     }}
-    defaults="Caught on <0>{catchDate, date, short}</0>!"
-    components={[<Link to="/dest">{catchDate}</Link>]}
+    defaultTranslation="Caught on <0>{catchDate, date, short}</0>!"
+    content={[
+      {
+        type: Link,
+        props: {
+          to: '/dest',
+        },
+      },
+    ]}
   />
 );
 "
@@ -268,15 +295,15 @@ const x = <Trans i18nKey="trainersWithDefaults" values={{trainersCount}} default
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from 'react-i18next';
+import { IcuTrans } from 'react-i18next';
 const x = (
-  <Trans
+  <IcuTrans
     i18nKey="trainersWithDefaults"
     values={{
       trainersCount,
     }}
-    defaults="Trainers: <strong>{ trainersCount, number }</strong>!"
-    components={[]}
+    defaultTranslation=""
+    content={[]}
   />
 );
 "
@@ -298,12 +325,12 @@ const x = <Select
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from 'react-i18next';
+import { IcuTrans } from 'react-i18next';
 const x = (
-  <Trans
+  <IcuTrans
     i18nKey="selectExample"
-    defaults="{gender, select,  male {He avoids bugs.} female {She avoids bugs.} other {They avoid bugs.}}"
-    components={[]}
+    defaultTranslation="{gender, select,  male {He avoids bugs.} female {She avoids bugs.} other {They avoid bugs.}}"
+    content={[]}
     values={{
       gender,
     }}
@@ -327,11 +354,21 @@ const x = <Select
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from 'react-i18next';
+import { IcuTrans } from 'react-i18next';
 const x = (
-  <Trans
-    defaults="{gender, select,  male {<0>He</0> avoids bugs.} female {<1>She</1> avoids bugs.} other {<2>They</2> avoid bugs.}}"
-    components={[<strong>He</strong>, <strong>She</strong>, <strong>They</strong>]}
+  <IcuTrans
+    defaultTranslation="{gender, select,  male {<0>He</0> avoids bugs.} female {<1>She</1> avoids bugs.} other {<2>They</2> avoid bugs.}}"
+    content={[
+      {
+        type: 'strong',
+      },
+      {
+        type: 'strong',
+      },
+      {
+        type: 'strong',
+      },
+    ]}
     values={{
       gender,
     }}
@@ -355,11 +392,11 @@ const x = <Plural
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from 'react-i18next';
+import { IcuTrans } from 'react-i18next';
 const x = (
-  <Trans
-    defaults="{itemsCount1, plural,  =0 {There are no items.} one {There is # item.} other {There are # items.}}"
-    components={[]}
+  <IcuTrans
+    defaultTranslation="{itemsCount1, plural,  =0 {There are no items.} one {There is # item.} other {There are # items.}}"
+    content={[]}
     values={{
       itemsCount1,
     }}
@@ -384,12 +421,22 @@ const x = <Plural
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from 'react-i18next';
+import { IcuTrans } from 'react-i18next';
 const x = (
-  <Trans
+  <IcuTrans
     i18nKey="testKey"
-    defaults="{itemsCount3, plural,  =0 {There is <0>no</0> item.} one {There is <1>#</1> item.} other {There are <2>#</2> items.}}"
-    components={[<strong>no</strong>, <strong>#</strong>, <strong>#</strong>]}
+    defaultTranslation="{itemsCount3, plural,  =0 {There is <0>no</0> item.} one {There is <1>#</1> item.} other {There are <2>#</2> items.}}"
+    content={[
+      {
+        type: 'strong',
+      },
+      {
+        type: 'strong',
+      },
+      {
+        type: 'strong',
+      },
+    ]}
     values={{
       itemsCount3,
     }}
@@ -415,18 +462,30 @@ const x = <Plural
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from 'react-i18next';
+import { IcuTrans } from 'react-i18next';
 const x = (
-  <Trans
+  <IcuTrans
     i18nKey="testKey"
-    defaults="{itemsCount3, plural,  =0 {There is <0>no</0> item on the <1>{location}</1>.} one {There is <2>#</2> item on the <3>{location}</3>.} other {There are <4>#</4> items on the <5>{location}</5>.}}"
-    components={[
-      <strong>no</strong>,
-      <i>{location}</i>,
-      <strong>#</strong>,
-      <i>{location}</i>,
-      <strong>#</strong>,
-      <i>{location}</i>,
+    defaultTranslation="{itemsCount3, plural,  =0 {There is <0>no</0> item on the <1>{location}</1>.} one {There is <2>#</2> item on the <3>{location}</3>.} other {There are <4>#</4> items on the <5>{location}</5>.}}"
+    content={[
+      {
+        type: 'strong',
+      },
+      {
+        type: 'i',
+      },
+      {
+        type: 'strong',
+      },
+      {
+        type: 'i',
+      },
+      {
+        type: 'strong',
+      },
+      {
+        type: 'i',
+      },
     ]}
     values={{
       itemsCount3,
@@ -456,11 +515,11 @@ const x = <SelectOrdinal
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from 'react-i18next';
+import { IcuTrans } from 'react-i18next';
 const x = (
-  <Trans
-    defaults="{position, selectordinal,  zero {You are #th in line} one {You are #st in line} two {You are #nd in line} few {You are #rd in line} many {You are #th in line} other {You are #th in line} =7 {You are in the lucky #th place in line}}"
-    components={[]}
+  <IcuTrans
+    defaultTranslation="{position, selectordinal,  zero {You are #th in line} one {You are #st in line} two {You are #nd in line} few {You are #rd in line} many {You are #th in line} other {You are #th in line} =7 {You are in the lucky #th place in line}}"
+    content={[]}
     values={{
       position,
     }}
@@ -487,17 +546,27 @@ const x = <SelectOrdinal
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from 'react-i18next';
+import { IcuTrans } from 'react-i18next';
 const x = (
-  <Trans
+  <IcuTrans
     i18nKey="testKey"
-    defaults="{position, selectordinal,  one {You are <0>#st in line</0>} two {You are <1>#nd in line</1>} few {You are <2>#rd in line</2>} other {You are <3>#th in line</3>} =0 {You are <4>#th in line</4>}}"
-    components={[
-      <strong>#st in line</strong>,
-      <strong>#nd in line</strong>,
-      <strong>#rd in line</strong>,
-      <strong>#th in line</strong>,
-      <strong>#th in line</strong>,
+    defaultTranslation="{position, selectordinal,  one {You are <0>#st in line</0>} two {You are <1>#nd in line</1>} few {You are <2>#rd in line</2>} other {You are <3>#th in line</3>} =0 {You are <4>#th in line</4>}}"
+    content={[
+      {
+        type: 'strong',
+      },
+      {
+        type: 'strong',
+      },
+      {
+        type: 'strong',
+      },
+      {
+        type: 'strong',
+      },
+      {
+        type: 'strong',
+      },
     ]}
     values={{
       position,
@@ -621,7 +690,7 @@ export default function TestPage({count = 1}) {
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import React from 'react';
-import { useTranslation, Trans } from 'react-i18next';
+import { useTranslation, IcuTrans } from 'react-i18next';
 const Link = ({ to, children }) => <a href={to}>{children}</a>;
 export default function TestPage({ count = 1 }) {
   const [t] = useTranslation();
@@ -641,89 +710,203 @@ export default function TestPage({ count = 1 }) {
           completion,
         },
       )}
-      <Trans
+      <IcuTrans
         i18nKey="plural"
         count={count}
-        defaults="{count, plural,  =0 {<0>Your cart</0> is <1>empty</1>.} one {You have <2># item</2> in <3>your cart</3>.} other {You have <4># items</4> in <5>your cart</5>.}}"
-        components={[
-          <Link to="/cart">Your cart</Link>,
-          <strong>empty</strong>,
-          <strong># item</strong>,
-          <Link to="/cart">your cart</Link>,
-          <strong># items</strong>,
-          <Link to="/cart">your cart</Link>,
+        defaultTranslation="{count, plural,  =0 {<0>Your cart</0> is <1>empty</1>.} one {You have <2># item</2> in <3>your cart</3>.} other {You have <4># items</4> in <5>your cart</5>.}}"
+        content={[
+          {
+            type: Link,
+            props: {
+              to: '/cart',
+            },
+          },
+          {
+            type: 'strong',
+          },
+          {
+            type: 'strong',
+          },
+          {
+            type: Link,
+            props: {
+              to: '/cart',
+            },
+          },
+          {
+            type: 'strong',
+          },
+          {
+            type: Link,
+            props: {
+              to: '/cart',
+            },
+          },
         ]}
         values={{
           linkPath: '/item/' + count,
         }}
       />
-      <Trans
+      <IcuTrans
         i18nKey="select"
-        defaults="{gender, select,  female {These are <0>her items</0>} male {These are <1>his items</1>} other {These are <2>their items</2>}}"
-        components={[
-          <Link to="/items">her items</Link>,
-          <Link to="/items">his items</Link>,
-          <Link to="/items">their items</Link>,
+        defaultTranslation="{gender, select,  female {These are <0>her items</0>} male {These are <1>his items</1>} other {These are <2>their items</2>}}"
+        content={[
+          {
+            type: Link,
+            props: {
+              to: '/items',
+            },
+          },
+          {
+            type: Link,
+            props: {
+              to: '/items',
+            },
+          },
+          {
+            type: Link,
+            props: {
+              to: '/items',
+            },
+          },
         ]}
         values={{
           gender,
         }}
       />
-      <Trans
+      <IcuTrans
         i18nKey="ordinal"
         count={itemIndex + 1}
-        defaults="{count, selectordinal,  one {Your <0><0>#st</0> item</0>} two {Your <1><0>#nd</0> item</1>} few {Your <2><0>#rd</0> item</2>} other {Your <3><0>#th</0> item</3>}}"
-        components={[
-          <Link to={linkPath}>
-            <strong>#st</strong> item
-          </Link>,
-          <Link to={linkPath}>
-            <strong>#nd</strong> item
-          </Link>,
-          <Link to={linkPath}>
-            <strong>#rd</strong> item
-          </Link>,
-          <Link to={linkPath}>
-            <strong>#th</strong> item
-          </Link>,
+        defaultTranslation="{count, selectordinal,  one {Your <0><0>#st</0> item</0>} two {Your <1><0>#nd</0> item</1>} few {Your <2><0>#rd</0> item</2>} other {Your <3><0>#th</0> item</3>}}"
+        content={[
+          {
+            type: Link,
+            props: {
+              to: linkPath,
+              children: [
+                {
+                  type: 'strong',
+                },
+              ],
+            },
+          },
+          {
+            type: Link,
+            props: {
+              to: linkPath,
+              children: [
+                {
+                  type: 'strong',
+                },
+              ],
+            },
+          },
+          {
+            type: Link,
+            props: {
+              to: linkPath,
+              children: [
+                {
+                  type: 'strong',
+                },
+              ],
+            },
+          },
+          {
+            type: Link,
+            props: {
+              to: linkPath,
+              children: [
+                {
+                  type: 'strong',
+                },
+              ],
+            },
+          },
         ]}
         values={{
           linkPath: '/item/' + itemIndex,
         }}
       />
-      <Trans
+      <IcuTrans
         i18nKey="percent"
-        defaults="You've completed <0>{completion, number, percent} of your tasks</0>."
-        components={[<Link to="/tasks">{completion} of your tasks</Link>]}
+        defaultTranslation="You've completed <0>{completion, number, percent} of your tasks</0>."
+        content={[
+          {
+            type: Link,
+            props: {
+              to: '/tasks',
+            },
+          },
+        ]}
         values={{
           completion,
         }}
       />
-      <Trans
+      <IcuTrans
         i18nKey="date"
-        defaults="Caught on <0>{catchDate, date, short}</0>!"
-        components={[<Link to="/dest">{catchDate}</Link>]}
+        defaultTranslation="Caught on <0>{catchDate, date, short}</0>!"
+        content={[
+          {
+            type: Link,
+            props: {
+              to: '/dest',
+            },
+          },
+        ]}
         values={{
           catchDate,
         }}
       />
-      <Trans
+      <IcuTrans
         i18nKey="ordinal.prettier"
         count={count}
-        defaults="{count, selectordinal,  one {Your <0><0>#st</0> {type}</0>} two {Your <1><0>#nd</0> {type}</1>} few {Your <2><0>#rd</0> {type}</2>} other {Your <3><0>#th</0> {type}</3>}}"
-        components={[
-          <Link to={linkPath}>
-            <strong>#st</strong> {type}
-          </Link>,
-          <Link to={linkPath}>
-            <strong>#nd</strong> {type}
-          </Link>,
-          <Link to={linkPath}>
-            <strong>#rd</strong> {type}
-          </Link>,
-          <Link to={linkPath}>
-            <strong>#th</strong> {type}
-          </Link>,
+        defaultTranslation="{count, selectordinal,  one {Your <0><0>#st</0> {type}</0>} two {Your <1><0>#nd</0> {type}</1>} few {Your <2><0>#rd</0> {type}</2>} other {Your <3><0>#th</0> {type}</3>}}"
+        content={[
+          {
+            type: Link,
+            props: {
+              to: linkPath,
+              children: [
+                {
+                  type: 'strong',
+                },
+              ],
+            },
+          },
+          {
+            type: Link,
+            props: {
+              to: linkPath,
+              children: [
+                {
+                  type: 'strong',
+                },
+              ],
+            },
+          },
+          {
+            type: Link,
+            props: {
+              to: linkPath,
+              children: [
+                {
+                  type: 'strong',
+                },
+              ],
+            },
+          },
+          {
+            type: Link,
+            props: {
+              to: linkPath,
+              children: [
+                {
+                  type: 'strong',
+                },
+              ],
+            },
+          },
         ]}
         values={{
           linkPath: \`/item/\${count}\`,
@@ -731,19 +914,43 @@ export default function TestPage({ count = 1 }) {
           prop,
         }}
       />
-      <Trans
+      <IcuTrans
         i18nKey="select.expr.prettier"
-        defaults="{selectKey, select,  malePerson {<0><0>He</0></0> avoids {type}.} femalePerson {<1><0>She</0></1> avoids {type}.} other {<2><0>They</0></2> avoid {type}.}}"
-        components={[
-          <Link to={linkPath}>
-            <strong>He</strong>
-          </Link>,
-          <Link to={linkPath}>
-            <strong>She</strong>
-          </Link>,
-          <Link to={linkPath}>
-            <strong>They</strong>
-          </Link>,
+        defaultTranslation="{selectKey, select,  malePerson {<0><0>He</0></0> avoids {type}.} femalePerson {<1><0>She</0></1> avoids {type}.} other {<2><0>They</0></2> avoid {type}.}}"
+        content={[
+          {
+            type: Link,
+            props: {
+              to: linkPath,
+              children: [
+                {
+                  type: 'strong',
+                },
+              ],
+            },
+          },
+          {
+            type: Link,
+            props: {
+              to: linkPath,
+              children: [
+                {
+                  type: 'strong',
+                },
+              ],
+            },
+          },
+          {
+            type: Link,
+            props: {
+              to: linkPath,
+              children: [
+                {
+                  type: 'strong',
+                },
+              ],
+            },
+          },
         ]}
         values={{
           selectKey: \`\${gender}Person\`,
@@ -787,7 +994,7 @@ const x = (
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans, number, date, plural, select } from 'react-i18next';
+import { IcuTrans, number, date, plural, select } from 'react-i18next';
 import React from 'react';
 function Component({ children, style }) {
   return <div style={style}>{children}</div>;
@@ -797,19 +1004,29 @@ const numbers = 34;
 const selectInput = 'thing';
 const now = new Date();
 const x = (
-  <Trans
+  <IcuTrans
     i18nKey="key"
-    defaults="<0>exciting!</0>{count, plural, =0 { hi there <1>friend</1> } other { woweee even supports nested {numbers, number} } } and{selectInput, select, thing { another nested <2>with regular text and a date: <0>{now, date}</0></2>} }"
-    components={[
-      <strong>exciting!</strong>,
-      <strong>friend</strong>,
-      <Component
-        style={{
-          color: 'red',
-        }}
-      >
-        with regular text and a date: <pre>{date\`\${now}\`}</pre>
-      </Component>,
+    defaultTranslation="<0>exciting!</0>{count, plural, =0 { hi there <1>friend</1> } other { woweee even supports nested {numbers, number} } } and{selectInput, select, thing { another nested <2>with regular text and a date: <0>{now, date}</0></2>} }"
+    content={[
+      {
+        type: 'strong',
+      },
+      {
+        type: 'strong',
+      },
+      {
+        type: Component,
+        props: {
+          style: {
+            color: 'red',
+          },
+          children: [
+            {
+              type: 'pre',
+            },
+          ],
+        },
+      },
     ]}
     values={{
       count,
@@ -832,11 +1049,11 @@ const x = <Trans>Welcome, &quot;{ name }&quot;!</Trans>
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { Trans } from 'react-i18next';
+import { IcuTrans } from 'react-i18next';
 const x = (
-  <Trans
-    defaults={'Welcome, "{name}"!'}
-    components={[]}
+  <IcuTrans
+    defaultTranslation={'Welcome, "{name}"!'}
+    content={[]}
     values={{
       name,
     }}
