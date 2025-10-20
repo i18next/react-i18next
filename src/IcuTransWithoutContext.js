@@ -1,7 +1,7 @@
 import React from 'react';
 import { warn, warnOnce, isString } from './utils.js';
 import { getI18n } from './i18nInstance.js';
-import { renderTranslation } from './IcuTransUtils';
+import { renderTranslation } from './IcuTransUtils/index.js';
 
 /**
  * IcuTrans component for rendering ICU MessageFormat translations (without React Context)

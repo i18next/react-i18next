@@ -1,3 +1,7 @@
+### 16.1.2
+
+- missing.js extensions for Icu imports
+
 ### 16.1.1
 
 - exports for `IcuTrans` component [1873](https://github.com/i18next/react-i18next/pull/1873)

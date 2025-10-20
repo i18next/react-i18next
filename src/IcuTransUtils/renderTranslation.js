@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { TranslationParserError } from './TranslationParserError';
-import { tokenize } from './tokenizer';
-import { decodeHtmlEntities } from './htmlEntityDecoder';
+import { TranslationParserError } from './TranslationParserError.js';
+import { tokenize } from './tokenizer.js';
+import { decodeHtmlEntities } from './htmlEntityDecoder.js';
 
 /**
  * Render a React element tree from a declaration node and its children
