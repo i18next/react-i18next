@@ -8,6 +8,8 @@ import type {
   TypeOptions,
   TFunction,
   KeyPrefix,
+  ParseKeys,
+  TOptions,
 } from 'i18next';
 import * as React from 'react';
 import {
@@ -21,6 +23,111 @@ export { initReactI18next } from './initReactI18next.js';
 
 export const TransWithoutContext: typeof Trans;
 export { Trans, TransProps, TransSelectorProps, ErrorArgs, ErrorCode };
+
+/**
+ * Content declaration for IcuTrans component
+ * Describes React components as type + props blueprints that will be rendered
+ */
+export interface IcuTransContentDeclaration {
+  type: string | React.ComponentType<any>;
+  props?: {
+    children?: IcuTransContentDeclaration | IcuTransContentDeclaration[];
+    [key: string]: any;
+  };
+}
+
+/**
+ * Props for IcuTransWithoutContext component (no React context)
+ */
+export type IcuTransWithoutContextProps<
+  Key extends ParseKeys<Ns, TOpt, KPrefix> = string,
+  Ns extends Namespace = _DefaultNamespace,
+  KPrefix = undefined,
+  TContext extends string | undefined = undefined,
+  TOpt extends TOptions & { context?: TContext } = { context: TContext },
+> = {
+  /** The i18n key to look up the translation */
+  i18nKey: Key;
+  /** The default translation in ICU format with numbered tags (e.g., "<0>Click here</0>") */
+  defaultTranslation: string;
+  /** Declaration tree describing React components and their props */
+  content: IcuTransContentDeclaration[];
+  /** Optional namespace(s) for the translation */
+  ns?: Ns;
+  /** Optional values for ICU variable interpolation */
+  values?: Record<string, any>;
+  /** i18next instance. If not provided, uses global instance */
+  i18n?: i18n;
+  /** Custom translation function */
+  t?: TFunction<Ns, KPrefix>;
+};
+
+/**
+ * Props for IcuTrans component (with React context support)
+ */
+export type IcuTransProps<
+  Key extends ParseKeys<Ns, TOpt, KPrefix> = string,
+  Ns extends Namespace = _DefaultNamespace,
+  KPrefix = undefined,
+  TContext extends string | undefined = undefined,
+  TOpt extends TOptions & { context?: TContext } = { context: TContext },
+> = IcuTransWithoutContextProps<Key, Ns, KPrefix, TContext, TOpt>;
+
+/**
+ * IcuTrans component for rendering ICU MessageFormat translations
+ * This is the context-aware version that works with I18nextProvider
+ *
+ * @example
+ * ```tsx
+ * // Type-safe usage with namespace
+ * <IcuTrans<'welcome.message', 'common'>
+ *   i18nKey="welcome.message"
+ *   defaultTranslation="Welcome <0>friend</0>!"
+ *   content={[{ type: 'strong', props: {} }]}
+ * />
+ * ```
+ */
+export interface IcuTransComponent {
+  <
+    Key extends ParseKeys<Ns, TOpt, KPrefix> = string,
+    Ns extends Namespace = _DefaultNamespace,
+    KPrefix = undefined,
+    TContext extends string | undefined = undefined,
+    TOpt extends TOptions & { context?: TContext } = { context: TContext },
+  >(
+    props: IcuTransProps<Key, Ns, KPrefix, TContext, TOpt>,
+  ): React.ReactElement;
+}
+
+/**
+ * IcuTransWithoutContext component for rendering ICU MessageFormat translations
+ * This version does not use React context and requires explicit i18n instance
+ *
+ * @example
+ * ```tsx
+ * // Type-safe usage with namespace
+ * <IcuTransWithoutContext<'welcome.message', 'common'>
+ *   i18nKey="welcome.message"
+ *   defaultTranslation="Welcome <0>back</0>!"
+ *   content={[{ type: 'strong', props: {} }]}
+ *   i18n={i18nInstance}
+ * />
+ * ```
+ */
+export interface IcuTransWithoutContextComponent {
+  <
+    Key extends ParseKeys<Ns, TOpt, KPrefix> = string,
+    Ns extends Namespace = _DefaultNamespace,
+    KPrefix = undefined,
+    TContext extends string | undefined = undefined,
+    TOpt extends TOptions & { context?: TContext } = { context: TContext },
+  >(
+    props: IcuTransWithoutContextProps<Key, Ns, KPrefix, TContext, TOpt>,
+  ): React.ReactElement;
+}
+
+export const IcuTrans: IcuTransComponent;
+export const IcuTransWithoutContext: IcuTransWithoutContextComponent;
 
 export function setDefaults(options: ReactOptions): void;
 export function getDefaults(): ReactOptions;

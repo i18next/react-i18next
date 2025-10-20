@@ -2,7 +2,7 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react')) :
   typeof define === 'function' && define.amd ? define(['exports', 'react'], factory) :
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.ReactI18next = {}, global.React));
-})(this, (function (exports, react) { 'use strict';
+})(this, (function (exports, React) { 'use strict';
 
   const isString$1 = obj => typeof obj === 'string';
   const defer = () => {
@@ -2426,7 +2426,7 @@
     const children = node.props?.children ?? node.children;
     return node.props?.i18nIsDynamicList ? getAsArray(children) : children;
   };
-  const hasValidReactChildren = children => Array.isArray(children) && children.every(react.isValidElement);
+  const hasValidReactChildren = children => Array.isArray(children) && children.every(React.isValidElement);
   const getAsArray = data => Array.isArray(data) ? data : [data];
   const mergeProps = (source, target) => {
     const newTarget = {
@@ -2445,7 +2445,7 @@
         stringNode += `${child}`;
         return;
       }
-      if (react.isValidElement(child)) {
+      if (React.isValidElement(child)) {
         const {
           props,
           type
@@ -2509,7 +2509,7 @@
       const childrenArray = getAsArray(childs);
       childrenArray.forEach(child => {
         if (isString(child)) return;
-        if (hasChildren(child)) getData(getChildren(child));else if (isObject(child) && !react.isValidElement(child)) Object.assign(data, child);
+        if (hasChildren(child)) getData(getChildren(child));else if (isObject(child) && !React.isValidElement(child)) Object.assign(data, child);
       });
     };
     getData(children);
@@ -2526,16 +2526,16 @@
     const pushTranslatedJSX = (child, inner, mem, i, isVoid) => {
       if (child.dummy) {
         child.children = inner;
-        mem.push(react.cloneElement(child, {
+        mem.push(React.cloneElement(child, {
           key: i
         }, isVoid ? undefined : inner));
       } else {
-        mem.push(...react.Children.map([child], c => {
+        mem.push(...React.Children.map([child], c => {
           const props = {
             ...c.props
           };
           delete props.i18nIsDynamicList;
-          return react.createElement(c.type, {
+          return React.createElement(c.type, {
             ...props,
             key: i,
             ref: c.props.ref ?? c.ref
@@ -2556,7 +2556,7 @@
           const child = Object.keys(node.attrs).length !== 0 ? mergeProps({
             props: node.attrs
           }, tmp) : tmp;
-          const isElement = react.isValidElement(child);
+          const isElement = React.isValidElement(child);
           const isValidTranslationWithChildren = isElement && hasChildren(node, true) && !node.voidElement;
           const isEmptyTransWithHTML = emptyChildrenButNeedsHandling && isObject(child) && child.dummy && !isElement;
           const isKnownComponent = isObject(knownComponentsMap) && Object.hasOwnProperty.call(knownComponentsMap, node.name);
@@ -2575,12 +2575,12 @@
               pushTranslatedJSX(child, inner, mem, i, node.voidElement);
             } else if (i18nOptions.transSupportBasicHtmlNodes && keepArray.indexOf(node.name) > -1) {
               if (node.voidElement) {
-                mem.push(react.createElement(node.name, {
+                mem.push(React.createElement(node.name, {
                   key: `${node.name}-${i}`
                 }));
               } else {
                 const inner = mapAST(reactNodes, node.children, rootReactNode);
-                mem.push(react.createElement(node.name, {
+                mem.push(React.createElement(node.name, {
                   key: `${node.name}-${i}`
                 }, inner));
               }
@@ -2600,7 +2600,7 @@
           const wrapTextNodes = i18nOptions.transWrapTextNodes;
           const content = shouldUnescape ? i18nOptions.unescape(i18n.services.interpolator.interpolate(node.content, opts, i18n.language)) : i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
           if (wrapTextNodes) {
-            mem.push(react.createElement(wrapTextNodes, {
+            mem.push(React.createElement(wrapTextNodes, {
               key: `${node.name}-${i}`
             }, content));
           } else {
@@ -2618,16 +2618,16 @@
   };
   const fixComponentProps = (component, index, translation) => {
     const componentKey = component.key || index;
-    const comp = react.cloneElement(component, {
+    const comp = React.cloneElement(component, {
       key: componentKey
     });
     if (!comp.props || !comp.props.children || translation.indexOf(`${index}/>`) < 0 && translation.indexOf(`${index} />`) < 0) {
       return comp;
     }
     function Componentized() {
-      return react.createElement(react.Fragment, null, comp);
+      return React.createElement(React.Fragment, null, comp);
     }
-    return react.createElement(Componentized, {
+    return React.createElement(Componentized, {
       key: componentKey
     });
   };
@@ -2729,7 +2729,7 @@
     }
     const content = renderNodes(indexedChildren, componentsMap, translation, i18n, reactI18nextOptions, combinedTOpts, shouldUnescape);
     const useAsParent = parent ?? reactI18nextOptions.defaultTransParent;
-    return useAsParent ? react.createElement(useAsParent, additionalProps, content) : content;
+    return useAsParent ? React.createElement(useAsParent, additionalProps, content) : content;
   }
 
   const initReactI18next = {
@@ -2740,7 +2740,7 @@
     }
   };
 
-  const I18nContext = react.createContext();
+  const I18nContext = React.createContext();
   class ReportNamespaces {
     constructor() {
       this.usedNamespaces = {};
@@ -2797,7 +2797,7 @@
     const {
       i18n: i18nFromContext,
       defaultNS: defaultNSFromContext
-    } = react.useContext(I18nContext) || {};
+    } = React.useContext(I18nContext) || {};
     const i18n = i18nFromProps || i18nFromContext || getI18n();
     const t = tFromProps || i18n?.t.bind(i18n);
     return Trans$1({
@@ -2818,15 +2818,467 @@
     });
   }
 
+  class TranslationParserError extends Error {
+    constructor(message, position, translationString) {
+      super(message);
+      this.name = 'TranslationParserError';
+      this.position = position;
+      this.translationString = translationString;
+      if (Error.captureStackTrace) {
+        Error.captureStackTrace(this, TranslationParserError);
+      }
+    }
+  }
+
+  const commonEntities = {
+    '&nbsp;': '\u00A0',
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&apos;': "'",
+    '&copy;': '©',
+    '&reg;': '®',
+    '&trade;': '™',
+    '&hellip;': '…',
+    '&ndash;': '–',
+    '&mdash;': '—',
+    '&lsquo;': '\u2018',
+    '&rsquo;': '\u2019',
+    '&sbquo;': '\u201A',
+    '&ldquo;': '\u201C',
+    '&rdquo;': '\u201D',
+    '&bdquo;': '\u201E',
+    '&dagger;': '†',
+    '&Dagger;': '‡',
+    '&bull;': '•',
+    '&prime;': '′',
+    '&Prime;': '″',
+    '&lsaquo;': '‹',
+    '&rsaquo;': '›',
+    '&sect;': '§',
+    '&para;': '¶',
+    '&middot;': '·',
+    '&ensp;': '\u2002',
+    '&emsp;': '\u2003',
+    '&thinsp;': '\u2009',
+    '&euro;': '€',
+    '&pound;': '£',
+    '&yen;': '¥',
+    '&cent;': '¢',
+    '&curren;': '¤',
+    '&times;': '×',
+    '&divide;': '÷',
+    '&minus;': '−',
+    '&plusmn;': '±',
+    '&ne;': '≠',
+    '&le;': '≤',
+    '&ge;': '≥',
+    '&asymp;': '≈',
+    '&equiv;': '≡',
+    '&infin;': '∞',
+    '&int;': '∫',
+    '&sum;': '∑',
+    '&prod;': '∏',
+    '&radic;': '√',
+    '&part;': '∂',
+    '&permil;': '‰',
+    '&deg;': '°',
+    '&micro;': 'µ',
+    '&larr;': '←',
+    '&uarr;': '↑',
+    '&rarr;': '→',
+    '&darr;': '↓',
+    '&harr;': '↔',
+    '&crarr;': '↵',
+    '&lArr;': '⇐',
+    '&uArr;': '⇑',
+    '&rArr;': '⇒',
+    '&dArr;': '⇓',
+    '&hArr;': '⇔',
+    '&alpha;': 'α',
+    '&beta;': 'β',
+    '&gamma;': 'γ',
+    '&delta;': 'δ',
+    '&epsilon;': 'ε',
+    '&zeta;': 'ζ',
+    '&eta;': 'η',
+    '&theta;': 'θ',
+    '&iota;': 'ι',
+    '&kappa;': 'κ',
+    '&lambda;': 'λ',
+    '&mu;': 'μ',
+    '&nu;': 'ν',
+    '&xi;': 'ξ',
+    '&omicron;': 'ο',
+    '&pi;': 'π',
+    '&rho;': 'ρ',
+    '&sigma;': 'σ',
+    '&tau;': 'τ',
+    '&upsilon;': 'υ',
+    '&phi;': 'φ',
+    '&chi;': 'χ',
+    '&psi;': 'ψ',
+    '&omega;': 'ω',
+    '&Alpha;': 'Α',
+    '&Beta;': 'Β',
+    '&Gamma;': 'Γ',
+    '&Delta;': 'Δ',
+    '&Epsilon;': 'Ε',
+    '&Zeta;': 'Ζ',
+    '&Eta;': 'Η',
+    '&Theta;': 'Θ',
+    '&Iota;': 'Ι',
+    '&Kappa;': 'Κ',
+    '&Lambda;': 'Λ',
+    '&Mu;': 'Μ',
+    '&Nu;': 'Ν',
+    '&Xi;': 'Ξ',
+    '&Omicron;': 'Ο',
+    '&Pi;': 'Π',
+    '&Rho;': 'Ρ',
+    '&Sigma;': 'Σ',
+    '&Tau;': 'Τ',
+    '&Upsilon;': 'Υ',
+    '&Phi;': 'Φ',
+    '&Chi;': 'Χ',
+    '&Psi;': 'Ψ',
+    '&Omega;': 'Ω',
+    '&Agrave;': 'À',
+    '&Aacute;': 'Á',
+    '&Acirc;': 'Â',
+    '&Atilde;': 'Ã',
+    '&Auml;': 'Ä',
+    '&Aring;': 'Å',
+    '&AElig;': 'Æ',
+    '&Ccedil;': 'Ç',
+    '&Egrave;': 'È',
+    '&Eacute;': 'É',
+    '&Ecirc;': 'Ê',
+    '&Euml;': 'Ë',
+    '&Igrave;': 'Ì',
+    '&Iacute;': 'Í',
+    '&Icirc;': 'Î',
+    '&Iuml;': 'Ï',
+    '&ETH;': 'Ð',
+    '&Ntilde;': 'Ñ',
+    '&Ograve;': 'Ò',
+    '&Oacute;': 'Ó',
+    '&Ocirc;': 'Ô',
+    '&Otilde;': 'Õ',
+    '&Ouml;': 'Ö',
+    '&Oslash;': 'Ø',
+    '&Ugrave;': 'Ù',
+    '&Uacute;': 'Ú',
+    '&Ucirc;': 'Û',
+    '&Uuml;': 'Ü',
+    '&Yacute;': 'Ý',
+    '&THORN;': 'Þ',
+    '&szlig;': 'ß',
+    '&agrave;': 'à',
+    '&aacute;': 'á',
+    '&acirc;': 'â',
+    '&atilde;': 'ã',
+    '&auml;': 'ä',
+    '&aring;': 'å',
+    '&aelig;': 'æ',
+    '&ccedil;': 'ç',
+    '&egrave;': 'è',
+    '&eacute;': 'é',
+    '&ecirc;': 'ê',
+    '&euml;': 'ë',
+    '&igrave;': 'ì',
+    '&iacute;': 'í',
+    '&icirc;': 'î',
+    '&iuml;': 'ï',
+    '&eth;': 'ð',
+    '&ntilde;': 'ñ',
+    '&ograve;': 'ò',
+    '&oacute;': 'ó',
+    '&ocirc;': 'ô',
+    '&otilde;': 'õ',
+    '&ouml;': 'ö',
+    '&oslash;': 'ø',
+    '&ugrave;': 'ù',
+    '&uacute;': 'ú',
+    '&ucirc;': 'û',
+    '&uuml;': 'ü',
+    '&yacute;': 'ý',
+    '&thorn;': 'þ',
+    '&yuml;': 'ÿ',
+    '&iexcl;': '¡',
+    '&iquest;': '¿',
+    '&fnof;': 'ƒ',
+    '&circ;': 'ˆ',
+    '&tilde;': '˜',
+    '&OElig;': 'Œ',
+    '&oelig;': 'œ',
+    '&Scaron;': 'Š',
+    '&scaron;': 'š',
+    '&Yuml;': 'Ÿ',
+    '&ordf;': 'ª',
+    '&ordm;': 'º',
+    '&macr;': '¯',
+    '&acute;': '´',
+    '&cedil;': '¸',
+    '&sup1;': '¹',
+    '&sup2;': '²',
+    '&sup3;': '³',
+    '&frac14;': '¼',
+    '&frac12;': '½',
+    '&frac34;': '¾',
+    '&spades;': '♠',
+    '&clubs;': '♣',
+    '&hearts;': '♥',
+    '&diams;': '♦',
+    '&loz;': '◊',
+    '&oline;': '‾',
+    '&frasl;': '⁄',
+    '&weierp;': '℘',
+    '&image;': 'ℑ',
+    '&real;': 'ℜ',
+    '&alefsym;': 'ℵ'
+  };
+  const entityPattern = new RegExp(Object.keys(commonEntities).map(entity => entity.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
+  const decodeHtmlEntities = text => text.replace(entityPattern, match => commonEntities[match]).replace(/&#(\d+);/g, (_, num) => String.fromCharCode(parseInt(num, 10))).replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+
+  const tokenize = translation => {
+    const tokens = [];
+    let position = 0;
+    let currentText = '';
+    const flushText = () => {
+      if (currentText) {
+        tokens.push({
+          type: 'Text',
+          value: currentText,
+          position: position - currentText.length
+        });
+        currentText = '';
+      }
+    };
+    while (position < translation.length) {
+      const char = translation[position];
+      if (char === '<') {
+        const tagMatch = translation.slice(position).match(/^<(\d+)>/);
+        if (tagMatch) {
+          flushText();
+          tokens.push({
+            type: 'TagOpen',
+            value: tagMatch[0],
+            position,
+            tagNumber: parseInt(tagMatch[1], 10)
+          });
+          position += tagMatch[0].length;
+        } else {
+          const closeTagMatch = translation.slice(position).match(/^<\/(\d+)>/);
+          if (closeTagMatch) {
+            flushText();
+            tokens.push({
+              type: 'TagClose',
+              value: closeTagMatch[0],
+              position,
+              tagNumber: parseInt(closeTagMatch[1], 10)
+            });
+            position += closeTagMatch[0].length;
+          } else {
+            currentText += char;
+            position += 1;
+          }
+        }
+      } else {
+        currentText += char;
+        position += 1;
+      }
+    }
+    flushText();
+    return tokens;
+  };
+
+  const renderDeclarationNode = (declaration, children, childDeclarations) => {
+    const {
+      type,
+      props = {}
+    } = declaration;
+    if (props.children && Array.isArray(props.children) && childDeclarations) {
+      const {
+        children: _childrenToRemove,
+        ...propsWithoutChildren
+      } = props;
+      return React.createElement(type, propsWithoutChildren, ...children);
+    }
+    if (children.length === 0) {
+      return React.createElement(type, props);
+    }
+    if (children.length === 1) {
+      return React.createElement(type, props, children[0]);
+    }
+    return React.createElement(type, props, ...children);
+  };
+  const renderTranslation = (translation, declarations = []) => {
+    if (!translation) {
+      return [];
+    }
+    const tokens = tokenize(translation);
+    const result = [];
+    const stack = [];
+    const literalTagNumbers = new Set();
+    const getCurrentDeclarations = () => {
+      if (stack.length === 0) {
+        return declarations;
+      }
+      const parentFrame = stack[stack.length - 1];
+      if (parentFrame.declaration.props?.children && Array.isArray(parentFrame.declaration.props.children)) {
+        return parentFrame.declaration.props.children;
+      }
+      return parentFrame.declarations;
+    };
+    tokens.forEach(token => {
+      switch (token.type) {
+        case 'Text':
+          {
+            const decoded = decodeHtmlEntities(token.value);
+            const targetArray = stack.length > 0 ? stack[stack.length - 1].children : result;
+            targetArray.push(decoded);
+          }
+          break;
+        case 'TagOpen':
+          {
+            const {
+              tagNumber
+            } = token;
+            const currentDeclarations = getCurrentDeclarations();
+            const declaration = currentDeclarations[tagNumber];
+            if (!declaration) {
+              literalTagNumbers.add(tagNumber);
+              const literalText = `<${tagNumber}>`;
+              const targetArray = stack.length > 0 ? stack[stack.length - 1].children : result;
+              targetArray.push(literalText);
+              break;
+            }
+            stack.push({
+              tagNumber,
+              children: [],
+              position: token.position,
+              declaration,
+              declarations: currentDeclarations
+            });
+          }
+          break;
+        case 'TagClose':
+          {
+            const {
+              tagNumber
+            } = token;
+            if (literalTagNumbers.has(tagNumber)) {
+              const literalText = `</${tagNumber}>`;
+              const literalTargetArray = stack.length > 0 ? stack[stack.length - 1].children : result;
+              literalTargetArray.push(literalText);
+              literalTagNumbers.delete(tagNumber);
+              break;
+            }
+            if (stack.length === 0) {
+              throw new TranslationParserError(`Unexpected closing tag </${tagNumber}> at position ${token.position}`, token.position, translation);
+            }
+            const frame = stack.pop();
+            if (frame.tagNumber !== tagNumber) {
+              throw new TranslationParserError(`Mismatched tags: expected </${frame.tagNumber}> but got </${tagNumber}> at position ${token.position}`, token.position, translation);
+            }
+            const element = renderDeclarationNode(frame.declaration, frame.children, frame.declarations);
+            const elementTargetArray = stack.length > 0 ? stack[stack.length - 1].children : result;
+            elementTargetArray.push(element);
+          }
+          break;
+      }
+    });
+    if (stack.length > 0) {
+      const unclosed = stack[stack.length - 1];
+      throw new TranslationParserError(`Unclosed tag <${unclosed.tagNumber}> at position ${unclosed.position}`, unclosed.position, translation);
+    }
+    return result;
+  };
+
+  function IcuTransWithoutContext({
+    i18nKey,
+    defaultTranslation,
+    content,
+    ns,
+    values = {},
+    i18n: i18nFromProps,
+    t: tFromProps
+  }) {
+    const i18n = i18nFromProps || getI18n();
+    if (!i18n) {
+      warnOnce(i18n, 'NO_I18NEXT_INSTANCE', `IcuTrans: You need to pass in an i18next instance using i18nextReactModule`, {
+        i18nKey
+      });
+      return React.createElement(React.Fragment, {}, defaultTranslation);
+    }
+    const t = tFromProps || i18n.t?.bind(i18n) || (k => k);
+    let namespaces = ns || t.ns || i18n.options?.defaultNS;
+    namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
+    let mergedValues = values;
+    if (i18n.options?.interpolation?.defaultVariables) {
+      mergedValues = values && Object.keys(values).length > 0 ? {
+        ...values,
+        ...i18n.options.interpolation.defaultVariables
+      } : {
+        ...i18n.options.interpolation.defaultVariables
+      };
+    }
+    const translation = t(i18nKey, {
+      defaultValue: defaultTranslation,
+      ...mergedValues,
+      ns: namespaces
+    });
+    try {
+      const rendered = renderTranslation(translation, content);
+      return React.createElement(React.Fragment, {}, ...rendered);
+    } catch (error) {
+      warn(i18n, 'ICU_TRANS_RENDER_ERROR', `IcuTrans component error for key "${i18nKey}": ${error.message}`, {
+        i18nKey,
+        error
+      });
+      return React.createElement(React.Fragment, {}, translation);
+    }
+  }
+  IcuTransWithoutContext.displayName = 'IcuTransWithoutContext';
+
+  function IcuTrans({
+    i18nKey,
+    defaultTranslation,
+    content,
+    ns,
+    values = {},
+    i18n: i18nFromProps,
+    t: tFromProps
+  }) {
+    const {
+      i18n: i18nFromContext,
+      defaultNS: defaultNSFromContext
+    } = React.useContext(I18nContext) || {};
+    const i18n = i18nFromProps || i18nFromContext || getI18n();
+    const t = tFromProps || i18n?.t.bind(i18n);
+    return IcuTransWithoutContext({
+      i18nKey,
+      defaultTranslation,
+      content,
+      ns: ns || t?.ns || defaultNSFromContext || i18n?.options?.defaultNS,
+      values,
+      i18n,
+      t: tFromProps
+    });
+  }
+  IcuTrans.displayName = 'IcuTrans';
+
   const usePrevious = (value, ignore) => {
-    const ref = react.useRef();
-    react.useEffect(() => {
+    const ref = React.useRef();
+    React.useEffect(() => {
       ref.current = value;
     }, [value, ignore]);
     return ref.current;
   };
   const alwaysNewT = (i18n, language, namespace, keyPrefix) => i18n.getFixedT(language, namespace, keyPrefix);
-  const useMemoizedT = (i18n, language, namespace, keyPrefix) => react.useCallback(alwaysNewT(i18n, language, namespace, keyPrefix), [i18n, language, namespace, keyPrefix]);
+  const useMemoizedT = (i18n, language, namespace, keyPrefix) => React.useCallback(alwaysNewT(i18n, language, namespace, keyPrefix), [i18n, language, namespace, keyPrefix]);
   const useTranslation = (ns, props = {}) => {
     const {
       i18n: i18nFromProps
@@ -2834,7 +3286,7 @@
     const {
       i18n: i18nFromContext,
       defaultNS: defaultNSFromContext
-    } = react.useContext(I18nContext) || {};
+    } = React.useContext(I18nContext) || {};
     const i18n = i18nFromProps || i18nFromContext || getI18n();
     if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
     if (!i18n) {
@@ -2867,12 +3319,12 @@
     const memoGetT = useMemoizedT(i18n, props.lng || null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
     const getT = () => memoGetT;
     const getNewT = () => alwaysNewT(i18n, props.lng || null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
-    const [t, setT] = react.useState(getT);
+    const [t, setT] = React.useState(getT);
     let joinedNS = namespaces.join();
     if (props.lng) joinedNS = `${props.lng}${joinedNS}`;
     const previousJoinedNS = usePrevious(joinedNS);
-    const isMounted = react.useRef(true);
-    react.useEffect(() => {
+    const isMounted = React.useRef(true);
+    React.useEffect(() => {
       const {
         bindI18n,
         bindI18nStore
@@ -2903,7 +3355,7 @@
         if (bindI18nStore && i18n) bindI18nStore.split(' ').forEach(e => i18n.store.off(e, boundReset));
       };
     }, [i18n, joinedNS]);
-    react.useEffect(() => {
+    React.useEffect(() => {
       if (isMounted.current && ready) {
         setT(getT);
       }
@@ -2943,14 +3395,14 @@
       } else if (!options.withRef && forwardedRef) {
         passDownProps.forwardedRef = forwardedRef;
       }
-      return react.createElement(WrappedComponent, passDownProps);
+      return React.createElement(WrappedComponent, passDownProps);
     }
     I18nextWithTranslation.displayName = `withI18nextTranslation(${getDisplayName(WrappedComponent)})`;
     I18nextWithTranslation.WrappedComponent = WrappedComponent;
-    const forwardRef = (props, ref) => react.createElement(I18nextWithTranslation, Object.assign({}, props, {
+    const forwardRef = (props, ref) => React.createElement(I18nextWithTranslation, Object.assign({}, props, {
       forwardedRef: ref
     }));
-    return options.withRef ? react.forwardRef(forwardRef) : I18nextWithTranslation;
+    return options.withRef ? React.forwardRef(forwardRef) : I18nextWithTranslation;
   };
 
   const Translation = ({
@@ -2970,11 +3422,11 @@
     defaultNS,
     children
   }) {
-    const value = react.useMemo(() => ({
+    const value = React.useMemo(() => ({
       i18n,
       defaultNS
     }), [i18n, defaultNS]);
-    return react.createElement(I18nContext.Provider, {
+    return React.createElement(I18nContext.Provider, {
       value
     }, children);
   }
@@ -2985,7 +3437,7 @@
     } = props;
     const {
       i18n: i18nFromContext
-    } = react.useContext(I18nContext) || {};
+    } = React.useContext(I18nContext) || {};
     const i18n = i18nFromProps || i18nFromContext || getI18n();
     if (i18n.options?.isClone) return;
     if (initialI18nStore && !i18n.initializedStoreOnce) {
@@ -3012,7 +3464,7 @@
       ...rest
     }) {
       useSSR(initialI18nStore, initialLanguage);
-      return react.createElement(WrappedComponent, {
+      return React.createElement(WrappedComponent, {
         ...rest
       });
     }
@@ -3031,6 +3483,8 @@
 
   exports.I18nContext = I18nContext;
   exports.I18nextProvider = I18nextProvider;
+  exports.IcuTrans = IcuTrans;
+  exports.IcuTransWithoutContext = IcuTransWithoutContext;
   exports.Trans = Trans;
   exports.TransWithoutContext = Trans$1;
   exports.Translation = Translation;
