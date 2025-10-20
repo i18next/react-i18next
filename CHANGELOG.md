@@ -1,3 +1,7 @@
+### 16.1.1
+
+- exports for `IcuTrans` component [1873](https://github.com/i18next/react-i18next/pull/1873)
+
 ### 16.1.0
 
 - Introduce `IcuTrans` component [1869](https://github.com/i18next/react-i18next/issues/1869)
