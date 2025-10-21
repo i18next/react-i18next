@@ -1,3 +1,7 @@
+### 16.1.3
+
+- fix: ensure invalid identifiers are quoted in the props object [1874](https://github.com/i18next/react-i18next/pull/1874)
+
 ### 16.1.2
 
 - missing.js extensions for Icu imports
