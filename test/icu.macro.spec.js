@@ -18,7 +18,7 @@ globalThis.expect = expect;
 pluginTester({
   plugin,
   snapshot: true,
-  babelOptions: { filename: __filename, parserOpts: { plugins: ['jsx'] } },
+  babelOptions: { filename: __filename, parserOpts: { plugins: ['jsx', 'typescript'] } },
   tests: [
     `
       import { Trans } from '../../../icu.macro'
@@ -329,6 +329,44 @@ pluginTester({
       import { Trans } from "../../../icu.macro";
 
       const x = <Trans data-cy="test" data-testid="trans-component">Welcome, <strong data-cy="name">{ name }</strong>!</Trans>
+    `,
+    `
+      import type { PackageDetail } from "@api/package";
+      import type { ReactElement } from "react";
+      import React from "react";
+
+      import { number } from "../../../icu.macro";
+      import { Trans } from "../../../icu.macro";
+      import ProgressBar from "/ProgressBar";
+
+      const UsageTracker = ({
+        packageDetail,
+        className,
+      }: {
+        packageDetail: PackageDetail;
+        className?: string;
+      }): ReactElement => {
+        const { k } = useI18nNamespace("usage");
+        const incomingRequestCount = packageDetail.incoming_requests;
+        const maxIncomingRequestsAllowed = packageDetail.incoming_requests_limit;
+        const prompt = (
+          <Trans i18nKey="usage-progress-bar-prompt">
+            <b>{number\`\${ incomingRequestCount }\`}</b> of {number\`\${ maxIncomingRequestsAllowed }\`} incoming requests since
+            the first day of the month
+          </Trans>
+        );
+        return (
+          <div className={className} data-cy="usage-tracker">
+            <ProgressBar
+              currentCount={incomingRequestCount}
+              limitCount={maxIncomingRequestsAllowed}
+              prompt={prompt}
+            />
+          </div>
+        );
+      };
+
+      export default UsageTracker;
     `,
     {
       code: `

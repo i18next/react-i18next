@@ -1117,3 +1117,90 @@ const x = (
 );
 "
 `;
+
+exports[`macros > 25. macros > 25. macros 1`] = `
+"
+
+import type { PackageDetail } from "@api/package";
+import type { ReactElement } from "react";
+import React from "react";
+
+import { number } from "../../../icu.macro";
+import { Trans } from "../../../icu.macro";
+import ProgressBar from "/ProgressBar";
+
+const UsageTracker = ({
+  packageDetail,
+  className,
+}: {
+  packageDetail: PackageDetail;
+  className?: string;
+}): ReactElement => {
+  const { k } = useI18nNamespace("usage");
+  const incomingRequestCount = packageDetail.incoming_requests;
+  const maxIncomingRequestsAllowed = packageDetail.incoming_requests_limit;
+  const prompt = (
+    <Trans i18nKey="usage-progress-bar-prompt">
+      <b>{number\`\${ incomingRequestCount }\`}</b> of {number\`\${ maxIncomingRequestsAllowed }\`} incoming requests since
+      the first day of the month
+    </Trans>
+  );
+  return (
+    <div className={className} data-cy="usage-tracker">
+      <ProgressBar
+        currentCount={incomingRequestCount}
+        limitCount={maxIncomingRequestsAllowed}
+        prompt={prompt}
+      />
+    </div>
+  );
+};
+
+export default UsageTracker;
+    
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { IcuTrans, number } from 'react-i18next';
+import type { PackageDetail } from '@api/package';
+import type { ReactElement } from 'react';
+import React from 'react';
+import ProgressBar from '/ProgressBar';
+const UsageTracker = ({
+  packageDetail,
+  className,
+}: {
+  packageDetail: PackageDetail,
+  className?: string,
+}): ReactElement => {
+  const { k } = useI18nNamespace('usage');
+  const incomingRequestCount = packageDetail.incoming_requests;
+  const maxIncomingRequestsAllowed = packageDetail.incoming_requests_limit;
+  const prompt = (
+    <IcuTrans
+      i18nKey="usage-progress-bar-prompt"
+      defaultTranslation="<0>{incomingRequestCount, number}</0> of {maxIncomingRequestsAllowed, number} incoming requests since\\n      the first day of the month"
+      content={[
+        {
+          type: 'b',
+        },
+      ]}
+      values={{
+        incomingRequestCount,
+        maxIncomingRequestsAllowed,
+      }}
+    />
+  );
+  return (
+    <div className={className} data-cy="usage-tracker">
+      <ProgressBar
+        currentCount={incomingRequestCount}
+        limitCount={maxIncomingRequestsAllowed}
+        prompt={prompt}
+      />
+    </div>
+  );
+};
+export default UsageTracker;
+"
+`;

@@ -86,9 +86,12 @@ function ICUMacro({ references, state, babel }) {
           const elementName = openingElement.name;
           const isMemberExpression = babel.types.isJSXMemberExpression(elementName);
 
-          if (!isMemberExpression && elementName.name === 'IcuTrans') {
+          if (
+            !isMemberExpression &&
+            (elementName.name === 'IcuTrans' || elementName.name === 'Trans')
+          ) {
             // this is a valid use of number/date/time/etc.
-            // Only check IcuTrans since Trans transformation (lines 57-71) happens before this validation
+            // Check for both IcuTrans (after transformation) and Trans (during transformation)
             return;
           }
         }
