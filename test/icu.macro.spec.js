@@ -320,6 +320,16 @@ pluginTester({
 
       const x = <Trans>Welcome, &quot;{ name }&quot;!</Trans>
     `,
+    `
+      import { Trans } from "../../../icu.macro";
+
+      const x = <Trans data-cy="test">Welcome, { name }!</Trans>
+    `,
+    `
+      import { Trans } from "../../../icu.macro";
+
+      const x = <Trans data-cy="test" data-testid="trans-component">Welcome, <strong data-cy="name">{ name }</strong>!</Trans>
+    `,
     {
       code: `
         import React from "react"
