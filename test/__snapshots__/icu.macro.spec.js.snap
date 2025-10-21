@@ -1061,3 +1061,59 @@ const x = (
 );
 "
 `;
+
+exports[`macros > 23. macros > 23. macros 1`] = `
+"
+
+import { Trans } from "../../../icu.macro";
+
+const x = <Trans data-cy="test">Welcome, { name }!</Trans>
+    
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { IcuTrans } from 'react-i18next';
+const x = (
+  <IcuTrans
+    data-cy="test"
+    defaultTranslation="Welcome, {name}!"
+    content={[]}
+    values={{
+      name,
+    }}
+  />
+);
+"
+`;
+
+exports[`macros > 24. macros > 24. macros 1`] = `
+"
+
+import { Trans } from "../../../icu.macro";
+
+const x = <Trans data-cy="test" data-testid="trans-component">Welcome, <strong data-cy="name">{ name }</strong>!</Trans>
+    
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { IcuTrans } from 'react-i18next';
+const x = (
+  <IcuTrans
+    data-cy="test"
+    data-testid="trans-component"
+    defaultTranslation="Welcome, <0>{name}</0>!"
+    content={[
+      {
+        type: 'strong',
+        props: {
+          'data-cy': 'name',
+        },
+      },
+    ]}
+    values={{
+      name,
+    }}
+  />
+);
+"
+`;

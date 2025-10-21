@@ -364,7 +364,12 @@ function jsxElementToDeclaration(jsxElement, t) {
         propValue = t.nullLiteral();
       }
 
-      propsProperties.push(t.objectProperty(t.identifier(propName), propValue));
+      // Use string literal for keys that aren't valid identifiers (e.g., contain hyphens)
+      const propKey = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(propName)
+        ? t.identifier(propName)
+        : t.stringLiteral(propName);
+
+      propsProperties.push(t.objectProperty(propKey, propValue));
     }
   });
 
