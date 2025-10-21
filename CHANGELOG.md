@@ -1,3 +1,7 @@
+### 16.1.4
+
+- fix: detect pre-transformation use of interpolation like number/date/etc. [1875](https://github.com/i18next/react-i18next/pull/1875)
+
 ### 16.1.3
 
 - fix: ensure invalid identifiers are quoted in the props object [1874](https://github.com/i18next/react-i18next/pull/1874)
