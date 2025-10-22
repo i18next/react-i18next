@@ -426,6 +426,7 @@ export function Trans({
   const nodeAsString = nodesToString(children, reactI18nextOptions, i18n, i18nKey);
   const defaultValue =
     defaults ||
+    tOptions?.defaultValue ||
     nodeAsString ||
     reactI18nextOptions.transEmptyNodeValue ||
     (typeof i18nKey === 'function' ? keyFromSelector(i18nKey) : i18nKey);
@@ -452,7 +453,7 @@ export function Trans({
     count,
     ...values,
     ...interpolationOverride,
-    defaultValue,
+    defaultValue: defaults || tOptions?.defaultValue,
     ns: namespaces,
   };
   const translation = key ? t(key, combinedTOpts) : defaultValue;

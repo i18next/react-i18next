@@ -1082,6 +1082,42 @@ describe('trans with defaults property and children', () => {
   });
 });
 
+describe('trans with defaults property and no children', () => {
+  function TestComponent() {
+    return <Trans i18nKey="missing-key-here" count={2} defaults="There are {{ count }} items" />;
+  }
+
+  it('should render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        There are 2 items
+      </div>
+    `);
+  });
+});
+
+describe('trans with defaults (via tOptions) property and no children', () => {
+  function TestComponent() {
+    return (
+      <Trans
+        i18nKey="missing-key-here"
+        count={4}
+        tOptions={{ defaultValue: 'There are {{ count }} items' }}
+      />
+    );
+  }
+
+  it('should render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        There are 4 items
+      </div>
+    `);
+  });
+});
+
 describe('trans with nesting $t()', () => {
   function TestComponent({ parent }) {
     return <Trans i18nKey="nestingKey1" ns="other" parent={parent} />;

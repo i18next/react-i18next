@@ -2690,7 +2690,7 @@
     let namespaces = ns || t.ns || i18n.options?.defaultNS;
     namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
     const nodeAsString = nodesToString(children, reactI18nextOptions, i18n, i18nKey);
-    const defaultValue = defaults || nodeAsString || reactI18nextOptions.transEmptyNodeValue || (typeof i18nKey === 'function' ? keysFromSelector(i18nKey) : i18nKey);
+    const defaultValue = defaults || tOptions?.defaultValue || nodeAsString || reactI18nextOptions.transEmptyNodeValue || (typeof i18nKey === 'function' ? keysFromSelector(i18nKey) : i18nKey);
     const {
       hashTransKey
     } = reactI18nextOptions;
@@ -2716,7 +2716,7 @@
       count,
       ...values,
       ...interpolationOverride,
-      defaultValue,
+      defaultValue: defaults || tOptions?.defaultValue,
       ns: namespaces
     };
     const translation = key ? t(key, combinedTOpts) : defaultValue;

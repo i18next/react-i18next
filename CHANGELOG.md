@@ -1,3 +1,8 @@
+### 16.1.5
+
+- fix: Incosistent behaviour of Trans and t. Trans set defaultValue when t call doesn't set the field. [1876](https://github.com/i18next/react-i18next/issues/1876)
+- Trans: use also defaultValue via tOptions as fallback
+
 ### 16.1.4
 
 - fix: detect pre-transformation use of interpolation like number/date/etc. [1875](https://github.com/i18next/react-i18next/pull/1875)
