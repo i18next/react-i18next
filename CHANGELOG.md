@@ -1,3 +1,7 @@
+### 16.1.6
+
+- fix: fix: handle spread props for inner components in Trans (icu) [1877](https://github.com/i18next/react-i18next/pull/1877)
+
 ### 16.1.5
 
 - fix: Incosistent behaviour of Trans and t. Trans set defaultValue when t call doesn't set the field. [1876](https://github.com/i18next/react-i18next/issues/1876)
