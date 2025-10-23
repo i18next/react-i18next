@@ -1204,3 +1204,64 @@ const UsageTracker = ({
 export default UsageTracker;
 "
 `;
+
+exports[`macros > 36. macros > 36. macros 1`] = `
+"
+
+import { Trans } from '../../../icu.macro'
+
+const spreadProps = { className: 'test', id: 'bold-text' }
+const x = <Trans><b {...spreadProps}>test</b></Trans>
+    
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { IcuTrans } from 'react-i18next';
+const spreadProps = {
+  className: 'test',
+  id: 'bold-text',
+};
+const x = (
+  <IcuTrans
+    defaultTranslation="<0>test</0>"
+    content={[
+      {
+        type: 'b',
+        props: {
+          ...spreadProps,
+        },
+      },
+    ]}
+    values={{}}
+  />
+);
+"
+`;
+
+exports[`macros > 37. macros > 37. macros 1`] = `
+"
+
+import { Trans } from '../../../icu.macro'
+
+const x = <Trans><b aria-hidden>test</b></Trans>
+    
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { IcuTrans } from 'react-i18next';
+const x = (
+  <IcuTrans
+    defaultTranslation="<0>test</0>"
+    content={[
+      {
+        type: 'b',
+        props: {
+          'aria-hidden': true,
+        },
+      },
+    ]}
+    values={{}}
+  />
+);
+"
+`;

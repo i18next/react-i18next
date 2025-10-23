@@ -495,5 +495,16 @@ pluginTester({
       snapshot: false,
       error: /Must pass a variable, not an expression to "number``" in "[^"]+" on line 8/,
     },
+    `
+      import { Trans } from '../../../icu.macro'
+
+      const spreadProps = { className: 'test', id: 'bold-text' }
+      const x = <Trans><b {...spreadProps}>test</b></Trans>
+    `,
+    `
+      import { Trans } from '../../../icu.macro'
+
+      const x = <Trans><b aria-hidden>test</b></Trans>
+    `,
   ],
 });

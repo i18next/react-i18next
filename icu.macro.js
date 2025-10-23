@@ -373,6 +373,9 @@ function jsxElementToDeclaration(jsxElement, t) {
         : t.stringLiteral(propName);
 
       propsProperties.push(t.objectProperty(propKey, propValue));
+    } else if (t.isJSXSpreadAttribute(attr)) {
+      // Handle spread attributes like {...spreadProps}
+      propsProperties.push(t.spreadElement(attr.argument));
     }
   });
 
