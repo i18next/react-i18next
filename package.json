@@ -68,7 +68,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.27.6",
-    "html-parse-stringify": "^3.0.1"
+    "html-parse-stringify": "^3.0.1",
+    "use-sync-external-store": "1.6.0"
   },
   "peerDependencies": {
     "i18next": ">= 25.5.2",
