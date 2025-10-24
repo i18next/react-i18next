@@ -1,3 +1,7 @@
+### 16.2.0
+
+- try to address: useTranslation hook violates React's rules of hooks by conditionally calling inner hooks [1863](https://github.com/i18next/react-i18next/issues/1863)
+
 ### 16.1.6
 
 - fix: fix: handle spread props for inner components in Trans (icu) [1877](https://github.com/i18next/react-i18next/pull/1877)

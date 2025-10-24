@@ -69,7 +69,7 @@
   "dependencies": {
     "@babel/runtime": "^7.27.6",
     "html-parse-stringify": "^3.0.1",
-    "use-sync-external-store": "1.6.0"
+    "use-sync-external-store": "^1.6.0"
   },
   "peerDependencies": {
     "i18next": ">= 25.5.2",
@@ -127,7 +127,7 @@
     "eslint-plugin-testing-library": "^6.5.0",
     "happy-dom": "^14.12.3",
     "husky": "^9.1.7",
-    "i18next": "^25.5.2",
+    "i18next": "^25.6.0",
     "lint-staged": "^15.5.2",
     "mkdirp": "^3.0.1",
     "prettier": "^3.6.2",

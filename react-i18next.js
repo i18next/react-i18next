@@ -475,7 +475,12 @@
       };
       if (key == null) return false;
       const resolved = this.resolve(key, opt);
-      return resolved?.res !== undefined;
+      if (resolved?.res === undefined) return false;
+      const isObject = shouldHandleAsObject(resolved.res);
+      if (opt.returnObjects === false && isObject) {
+        return false;
+      }
+      return true;
     }
     extractFromKey(key, opt) {
       let nsSeparator = opt.nsSeparator !== undefined ? opt.nsSeparator : this.options.nsSeparator;
@@ -3270,15 +3275,102 @@
   }
   IcuTrans.displayName = 'IcuTrans';
 
-  const usePrevious = (value, ignore) => {
-    const ref = React.useRef();
-    React.useEffect(() => {
-      ref.current = value;
-    }, [value, ignore]);
-    return ref.current;
+  var shim = {exports: {}};
+
+  var useSyncExternalStoreShim_development = {};
+
+  /**
+   * @license React
+   * use-sync-external-store-shim.development.js
+   *
+   * Copyright (c) Meta Platforms, Inc. and affiliates.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE file in the root directory of this source tree.
+   */
+
+  (function () {
+    function is(x, y) {
+      return x === y && (0 !== x || 1 / x === 1 / y) || x !== x && y !== y;
+    }
+    function useSyncExternalStore$2(subscribe, getSnapshot) {
+      didWarnOld18Alpha || void 0 === React$1.startTransition || (didWarnOld18Alpha = true, console.error("You are using an outdated, pre-release alpha of React 18 that does not support useSyncExternalStore. The use-sync-external-store shim will not work correctly. Upgrade to a newer pre-release."));
+      var value = getSnapshot();
+      if (!didWarnUncachedGetSnapshot) {
+        var cachedValue = getSnapshot();
+        objectIs(value, cachedValue) || (console.error("The result of getSnapshot should be cached to avoid an infinite loop"), didWarnUncachedGetSnapshot = true);
+      }
+      cachedValue = useState({
+        inst: {
+          value: value,
+          getSnapshot: getSnapshot
+        }
+      });
+      var inst = cachedValue[0].inst,
+        forceUpdate = cachedValue[1];
+      useLayoutEffect(function () {
+        inst.value = value;
+        inst.getSnapshot = getSnapshot;
+        checkIfSnapshotChanged(inst) && forceUpdate({
+          inst: inst
+        });
+      }, [subscribe, value, getSnapshot]);
+      useEffect(function () {
+        checkIfSnapshotChanged(inst) && forceUpdate({
+          inst: inst
+        });
+        return subscribe(function () {
+          checkIfSnapshotChanged(inst) && forceUpdate({
+            inst: inst
+          });
+        });
+      }, [subscribe]);
+      useDebugValue(value);
+      return value;
+    }
+    function checkIfSnapshotChanged(inst) {
+      var latestGetSnapshot = inst.getSnapshot;
+      inst = inst.value;
+      try {
+        var nextValue = latestGetSnapshot();
+        return !objectIs(inst, nextValue);
+      } catch (error) {
+        return true;
+      }
+    }
+    function useSyncExternalStore$1(subscribe, getSnapshot) {
+      return getSnapshot();
+    }
+    "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
+    var React$1 = React,
+      objectIs = "function" === typeof Object.is ? Object.is : is,
+      useState = React$1.useState,
+      useEffect = React$1.useEffect,
+      useLayoutEffect = React$1.useLayoutEffect,
+      useDebugValue = React$1.useDebugValue,
+      didWarnOld18Alpha = false,
+      didWarnUncachedGetSnapshot = false,
+      shim = "undefined" === typeof window || "undefined" === typeof window.document || "undefined" === typeof window.document.createElement ? useSyncExternalStore$1 : useSyncExternalStore$2;
+    useSyncExternalStoreShim_development.useSyncExternalStore = void 0 !== React$1.useSyncExternalStore ? React$1.useSyncExternalStore : shim;
+    "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
+  })();
+
+  {
+    shim.exports = useSyncExternalStoreShim_development;
+  }
+
+  var shimExports = shim.exports;
+
+  const notReadyT = (k, optsOrDefaultValue) => {
+    if (isString(optsOrDefaultValue)) return optsOrDefaultValue;
+    if (isObject(optsOrDefaultValue) && isString(optsOrDefaultValue.defaultValue)) return optsOrDefaultValue.defaultValue;
+    return Array.isArray(k) ? k[k.length - 1] : k;
   };
-  const alwaysNewT = (i18n, language, namespace, keyPrefix) => i18n.getFixedT(language, namespace, keyPrefix);
-  const useMemoizedT = (i18n, language, namespace, keyPrefix) => React.useCallback(alwaysNewT(i18n, language, namespace, keyPrefix), [i18n, language, namespace, keyPrefix]);
+  const notReadySnapshot = {
+    t: notReadyT,
+    ready: false
+  };
+  const dummySubscribe = () => () => {};
   const useTranslation = (ns, props = {}) => {
     const {
       i18n: i18nFromProps
@@ -3291,88 +3383,88 @@
     if (i18n && !i18n.reportNamespaces) i18n.reportNamespaces = new ReportNamespaces();
     if (!i18n) {
       warnOnce(i18n, 'NO_I18NEXT_INSTANCE', 'useTranslation: You will need to pass in an i18next instance by using initReactI18next');
-      const notReadyT = (k, optsOrDefaultValue) => {
-        if (isString(optsOrDefaultValue)) return optsOrDefaultValue;
-        if (isObject(optsOrDefaultValue) && isString(optsOrDefaultValue.defaultValue)) return optsOrDefaultValue.defaultValue;
-        return Array.isArray(k) ? k[k.length - 1] : k;
-      };
-      const retNotReady = [notReadyT, {}, false];
-      retNotReady.t = notReadyT;
-      retNotReady.i18n = {};
-      retNotReady.ready = false;
-      return retNotReady;
     }
-    if (i18n.options.react?.wait) warnOnce(i18n, 'DEPRECATED_OPTION', 'useTranslation: It seems you are still using the old wait option, you may migrate to the new useSuspense behaviour.');
-    const i18nOptions = {
+    const i18nOptions = React.useMemo(() => ({
       ...getDefaults(),
-      ...i18n.options.react,
+      ...i18n?.options?.react,
       ...props
-    };
+    }), [i18n, props]);
     const {
       useSuspense,
       keyPrefix
     } = i18nOptions;
-    let namespaces = ns || defaultNSFromContext || i18n.options?.defaultNS;
-    namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
-    i18n.reportNamespaces.addUsedNamespaces?.(namespaces);
-    const ready = (i18n.isInitialized || i18n.initializedStoreOnce) && namespaces.every(n => hasLoadedNamespace(n, i18n, i18nOptions));
-    const memoGetT = useMemoizedT(i18n, props.lng || null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
-    const getT = () => memoGetT;
-    const getNewT = () => alwaysNewT(i18n, props.lng || null, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
-    const [t, setT] = React.useState(getT);
-    let joinedNS = namespaces.join();
-    if (props.lng) joinedNS = `${props.lng}${joinedNS}`;
-    const previousJoinedNS = usePrevious(joinedNS);
-    const isMounted = React.useRef(true);
-    React.useEffect(() => {
+    const namespaces = React.useMemo(() => {
+      const nsOrContext = ns || defaultNSFromContext || i18n?.options?.defaultNS;
+      return isString(nsOrContext) ? [nsOrContext] : nsOrContext || ['translation'];
+    }, [ns, defaultNSFromContext, i18n]);
+    i18n?.reportNamespaces?.addUsedNamespaces?.(namespaces);
+    const subscribe = React.useCallback(callback => {
+      if (!i18n) return dummySubscribe;
       const {
         bindI18n,
         bindI18nStore
       } = i18nOptions;
-      isMounted.current = true;
-      if (!ready && !useSuspense) {
+      if (bindI18n) i18n.on(bindI18n, callback);
+      if (bindI18nStore) i18n.store.on(bindI18nStore, callback);
+      return () => {
+        if (bindI18n) bindI18n.split(' ').forEach(e => i18n.off(e, callback));
+        if (bindI18nStore) bindI18nStore.split(' ').forEach(e => i18n.store.off(e, callback));
+      };
+    }, [i18n, i18nOptions]);
+    const snapshotRef = React.useRef();
+    const getSnapshot = React.useCallback(() => {
+      if (!i18n) {
+        return notReadySnapshot;
+      }
+      const calculatedReady = !!(i18n.isInitialized || i18n.initializedStoreOnce) && namespaces.every(n => hasLoadedNamespace(n, i18n, i18nOptions));
+      const calculatedT = i18n.getFixedT(props.lng || i18n.language, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
+      const lastSnapshot = snapshotRef.current;
+      if (lastSnapshot && lastSnapshot.ready === calculatedReady && lastSnapshot.lng === (props.lng || i18n.language) && lastSnapshot.keyPrefix === keyPrefix) {
+        return lastSnapshot;
+      }
+      const newSnapshot = {
+        t: calculatedT,
+        ready: calculatedReady,
+        lng: props.lng || i18n.language,
+        keyPrefix
+      };
+      snapshotRef.current = newSnapshot;
+      return newSnapshot;
+    }, [i18n, namespaces, keyPrefix, i18nOptions, props.lng]);
+    const [loadCount, setLoadCount] = React.useState(0);
+    const {
+      t,
+      ready
+    } = shimExports.useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+    React.useEffect(() => {
+      if (i18n && !ready && !useSuspense) {
+        const onLoaded = () => setLoadCount(c => c + 1);
         if (props.lng) {
-          loadLanguages(i18n, props.lng, namespaces, () => {
-            if (isMounted.current) setT(getNewT);
-          });
+          loadLanguages(i18n, props.lng, namespaces, onLoaded);
         } else {
-          loadNamespaces(i18n, namespaces, () => {
-            if (isMounted.current) setT(getNewT);
-          });
+          loadNamespaces(i18n, namespaces, onLoaded);
         }
       }
-      if (ready && previousJoinedNS && previousJoinedNS !== joinedNS && isMounted.current) {
-        setT(getNewT);
-      }
-      const boundReset = () => {
-        if (isMounted.current) setT(getNewT);
-      };
-      if (bindI18n) i18n?.on(bindI18n, boundReset);
-      if (bindI18nStore) i18n?.store.on(bindI18nStore, boundReset);
-      return () => {
-        isMounted.current = false;
-        if (i18n && bindI18n) bindI18n?.split(' ').forEach(e => i18n.off(e, boundReset));
-        if (bindI18nStore && i18n) bindI18nStore.split(' ').forEach(e => i18n.store.off(e, boundReset));
-      };
-    }, [i18n, joinedNS]);
-    React.useEffect(() => {
-      if (isMounted.current && ready) {
-        setT(getT);
-      }
-    }, [i18n, keyPrefix, ready]);
-    const ret = [t, i18n, ready];
-    ret.t = t;
-    ret.i18n = i18n;
-    ret.ready = ready;
-    if (ready) return ret;
-    if (!ready && !useSuspense) return ret;
-    throw new Promise(resolve => {
-      if (props.lng) {
-        loadLanguages(i18n, props.lng, namespaces, () => resolve());
-      } else {
-        loadNamespaces(i18n, namespaces, () => resolve());
-      }
-    });
+    }, [i18n, props.lng, namespaces, ready, useSuspense, loadCount]);
+    const finalI18n = i18n || {};
+    const ret = React.useMemo(() => {
+      const arr = [t, finalI18n, ready];
+      arr.t = t;
+      arr.i18n = finalI18n;
+      arr.ready = ready;
+      return arr;
+    }, [t, finalI18n, ready]);
+    if (i18n && useSuspense && !ready) {
+      throw new Promise(resolve => {
+        const onLoaded = () => resolve();
+        if (props.lng) {
+          loadLanguages(i18n, props.lng, namespaces, onLoaded);
+        } else {
+          loadNamespaces(i18n, namespaces, onLoaded);
+        }
+      });
+    }
+    return ret;
   };
 
   const withTranslation = (ns, options = {}) => function Extend(WrappedComponent) {
