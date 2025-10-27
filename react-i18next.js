@@ -3398,17 +3398,22 @@
       return isString(nsOrContext) ? [nsOrContext] : nsOrContext || ['translation'];
     }, [ns, defaultNSFromContext, i18n]);
     i18n?.reportNamespaces?.addUsedNamespaces?.(namespaces);
+    const revisionRef = React.useRef(0);
     const subscribe = React.useCallback(callback => {
       if (!i18n) return dummySubscribe;
       const {
         bindI18n,
         bindI18nStore
       } = i18nOptions;
-      if (bindI18n) i18n.on(bindI18n, callback);
-      if (bindI18nStore) i18n.store.on(bindI18nStore, callback);
+      const wrappedCallback = () => {
+        revisionRef.current += 1;
+        callback();
+      };
+      if (bindI18n) i18n.on(bindI18n, wrappedCallback);
+      if (bindI18nStore) i18n.store.on(bindI18nStore, wrappedCallback);
       return () => {
-        if (bindI18n) bindI18n.split(' ').forEach(e => i18n.off(e, callback));
-        if (bindI18nStore) bindI18nStore.split(' ').forEach(e => i18n.store.off(e, callback));
+        if (bindI18n) bindI18n.split(' ').forEach(e => i18n.off(e, wrappedCallback));
+        if (bindI18nStore) bindI18nStore.split(' ').forEach(e => i18n.store.off(e, wrappedCallback));
       };
     }, [i18n, i18nOptions]);
     const snapshotRef = React.useRef();
@@ -3417,16 +3422,19 @@
         return notReadySnapshot;
       }
       const calculatedReady = !!(i18n.isInitialized || i18n.initializedStoreOnce) && namespaces.every(n => hasLoadedNamespace(n, i18n, i18nOptions));
-      const calculatedT = i18n.getFixedT(props.lng || i18n.language, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
+      const currentLng = props.lng || i18n.language;
+      const currentRevision = revisionRef.current;
       const lastSnapshot = snapshotRef.current;
-      if (lastSnapshot && lastSnapshot.ready === calculatedReady && lastSnapshot.lng === (props.lng || i18n.language) && lastSnapshot.keyPrefix === keyPrefix) {
+      if (lastSnapshot && lastSnapshot.ready === calculatedReady && lastSnapshot.lng === currentLng && lastSnapshot.keyPrefix === keyPrefix && lastSnapshot.revision === currentRevision) {
         return lastSnapshot;
       }
+      const calculatedT = i18n.getFixedT(currentLng, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix);
       const newSnapshot = {
         t: calculatedT,
         ready: calculatedReady,
-        lng: props.lng || i18n.language,
-        keyPrefix
+        lng: currentLng,
+        keyPrefix,
+        revision: currentRevision
       };
       snapshotRef.current = newSnapshot;
       return newSnapshot;

@@ -1,3 +1,7 @@
+### 16.2.1
+
+- fix regression in v16.2.0: bindI18nStore does not work correctly [1879](https://github.com/i18next/react-i18next/issues/1879)
+
 ### 16.2.0
 
 - try to address: useTranslation hook violates React's rules of hooks by conditionally calling inner hooks [1863](https://github.com/i18next/react-i18next/issues/1863)
