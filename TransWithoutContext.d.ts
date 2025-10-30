@@ -9,14 +9,62 @@ import type {
   TypeOptions,
   TOptions,
   TFunction,
+  TFunctionReturn,
+  $PreservedValue,
+  $StringKeyPathToRecord,
 } from 'i18next';
 import * as React from 'react';
 
 type _DefaultNamespace = TypeOptions['defaultNS'];
 type _EnableSelector = TypeOptions['enableSelector'];
+type _InterpolationPrefix = TypeOptions['interpolationPrefix'];
+type _InterpolationSuffix = TypeOptions['interpolationSuffix'];
+type _UnescapePrefix = TypeOptions['unescapePrefix'];
+type _UnescapeSuffix = TypeOptions['unescapeSuffix'];
 
 type TransChild = React.ReactNode | Record<string, unknown>;
 type $NoInfer<T> = [T][T extends T ? 0 : never];
+
+/**
+ * Trim spaces from a string type
+ */
+type TrimSpaces<T extends string, Acc extends string = ''> = T extends `${infer Char}${infer Rest}`
+  ? Char extends ' '
+    ? TrimSpaces<Rest, Acc>
+    : TrimSpaces<Rest, `${Acc}${Char}`>
+  : T extends ''
+    ? Acc
+    : never;
+
+/**
+ * Parse actual interpolation value, handling unescape prefix/suffix
+ */
+type ParseActualValue<Ret> = Ret extends `${_UnescapePrefix}${infer ActualValue}${_UnescapeSuffix}`
+  ? TrimSpaces<ActualValue>
+  : Ret;
+
+/**
+ * Extract all interpolation variable names from a translation string
+ * e.g., "Hello {{name}}, you have {{count}} messages" -> "name" | "count"
+ */
+type ParseInterpolationValues<Ret> =
+  Ret extends `${string}${_InterpolationPrefix}${infer Value}${_InterpolationSuffix}${infer Rest}`
+    ?
+        | (Value extends `${infer ActualValue},${string}`
+            ? ParseActualValue<ActualValue>
+            : ParseActualValue<Value>)
+        | ParseInterpolationValues<Rest>
+    : never;
+
+/**
+ * Create a record type from interpolation variable names
+ * This ensures that the values prop contains exactly the required interpolation variables
+ * Uses the same approach as i18next's InterpolationMap
+ */
+type InterpolationMap<Ret> = $PreservedValue<
+  $StringKeyPathToRecord<ParseInterpolationValues<Ret>, unknown>,
+  Record<string, unknown>
+>;
 
 export type TransProps<
   Key extends ParseKeys<Ns, TOpt, KPrefix>,
@@ -36,7 +84,7 @@ export type TransProps<
   ns?: Ns;
   parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
   tOptions?: TOpt;
-  values?: {};
+  values?: InterpolationMap<TFunctionReturn<Ns, Key, TOpt>>;
   shouldUnescape?: boolean;
   t?: TFunction<Ns, KPrefix>;
 };
@@ -71,7 +119,7 @@ export interface TransSelectorProps<
   ns?: Ns;
   parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
   tOptions?: TOpt;
-  values?: {};
+  values?: InterpolationMap<TFunctionReturn<Ns, Key, TOpt>>;
   shouldUnescape?: boolean;
   t?: TFunction<Ns, KPrefix>;
 }

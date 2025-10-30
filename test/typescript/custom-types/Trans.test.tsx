@@ -117,4 +117,61 @@ describe('<Trans />', () => {
       });
     });
   });
+
+  describe('values prop with interpolation type hints', () => {
+    it('should accept correct values for interpolation', () => {
+      // <Trans i18nKey="title" values={{ appName: 'My App' }} />
+      // The values prop now provides intellisense for the appName variable
+      expectTypeOf(Trans).toBeCallableWith({
+        i18nKey: 'title',
+        values: { appName: 'My App' },
+      });
+    });
+
+    it('should accept correct values with multiple interpolation variables', () => {
+      // <Trans i18nKey="message" values={{ count: 5, sender: 'John' }} />
+      // The values prop now provides intellisense for count and sender variables
+      expectTypeOf(Trans).toBeCallableWith({
+        i18nKey: 'message',
+        values: { count: 5, sender: 'John' },
+      });
+    });
+
+    it('should provide type hints for interpolation variables', () => {
+      // The values prop type is now InterpolationMap<TFunctionReturn<...>>
+      // which extracts variables from the translation string
+      // This provides intellisense in IDEs showing: { appName: unknown }
+      expectTypeOf(Trans).toBeCallableWith({
+        i18nKey: 'title',
+        values: { appName: 'My App' },
+      });
+    });
+
+    it('should work with keys that have no interpolation', () => {
+      // Keys without interpolation accept any values object
+      expectTypeOf(Trans).toBeCallableWith({
+        i18nKey: 'foo',
+        values: {},
+      });
+    });
+
+    it('should work with t function and provide type hints', () => {
+      const { t } = useTranslation('custom');
+
+      // When using t function, values prop gets same type hints
+      expectTypeOf(Trans).toBeCallableWith({
+        t,
+        i18nKey: 'title',
+        values: { appName: 'My App' },
+      });
+    });
+
+    it('should work with greeting key', () => {
+      // <Trans i18nKey="greeting" values={{ name: 'John' }} />
+      expectTypeOf(Trans).toBeCallableWith({
+        i18nKey: 'greeting',
+        values: { name: 'John' },
+      });
+    });
+  });
 });
