@@ -2504,6 +2504,46 @@
     });
     return stringNode;
   };
+  const escapeLiteralLessThan = (str, keepArray = [], knownComponentsMap = {}) => {
+    if (!str) return str;
+    const knownNames = Object.keys(knownComponentsMap);
+    const allValidNames = [...keepArray, ...knownNames];
+    let result = '';
+    let i = 0;
+    while (i < str.length) {
+      if (str[i] === '<') {
+        let isValidTag = false;
+        const closingMatch = str.slice(i).match(/^<\/(\d+|[a-zA-Z][a-zA-Z0-9]*)>/);
+        if (closingMatch) {
+          const tagName = closingMatch[1];
+          if (/^\d+$/.test(tagName) || allValidNames.includes(tagName)) {
+            isValidTag = true;
+            result += closingMatch[0];
+            i += closingMatch[0].length;
+          }
+        }
+        if (!isValidTag) {
+          const openingMatch = str.slice(i).match(/^<(\d+|[a-zA-Z][a-zA-Z0-9]*)(\s+[\w-]+(?:=(?:"[^"]*"|'[^']*'|[^\s>]+))?)*\s*(\/)?>/);
+          if (openingMatch) {
+            const tagName = openingMatch[1];
+            if (/^\d+$/.test(tagName) || allValidNames.includes(tagName)) {
+              isValidTag = true;
+              result += openingMatch[0];
+              i += openingMatch[0].length;
+            }
+          }
+        }
+        if (!isValidTag) {
+          result += '&lt;';
+          i += 1;
+        }
+      } else {
+        result += str[i];
+        i += 1;
+      }
+    }
+    return result;
+  };
   const renderNodes = (children, knownComponentsMap, targetString, i18n, i18nOptions, combinedTOpts, shouldUnescape) => {
     if (targetString === '') return [];
     const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
@@ -2518,7 +2558,8 @@
       });
     };
     getData(children);
-    const ast = c.parse(`<0>${targetString}</0>`);
+    const escapedString = escapeLiteralLessThan(targetString, keepArray, data);
+    const ast = c.parse(`<0>${escapedString}</0>`);
     const opts = {
       ...data,
       ...combinedTOpts

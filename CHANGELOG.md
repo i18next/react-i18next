@@ -1,3 +1,7 @@
+### 16.2.2
+
+- fix trans component break with less than sign [1880](https://github.com/i18next/react-i18next/pull/1880), closes [1734](https://github.com/i18next/react-i18next/issues/1734)
+
 ### 16.2.1
 
 - fix regression in v16.2.0: bindI18nStore does not work correctly [1879](https://github.com/i18next/react-i18next/issues/1879)

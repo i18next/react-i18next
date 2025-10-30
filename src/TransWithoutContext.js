@@ -163,7 +163,7 @@ const escapeLiteralLessThan = (str, keepArray = [], knownComponentsMap = {}) => 
         const openingMatch = str
           .slice(i)
           .match(
-            /^<(\d+|[a-zA-Z][a-zA-Z0-9]*)(\s+[\w\-]+(?:=(?:"[^"]*"|'[^']*'|[^\s>]+))?)*\s*(\/)?>/,
+            /^<(\d+|[a-zA-Z][a-zA-Z0-9]*)(\s+[\w-]+(?:=(?:"[^"]*"|'[^']*'|[^\s>]+))?)*\s*(\/)?>/,
           );
         if (openingMatch) {
           const tagName = openingMatch[1];
@@ -179,11 +179,11 @@ const escapeLiteralLessThan = (str, keepArray = [], knownComponentsMap = {}) => 
       // If not a valid tag, escape the <
       if (!isValidTag) {
         result += '&lt;';
-        i++;
+        i += 1;
       }
     } else {
       result += str[i];
-      i++;
+      i += 1;
     }
   }
 
