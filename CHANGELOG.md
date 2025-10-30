@@ -1,3 +1,7 @@
+### 16.2.3
+
+- fix hyphened component break issue [1882](https://github.com/i18next/react-i18next/pull/1882)
+
 ### 16.2.2
 
 - fix trans component break with less than sign [1880](https://github.com/i18next/react-i18next/pull/1880), closes [1734](https://github.com/i18next/react-i18next/issues/1734)
