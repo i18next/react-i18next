@@ -368,3 +368,27 @@ describe('trans with less-than in mathematical expression', () => {
     `);
   });
 });
+
+describe('trans with numbered tags with attributes', () => {
+  function TestComponent() {
+    return (
+      <Trans
+        defaults='Result should be a clickable link <0 href="https://www.google.com">Google</0>'
+        components={[<a>dummy</a>]}
+      />
+    );
+  }
+  it('should render tags with attributes correctly', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Result should be a clickable link 
+        <a
+          href="https://www.google.com"
+        >
+          Google
+        </a>
+      </div>
+    `);
+  });
+});

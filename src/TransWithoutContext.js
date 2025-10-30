@@ -156,8 +156,15 @@ const escapeLiteralLessThan = (str, keepArray = [], knownComponentsMap = {}) => 
       }
 
       // Check for opening tag: <number> or <name> or <name/> or <name />
+      // Also handle tags with attributes: <0 href="..."> or <name class="...">
       if (!isValidTag) {
-        const openingMatch = str.slice(i).match(/^<(\d+|[a-zA-Z][a-zA-Z0-9]*)(\s*\/)?\s*>/);
+        // Match: <tagName [attributes] [/]>
+        // Attributes pattern: name="value" or name='value' or name (boolean)
+        const openingMatch = str
+          .slice(i)
+          .match(
+            /^<(\d+|[a-zA-Z][a-zA-Z0-9]*)(\s+[\w\-]+(?:=(?:"[^"]*"|'[^']*'|[^\s>]+))?)*\s*(\/)?>/,
+          );
         if (openingMatch) {
           const tagName = openingMatch[1];
           // Valid if it's a number or in our valid names list

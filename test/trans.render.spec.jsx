@@ -186,9 +186,7 @@ describe('trans simple with custom html tag', () => {
         <strong>
           Go
         </strong>
-        &lt;video /&gt;
-        &lt;script&gt;console.warn("test")&lt;/script&gt;
-         there.
+        &lt;video /&gt;&lt;script&gt;console.warn("test")&lt;/script&gt; there.
       </div>
     `);
   });
