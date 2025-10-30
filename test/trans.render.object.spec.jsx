@@ -392,3 +392,27 @@ describe('trans with numbered tags with attributes', () => {
     `);
   });
 });
+
+describe('trans with hyphenated component names', () => {
+  function TestComponent() {
+    return (
+      <Trans
+        defaults="Visit our website: <website-link>mywebsite.fr</website-link>"
+        components={{ 'website-link': <a href="https://mywebsite.fr">dummy</a> }}
+      />
+    );
+  }
+  it('should render hyphenated component names correctly', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Visit our website: 
+        <a
+          href="https://mywebsite.fr"
+        >
+          mywebsite.fr
+        </a>
+      </div>
+    `);
+  });
+});
