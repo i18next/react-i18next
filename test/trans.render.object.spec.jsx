@@ -62,7 +62,7 @@ describe('trans using no children but components (object) - using index', () => 
   });
 });
 
-describe.skip('trans using no children but components (object) - using names', () => {
+describe('trans using no children but components (object) - using names with less-than sign', () => {
   function TestComponent() {
     return (
       <Trans
@@ -318,6 +318,52 @@ describe('trans using no children but components (object) - interpolated compone
         >
           Test
         </button>
+      </div>
+    `);
+  });
+});
+
+describe('trans with multiple less-than signs', () => {
+  function TestComponent() {
+    return (
+      <Trans
+        defaults="Values: <10, <20, and <bold>{{value}}</bold> are all less than 100"
+        values={{ value: '50' }}
+        components={{ bold: <strong>test</strong> }}
+      />
+    );
+  }
+  it('should render with escaped less-than signs', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Values: &lt;10, &lt;20, and 
+        <strong>
+          50
+        </strong>
+         are all less than 100
+      </div>
+    `);
+  });
+});
+
+describe('trans with less-than in mathematical expression', () => {
+  function TestComponent() {
+    return (
+      <Trans
+        defaults="If x<5 then <bold>do this</bold>"
+        components={{ bold: <strong>test</strong> }}
+      />
+    );
+  }
+  it('should render with escaped less-than sign', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        If x&lt;5 then 
+        <strong>
+          do this
+        </strong>
       </div>
     `);
   });

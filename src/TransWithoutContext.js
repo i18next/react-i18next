@@ -114,6 +114,75 @@ export const nodesToString = (children, i18nOptions, i18n, i18nKey) => {
   return stringNode;
 };
 
+/**
+ * Escape literal < characters that are not part of valid tags
+ * Valid tags are: numbered tags like <0>, </0> or named tags from keepArray/knownComponents
+ * @param {string} str - The string to escape
+ * @param {Array<string>} keepArray - Array of HTML tag names to keep
+ * @param {Object} knownComponentsMap - Map of known component names
+ * @returns {string} String with literal < characters escaped
+ */
+const escapeLiteralLessThan = (str, keepArray = [], knownComponentsMap = {}) => {
+  if (!str) return str;
+
+  // Build a list of valid tag names (numbered indices and known component names)
+  const knownNames = Object.keys(knownComponentsMap);
+  const allValidNames = [...keepArray, ...knownNames];
+
+  // Pattern to match:
+  // 1. Opening tags: <number> or <name> where name is in allValidNames
+  // 2. Closing tags: </number> or </name> where name is in allValidNames
+  // 3. Self-closing tags: <name/> or <name /> where name is in keepArray
+  // Everything else starting with < should be escaped
+
+  let result = '';
+  let i = 0;
+
+  while (i < str.length) {
+    if (str[i] === '<') {
+      // Check if this is a valid tag
+      let isValidTag = false;
+
+      // Check for closing tag: </number> or </name>
+      const closingMatch = str.slice(i).match(/^<\/(\d+|[a-zA-Z][a-zA-Z0-9]*)>/);
+      if (closingMatch) {
+        const tagName = closingMatch[1];
+        // Valid if it's a number or in our valid names list
+        if (/^\d+$/.test(tagName) || allValidNames.includes(tagName)) {
+          isValidTag = true;
+          result += closingMatch[0];
+          i += closingMatch[0].length;
+        }
+      }
+
+      // Check for opening tag: <number> or <name> or <name/> or <name />
+      if (!isValidTag) {
+        const openingMatch = str.slice(i).match(/^<(\d+|[a-zA-Z][a-zA-Z0-9]*)(\s*\/)?\s*>/);
+        if (openingMatch) {
+          const tagName = openingMatch[1];
+          // Valid if it's a number or in our valid names list
+          if (/^\d+$/.test(tagName) || allValidNames.includes(tagName)) {
+            isValidTag = true;
+            result += openingMatch[0];
+            i += openingMatch[0].length;
+          }
+        }
+      }
+
+      // If not a valid tag, escape the <
+      if (!isValidTag) {
+        result += '&lt;';
+        i++;
+      }
+    } else {
+      result += str[i];
+      i++;
+    }
+  }
+
+  return result;
+};
+
 const renderNodes = (
   children,
   knownComponentsMap,
@@ -149,9 +218,12 @@ const renderNodes = (
 
   getData(children);
 
+  // Escape literal < characters that are not part of valid tags before parsing
+  const escapedString = escapeLiteralLessThan(targetString, keepArray, data);
+
   // parse ast from string with additional wrapper tag
   // -> avoids issues in parser removing prepending text nodes
-  const ast = HTML.parse(`<0>${targetString}</0>`);
+  const ast = HTML.parse(`<0>${escapedString}</0>`);
   const opts = { ...data, ...combinedTOpts };
 
   const renderInner = (child, node, rootReactNode) => {
