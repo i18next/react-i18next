@@ -1,3 +1,7 @@
+### 16.2.4
+
+- try to fix "Trans component do not render anymore children as default value in test environment" [1883](https://github.com/i18next/react-i18next/issues/1883) by also respecting [1876](https://github.com/i18next/react-i18next/issues/1876)
+
 ### 16.2.3
 
 - fix hyphened component break issue [1882](https://github.com/i18next/react-i18next/pull/1882)

@@ -2765,7 +2765,8 @@
       defaultValue: defaults || tOptions?.defaultValue,
       ns: namespaces
     };
-    const translation = key ? t(key, combinedTOpts) : defaultValue;
+    let translation = key ? t(key, combinedTOpts) : defaultValue;
+    if (translation === key && defaultValue) translation = defaultValue;
     const generatedComponents = generateComponents(components, translation, i18n, i18nKey);
     let indexedChildren = generatedComponents || children;
     let componentsMap = null;
