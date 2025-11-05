@@ -38,7 +38,8 @@ describe('I18nextProvider', () => {
       const { t, i18n } = useTranslation('translation');
 
       expect(typeof t).toBe('function');
-      expect(i18n).toBe(instance);
+      // expect(i18n).toBe(instance);
+      expect(i18n.__original).toBe(instance);
 
       return <div>{t('key1')}</div>;
     }

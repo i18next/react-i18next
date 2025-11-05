@@ -21,7 +21,7 @@ describe('useTranslation', () => {
       const { t, i18n } = result.current;
       expect(t('key1')).toBe('test');
       expect(t(($) => $.key1)).toBe('test');
-      expect(i18nInstance).toBe(i18n);
+      expect(i18n.__original).toBe(i18nInstance);
     });
   });
 
@@ -48,7 +48,8 @@ describe('useTranslation', () => {
       const { result } = renderHook(() => useTranslation('translation', { i18n: i18nInstance }));
       const [t, i18n] = result.current;
       expect(t('key1')).toBe('test');
-      expect(i18n).toBe(i18nInstance);
+      // expect(i18n).toBe(i18nInstance);
+      expect(i18n.__original).toBe(i18nInstance);
     });
   });
 

@@ -129,12 +129,25 @@ export const useTranslation = (ns, props = {}) => {
   const finalI18n = i18n || {};
 
   const ret = useMemo(() => {
-    const arr = [t, finalI18n, ready];
+    const i18nWrapper = Object.create(
+      Object.getPrototypeOf(finalI18n),
+      Object.getOwnPropertyDescriptors(finalI18n),
+    );
+
+    // Store reference to the original instance for tests/debugging
+    Object.defineProperty(i18nWrapper, '__original', {
+      value: finalI18n,
+      writable: false,
+      enumerable: false,
+      configurable: false,
+    });
+
+    const arr = [t, i18nWrapper, ready];
     arr.t = t;
-    arr.i18n = finalI18n;
+    arr.i18n = i18nWrapper;
     arr.ready = ready;
     return arr;
-  }, [t, finalI18n, ready]);
+  }, [t, finalI18n, ready, finalI18n.resolvedLanguage, finalI18n.language, finalI18n.languages]);
 
   if (i18n && useSuspense && !ready) {
     throw new Promise((resolve) => {
