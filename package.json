@@ -72,7 +72,7 @@
     "use-sync-external-store": "^1.6.0"
   },
   "peerDependencies": {
-    "i18next": ">= 25.5.2",
+    "i18next": ">= 25.6.2",
     "react": ">= 16.8.0",
     "typescript": "^5"
   },
@@ -127,7 +127,7 @@
     "eslint-plugin-testing-library": "^6.5.0",
     "happy-dom": "^14.12.3",
     "husky": "^9.1.7",
-    "i18next": "^25.6.0",
+    "i18next": "^25.6.2",
     "lint-staged": "^15.5.2",
     "mkdirp": "^3.0.1",
     "prettier": "^3.6.2",
