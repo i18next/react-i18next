@@ -20,6 +20,14 @@ type _EnableSelector = TypeOptions['enableSelector'];
 type TransChild = React.ReactNode | Record<string, unknown>;
 type $NoInfer<T> = [T][T extends T ? 0 : never];
 
+/**
+ * Distributive version of InterpolationMap that works correctly with union types
+ * This ensures each key is processed individually rather than creating an intersection
+ */
+type TransInterpolationMap<Ns extends Namespace, Key, TOpt extends TOptions> = Key extends any
+  ? InterpolationMap<TFunctionReturn<Ns, Key, TOpt>>
+  : never;
+
 export type TransProps<
   Key extends ParseKeys<Ns, TOpt, KPrefix>,
   Ns extends Namespace = _DefaultNamespace,
@@ -38,7 +46,7 @@ export type TransProps<
   ns?: Ns;
   parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
   tOptions?: TOpt;
-  values?: InterpolationMap<TFunctionReturn<Ns, Key, TOpt>>;
+  values?: TransInterpolationMap<Ns, Key, TOpt>;
   shouldUnescape?: boolean;
   t?: TFunction<Ns, KPrefix>;
 };
@@ -73,7 +81,7 @@ export interface TransSelectorProps<
   ns?: Ns;
   parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
   tOptions?: TOpt;
-  values?: InterpolationMap<TFunctionReturn<Ns, Key, TOpt>>;
+  values?: TransInterpolationMap<Ns, Key, TOpt>;
   shouldUnescape?: boolean;
   t?: TFunction<Ns, KPrefix>;
 }
