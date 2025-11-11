@@ -51,9 +51,14 @@ type RequireKeys<T extends string> = T extends never
  * Creates a Record type from extracted interpolation keys
  * If no keys are extracted, returns an empty object type or undefined
  * Otherwise, returns a required Record with the extracted keys
+ *
+ * Special case: If S is the generic 'string' type (not a literal),
+ * it means resources are not defined (e.g., imported from JSON),
+ * so we allow any Record<string, unknown> for flexibility.
  */
-type InterpolationRecord<S extends string> =
-  ExtractInterpolationKeys<S> extends infer Keys
+type InterpolationRecord<S extends string> = string extends S
+  ? Record<string, unknown> | undefined // Generic string type - allow any keys
+  : ExtractInterpolationKeys<S> extends infer Keys
     ? Keys extends []
       ? Record<string, never> | undefined // No interpolation variables
       : Keys extends readonly string[]

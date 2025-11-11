@@ -113,6 +113,10 @@ describe('<Trans />', () => {
     expectTypeOf(Trans).toBeCallableWith({ values: {}, children: 'Foo' });
   });
 
+  it('should work for `values` objects where a key is defined', () => {
+    expectTypeOf(Trans).toBeCallableWith({ values: { something: 'asd' }, children: 'Foo' });
+  });
+
   it('should work with `t`', () => {
     const { t } = useTranslation();
     expectTypeOf(Trans).toBeCallableWith({ t, children: 'Foo' });
