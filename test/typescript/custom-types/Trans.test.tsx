@@ -173,5 +173,35 @@ describe('<Trans />', () => {
         values: { name: 'John' },
       });
     });
+
+    it('should reject incorrect interpolation variable names', () => {
+      // Should fail: wrongName is not a valid interpolation variable for 'title'
+      expectTypeOf(Trans).toBeCallableWith({
+        i18nKey: 'title',
+        // @ts-expect-error - wrongName is not a valid interpolation variable
+        values: { wrongName: 'My App' },
+      });
+    });
+
+    it('should reject missing required interpolation variables', () => {
+      // Should fail: appName is required for 'title'
+      // Test the values prop type directly
+      type TitleProps = React.ComponentProps<typeof Trans<'title'>>;
+      type ValuesType = TitleProps['values'];
+
+      // @ts-expect-error - empty object should not be assignable when appName is required
+      const invalidValues: ValuesType = {};
+
+      expectTypeOf<ValuesType>().not.toMatchTypeOf<{}>();
+    });
+
+    it('should reject extra interpolation variables', () => {
+      // Should fail: extra is not a valid interpolation variable for 'title'
+      expectTypeOf(Trans).toBeCallableWith({
+        i18nKey: 'title',
+        // @ts-expect-error - extra is not a valid interpolation variable
+        values: { appName: 'My App', extra: 'value' },
+      });
+    });
   });
 });
