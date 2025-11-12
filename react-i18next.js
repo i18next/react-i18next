@@ -2113,7 +2113,9 @@
       return rtlLngs.indexOf(languageUtils.getLanguagePartFromCode(lng)) > -1 || lng.toLowerCase().indexOf('-arab') > 1 ? 'rtl' : 'ltr';
     }
     static createInstance(options = {}, callback) {
-      return new I18n(options, callback);
+      const instance = new I18n(options, callback);
+      instance.createInstance = I18n.createInstance;
+      return instance;
     }
     cloneInstance(options = {}, callback = noop) {
       const forkResourceStore = options.forkResourceStore;
@@ -2177,7 +2179,6 @@
     }
   }
   const instance = I18n.createInstance();
-  instance.createInstance = I18n.createInstance;
   instance.createInstance;
   instance.dir;
   instance.init;
@@ -3498,12 +3499,19 @@
     }, [i18n, props.lng, namespaces, ready, useSuspense, loadCount]);
     const finalI18n = i18n || {};
     const ret = React.useMemo(() => {
-      const arr = [t, finalI18n, ready];
+      const i18nWrapper = Object.create(Object.getPrototypeOf(finalI18n), Object.getOwnPropertyDescriptors(finalI18n));
+      Object.defineProperty(i18nWrapper, '__original', {
+        value: finalI18n,
+        writable: false,
+        enumerable: false,
+        configurable: false
+      });
+      const arr = [t, i18nWrapper, ready];
       arr.t = t;
-      arr.i18n = finalI18n;
+      arr.i18n = i18nWrapper;
       arr.ready = ready;
       return arr;
-    }, [t, finalI18n, ready]);
+    }, [t, finalI18n, ready, finalI18n.resolvedLanguage, finalI18n.language, finalI18n.languages]);
     if (i18n && useSuspense && !ready) {
       throw new Promise(resolve => {
         const onLoaded = () => resolve();
