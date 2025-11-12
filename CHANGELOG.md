@@ -1,3 +1,7 @@
+### 16.3.1
+
+- revert fix: Incosistent behaviour of Trans and t. Trans set defaultValue when t call doesn't set the field. [1876](https://github.com/i18next/react-i18next/issues/1876) [f22d478](https://github.com/i18next/react-i18next/commit/f22d4787187e6cfc54d57f5fbede1c816ea19565)
+
 ### 16.3.0
 
 - fix: add i18n wrapper for React Compiler and React.memo compatibility [1884](https://github.com/i18next/react-i18next/pull/1884)

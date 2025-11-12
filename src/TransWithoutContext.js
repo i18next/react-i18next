@@ -532,7 +532,7 @@ export function Trans({
     count,
     ...values,
     ...interpolationOverride,
-    defaultValue: defaults || tOptions?.defaultValue,
+    defaultValue,
     ns: namespaces,
   };
   let translation = key ? t(key, combinedTOpts) : defaultValue;
