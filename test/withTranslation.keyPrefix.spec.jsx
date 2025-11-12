@@ -15,7 +15,8 @@ describe('withTranslation', () => {
     render() {
       const { t, i18n: instance } = this.props;
       expect(typeof t).toBe('function');
-      expect(instance).toBe(i18n);
+      // expect(instance).toBe(i18n);
+      expect(instance.__original).toBe(i18n);
 
       return <div>{t('deepKey1')}</div>;
     }

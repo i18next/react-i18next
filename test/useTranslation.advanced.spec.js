@@ -67,7 +67,8 @@ describe('useTranslation mounting and re-render', () => {
     // 3. Hook should now be ready and functional
     expect(result.current.ready).toBe(true);
     expect(result.current.t('key')).toBe('translated_key');
-    expect(result.current.i18n).toBe(mockI18n);
+    // expect(result.current.i18n).toBe(mockI18n);
+    expect(result.current.i18n.__original).toBe(mockI18n);
   });
 
   /**
