@@ -254,4 +254,29 @@ describe('useTranslation', () => {
       expect(container.textContent).toBeTruthy();
     });
   });
+
+  describe('useTranslation __original safety', () => {
+    it('does not throw when the source i18n has a non-configurable __original property', async () => {
+      const mockI18n = createInstance();
+      await mockI18n.init({
+        lng: 'en',
+        resources: { en: { translation: { key1: 'test' } } },
+        react: { useSuspense: false },
+      });
+
+      // Simulate a non-configurable __original on the source instance
+      Object.defineProperty(mockI18n, '__original', {
+        value: 'existing',
+        writable: false,
+        enumerable: false,
+        configurable: false,
+      });
+
+      // Should not throw; wrapper creation should handle the existing non-configurable descriptor
+      const { result } = renderHook(() => useTranslation('translation', { i18n: mockI18n }));
+
+      // The returned wrapper should expose __original pointing to the original instance
+      expect(result.current.i18n.__original).toBe(mockI18n);
+    });
+  });
 });

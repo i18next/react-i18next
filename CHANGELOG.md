@@ -1,3 +1,7 @@
+### 16.3.2
+
+- fix: avoid "Uncaught TypeError: Cannot redefine property: \_\_original"
+
 ### 16.3.1
 
 - revert fix: Incosistent behaviour of Trans and t. Trans set defaultValue when t call doesn't set the field. [1876](https://github.com/i18next/react-i18next/issues/1876) [f22d478](https://github.com/i18next/react-i18next/commit/f22d4787187e6cfc54d57f5fbede1c816ea19565)

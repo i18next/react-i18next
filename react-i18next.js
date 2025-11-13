@@ -3499,13 +3499,17 @@
     }, [i18n, props.lng, namespaces, ready, useSuspense, loadCount]);
     const finalI18n = i18n || {};
     const ret = React.useMemo(() => {
-      const i18nWrapper = Object.create(Object.getPrototypeOf(finalI18n), Object.getOwnPropertyDescriptors(finalI18n));
-      Object.defineProperty(i18nWrapper, '__original', {
-        value: finalI18n,
-        writable: false,
-        enumerable: false,
-        configurable: false
-      });
+      const descriptors = Object.getOwnPropertyDescriptors(finalI18n);
+      if (descriptors.__original) delete descriptors.__original;
+      const i18nWrapper = Object.create(Object.getPrototypeOf(finalI18n), descriptors);
+      if (!Object.prototype.hasOwnProperty.call(i18nWrapper, '__original')) {
+        Object.defineProperty(i18nWrapper, '__original', {
+          value: finalI18n,
+          writable: false,
+          enumerable: false,
+          configurable: false
+        });
+      }
       const arr = [t, i18nWrapper, ready];
       arr.t = t;
       arr.i18n = i18nWrapper;

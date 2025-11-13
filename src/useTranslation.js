@@ -129,18 +129,20 @@ export const useTranslation = (ns, props = {}) => {
   const finalI18n = i18n || {};
 
   const ret = useMemo(() => {
-    const i18nWrapper = Object.create(
-      Object.getPrototypeOf(finalI18n),
-      Object.getOwnPropertyDescriptors(finalI18n),
-    );
+    // Copy descriptors but avoid carrying over any existing "__original"
+    const descriptors = Object.getOwnPropertyDescriptors(finalI18n);
+    if (descriptors.__original) delete descriptors.__original;
+    const i18nWrapper = Object.create(Object.getPrototypeOf(finalI18n), descriptors);
 
-    // Store reference to the original instance for tests/debugging
-    Object.defineProperty(i18nWrapper, '__original', {
-      value: finalI18n,
-      writable: false,
-      enumerable: false,
-      configurable: false,
-    });
+    // Store reference to the original instance for tests/debugging if absent
+    if (!Object.prototype.hasOwnProperty.call(i18nWrapper, '__original')) {
+      Object.defineProperty(i18nWrapper, '__original', {
+        value: finalI18n,
+        writable: false,
+        enumerable: false,
+        configurable: false,
+      });
+    }
 
     const arr = [t, i18nWrapper, ready];
     arr.t = t;
