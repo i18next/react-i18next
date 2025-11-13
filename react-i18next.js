@@ -3498,17 +3498,42 @@
       }
     }, [i18n, props.lng, namespaces, ready, useSuspense, loadCount]);
     const finalI18n = i18n || {};
-    const ret = React.useMemo(() => {
-      const descriptors = Object.getOwnPropertyDescriptors(finalI18n);
+    const wrapperRef = React.useRef(null);
+    const wrapperLangRef = React.useRef();
+    const createI18nWrapper = original => {
+      const descriptors = Object.getOwnPropertyDescriptors(original);
       if (descriptors.__original) delete descriptors.__original;
-      const i18nWrapper = Object.create(Object.getPrototypeOf(finalI18n), descriptors);
-      if (!Object.prototype.hasOwnProperty.call(i18nWrapper, '__original')) {
-        Object.defineProperty(i18nWrapper, '__original', {
-          value: finalI18n,
-          writable: false,
-          enumerable: false,
-          configurable: false
-        });
+      const wrapper = Object.create(Object.getPrototypeOf(original), descriptors);
+      if (!Object.prototype.hasOwnProperty.call(wrapper, '__original')) {
+        try {
+          Object.defineProperty(wrapper, '__original', {
+            value: original,
+            writable: false,
+            enumerable: false,
+            configurable: false
+          });
+        } catch (_) {}
+      }
+      return wrapper;
+    };
+    const ret = React.useMemo(() => {
+      const original = finalI18n;
+      const lang = original?.language;
+      let i18nWrapper = original;
+      if (original) {
+        if (wrapperRef.current && wrapperRef.current.__original === original) {
+          if (wrapperLangRef.current !== lang) {
+            i18nWrapper = createI18nWrapper(original);
+            wrapperRef.current = i18nWrapper;
+            wrapperLangRef.current = lang;
+          } else {
+            i18nWrapper = wrapperRef.current;
+          }
+        } else {
+          i18nWrapper = createI18nWrapper(original);
+          wrapperRef.current = i18nWrapper;
+          wrapperLangRef.current = lang;
+        }
       }
       const arr = [t, i18nWrapper, ready];
       arr.t = t;

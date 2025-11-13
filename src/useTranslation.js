@@ -128,20 +128,58 @@ export const useTranslation = (ns, props = {}) => {
 
   const finalI18n = i18n || {};
 
-  const ret = useMemo(() => {
-    // Copy descriptors but avoid carrying over any existing "__original"
-    const descriptors = Object.getOwnPropertyDescriptors(finalI18n);
-    if (descriptors.__original) delete descriptors.__original;
-    const i18nWrapper = Object.create(Object.getPrototypeOf(finalI18n), descriptors);
+  // cache one wrapper per hook caller and only recreate it when language changes
+  const wrapperRef = useRef(null);
+  const wrapperLangRef = useRef();
 
-    // Store reference to the original instance for tests/debugging if absent
-    if (!Object.prototype.hasOwnProperty.call(i18nWrapper, '__original')) {
-      Object.defineProperty(i18nWrapper, '__original', {
-        value: finalI18n,
-        writable: false,
-        enumerable: false,
-        configurable: false,
-      });
+  // helper to create a wrapper instance (avoid duplicating descriptor logic)
+  const createI18nWrapper = (original) => {
+    const descriptors = Object.getOwnPropertyDescriptors(original);
+    if (descriptors.__original) delete descriptors.__original;
+    const wrapper = Object.create(Object.getPrototypeOf(original), descriptors);
+
+    if (!Object.prototype.hasOwnProperty.call(wrapper, '__original')) {
+      try {
+        Object.defineProperty(wrapper, '__original', {
+          value: original,
+          writable: false,
+          enumerable: false,
+          configurable: false,
+        });
+      } catch (_) {
+        /* ignore */
+      }
+    }
+
+    return wrapper;
+  };
+
+  const ret = useMemo(() => {
+    const original = finalI18n;
+    const lang = original?.language;
+
+    let i18nWrapper = original;
+
+    if (original) {
+      // if we already created a wrapper for this original instance
+      if (wrapperRef.current && wrapperRef.current.__original === original) {
+        // language changed -> create fresh wrapper so identity changes
+        if (wrapperLangRef.current !== lang) {
+          i18nWrapper = createI18nWrapper(original);
+
+          wrapperRef.current = i18nWrapper;
+          wrapperLangRef.current = lang;
+        } else {
+          // reuse existing wrapper when language didn't change
+          i18nWrapper = wrapperRef.current;
+        }
+      } else {
+        // first time for this original instance -> create wrapper
+        i18nWrapper = createI18nWrapper(original);
+
+        wrapperRef.current = i18nWrapper;
+        wrapperLangRef.current = lang;
+      }
     }
 
     const arr = [t, i18nWrapper, ready];
