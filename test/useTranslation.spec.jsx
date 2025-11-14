@@ -21,6 +21,7 @@ describe('useTranslation', () => {
       const { t, i18n } = result.current;
       expect(t('key1')).toBe('test');
       expect(t(($) => $.key1)).toBe('test');
+      // expect(i18n).toBe(i18nInstance);
       expect(i18n.__original).toBe(i18nInstance);
     });
   });
@@ -35,8 +36,10 @@ describe('useTranslation', () => {
       i18n.changeLanguage('fr');
       try {
         rerender();
-        const { t: refreshedT } = result.current;
+        const { t: refreshedT, i18n: refreshedI18n } = result.current;
         expect(refreshedT).not.toBe(t);
+        // expect(refreshedI18n).toBe(i18n);
+        expect(refreshedI18n.__original).toBe(i18n.__original);
       } finally {
         i18n.changeLanguage('en');
       }
@@ -277,6 +280,33 @@ describe('useTranslation', () => {
 
       // The returned wrapper should expose __original pointing to the original instance
       expect(result.current.i18n.__original).toBe(mockI18n);
+    });
+  });
+
+  describe('useTranslation language wrapper identity', () => {
+    it('only replaces returned i18n wrapper when language actually changes', async () => {
+      const { result, rerender } = renderHook(() =>
+        useTranslation('translation', { i18n: i18nInstance }),
+      );
+
+      const beforeWrapper = result.current.i18n;
+      expect(beforeWrapper.__original || beforeWrapper).toBe(i18nInstance);
+
+      // calling changeLanguage with the same current language should NOT replace wrapper
+      await i18nInstance.changeLanguage(i18nInstance.language);
+      rerender();
+      expect(result.current.i18n).toBe(beforeWrapper);
+
+      // calling changeLanguage to a different language SHOULD replace wrapper
+      i18nInstance.changeLanguage('fr');
+      rerender();
+      const afterWrapper = result.current.i18n;
+      expect(afterWrapper).not.toBe(beforeWrapper);
+      expect(afterWrapper.__original).toBe(i18nInstance);
+
+      // restore language
+      await i18nInstance.changeLanguage('en');
+      rerender();
     });
   });
 });
