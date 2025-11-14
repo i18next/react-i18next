@@ -12,6 +12,11 @@ declare module 'i18next' {
 
         some: 'some';
         some_me: 'some context';
+
+        // Test interpolation
+        title: 'Title: <strong>{{appName}}</strong>';
+        greeting: 'Hello {{name}}!';
+        message: 'You have {{count}} messages from {{sender}}';
       };
 
       alternate: {

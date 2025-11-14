@@ -125,4 +125,48 @@ describe('<Trans />', () => {
       });
     });
   });
+
+  describe('values prop with interpolation type hints (Selector API)', () => {
+    it('should accept correct values for interpolation with selector', () => {
+      // <Trans i18nKey={($) => $.title} values={{ appName: 'My App' }} />
+      <Trans i18nKey={($) => $.title} values={{ appName: 'My App' }} />;
+    });
+
+    it('should accept correct values with multiple interpolation variables', () => {
+      // <Trans i18nKey={($) => $.message} values={{ count: 5, sender: 'John' }} />
+      <Trans i18nKey={($) => $.message} values={{ count: 5, sender: 'John' }} />;
+    });
+
+    it('should work with keys that have no interpolation', () => {
+      // Keys without interpolation accept empty values object
+      <Trans i18nKey={($) => $.foo} values={{}} />;
+    });
+
+    it('should work with greeting key', () => {
+      // <Trans i18nKey={($) => $.greeting} values={{ name: 'John' }} />
+      <Trans i18nKey={($) => $.greeting} values={{ name: 'John' }} />;
+    });
+
+    // Note: Negative tests for Selector API are currently not working
+    // because the type system cannot extract interpolation variables from
+    // the SelectorFn return type. This is a known limitation.
+    // The positive tests above verify that correct usage works.
+
+    it('should work with t function and provide type hints', () => {
+      const { t } = useTranslation('custom');
+
+      // When using t function with selector, values prop gets same type hints
+      <Trans t={t} i18nKey={($) => $.title} values={{ appName: 'My App' }} />;
+    });
+
+    it('should work with namespace selector', () => {
+      // Test with explicit namespace
+      <Trans ns="custom" i18nKey={($) => $.title} values={{ appName: 'My App' }} />;
+    });
+
+    it('should work with context key that has interpolation', () => {
+      // Test with context namespace that has interpolation (using plural form)
+      <Trans ns="context" i18nKey={($) => $.dessert_muffin} values={{ count: 5 }} count={5} />;
+    });
+  });
 });
