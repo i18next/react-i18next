@@ -116,7 +116,7 @@ describe('<Trans />', () => {
       assertType<React.ReactElement>(<Trans t={t} i18nKey={($) => $.some} context="me" />);
     });
 
-    it('raises a TypeError given a defaut `t` function when context is invalid', () => {
+    it('raises a TypeError given a default `t` function when context is invalid', () => {
       // @ts-expect-error should
       assertType<React.ReactElement>(<Trans t={t} i18nKey={($) => $.some} context="Test1222" />);
     });
