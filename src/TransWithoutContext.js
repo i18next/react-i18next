@@ -251,18 +251,28 @@ const renderNodes = (
     } else {
       mem.push(
         ...Children.map([child], (c) => {
-          const props = { ...c.props };
-          delete props.i18nIsDynamicList;
-          // <c.type {...props} key={i} ref={c.ref} {...(isVoid ? {} : { children: inner })} />;
-          return createElement(
-            c.type,
-            {
-              ...props,
-              key: i,
-              ref: c.props.ref ?? c.ref, // ref is a prop in react >= v19
-            },
-            isVoid ? null : inner,
-          );
+          // Build an override props object while deliberately NOT reading c.ref or c.props.ref
+          // use a DOM-safe marker name and never forward it to DOM nodes
+          const INTERNAL_DYNAMIC_MARKER = 'data-i18n-is-dynamic-list';
+          const override = { key: i, [INTERNAL_DYNAMIC_MARKER]: undefined };
+
+          if (c && c.props) {
+            Object.keys(c.props).forEach((k) => {
+              // skip special/internal props and the dynamic-list marker so it never reaches DOM
+              if (
+                k === 'ref' ||
+                k === 'children' ||
+                k === 'i18nIsDynamicList' ||
+                k === INTERNAL_DYNAMIC_MARKER
+              )
+                return;
+              override[k] = c.props[k];
+            });
+          }
+
+          // Use cloneElement for all element types so React preserves/forwards refs internally
+          // and we don't access element.ref nor c.props.ref ourselves.
+          return cloneElement(c, override, isVoid ? null : inner);
         }),
       );
     }

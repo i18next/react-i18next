@@ -2578,15 +2578,18 @@
         }, isVoid ? undefined : inner));
       } else {
         mem.push(...React.Children.map([child], c => {
-          const props = {
-            ...c.props
-          };
-          delete props.i18nIsDynamicList;
-          return React.createElement(c.type, {
-            ...props,
+          const INTERNAL_DYNAMIC_MARKER = 'data-i18n-is-dynamic-list';
+          const override = {
             key: i,
-            ref: c.props.ref ?? c.ref
-          }, isVoid ? null : inner);
+            [INTERNAL_DYNAMIC_MARKER]: undefined
+          };
+          if (c && c.props) {
+            Object.keys(c.props).forEach(k => {
+              if (k === 'ref' || k === 'children' || k === 'i18nIsDynamicList' || k === INTERNAL_DYNAMIC_MARKER) return;
+              override[k] = c.props[k];
+            });
+          }
+          return React.cloneElement(c, override, isVoid ? null : inner);
         }));
       }
     };

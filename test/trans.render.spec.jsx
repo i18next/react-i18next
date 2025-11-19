@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach } from 'vitest';
-import React from 'react';
-import { render, cleanup } from '@testing-library/react';
+import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach, vi } from 'vitest';
+import React, { useRef, useEffect } from 'react';
+import { render, cleanup, waitFor } from '@testing-library/react';
 import i18n from './i18n';
 import { withTranslation } from '../src/withTranslation';
 import { Trans } from '../src/Trans';
@@ -1175,5 +1175,36 @@ describe('Trans edge cases', () => {
 
     // Should render something (component warning logged internally)
     expect(container).toBeTruthy();
+  });
+
+  describe('Trans ref forwarding', () => {
+    function TestComponent({ cb }) {
+      const ref = useRef(null);
+      useEffect(() => {
+        cb(ref.current);
+      }, [cb]);
+      return (
+        <Trans>
+          <div className="App">
+            <h1>Hello CodeSandbox</h1>
+            <h2 ref={ref}>Start editing to see some magic happen!</h2>
+          </div>
+        </Trans>
+      );
+    }
+
+    it('preserves a user ref placed on a nested element', async () => {
+      const cb = vi.fn();
+      render(<TestComponent cb={cb} />);
+
+      await waitFor(() => {
+        expect(cb).toHaveBeenCalled();
+      });
+
+      const el = cb.mock.calls[0][0];
+      expect(el).toBeInstanceOf(HTMLElement);
+      expect(el.tagName).toBe('H2');
+      expect(el).toHaveTextContent('Start editing to see some magic happen!');
+    });
   });
 });
