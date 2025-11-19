@@ -1,3 +1,7 @@
+### 16.3.5
+
+- fix runaway effect in useTranslation [1888](https://github.com/i18next/react-i18next/issues/1888) by [1889](https://github.com/i18next/react-i18next/pull/1889)
+
 ### 16.3.4
 
 - Fix: avoid the "ref is not a prop" warning when a user ref is placed on an element inside `<Trans>` [1887](https://github.com/i18next/react-i18next/issues/1887), by still trying to fix element.ref access issue with react 19 [1846](https://github.com/i18next/react-i18next/pull/1846)
