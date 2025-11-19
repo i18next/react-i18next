@@ -325,10 +325,12 @@ describe('useTranslation', () => {
     i18n.loadNamespaces = vitest.fn();
 
     let renderCount = 0;
+    const countCalls = [];
     // Create a hook wrapper that forces re-renders by prop
     const { rerender } = renderHook(
       ({ count }) => {
-        renderCount++;
+        countCalls.push(count);
+        renderCount += 1;
         // Inline array: New reference every render
         useTranslation(['ns1'], { i18n });
       },
@@ -337,11 +339,20 @@ describe('useTranslation', () => {
 
     // Initial render
     expect(i18n.loadNamespaces).toHaveBeenCalledTimes(1);
+    expect(renderCount).to.eql(1);
+    expect(countCalls).to.have.lengthOf(1);
+    expect(countCalls[0]).to.eql(0);
 
     rerender({ count: 1 });
     expect(i18n.loadNamespaces).toHaveBeenCalledTimes(1);
+    expect(renderCount).to.eql(2);
+    expect(countCalls).to.have.lengthOf(2);
+    expect(countCalls[1]).to.eql(1);
 
     rerender({ count: 2 });
     expect(i18n.loadNamespaces).toHaveBeenCalledTimes(1);
+    expect(renderCount).to.eql(3);
+    expect(countCalls).to.have.lengthOf(3);
+    expect(countCalls[2]).to.eql(2);
   });
 });
