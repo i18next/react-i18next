@@ -309,4 +309,39 @@ describe('useTranslation', () => {
       rerender();
     });
   });
+
+  it('should not trigger loadNamespaces on every render if namespaces array is unstable (inline)', async () => {
+    const i18n = createInstance();
+    i18n.init({
+      lng: 'en',
+      resources: {},
+      react: { useSuspense: false },
+    });
+
+    // Mock hasLoadedNamespace to return false so we hit the loading path
+    i18n.hasLoadedNamespace = () => false;
+
+    // Mock loadNamespaces to do nothing (pending)
+    i18n.loadNamespaces = vitest.fn();
+
+    let renderCount = 0;
+    // Create a hook wrapper that forces re-renders by prop
+    const { rerender } = renderHook(
+      ({ count }) => {
+        renderCount++;
+        // Inline array: New reference every render
+        useTranslation(['ns1'], { i18n });
+      },
+      { initialProps: { count: 0 } },
+    );
+
+    // Initial render
+    expect(i18n.loadNamespaces).toHaveBeenCalledTimes(1);
+
+    rerender({ count: 1 });
+    expect(i18n.loadNamespaces).toHaveBeenCalledTimes(1);
+
+    rerender({ count: 2 });
+    expect(i18n.loadNamespaces).toHaveBeenCalledTimes(1);
+  });
 });

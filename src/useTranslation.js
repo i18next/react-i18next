@@ -43,10 +43,9 @@ export const useTranslation = (ns, props = {}) => {
 
   const { useSuspense, keyPrefix } = i18nOptions;
 
-  const namespaces = useMemo(() => {
-    const nsOrContext = ns || defaultNSFromContext || i18n?.options?.defaultNS;
-    return isString(nsOrContext) ? [nsOrContext] : nsOrContext || ['translation'];
-  }, [ns, defaultNSFromContext, i18n]);
+  const nsOrContext = ns || defaultNSFromContext || i18n?.options?.defaultNS;
+  const unstableNamespaces = isString(nsOrContext) ? [nsOrContext] : nsOrContext || ['translation'];
+  const namespaces = useMemo(() => unstableNamespaces, unstableNamespaces);
 
   i18n?.reportNamespaces?.addUsedNamespaces?.(namespaces);
 
