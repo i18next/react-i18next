@@ -1163,7 +1163,7 @@ describe('Trans edge cases', () => {
       <TransWithoutContext i18n={null}>Fallback content</TransWithoutContext>,
     );
 
-    expect(container.textContent).toBe('Fallback content');
+    expect(container).toHaveTextContent('Fallback content');
   });
 
   it('should handle invalid components prop type', () => {
