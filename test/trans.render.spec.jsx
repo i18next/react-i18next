@@ -385,6 +385,65 @@ describe('trans complex - count only in props', () => {
   });
 });
 
+describe('trans complex - count inferred from children', () => {
+  function TestComponent() {
+    const count = 10;
+    const name = 'Jan';
+    // prettier-ignore
+    return (
+      <Trans i18nKey="transTest2">
+        Hello <strong>{{ name }}</strong>, you have {{ count }} message. Open <Link to="/msgs">here</Link>.
+      </Trans>
+    );
+  }
+
+  it('should render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Hello 
+        <strong>
+          Jan
+        </strong>
+        , you have 
+        10
+         messages. Open 
+        <a
+          href="/msgs"
+        >
+          here
+        </a>
+        .
+      </div>
+    `);
+  });
+});
+
+describe('trans with count and stuff inferred', () => {
+  function TestComponent() {
+    const count = 123;
+    const stuff = 'hey';
+    return (
+      <Trans>
+        <strong>
+          {{ count }} and {{ stuff }}
+        </strong>
+      </Trans>
+    );
+  }
+
+  it('should render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        <strong>
+          123 and hey
+        </strong>
+      </div>
+    `);
+  });
+});
+
 describe('trans complex v2 no extra pseudo elements for interpolation', () => {
   function TestComponent() {
     const count = 10;

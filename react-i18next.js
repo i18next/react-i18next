@@ -2441,6 +2441,19 @@
     newTarget.props = Object.assign(source.props, target.props);
     return newTarget;
   };
+  const getValuesFromChildren = children => {
+    const values = {};
+    if (!children) return values;
+    const getData = childs => {
+      const childrenArray = getAsArray(childs);
+      childrenArray.forEach(child => {
+        if (isString(child)) return;
+        if (hasChildren(child)) getData(getChildren(child));else if (isObject(child) && !React.isValidElement(child)) Object.assign(values, child);
+      });
+    };
+    getData(children);
+    return values;
+  };
   const nodesToString = (children, i18nOptions, i18n, i18nKey) => {
     if (!children) return '';
     let stringNode = '';
@@ -2752,6 +2765,10 @@
       } : {
         ...i18n.options.interpolation.defaultVariables
       };
+    }
+    const valuesFromChildren = getValuesFromChildren(children);
+    if (valuesFromChildren && typeof valuesFromChildren.count === 'number' && count === undefined) {
+      count = valuesFromChildren.count;
     }
     const interpolationOverride = values || count !== undefined && !i18n.options?.interpolation?.alwaysFormat || !children ? tOptions.interpolation : {
       interpolation: {

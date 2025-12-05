@@ -30,6 +30,21 @@ const mergeProps = (source, target) => {
   return newTarget;
 };
 
+const getValuesFromChildren = (children) => {
+  const values = {};
+  if (!children) return values;
+  const getData = (childs) => {
+    const childrenArray = getAsArray(childs);
+    childrenArray.forEach((child) => {
+      if (isString(child)) return;
+      if (hasChildren(child)) getData(getChildren(child));
+      else if (isObject(child) && !isValidElement(child)) Object.assign(values, child);
+    });
+  };
+  getData(children);
+  return values;
+};
+
 export const nodesToString = (children, i18nOptions, i18n, i18nKey) => {
   if (!children) return '';
   let stringNode = '';
@@ -530,6 +545,14 @@ export function Trans({
         ? { ...values, ...i18n.options.interpolation.defaultVariables }
         : { ...i18n.options.interpolation.defaultVariables };
   }
+
+  const valuesFromChildren = getValuesFromChildren(children);
+
+  if (valuesFromChildren && typeof valuesFromChildren.count === 'number' && count === undefined) {
+    // eslint-disable-next-line no-param-reassign
+    count = valuesFromChildren.count;
+  }
+
   const interpolationOverride =
     values ||
     (count !== undefined && !i18n.options?.interpolation?.alwaysFormat) || // https://github.com/i18next/react-i18next/issues/1719 + https://github.com/i18next/react-i18next/issues/1801

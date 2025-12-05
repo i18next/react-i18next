@@ -1,3 +1,7 @@
+### 16.4.0
+
+- `<Trans count>` prop: optional - infer count from children [1891](https://github.com/i18next/react-i18next/issues/1891)
+
 ### 16.3.5
 
 - fix runaway effect in useTranslation [1888](https://github.com/i18next/react-i18next/issues/1888) by [1889](https://github.com/i18next/react-i18next/pull/1889)
