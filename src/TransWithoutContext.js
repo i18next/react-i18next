@@ -397,10 +397,12 @@ const renderNodes = (
         }
       } else if (node.type === 'text') {
         const wrapTextNodes = i18nOptions.transWrapTextNodes;
+        const unescapeFn =
+          typeof i18nOptions.unescape === 'function'
+            ? i18nOptions.unescape
+            : getDefaults().unescape;
         const content = shouldUnescape
-          ? i18nOptions.unescape(
-              i18n.services.interpolator.interpolate(node.content, opts, i18n.language),
-            )
+          ? unescapeFn(i18n.services.interpolator.interpolate(node.content, opts, i18n.language))
           : i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
         if (wrapTextNodes) {
           mem.push(createElement(wrapTextNodes, { key: `${node.name}-${i}` }, content));
