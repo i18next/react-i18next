@@ -2616,8 +2616,19 @@
           if (!tmp && knownComponentsMap) tmp = knownComponentsMap[node.name];
           if (rootReactNode.length === 1 && !tmp) tmp = rootReactNode[0][node.name];
           if (!tmp) tmp = {};
-          const child = Object.keys(node.attrs).length !== 0 ? mergeProps({
-            props: node.attrs
+          const props = {
+            ...node.attrs
+          };
+          if (shouldUnescape) {
+            Object.keys(props).forEach(p => {
+              const val = props[p];
+              if (isString(val)) {
+                props[p] = unescape(val);
+              }
+            });
+          }
+          const child = Object.keys(props).length !== 0 ? mergeProps({
+            props
           }, tmp) : tmp;
           const isElement = React.isValidElement(child);
           const isValidTranslationWithChildren = isElement && hasChildren(node, true) && !node.voidElement;
@@ -2661,7 +2672,8 @@
           }
         } else if (node.type === 'text') {
           const wrapTextNodes = i18nOptions.transWrapTextNodes;
-          const content = shouldUnescape ? i18nOptions.unescape(i18n.services.interpolator.interpolate(node.content, opts, i18n.language)) : i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
+          const unescapeFn = typeof i18nOptions.unescape === 'function' ? i18nOptions.unescape : getDefaults().unescape;
+          const content = shouldUnescape ? unescapeFn(i18n.services.interpolator.interpolate(node.content, opts, i18n.language)) : i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
           if (wrapTextNodes) {
             mem.push(React.createElement(wrapTextNodes, {
               key: `${node.name}-${i}`

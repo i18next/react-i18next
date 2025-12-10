@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach, vi } from 'vitest';
 import React, { useRef, useEffect } from 'react';
-import { render, cleanup, waitFor } from '@testing-library/react';
+import { render, cleanup, waitFor, screen } from '@testing-library/react';
 import i18n from './i18n';
 import { withTranslation } from '../src/withTranslation';
 import { Trans } from '../src/Trans';
@@ -1265,5 +1265,56 @@ describe('Trans edge cases', () => {
       expect(el.tagName).toBe('H2');
       expect(el).toHaveTextContent('Start editing to see some magic happen!');
     });
+  });
+});
+
+describe('trans issue 1893 - double escaping in props', () => {
+  function Item({ title }) {
+    return <span title={title}>{title}</span>;
+  }
+
+  function TestComponent({ name, escapeValue }) {
+    return (
+      <Trans
+        i18nKey="issue1893"
+        values={{ name }}
+        components={{ Item: <Item /> }}
+        tOptions={escapeValue ? { interpolation: { escapeValue: true } } : undefined}
+        shouldUnescape
+      />
+    );
+  }
+
+  it('should render correctly with quotes in interpolation (case 1: escapeValue false)', () => {
+    const value = 'World " \' Test';
+    const { container } = render(<TestComponent name={value} />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Hello &lt;Item title="World " ' Test" /&gt;!
+      </div>
+    `);
+  });
+
+  it('should render correctly with quotes in interpolation (case 2: escapeValue true)', () => {
+    const value = 'World " \' Test';
+    const { container } = render(<TestComponent name={value} escapeValue />);
+
+    // Expected behavior: Component parsed and rendered correctly without double escaping
+    const span = screen.getByText(value);
+    expect(span).toBeInTheDocument();
+    expect(span).toHaveTextContent(value);
+    expect(span).toHaveAttribute('title', value);
+
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Hello 
+        <span
+          title="World " ' Test"
+        >
+          World " ' Test
+        </span>
+        !
+      </div>
+    `);
   });
 });

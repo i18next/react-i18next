@@ -1,3 +1,7 @@
+### 16.4.1
+
+- fix(Trans): prevent double-escaping of interpolated values in component props (e.g. title). Unescape HTML entities before passing prop values to React to avoid rendered output like `&amp;quot;` / `&amp;#39;`. [#1893](https://github.com/i18next/react-i18next/issues/1893)
+
 ### 16.4.0
 
 - `<Trans count>` prop: optional - infer count from children [1891](https://github.com/i18next/react-i18next/issues/1891)

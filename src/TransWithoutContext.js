@@ -4,6 +4,7 @@ import HTML from 'html-parse-stringify';
 import { isObject, isString, warn, warnOnce } from './utils.js';
 import { getDefaults } from './defaults.js';
 import { getI18n } from './i18nInstance.js';
+import { unescape } from './unescape.js';
 
 const hasChildren = (node, checkLength) => {
   if (!node) return false;
@@ -316,8 +317,18 @@ const renderNodes = (
         // neither
         if (!tmp) tmp = {};
 
-        const child =
-          Object.keys(node.attrs).length !== 0 ? mergeProps({ props: node.attrs }, tmp) : tmp;
+        // should fix #1893
+        const props = { ...node.attrs };
+        if (shouldUnescape) {
+          Object.keys(props).forEach((p) => {
+            const val = props[p];
+            if (isString(val)) {
+              props[p] = unescape(val);
+            }
+          });
+        }
+
+        const child = Object.keys(props).length !== 0 ? mergeProps({ props }, tmp) : tmp;
 
         const isElement = isValidElement(child);
 

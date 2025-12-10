@@ -60,6 +60,7 @@ i18n.init({
         transTestWithSelfClosing: 'interpolated component: <component/>',
         bracketNotation: '{{count}}',
         otherNotation: '#$?count?$#',
+        issue1893: 'Hello <Item title="{{ name }}" />!',
       },
       other: {
         transTest1: 'Another go <1>there</1>.',
