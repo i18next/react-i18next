@@ -1,6 +1,10 @@
+### 16.5.0
+
+- Add configuration option `transDefaultProps` to set default props for the Trans component (e.g. `tOptions`, `shouldUnescape`, `values`) [1895](https://github.com/i18next/react-i18next/issues/1895)
+
 ### 16.4.1
 
-- fix(Trans): prevent double-escaping of interpolated values in component props (e.g. title). Unescape HTML entities before passing prop values to React to avoid rendered output like `&amp;quot;` / `&amp;#39;`. [#1893](https://github.com/i18next/react-i18next/issues/1893)
+- fix(Trans): prevent double-escaping of interpolated values in component props (e.g. title). Unescape HTML entities before passing prop values to React to avoid rendered output like `&amp;quot;` / `&amp;#39;`. [1893](https://github.com/i18next/react-i18next/issues/1893)
 
 ### 16.4.0
 

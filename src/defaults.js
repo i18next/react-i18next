@@ -11,6 +11,7 @@ let defaultOptions = {
   // hashTransKey: key => key // calculate a key for Trans component based on defaultValue
   useSuspense: true,
   unescape,
+  transDefaultProps: undefined, // { tOptions: {}, shouldUnescape: false, values: {}, components: [] }
 };
 
 export const setDefaults = (options = {}) => {

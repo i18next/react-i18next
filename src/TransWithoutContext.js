@@ -540,10 +540,25 @@ export function Trans({
   let namespaces = ns || t.ns || i18n.options?.defaultNS;
   namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
 
+  const { transDefaultProps } = reactI18nextOptions;
+  const mergedTOptions = transDefaultProps?.tOptions
+    ? { ...transDefaultProps.tOptions, ...tOptions }
+    : tOptions;
+
+  const mergedShouldUnescape = shouldUnescape ?? transDefaultProps?.shouldUnescape;
+
+  const mergedValues = transDefaultProps?.values
+    ? { ...transDefaultProps.values, ...values }
+    : values;
+
+  const mergedComponents = transDefaultProps?.components
+    ? { ...transDefaultProps.components, ...components }
+    : components;
+
   const nodeAsString = nodesToString(children, reactI18nextOptions, i18n, i18nKey);
   const defaultValue =
     defaults ||
-    tOptions?.defaultValue ||
+    mergedTOptions?.defaultValue ||
     nodeAsString ||
     reactI18nextOptions.transEmptyNodeValue ||
     (typeof i18nKey === 'function' ? keyFromSelector(i18nKey) : i18nKey);
@@ -554,9 +569,12 @@ export function Trans({
   if (i18n.options?.interpolation?.defaultVariables) {
     // eslint-disable-next-line no-param-reassign
     values =
-      values && Object.keys(values).length > 0
-        ? { ...values, ...i18n.options.interpolation.defaultVariables }
+      mergedValues && Object.keys(mergedValues).length > 0
+        ? { ...mergedValues, ...i18n.options.interpolation.defaultVariables }
         : { ...i18n.options.interpolation.defaultVariables };
+  } else {
+    // eslint-disable-next-line no-param-reassign
+    values = mergedValues;
   }
 
   const valuesFromChildren = getValuesFromChildren(children);
@@ -570,11 +588,11 @@ export function Trans({
     values ||
     (count !== undefined && !i18n.options?.interpolation?.alwaysFormat) || // https://github.com/i18next/react-i18next/issues/1719 + https://github.com/i18next/react-i18next/issues/1801
     !children // if !children gets problems in future, undo that fix: https://github.com/i18next/react-i18next/issues/1729 by removing !children from this condition
-      ? tOptions.interpolation
-      : { interpolation: { ...tOptions.interpolation, prefix: '#$?', suffix: '?$#' } };
+      ? mergedTOptions.interpolation
+      : { interpolation: { ...mergedTOptions.interpolation, prefix: '#$?', suffix: '?$#' } };
   const combinedTOpts = {
-    ...tOptions,
-    context: context || tOptions.context, // Add `context` from the props or fallback to the value from `tOptions`
+    ...mergedTOptions,
+    context: context || mergedTOptions.context, // Add `context` from the props or fallback to the value from `tOptions`
     count,
     ...values,
     ...interpolationOverride,
@@ -584,7 +602,7 @@ export function Trans({
   let translation = key ? t(key, combinedTOpts) : defaultValue;
   if (translation === key && defaultValue) translation = defaultValue;
 
-  const generatedComponents = generateComponents(components, translation, i18n, i18nKey);
+  const generatedComponents = generateComponents(mergedComponents, translation, i18n, i18nKey);
   let indexedChildren = generatedComponents || children;
   let componentsMap = null;
   if (isComponentsMap(generatedComponents)) {
@@ -599,7 +617,7 @@ export function Trans({
     i18n,
     reactI18nextOptions,
     combinedTOpts,
-    shouldUnescape,
+    mergedShouldUnescape,
   );
 
   // allows user to pass `null` to `parent`

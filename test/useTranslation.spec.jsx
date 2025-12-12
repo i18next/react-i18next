@@ -1,6 +1,6 @@
 import { describe, it, vitest, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import React from 'react';
-import { renderHook, cleanup, render } from '@testing-library/react';
+import { renderHook, cleanup, render, act } from '@testing-library/react';
 import { createInstance } from 'i18next';
 import i18nInstance from './i18n';
 import { useTranslation } from '../src/useTranslation';

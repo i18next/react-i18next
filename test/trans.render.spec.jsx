@@ -1318,3 +1318,137 @@ describe('trans issue 1893 - double escaping in props', () => {
     `);
   });
 });
+
+describe('trans with default props', () => {
+  it('should use transDefaultProps for tOptions', () => {
+    const i18nInst = i18n.createInstance();
+    i18nInst.init({
+      lng: 'en',
+      resources: {
+        en: {
+          translation: {
+            key1: 'hello #name#',
+          },
+        },
+      },
+      react: {
+        transDefaultProps: {
+          tOptions: { interpolation: { prefix: '#', suffix: '#' } },
+        },
+      },
+    });
+
+    const { container } = render(
+      <Trans i18n={i18nInst} i18nKey="key1" values={{ name: 'world' }} />,
+    );
+    expect(container).toHaveTextContent('hello world');
+  });
+
+  it('should use transDefaultProps for shouldUnescape', () => {
+    const i18nInst = i18n.createInstance();
+    i18nInst.init({
+      lng: 'en',
+      resources: {
+        en: {
+          translation: {
+            key1: 'hello <Item title="{{name}}" />',
+          },
+        },
+      },
+      react: {
+        transDefaultProps: {
+          tOptions: { interpolation: { escapeValue: true } },
+          shouldUnescape: true,
+        },
+      },
+    });
+
+    function Item({ title }) {
+      return <span title={title}>{title}</span>;
+    }
+
+    render(
+      <Trans
+        i18n={i18nInst}
+        i18nKey="key1"
+        values={{ name: '"' }}
+        components={{ Item: <Item /> }}
+      />,
+    );
+    const span = screen.getByTitle('"');
+    expect(span).toHaveAttribute('title', '"');
+  });
+
+  it('should override transDefaultProps', () => {
+    const i18nInst = i18n.createInstance();
+    i18nInst.init({
+      lng: 'en',
+      resources: {
+        en: {
+          translation: {
+            key1: 'hello {{name}}',
+          },
+        },
+      },
+      react: {
+        transDefaultProps: {
+          tOptions: { interpolation: { prefix: '#', suffix: '#' } },
+        },
+      },
+    });
+
+    const { container } = render(
+      <Trans
+        i18n={i18nInst}
+        i18nKey="key1"
+        values={{ name: 'world' }}
+        tOptions={{ interpolation: { prefix: '{{', suffix: '}}' } }}
+      />,
+    );
+    expect(container).toHaveTextContent('hello world');
+  });
+
+  it('should use transDefaultProps for values', () => {
+    const i18nInst = i18n.createInstance();
+    i18nInst.init({
+      lng: 'en',
+      resources: {
+        en: {
+          translation: {
+            key1: 'hello {{name}}',
+          },
+        },
+      },
+      react: {
+        transDefaultProps: {
+          values: { name: 'world' },
+        },
+      },
+    });
+
+    const { container } = render(<Trans i18n={i18nInst} i18nKey="key1" />);
+    expect(container).toHaveTextContent('hello world');
+  });
+
+  it('should use transDefaultProps for components', () => {
+    const i18nInst = i18n.createInstance();
+    i18nInst.init({
+      lng: 'en',
+      resources: {
+        en: {
+          translation: {
+            key1: 'hello <Bold>world</Bold>',
+          },
+        },
+      },
+      react: {
+        transDefaultProps: {
+          components: { Bold: <strong /> },
+        },
+      },
+    });
+
+    render(<Trans i18n={i18nInst} i18nKey="key1" />);
+    expect(screen.getByText('world', { selector: 'strong' })).toHaveTextContent('world');
+  });
+});

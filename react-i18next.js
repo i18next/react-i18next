@@ -2405,7 +2405,8 @@
     transWrapTextNodes: '',
     transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'p'],
     useSuspense: true,
-    unescape
+    unescape,
+    transDefaultProps: undefined
   };
   const setDefaults = (options = {}) => {
     defaultOptions = {
@@ -2764,34 +2765,52 @@
     };
     let namespaces = ns || t.ns || i18n.options?.defaultNS;
     namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
+    const {
+      transDefaultProps
+    } = reactI18nextOptions;
+    const mergedTOptions = transDefaultProps?.tOptions ? {
+      ...transDefaultProps.tOptions,
+      ...tOptions
+    } : tOptions;
+    const mergedShouldUnescape = shouldUnescape ?? transDefaultProps?.shouldUnescape;
+    const mergedValues = transDefaultProps?.values ? {
+      ...transDefaultProps.values,
+      ...values
+    } : values;
+    const mergedComponents = transDefaultProps?.components ? {
+      ...transDefaultProps.components,
+      ...components
+    } : components;
     const nodeAsString = nodesToString(children, reactI18nextOptions, i18n, i18nKey);
-    const defaultValue = defaults || tOptions?.defaultValue || nodeAsString || reactI18nextOptions.transEmptyNodeValue || (typeof i18nKey === 'function' ? keysFromSelector(i18nKey) : i18nKey);
+    const defaultValue = defaults || mergedTOptions?.defaultValue || nodeAsString || reactI18nextOptions.transEmptyNodeValue || (typeof i18nKey === 'function' ? keysFromSelector(i18nKey) : i18nKey);
     const {
       hashTransKey
     } = reactI18nextOptions;
     const key = i18nKey || (hashTransKey ? hashTransKey(nodeAsString || defaultValue) : nodeAsString || defaultValue);
     if (i18n.options?.interpolation?.defaultVariables) {
-      values = values && Object.keys(values).length > 0 ? {
-        ...values,
+      values = mergedValues && Object.keys(mergedValues).length > 0 ? {
+        ...mergedValues,
         ...i18n.options.interpolation.defaultVariables
       } : {
         ...i18n.options.interpolation.defaultVariables
       };
+    } else {
+      values = mergedValues;
     }
     const valuesFromChildren = getValuesFromChildren(children);
     if (valuesFromChildren && typeof valuesFromChildren.count === 'number' && count === undefined) {
       count = valuesFromChildren.count;
     }
-    const interpolationOverride = values || count !== undefined && !i18n.options?.interpolation?.alwaysFormat || !children ? tOptions.interpolation : {
+    const interpolationOverride = values || count !== undefined && !i18n.options?.interpolation?.alwaysFormat || !children ? mergedTOptions.interpolation : {
       interpolation: {
-        ...tOptions.interpolation,
+        ...mergedTOptions.interpolation,
         prefix: '#$?',
         suffix: '?$#'
       }
     };
     const combinedTOpts = {
-      ...tOptions,
-      context: context || tOptions.context,
+      ...mergedTOptions,
+      context: context || mergedTOptions.context,
       count,
       ...values,
       ...interpolationOverride,
@@ -2800,14 +2819,14 @@
     };
     let translation = key ? t(key, combinedTOpts) : defaultValue;
     if (translation === key && defaultValue) translation = defaultValue;
-    const generatedComponents = generateComponents(components, translation, i18n, i18nKey);
+    const generatedComponents = generateComponents(mergedComponents, translation, i18n, i18nKey);
     let indexedChildren = generatedComponents || children;
     let componentsMap = null;
     if (isComponentsMap(generatedComponents)) {
       componentsMap = generatedComponents;
       indexedChildren = children;
     }
-    const content = renderNodes(indexedChildren, componentsMap, translation, i18n, reactI18nextOptions, combinedTOpts, shouldUnescape);
+    const content = renderNodes(indexedChildren, componentsMap, translation, i18n, reactI18nextOptions, combinedTOpts, mergedShouldUnescape);
     const useAsParent = parent ?? reactI18nextOptions.defaultTransParent;
     return useAsParent ? React.createElement(useAsParent, additionalProps, content) : content;
   }
