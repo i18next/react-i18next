@@ -126,4 +126,48 @@ describe('trans nodeToString', () => {
       expect(actual).toEqual(expected);
     });
   });
+
+  describe('interpolation objects and invalid children', () => {
+    it('should convert single-key object children to interpolation syntax', () => {
+      const fragment = (
+        <>
+          {'lorem '}
+          {{ insert: 'x' }}
+          {' ipsum'}
+        </>
+      );
+
+      const expected = 'lorem {{insert}} ipsum';
+      const actual = nodesToString(fragment.props.children, {});
+      expect(actual).toEqual(expected);
+    });
+
+    it('should support format on interpolation object children', () => {
+      const fragment = (
+        <>
+          {'lorem '}
+          {{ insert: 'x', format: 'uppercase' }}
+          {' ipsum'}
+        </>
+      );
+
+      const expected = 'lorem {{insert, uppercase}} ipsum';
+      const actual = nodesToString(fragment.props.children, {});
+      expect(actual).toEqual(expected);
+    });
+
+    it('should ignore invalid primitive children (e.g. numbers)', () => {
+      const fragment = (
+        <>
+          {'lorem '}
+          {1}
+          {' ipsum'}
+        </>
+      );
+
+      const expected = 'lorem  ipsum';
+      const actual = nodesToString(fragment.props.children, {});
+      expect(actual).toEqual(expected);
+    });
+  });
 });

@@ -1,3 +1,7 @@
+### 16.5.1
+
+- fix: export `nodesToString` (runtime + TypeScript typings) to support `i18next-cli` ([i18next/i18next-cli#155](https://github.com/i18next/i18next-cli/pull/155))
+
 ### 16.5.0
 
 - Add configuration option `transDefaultProps` to set default props for the Trans component (e.g. `tOptions`, `shouldUnescape`, `values`) [1895](https://github.com/i18next/react-i18next/issues/1895)

@@ -21,6 +21,13 @@ import {
 } from './TransWithoutContext.js';
 export { initReactI18next } from './initReactI18next.js';
 
+export function nodesToString(
+  children: React.ReactNode,
+  i18nOptions?: ReactOptions,
+  i18n?: i18n,
+  i18nKey?: string,
+): string;
+
 export const TransWithoutContext: typeof Trans;
 export { Trans, TransProps, TransSelectorProps, ErrorArgs, ErrorCode };
 

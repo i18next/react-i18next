@@ -1,5 +1,6 @@
 import type {
   i18n,
+  ReactOptions,
   ApplyTarget,
   ConstrainTarget,
   GetSource,
@@ -91,6 +92,13 @@ export interface TransSelector {
 }
 
 export const Trans: _EnableSelector extends true | 'optimize' ? TransSelector : TransLegacy;
+
+export function nodesToString(
+  children: React.ReactNode,
+  i18nOptions?: ReactOptions,
+  i18n?: i18n,
+  i18nKey?: string,
+): string;
 
 export type ErrorCode =
   | 'NO_I18NEXT_INSTANCE'

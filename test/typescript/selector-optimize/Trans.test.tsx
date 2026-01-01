@@ -103,7 +103,7 @@ describe('<Trans />', () => {
   describe('interpolation', () => {
     it('should work with text and interpolation', () => {
       expectTypeOf(Trans).toBeCallableWith({
-        children: <>foo {{ var: '' }}</>,
+        children: ['foo ', { var: '' }],
       });
     });
 
