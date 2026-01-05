@@ -190,6 +190,8 @@ export function useSSR(initialI18nStore: Resource, initialLanguage: string): voi
 // If the version is earlier than i18next v25.4.0, enableSelector does not exist in TypeOptions, so a conditional type is used to maintain type compatibility.
 type _EnableSelector = TypeOptions extends { enableSelector: infer U } ? U : false;
 
+type _StrictNoSuspense = TypeOptions extends { strictNoSuspense: infer U } ? U : false;
+
 export type UseTranslationOptions<KPrefix> = {
   i18n?: i18n;
   useSuspense?: boolean;
@@ -210,6 +212,30 @@ export type UseTranslationResponse<Ns extends Namespace, KPrefix> = [
   ready: boolean;
 };
 
+export type UseTranslationResponseNotReady<Ns extends Namespace, KPrefix> = readonly [
+  t: undefined,
+  i18n: i18n,
+  ready: false,
+] & {
+  t: undefined;
+  i18n: i18n;
+  ready: false;
+};
+
+export type UseTranslationResponseReady<Ns extends Namespace, KPrefix> = readonly [
+  t: TFunction<Ns, KPrefix>,
+  i18n: i18n,
+  ready: true,
+] & {
+  t: TFunction<Ns, KPrefix>;
+  i18n: i18n;
+  ready: true;
+};
+
+export type UseTranslationResponseStrict<Ns extends Namespace, KPrefix> =
+  | UseTranslationResponseNotReady<Ns, KPrefix>
+  | UseTranslationResponseReady<Ns, KPrefix>;
+
 // Workaround to make code completion to work when suggesting namespaces.
 // This is a typescript limitation when using generics with default values,
 // it'll be addressed in this issue: https://github.com/microsoft/TypeScript/issues/52516
@@ -228,12 +254,46 @@ interface UseTranslationLegacy {
     const Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
     const KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined,
   >(
+    ns: Ns,
+    options: UseTranslationOptions<KPrefix> & { useSuspense: false },
+  ): _StrictNoSuspense extends true
+    ? UseTranslationResponseStrict<FallbackNs<Ns>, KPrefix>
+    : UseTranslationResponse<FallbackNs<Ns>, KPrefix>;
+
+  <const KPrefix extends KeyPrefix<_DefaultNamespace> = undefined>(
+    ns: undefined,
+    options: UseTranslationOptions<KPrefix> & { useSuspense: false },
+  ): _StrictNoSuspense extends true
+    ? UseTranslationResponseStrict<_DefaultNamespace, KPrefix>
+    : UseTranslationResponse<_DefaultNamespace, KPrefix>;
+
+  <
+    const Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
+    const KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined,
+  >(
     ns?: Ns,
     options?: UseTranslationOptions<KPrefix>,
   ): UseTranslationResponse<FallbackNs<Ns>, KPrefix>;
 }
 
 interface UseTranslationSelector {
+  <
+    const Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
+    const KPrefix = undefined,
+  >(
+    ns: Ns,
+    options: UseTranslationOptions<KPrefix> & { useSuspense: false },
+  ): _StrictNoSuspense extends true
+    ? UseTranslationResponseStrict<FallbackNs<Ns>, KPrefix>
+    : UseTranslationResponse<FallbackNs<Ns>, KPrefix>;
+
+  <const KPrefix = undefined>(
+    ns: undefined,
+    options: UseTranslationOptions<KPrefix> & { useSuspense: false },
+  ): _StrictNoSuspense extends true
+    ? UseTranslationResponseStrict<_DefaultNamespace, KPrefix>
+    : UseTranslationResponse<_DefaultNamespace, KPrefix>;
+
   <
     const Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
     const KPrefix = undefined,
