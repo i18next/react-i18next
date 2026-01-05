@@ -173,7 +173,7 @@ This project follows the [all-contributors](https://github.com/kentcdodds/all-co
 
 Needing a translation management? Want to edit your translations with an InContext Editor? Use the original provided to you by the maintainers of i18next!
 
-![locize](https://cdn.prod.website-files.com/67a323e323a50df7f24f0a6f/67b8bbb29365c3a3c21c0898_github_locize.png)
+![locize](https://www.locize.com/img/ads/github_locize.png)
 
 By using [locize](http://locize.com/?utm_source=react_i18next_readme&utm_medium=github) you directly support the future of i18next and react-i18next.
 
