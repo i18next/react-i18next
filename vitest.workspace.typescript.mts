@@ -9,6 +9,9 @@ export default defineWorkspace(
    */
   readdirSync('./test/typescript', { withFileTypes: true })
     .filter((dir) => dir.isDirectory())
+    // Exclude issue-1899 - it runs separately via test:typescript:issue-1899
+    // because it requires skipLibCheck: false which exposes @types/node errors
+    .filter((dir) => dir.name !== 'issue-1899')
     .reduce<UserProjectConfigExport[]>((workspaces, dir) => {
       const dirPath = `test/typescript/${dir.name}` as const;
 

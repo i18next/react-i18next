@@ -47,7 +47,7 @@ export interface IcuTransContentDeclaration {
  * Props for IcuTransWithoutContext component (no React context)
  */
 export type IcuTransWithoutContextProps<
-  Key extends ParseKeys<Ns, TOpt, KPrefix> = string,
+  Key extends ParseKeys<Ns, TOpt, KPrefix>,
   Ns extends Namespace = _DefaultNamespace,
   KPrefix = undefined,
   TContext extends string | undefined = undefined,
@@ -73,7 +73,7 @@ export type IcuTransWithoutContextProps<
  * Props for IcuTrans component (with React context support)
  */
 export type IcuTransProps<
-  Key extends ParseKeys<Ns, TOpt, KPrefix> = string,
+  Key extends ParseKeys<Ns, TOpt, KPrefix>,
   Ns extends Namespace = _DefaultNamespace,
   KPrefix = undefined,
   TContext extends string | undefined = undefined,
@@ -96,7 +96,7 @@ export type IcuTransProps<
  */
 export interface IcuTransComponent {
   <
-    Key extends ParseKeys<Ns, TOpt, KPrefix> = string,
+    Key extends ParseKeys<Ns, TOpt, KPrefix>,
     Ns extends Namespace = _DefaultNamespace,
     KPrefix = undefined,
     TContext extends string | undefined = undefined,
@@ -123,7 +123,7 @@ export interface IcuTransComponent {
  */
 export interface IcuTransWithoutContextComponent {
   <
-    Key extends ParseKeys<Ns, TOpt, KPrefix> = string,
+    Key extends ParseKeys<Ns, TOpt, KPrefix>,
     Ns extends Namespace = _DefaultNamespace,
     KPrefix = undefined,
     TContext extends string | undefined = undefined,
