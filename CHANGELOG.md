@@ -1,3 +1,7 @@
+### 16.5.2
+
+- fix: Type errors when you've declared a resources type [1899](https://github.com/i18next/react-i18next/issues/1899) via [1900](https://github.com/i18next/react-i18next/pull/1900)
+
 ### 16.5.1
 
 - fix: export `nodesToString` (runtime + TypeScript typings) to support `i18next-cli` ([i18next/i18next-cli#155](https://github.com/i18next/i18next-cli/pull/155))
