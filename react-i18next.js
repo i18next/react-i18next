@@ -2532,7 +2532,7 @@
     while (i < str.length) {
       if (str[i] === '<') {
         let isValidTag = false;
-        const closingMatch = str.slice(i).match(/^<\/(\d+|[a-zA-Z][a-zA-Z0-9-]*)>/);
+        const closingMatch = str.slice(i).match(/^<\/(\d+|[a-zA-Z][a-zA-Z0-9_-]*)>/);
         if (closingMatch) {
           const tagName = closingMatch[1];
           if (/^\d+$/.test(tagName) || allValidNames.includes(tagName)) {
@@ -2542,7 +2542,7 @@
           }
         }
         if (!isValidTag) {
-          const openingMatch = str.slice(i).match(/^<(\d+|[a-zA-Z][a-zA-Z0-9-]*)(\s+[\w-]+(?:=(?:"[^"]*"|'[^']*'|[^\s>]+))?)*\s*(\/)?>/);
+          const openingMatch = str.slice(i).match(/^<(\d+|[a-zA-Z][a-zA-Z0-9_-]*)(\s+[\w-]+(?:=(?:"[^"]*"|'[^']*'|[^\s>]+))?)*\s*(\/)?>/);
           if (openingMatch) {
             const tagName = openingMatch[1];
             if (/^\d+$/.test(tagName) || allValidNames.includes(tagName)) {

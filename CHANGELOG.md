@@ -1,3 +1,7 @@
+### 16.5.3
+
+- fix: Trans named tags with underscore [1901](https://github.com/i18next/react-i18next/pull/1901)
+
 ### 16.5.2
 
 - fix: Type errors when you've declared a resources type [1899](https://github.com/i18next/react-i18next/issues/1899) via [1900](https://github.com/i18next/react-i18next/pull/1900)
