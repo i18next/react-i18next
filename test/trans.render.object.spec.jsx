@@ -416,3 +416,28 @@ describe('trans with hyphenated component names', () => {
     `);
   });
 });
+
+describe('trans with underscore component names', () => {
+  function TestComponent() {
+    return (
+      <Trans
+        defaults="Click <my_button>here</my_button> to continue"
+        components={{ my_button: <button type="button">dummy</button> }}
+      />
+    );
+  }
+  it('should render underscore component names correctly', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Click 
+        <button
+          type="button"
+        >
+          here
+        </button>
+         to continue
+      </div>
+    `);
+  });
+});

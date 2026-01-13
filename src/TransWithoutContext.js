@@ -160,7 +160,7 @@ const escapeLiteralLessThan = (str, keepArray = [], knownComponentsMap = {}) => 
       let isValidTag = false;
 
       // Check for closing tag: </number> or </name>
-      const closingMatch = str.slice(i).match(/^<\/(\d+|[a-zA-Z][a-zA-Z0-9-]*)>/);
+      const closingMatch = str.slice(i).match(/^<\/(\d+|[a-zA-Z][a-zA-Z0-9_-]*)>/);
       if (closingMatch) {
         const tagName = closingMatch[1];
         // Valid if it's a number or in our valid names list
@@ -179,7 +179,7 @@ const escapeLiteralLessThan = (str, keepArray = [], knownComponentsMap = {}) => 
         const openingMatch = str
           .slice(i)
           .match(
-            /^<(\d+|[a-zA-Z][a-zA-Z0-9-]*)(\s+[\w-]+(?:=(?:"[^"]*"|'[^']*'|[^\s>]+))?)*\s*(\/)?>/,
+            /^<(\d+|[a-zA-Z][a-zA-Z0-9_-]*)(\s+[\w-]+(?:=(?:"[^"]*"|'[^']*'|[^\s>]+))?)*\s*(\/)?>/,
           );
         if (openingMatch) {
           const tagName = openingMatch[1];
