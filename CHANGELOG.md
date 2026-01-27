@@ -1,3 +1,7 @@
+### 16.5.4
+
+- fix: Overriding React component props not working [1902](https://github.com/i18next/react-i18next/pull/1902)
+
 ### 16.5.3
 
 - fix: Trans named tags with underscore [1901](https://github.com/i18next/react-i18next/pull/1901)

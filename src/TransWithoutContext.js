@@ -26,8 +26,8 @@ const getAsArray = (data) => (Array.isArray(data) ? data : [data]);
 
 const mergeProps = (source, target) => {
   const newTarget = { ...target };
-  // overwrite source.props when target.props already set
-  newTarget.props = Object.assign(source.props, target.props);
+  // translation props (source.props) should override component props (target.props)
+  newTarget.props = { ...target.props, ...source.props };
   return newTarget;
 };
 

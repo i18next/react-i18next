@@ -2443,7 +2443,10 @@
     const newTarget = {
       ...target
     };
-    newTarget.props = Object.assign(source.props, target.props);
+    newTarget.props = {
+      ...target.props,
+      ...source.props
+    };
     return newTarget;
   };
   const getValuesFromChildren = children => {

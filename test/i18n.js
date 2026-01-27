@@ -16,6 +16,8 @@ i18n.init({
         interpolateKeyWithDefaultVariables: 'add {{defaultInsert}} {{defaultUp, uppercase}}',
         interpolateKey: 'add {{insert}} {{up, uppercase}}',
         interpolateKey2: '<strong>add</strong> {{insert}} {{up, uppercase}}',
+        myKey:
+          'This is a <CustomLink href="https://example.com/">link to example.com</CustomLink>.',
         transTest1: 'Go <1>there</1>.',
         transTest1_noParent: '<0>Go <1>there</1>.</0>',
         transTest1_customHtml: '<strong>Go</strong> <br/><1>there</1>.',
@@ -42,7 +44,7 @@ i18n.init({
         testTrans5KeyWithValue: 'Result should be rendered within tag <0>{{testValue}}</0>',
         transTest3: 'Result should be a clickable link <0 href="https://www.google.com">Google</0>',
         transTest3_overwrite:
-          'Result should be a clickable link <0 href="https://www.google.com">Google</0>',
+          'Result should be a clickable link <0 href="https://www.bing.com">Google</0>',
         transTestEscapedHtml: 'Escaped html should unescape correctly <0>&lt;&nbsp;&amp;&gt;</0>.',
         transTestCustomUnescape: 'Text should be passed through custom unescape <0>&shy;</0>',
         transTestCustomUnescapeSecond: 'Vertrauens&shy;kennwert',

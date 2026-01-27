@@ -768,6 +768,28 @@ describe('trans should work with self closing elements with react components', (
       </div>
     `);
   });
+
+  it('should override component props with translation props (issue #1902)', () => {
+    const { container } = render(
+      <Trans
+        i18nKey="myKey"
+        components={{
+          CustomLink: <a href="value-to-be-overridden">fallback</a>,
+        }}
+      />,
+    );
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        This is a 
+        <a
+          href="https://example.com/"
+        >
+          link to example.com
+        </a>
+        .
+      </div>
+    `);
+  });
 });
 
 describe('trans with null child', () => {
