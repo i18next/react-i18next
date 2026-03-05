@@ -1,10 +1,20 @@
 import { useContext } from 'react';
 import { getI18n, I18nContext } from './context.js';
+import { warnOnce } from './utils.js';
 
 export const useSSR = (initialI18nStore, initialLanguage, props = {}) => {
   const { i18n: i18nFromProps } = props;
   const { i18n: i18nFromContext } = useContext(I18nContext) || {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
+
+  if (!i18n) {
+    warnOnce(
+      i18n,
+      'NO_I18NEXT_INSTANCE',
+      'useSSR: You will need to pass in an i18next instance by using initReactI18next or by passing it via props or context. In monorepo setups, make sure there is only one instance of react-i18next.',
+    );
+    return;
+  }
 
   // opt out if is a cloned instance, eg. created by i18next-http-middleware on request
   // -> do not set initial stuff on server side

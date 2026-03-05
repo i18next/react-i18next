@@ -2870,6 +2870,10 @@
   };
   const getInitialProps = () => {
     const i18n = getI18n();
+    if (!i18n) {
+      console.warn('react-i18next:: getInitialProps: You will need to pass in an i18next instance by using initReactI18next');
+      return {};
+    }
     const namespaces = i18n.reportNamespaces?.getUsedNamespaces() ?? [];
     const ret = {};
     const initialI18nStore = {};
@@ -3649,7 +3653,7 @@
     const [t, i18n, ready] = useTranslation(ns, options);
     return children(t, {
       i18n,
-      lng: i18n.language
+      lng: i18n?.language
     }, ready);
   };
 
@@ -3675,6 +3679,10 @@
       i18n: i18nFromContext
     } = React.useContext(I18nContext) || {};
     const i18n = i18nFromProps || i18nFromContext || getI18n();
+    if (!i18n) {
+      warnOnce(i18n, 'NO_I18NEXT_INSTANCE', 'useSSR: You will need to pass in an i18next instance by using initReactI18next or by passing it via props or context. In monorepo setups, make sure there is only one instance of react-i18next.');
+      return;
+    }
     if (i18n.options?.isClone) return;
     if (initialI18nStore && !i18n.initializedStoreOnce) {
       i18n.services.resourceStore.data = initialI18nStore;

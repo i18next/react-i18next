@@ -7,7 +7,7 @@ export const Translation = ({ ns, children, ...options }) => {
     t,
     {
       i18n,
-      lng: i18n.language,
+      lng: i18n?.language,
     },
     ready,
   );

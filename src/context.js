@@ -36,6 +36,12 @@ export const composeInitialProps = (ForComponent) => async (ctx) => {
 
 export const getInitialProps = () => {
   const i18n = getI18n();
+  if (!i18n) {
+    console.warn(
+      'react-i18next:: getInitialProps: You will need to pass in an i18next instance by using initReactI18next',
+    );
+    return {};
+  }
   const namespaces = i18n.reportNamespaces?.getUsedNamespaces() ?? [];
 
   const ret = {};

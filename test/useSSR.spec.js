@@ -43,4 +43,18 @@ describe('useSSR', () => {
     expect(mockI18n.language).toBe('de');
     expect(mockI18n.services.resourceStore.data).toEqual({ foo: 'bar' });
   });
+
+  it('should not crash and warn when i18n is not available', () => {
+    setI18n(undefined);
+    const warnSpy = vitest.spyOn(console, 'warn').mockImplementation(() => {});
+    expect(() => {
+      renderHook(() => useSSR({ foo: 'bar' }, 'en'));
+    }).not.toThrow();
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('useSSR'),
+      expect.objectContaining({ code: 'NO_I18NEXT_INSTANCE' }),
+    );
+    warnSpy.mockRestore();
+    setI18n(mockI18n);
+  });
 });
