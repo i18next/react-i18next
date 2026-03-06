@@ -57,4 +57,22 @@ describe('useSSR', () => {
     warnSpy.mockRestore();
     setI18n(mockI18n);
   });
+
+  it('should not crash and warn when i18n exists but is not initialized', () => {
+    const uninitializedI18n = {
+      options: {},
+      services: {},
+    };
+    setI18n(uninitializedI18n);
+    const warnSpy = vitest.spyOn(console, 'warn').mockImplementation(() => {});
+    expect(() => {
+      renderHook(() => useSSR({ foo: 'bar' }, 'en'));
+    }).not.toThrow();
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('useSSR'),
+      expect.objectContaining({ code: 'I18N_NOT_INITIALIZED' }),
+    );
+    warnSpy.mockRestore();
+    setI18n(mockI18n);
+  });
 });

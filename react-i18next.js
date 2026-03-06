@@ -3685,6 +3685,10 @@
     }
     if (i18n.options?.isClone) return;
     if (initialI18nStore && !i18n.initializedStoreOnce) {
+      if (!i18n.services?.resourceStore) {
+        warnOnce(i18n, 'I18N_NOT_INITIALIZED', 'useSSR: i18n instance was found but not initialized (services.resourceStore is missing). Make sure you call i18next.init() before using useSSR — e.g. at module level, not only in getStaticProps/getServerSideProps.');
+        return;
+      }
       i18n.services.resourceStore.data = initialI18nStore;
       i18n.options.ns = Object.values(initialI18nStore).reduce((mem, lngResources) => {
         Object.keys(lngResources).forEach(ns => {

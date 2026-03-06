@@ -1,3 +1,7 @@
+### 16.5.6
+
+- fix: prevent crash in `useSSR` when `init()` hasn't been called before `useSSR` — now logs a warning instead of throwing [1604](https://github.com/i18next/react-i18next/discussions/1604)
+
 ### 16.5.5
 
 - fix: prevent crash in `useSSR`, `getInitialProps` and `Translation` when no i18next instance is available (e.g. in monorepo setups with duplicate `react-i18next` copies) — now logs a clear warning instead of throwing [1604](https://github.com/i18next/react-i18next/discussions/1604)
