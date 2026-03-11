@@ -66,9 +66,9 @@ export interface TransSelectorProps<
   components?: readonly React.ReactElement[] | { readonly [tagName: string]: React.ReactElement };
   count?: number;
   context?: TContext;
-  defaults?: string;
+  defaults?: string | Key;
   i18n?: i18n;
-  i18nKey?: Key;
+  i18nKey?: Key | readonly Key[];
   ns?: Ns;
   parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
   tOptions?: TOpt;

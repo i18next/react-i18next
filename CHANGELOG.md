@@ -1,3 +1,7 @@
+### 16.5.7
+
+- fix: `<Trans>` component with `enableSelector: true` does not support multiple selectors for fallbacks [1907](https://github.com/i18next/react-i18next/issues/1907)
+
 ### 16.5.6
 
 - fix: prevent crash in `useSSR` when `init()` hasn't been called before `useSSR` — now logs a warning instead of throwing [1604](https://github.com/i18next/react-i18next/discussions/1604)
