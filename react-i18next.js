@@ -3469,7 +3469,12 @@
   const notReadyT = (k, optsOrDefaultValue) => {
     if (isString(optsOrDefaultValue)) return optsOrDefaultValue;
     if (isObject(optsOrDefaultValue) && isString(optsOrDefaultValue.defaultValue)) return optsOrDefaultValue.defaultValue;
-    return Array.isArray(k) ? k[k.length - 1] : k;
+    if (typeof k === 'function') return '';
+    if (Array.isArray(k)) {
+      const last = k[k.length - 1];
+      return typeof last === 'function' ? '' : last;
+    }
+    return k;
   };
   const notReadySnapshot = {
     t: notReadyT,

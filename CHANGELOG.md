@@ -1,3 +1,7 @@
+### 16.5.8
+
+- A selector function cannot be resolved without an i18n instance... returning empty string is safer than leaking the raw function reference. [1907](https://github.com/i18next/react-i18next/issues/1907)
+
 ### 16.5.7
 
 - fix: `<Trans>` component with `enableSelector: true` does not support multiple selectors for fallbacks [1907](https://github.com/i18next/react-i18next/issues/1907)

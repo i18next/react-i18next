@@ -15,7 +15,14 @@ const notReadyT = (k, optsOrDefaultValue) => {
   if (isString(optsOrDefaultValue)) return optsOrDefaultValue;
   if (isObject(optsOrDefaultValue) && isString(optsOrDefaultValue.defaultValue))
     return optsOrDefaultValue.defaultValue;
-  return Array.isArray(k) ? k[k.length - 1] : k;
+  // Selector functions and arrays of selector functions cannot be meaningfully resolved
+  // before i18n is ready — return empty string rather than leaking a function reference.
+  if (typeof k === 'function') return '';
+  if (Array.isArray(k)) {
+    const last = k[k.length - 1];
+    return typeof last === 'function' ? '' : last;
+  }
+  return k;
 };
 
 const notReadySnapshot = { t: notReadyT, ready: false };

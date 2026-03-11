@@ -78,6 +78,38 @@ describe('useTranslation', () => {
 
         expect(console.warn).toHaveBeenCalled();
       });
+
+      it('should return empty string for a selector function when not ready', () => {
+        console.warn = vitest.fn();
+
+        const { result } = renderHook(() => useTranslation('translation', { i18n: undefined }));
+        const { t } = result.current;
+
+        // A selector function cannot be resolved without an i18n instance —
+        // returning '' is safer than leaking the raw function reference.
+        expect(t(($) => $.foo)).toBe('');
+      });
+
+      it('should return empty string for an array of selector functions when not ready', () => {
+        console.warn = vitest.fn();
+
+        const { result } = renderHook(() => useTranslation('translation', { i18n: undefined }));
+        const { t } = result.current;
+
+        expect(t([($) => $.foo, ($) => $.fallback])).toBe('');
+      });
+
+      it('should still honour defaultValue with a selector when not ready', () => {
+        console.warn = vitest.fn();
+
+        const { result } = renderHook(() => useTranslation('translation', { i18n: undefined }));
+        const { t } = result.current;
+
+        expect(t(($) => $.foo, 'my default')).toBe('my default');
+        expect(t([($) => $.foo, ($) => $.fallback], { defaultValue: 'my default' })).toBe(
+          'my default',
+        );
+      });
     });
   });
 
