@@ -1,3 +1,7 @@
+### 16.6.0 (next / unreleased)
+
+- warn when `t` is called before `ready` with `useSuspense: false` [1896](https://github.com/i18next/react-i18next/issues/1896)
+
 ### 16.5.8
 
 - A selector function cannot be resolved without an i18n instance... returning empty string is safer than leaking the raw function reference. [1907](https://github.com/i18next/react-i18next/issues/1907)

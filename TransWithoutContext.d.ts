@@ -107,7 +107,8 @@ export type ErrorCode =
   | 'TRANS_NULL_VALUE'
   | 'TRANS_INVALID_OBJ'
   | 'TRANS_INVALID_VAR'
-  | 'TRANS_INVALID_COMPONENTS';
+  | 'TRANS_INVALID_COMPONENTS'
+  | 'USE_T_BEFORE_READY';
 
 export type ErrorMeta = {
   code: ErrorCode;

@@ -113,6 +113,56 @@ describe('useTranslation', () => {
     expect(t('keyOne')).toBe('keyOne');
   });
 
+  it('should warn when t is called before ready with useSuspense false', () => {
+    const warnSpy = vitest.spyOn(console, 'warn').mockImplementation(() => {});
+    const instance2 = { ...instance };
+    instance2.options.react = { useSuspense: false };
+    instance2.services.backendConnector = {
+      backend: {},
+      state: { 'en|notLoadedNS': 1, 'fr|notLoadedNS': 1 },
+    };
+
+    const { result } = renderHook(() =>
+      useTranslation(['notLoadedNS', 'alreadyLoadedNS'], { i18n: instance2 }),
+    );
+
+    expect(result.current.ready).toBe(false);
+    warnSpy.mockClear();
+    result.current.t('keyOne');
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('t was called before ready'),
+      expect.objectContaining({ code: 'USE_T_BEFORE_READY' }),
+    );
+    warnSpy.mockRestore();
+  });
+
+  it('should not warn when t is called and ready is true', () => {
+    const warnSpy = vitest.spyOn(console, 'warn').mockImplementation(() => {});
+    const { result } = renderHook(() => useTranslation('alreadyLoadedNS', { i18n: instance }));
+
+    expect(result.current.ready).toBe(true);
+    warnSpy.mockClear();
+    result.current.t('keyOne');
+    expect(warnSpy).not.toHaveBeenCalledWith(
+      expect.stringContaining('t was called before ready'),
+      expect.anything(),
+    );
+    warnSpy.mockRestore();
+  });
+
+  it('should not warn when using suspense (default)', () => {
+    const warnSpy = vitest.spyOn(console, 'warn').mockImplementation(() => {});
+    const { result } = renderHook(() => useTranslation('alreadyLoadedNS', { i18n: instance }));
+
+    warnSpy.mockClear();
+    result.current.t('keyOne');
+    expect(warnSpy).not.toHaveBeenCalledWith(
+      expect.stringContaining('t was called before ready'),
+      expect.anything(),
+    );
+    warnSpy.mockRestore();
+  });
+
   it('should ignore suspense if set useSuspense to false', () => {
     const instance2 = { ...instance };
     instance2.options.react = { useSuspense: false };

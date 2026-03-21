@@ -188,8 +188,20 @@ export const useTranslation = (ns, props = {}) => {
       }
     }
 
-    const arr = [t, i18nWrapper, ready];
-    arr.t = t;
+    const effectiveT =
+      !ready && !useSuspense
+        ? (...args) => {
+            warnOnce(
+              i18n,
+              'USE_T_BEFORE_READY',
+              'useTranslation: t was called before ready. When using useSuspense: false, make sure to check the ready flag before using t.',
+            );
+            return t(...args);
+          }
+        : t;
+
+    const arr = [effectiveT, i18nWrapper, ready];
+    arr.t = effectiveT;
     arr.i18n = i18nWrapper;
     arr.ready = ready;
     return arr;

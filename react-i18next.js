@@ -194,7 +194,7 @@
     }
     return current;
   };
-  const getCleanedCode = code => code?.replace('_', '-');
+  const getCleanedCode = code => code?.replace(/_/g, '-');
   const consoleLogger = {
     type: 'logger',
     log(args) {
@@ -450,7 +450,16 @@
     const {
       [PATH_KEY]: path
     } = selector(createProxy());
-    return path.join(opts?.keySeparator ?? '.');
+    const keySeparator = opts?.keySeparator ?? '.';
+    const nsSeparator = opts?.nsSeparator ?? ':';
+    if (path.length > 1 && nsSeparator) {
+      const ns = opts?.ns;
+      const nsArray = Array.isArray(ns) ? ns : null;
+      if (nsArray && nsArray.length > 1 && nsArray.slice(1).includes(path[0])) {
+        return `${path[0]}${nsSeparator}${path.slice(1).join(keySeparator)}`;
+      }
+    }
+    return path.join(keySeparator);
   }
   const checkedLoadedFor = {};
   const shouldHandleAsObject = res => !isString$1(res) && typeof res !== 'boolean' && typeof res !== 'number';
@@ -523,6 +532,10 @@
         ...opt
       });
       if (!Array.isArray(keys)) keys = [String(keys)];
+      keys = keys.map(k => typeof k === 'function' ? keysFromSelector(k, {
+        ...this.options,
+        ...opt
+      }) : String(k));
       const returnDetails = opt.returnDetails !== undefined ? opt.returnDetails : this.options.returnDetails;
       const keySeparator = opt.keySeparator !== undefined ? opt.keySeparator : this.options.keySeparator;
       const {
@@ -769,6 +782,10 @@
       let usedLng;
       let usedNS;
       if (isString$1(keys)) keys = [keys];
+      if (Array.isArray(keys)) keys = keys.map(k => typeof k === 'function' ? keysFromSelector(k, {
+        ...this.options,
+        ...opt
+      }) : k);
       keys.forEach(k => {
         if (this.isValidLookup(found)) return;
         const extracted = this.extractFromKey(k, opt);
@@ -1007,9 +1024,6 @@
       this.logger = baseLogger.create('pluralResolver');
       this.pluralRulesCache = {};
     }
-    addRule(lng, obj) {
-      this.rules[lng] = obj;
-    }
     clearCache() {
       this.pluralRulesCache = {};
     }
@@ -1029,7 +1043,7 @@
           type
         });
       } catch (err) {
-        if (!Intl) {
+        if (typeof Intl === 'undefined') {
           this.logger.error('No Intl support, please use an Intl polyfill!');
           return dummyRule;
         }
@@ -1209,13 +1223,13 @@
       const handleHasOptions = (key, inheritedOptions) => {
         const sep = this.nestingOptionsSeparator;
         if (key.indexOf(sep) < 0) return key;
-        const c = key.split(new RegExp(`${sep}[ ]*{`));
+        const c = key.split(new RegExp(`${regexEscape(sep)}[ ]*{`));
         let optionsString = `{${c[1]}`;
         key = c[0];
         optionsString = this.interpolate(optionsString, clonedOptions);
         const matchedSingleQuotes = optionsString.match(/'/g);
         const matchedDoubleQuotes = optionsString.match(/"/g);
-        if ((matchedSingleQuotes?.length ?? 0) % 2 === 0 && !matchedDoubleQuotes || matchedDoubleQuotes.length % 2 !== 0) {
+        if ((matchedSingleQuotes?.length ?? 0) % 2 === 0 && !matchedDoubleQuotes || (matchedDoubleQuotes?.length ?? 0) % 2 !== 0) {
           optionsString = optionsString.replace(/'/g, '"');
         }
         try {
@@ -1693,6 +1707,23 @@
       }
     });
   };
+  const SUPPORT_NOTICE_KEY = '__i18next_supportNoticeShown';
+  const getSupportNoticeShown = () => typeof globalThis !== 'undefined' && !!globalThis[SUPPORT_NOTICE_KEY];
+  const setSupportNoticeShown = () => {
+    if (typeof globalThis !== 'undefined') globalThis[SUPPORT_NOTICE_KEY] = true;
+  };
+  const usesLocize = inst => {
+    if (inst?.modules?.backend?.name?.indexOf('Locize') > 0) return true;
+    if (inst?.modules?.backend?.constructor?.name?.indexOf('Locize') > 0) return true;
+    if (inst?.options?.backend?.backends) {
+      if (inst.options.backend.backends.some(b => b?.name?.indexOf('Locize') > 0 || b?.constructor?.name?.indexOf('Locize') > 0)) return true;
+    }
+    if (inst?.options?.backend?.projectId) return true;
+    if (inst?.options?.backend?.backendOptions) {
+      if (inst.options.backend.backendOptions.some(b => b?.projectId)) return true;
+    }
+    return false;
+  };
   class I18n extends EventEmitter {
     constructor(options = {}, callback) {
       super();
@@ -1744,6 +1775,10 @@
       }
       if (typeof this.options.overloadTranslationOptionHandler !== 'function') {
         this.options.overloadTranslationOptionHandler = defOpts.overloadTranslationOptionHandler;
+      }
+      if (this.options.showSupportNotice !== false && !usesLocize(this) && !getSupportNoticeShown()) {
+        if (typeof console !== 'undefined' && typeof console.info !== 'undefined') console.info('🌐 i18next is made possible by our own product, Locize — consider powering your project with managed localization (AI, CDN, integrations): https://locize.com 💙');
+        setSupportNoticeShown();
       }
       const createClassOnDemand = ClassOrObject => {
         if (!ClassOrObject) return null;
@@ -2005,21 +2040,20 @@
         o.lngs = o.lngs || fixedT.lngs;
         o.ns = o.ns || fixedT.ns;
         if (o.keyPrefix !== '') o.keyPrefix = o.keyPrefix || keyPrefix || fixedT.keyPrefix;
+        const selectorOpts = {
+          ...this.options,
+          ...o
+        };
+        if (typeof o.keyPrefix === 'function') o.keyPrefix = keysFromSelector(o.keyPrefix, selectorOpts);
         const keySeparator = this.options.keySeparator || '.';
         let resultKey;
         if (o.keyPrefix && Array.isArray(key)) {
           resultKey = key.map(k => {
-            if (typeof k === 'function') k = keysFromSelector(k, {
-              ...this.options,
-              ...opts
-            });
+            if (typeof k === 'function') k = keysFromSelector(k, selectorOpts);
             return `${o.keyPrefix}${keySeparator}${k}`;
           });
         } else {
-          if (typeof key === 'function') key = keysFromSelector(key, {
-            ...this.options,
-            ...opts
-          });
+          if (typeof key === 'function') key = keysFromSelector(key, selectorOpts);
           resultKey = o.keyPrefix ? `${o.keyPrefix}${keySeparator}${key}` : key;
         }
         return this.t(resultKey, o);
@@ -2160,7 +2194,19 @@
         clone.store = new ResourceStore(clonedData, mergedOptions);
         clone.services.resourceStore = clone.store;
       }
-      if (options.interpolation) clone.services.interpolator = new Interpolator(mergedOptions);
+      if (options.interpolation) {
+        const defOpts = get();
+        const mergedInterpolation = {
+          ...defOpts.interpolation,
+          ...this.options.interpolation,
+          ...options.interpolation
+        };
+        const mergedForInterpolator = {
+          ...mergedOptions,
+          interpolation: mergedInterpolation
+        };
+        clone.services.interpolator = new Interpolator(mergedForInterpolator);
+      }
       clone.translator = new Translator(clone.services, mergedOptions);
       clone.translator.on('*', (event, ...args) => {
         clone.emit(event, ...args);
@@ -3601,8 +3647,12 @@
           wrapperLangRef.current = lang;
         }
       }
-      const arr = [t, i18nWrapper, ready];
-      arr.t = t;
+      const effectiveT = !ready && !useSuspense ? (...args) => {
+        warnOnce(i18n, 'USE_T_BEFORE_READY', 'useTranslation: t was called before ready. When using useSuspense: false, make sure to check the ready flag before using t.');
+        return t(...args);
+      } : t;
+      const arr = [effectiveT, i18nWrapper, ready];
+      arr.t = effectiveT;
       arr.i18n = i18nWrapper;
       arr.ready = ready;
       return arr;
