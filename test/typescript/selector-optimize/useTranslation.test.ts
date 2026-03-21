@@ -16,13 +16,13 @@ describe('useTranslation', () => {
     it('should work with default namespace', () => {
       const [t] = useTranslation();
 
-      expectTypeOf(t).toBeCallableWith(($) => $.foo);
+      expectTypeOf(t(($) => $.foo)).toEqualTypeOf<'foo'>();
     });
 
     it('should work with default named namespace', () => {
       const [t] = useTranslation('custom');
 
-      expectTypeOf(t).toBeCallableWith(($) => $.bar);
+      expectTypeOf(t(($) => $.bar)).toEqualTypeOf<'bar'>();
     });
   });
 
@@ -30,7 +30,7 @@ describe('useTranslation', () => {
     it('should work with named namespace', () => {
       const [t] = useTranslation('alternate');
 
-      expectTypeOf(t).toBeCallableWith(($) => $.baz);
+      expectTypeOf(t(($) => $.baz)).toEqualTypeOf<'baz'>();
     });
 
     it(`raises a TypeError given a namespace that doesn't exist`, () => {
