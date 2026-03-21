@@ -125,4 +125,18 @@ describe('<Trans />', () => {
       });
     });
   });
+
+  describe('values type safety', () => {
+    it('should accept correct interpolation values', () => {
+      <Trans i18nKey={($) => $.title} values={{ appName: 'My App' }} />;
+    });
+
+    it('should reject wrong interpolation value keys', () => {
+      <Trans
+        i18nKey={($) => $.title}
+        // @ts-expect-error - 'apName' is not a valid interpolation key for 'title'
+        values={{ apName: 'My App' }}
+      />;
+    });
+  });
 });

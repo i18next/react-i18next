@@ -117,4 +117,27 @@ describe('<Trans />', () => {
       });
     });
   });
+
+  describe('values type safety', () => {
+    it('should accept correct interpolation values', () => {
+      expectTypeOf<typeof Trans<'title'>>().toBeCallableWith({
+        i18nKey: 'title',
+        values: { appName: 'My App' },
+      });
+    });
+
+    it('should reject wrong interpolation value keys', () => {
+      expectTypeOf<typeof Trans<'title'>>().toBeCallableWith({
+        i18nKey: 'title',
+        // @ts-expect-error - 'apName' is not a valid interpolation key for 'title'
+        values: { apName: 'My App' },
+      });
+    });
+
+    it('should work without values for keys without interpolation', () => {
+      expectTypeOf(Trans).toBeCallableWith({
+        i18nKey: 'foo',
+      });
+    });
+  });
 });

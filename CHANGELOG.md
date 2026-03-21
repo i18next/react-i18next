@@ -1,6 +1,7 @@
-### 16.6.0 (next / unreleased)
+### 16.6.0
 
 - warn when `t` is called before `ready` with `useSuspense: false` [1896](https://github.com/i18next/react-i18next/issues/1896)
+- type-safe `values` prop on `<Trans />` component — interpolation variables are now inferred from the translation string when custom types are configured [1772](https://github.com/i18next/react-i18next/issues/1772)
 
 ### 16.5.8
 

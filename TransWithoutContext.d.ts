@@ -4,9 +4,11 @@ import type {
   ApplyTarget,
   ConstrainTarget,
   GetSource,
+  InterpolationMap,
   ParseKeys,
   Namespace,
   SelectorFn,
+  TFunctionReturn,
   TypeOptions,
   TOptions,
   TFunction,
@@ -15,6 +17,10 @@ import * as React from 'react';
 
 type _DefaultNamespace = TypeOptions['defaultNS'];
 type _EnableSelector = TypeOptions['enableSelector'];
+type _KeySeparator = TypeOptions['keySeparator'];
+type _AppendKeyPrefix<Key, KPrefix> = KPrefix extends string
+  ? `${KPrefix}${_KeySeparator}${Key & string}`
+  : Key;
 
 type TransChild = React.ReactNode | Record<string, unknown>;
 type $NoInfer<T> = [T][T extends T ? 0 : never];
@@ -37,7 +43,7 @@ export type TransProps<
   ns?: Ns;
   parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
   tOptions?: TOpt;
-  values?: {};
+  values?: InterpolationMap<TFunctionReturn<Ns, _AppendKeyPrefix<Key, KPrefix>, TOpt>>;
   shouldUnescape?: boolean;
   t?: TFunction<Ns, KPrefix>;
 };
@@ -72,7 +78,7 @@ export interface TransSelectorProps<
   ns?: Ns;
   parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
   tOptions?: TOpt;
-  values?: {};
+  values?: Key extends (...args: any[]) => infer R ? InterpolationMap<R> : {};
   shouldUnescape?: boolean;
   t?: TFunction<Ns, KPrefix>;
 }

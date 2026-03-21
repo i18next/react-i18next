@@ -8,6 +8,7 @@ declare module 'i18next' {
       custom: {
         foo: 'foo';
         bar: 'bar';
+        title: 'Title: <strong>{{appName}}</strong>';
 
         some: 'some';
         some_me: 'some context';
