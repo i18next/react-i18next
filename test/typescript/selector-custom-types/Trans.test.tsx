@@ -1,6 +1,7 @@
 import { describe, it, expectTypeOf } from 'vitest';
 import * as React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { keyFromSelector } from 'i18next';
 
 describe('<Trans />', () => {
   describe('default namespace', () => {
@@ -132,11 +133,15 @@ describe('<Trans />', () => {
     });
 
     it('should reject wrong interpolation value keys', () => {
-      <Trans
-        i18nKey={($) => $.title}
-        // @ts-expect-error - 'apName' is not a valid interpolation key for 'title'
-        values={{ apName: 'My App' }}
-      />;
+      // @ts-expect-error - 'apName' is not a valid interpolation key for 'title'
+      <Trans i18nKey={($) => $.title} values={{ apName: 'My App' }} />;
+    });
+  });
+
+  describe('SelectorKey', () => {
+    it('should accept a SelectorKey as i18nKey', () => {
+      const sk = keyFromSelector(($) => $.foo);
+      <Trans i18nKey={sk} />;
     });
   });
 });

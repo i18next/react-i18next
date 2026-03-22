@@ -1,3 +1,7 @@
+### 16.6.1
+
+- feat(types): i18nKey of `<Trans i18nKey={sk} />` to accept a `SelectorKey` [2364](https://github.com/i18next/i18next/issues/2364)
+
 ### 16.6.0
 
 - warn when `t` is called before `ready` with `useSuspense: false` [1896](https://github.com/i18next/react-i18next/issues/1896)

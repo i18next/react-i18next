@@ -127,7 +127,7 @@
     "eslint-plugin-testing-library": "^6.5.0",
     "happy-dom": "^14.12.3",
     "husky": "^9.1.7",
-    "i18next": "^25.10.2",
+    "i18next": "^25.10.4",
     "lint-staged": "^16.4.0",
     "mkdirp": "^3.0.1",
     "prettier": "^3.8.1",
