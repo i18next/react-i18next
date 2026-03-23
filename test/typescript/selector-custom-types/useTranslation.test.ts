@@ -97,6 +97,28 @@ describe('useTranslation', () => {
     });
   });
 
+  describe('with selector function as `keyPrefix`', () => {
+    it('should scope t to the prefix subtree', () => {
+      const [t] = useTranslation('alternate', { keyPrefix: ($) => $.foobar });
+
+      expectTypeOf(t(($) => $.barfoo)).toEqualTypeOf<'barfoo'>();
+    });
+
+    it('should work with deep selector keyPrefix', () => {
+      const [t] = useTranslation('alternate', { keyPrefix: ($) => $.foobar.deep });
+
+      expectTypeOf(t(($) => $.deeper.deeeeeper)).toEqualTypeOf<'foobar'>();
+    });
+
+    it('should work with returnObjects', () => {
+      const [t] = useTranslation('alternate', { keyPrefix: ($) => $.foobar.deep });
+
+      expectTypeOf(t(($) => $.deeper, { returnObjects: true })).toEqualTypeOf<{
+        deeeeeper: 'foobar';
+      }>();
+    });
+  });
+
   it('should work with json format v4 plurals', () => {
     const [t] = useTranslation('plurals');
 

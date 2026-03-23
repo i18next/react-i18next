@@ -1,3 +1,7 @@
+### 16.6.2
+
+- feat(types): `useTranslation` now accepts selector functions as `keyPrefix` with full type-safe key narrowing when `enableSelector` is enabled [2367](https://github.com/i18next/i18next/issues/2367)
+
 ### 16.6.1
 
 - feat(types): i18nKey of `<Trans i18nKey={sk} />` to accept a `SelectorKey` [2364](https://github.com/i18next/i18next/issues/2364)
