@@ -238,11 +238,11 @@ interface UseTranslationLegacy {
 interface UseTranslationSelector {
   // Overload: selector function as keyPrefix — provides type-safe key narrowing
   <
-    const Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
-    const KPrefix extends KeyPrefixSelector<FallbackNs<Ns>> = KeyPrefixSelector<FallbackNs<Ns>>,
+    const Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined,
+    const KPrefix extends KeyPrefixSelector<FallbackNs<Ns>>,
   >(
     ns: Ns,
-    options: UseTranslationOptions<KPrefix>,
+    options: UseTranslationOptions<KPrefix> & { keyPrefix: KPrefix },
   ): UseTranslationResponse<FallbackNs<Ns>, KPrefix>;
 
   // Overload: string or undefined keyPrefix (original behavior)

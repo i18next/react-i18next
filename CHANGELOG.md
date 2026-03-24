@@ -1,3 +1,7 @@
+### 16.6.5
+
+- fix(types): selector keyPrefix overload in `useTranslation` no longer matches when `keyPrefix` is absent, fixing `defaultNS: false` with explicit `ns` option [2412](https://github.com/i18next/i18next/issues/2412)
+
 ### 16.6.4
 
 - allow TypeScript 6 as peer dependency [1910](https://github.com/i18next/react-i18next/issues/1910)
