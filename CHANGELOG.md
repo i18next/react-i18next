@@ -1,3 +1,7 @@
+### 16.6.6
+
+- fix(peer-deps): bump i18next peer dependency to `>= 25.10.9` to match required type exports (`ConstrainTarget`, `ApplyTarget`, `GetSource`) used by `TransSelector` [1911](https://github.com/i18next/react-i18next/issues/1911)
+
 ### 16.6.5
 
 - fix(types): selector keyPrefix overload in `useTranslation` no longer matches when `keyPrefix` is absent, fixing `defaultNS: false` with explicit `ns` option [2412](https://github.com/i18next/i18next/issues/2412)
