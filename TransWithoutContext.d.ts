@@ -85,10 +85,11 @@ export interface TransSelectorProps<
 }
 
 export interface TransSelector {
-  // ── Selector function ──────────────────────────────────────────────────────
   <
     Target extends ConstrainTarget<TOpt>,
-    Key extends SelectorFn<GetSource<$NoInfer<Ns>, KPrefix>, ApplyTarget<Target, TOpt>, TOpt>,
+    Key extends
+      | SelectorFn<GetSource<$NoInfer<Ns>, KPrefix>, ApplyTarget<Target, TOpt>, TOpt>
+      | SelectorKey,
     const Ns extends Namespace = _DefaultNamespace,
     KPrefix = undefined,
     TContext extends string | undefined = undefined,
@@ -97,9 +98,6 @@ export interface TransSelector {
   >(
     props: TransSelectorProps<Key, Ns, KPrefix, TContext, TOpt> & E,
   ): React.ReactElement;
-
-  // ── Pre-computed SelectorKey ────────────────────────────────────────────────
-  (props: TransSelectorProps<SelectorKey> & Record<string, any>): React.ReactElement;
 }
 
 export const Trans: _EnableSelector extends true | 'optimize' ? TransSelector : TransLegacy;

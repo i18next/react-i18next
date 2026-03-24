@@ -143,5 +143,27 @@ describe('<Trans />', () => {
       const sk = keyFromSelector(($) => $.foo);
       <Trans i18nKey={sk} />;
     });
+
+    it('should accept an array of SelectorKey as i18nKey', () => {
+      const sk = keyFromSelector(($) => $.foo);
+      <Trans i18nKey={[sk]} />;
+    });
+  });
+
+  describe('typeof Trans wrapper', () => {
+    it('should allow extending Trans with typeof', () => {
+      const MyTrans: typeof Trans = (props) => {
+        return <Trans {...props} />;
+      };
+      <MyTrans i18nKey={($) => $.foo} />;
+    });
+
+    it('should allow extending Trans with typeof and SelectorKey', () => {
+      const sk = keyFromSelector(($) => $.foo);
+      const MyTrans: typeof Trans = (props) => {
+        return <Trans {...props} />;
+      };
+      <MyTrans i18nKey={sk} />;
+    });
   });
 });

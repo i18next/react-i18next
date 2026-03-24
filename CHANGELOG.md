@@ -1,3 +1,7 @@
+### 16.6.3
+
+- fix(types): merge `TransSelector` overloads into a single signature so `typeof Trans` remains extendable [1909](https://github.com/i18next/react-i18next/issues/1909)
+
 ### 16.6.2
 
 - feat(types): `useTranslation` now accepts selector functions as `keyPrefix` with full type-safe key narrowing when `enableSelector` is enabled [2367](https://github.com/i18next/i18next/issues/2367)
