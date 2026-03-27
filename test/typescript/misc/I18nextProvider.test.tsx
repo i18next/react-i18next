@@ -1,4 +1,4 @@
-import { describe, expectTypeOf } from 'vitest';
+import { describe, it, expectTypeOf } from 'vitest';
 import i18next from 'i18next';
 import { I18nextProvider } from 'react-i18next';
 

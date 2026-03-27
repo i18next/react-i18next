@@ -1711,6 +1711,7 @@
   const getSupportNoticeShown = () => {
     if (typeof globalThis !== 'undefined' && !!globalThis[SUPPORT_NOTICE_KEY]) return true;
     if (typeof process !== 'undefined' && process.env && process.env.I18NEXT_NO_SUPPORT_NOTICE) return true;
+    if (typeof process !== 'undefined' && process.env && "development" === 'production') ;
     return false;
   };
   const setSupportNoticeShown = () => {
@@ -2252,24 +2253,33 @@
   	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
   }
 
-  var voidElements = {
-    "area": true,
-    "base": true,
-    "br": true,
-    "col": true,
-    "embed": true,
-    "hr": true,
-    "img": true,
-    "input": true,
-    "link": true,
-    "meta": true,
-    "param": true,
-    "source": true,
-    "track": true,
-    "wbr": true
-  };
+  var voidElements;
+  var hasRequiredVoidElements;
 
-  var e = /*@__PURE__*/getDefaultExportFromCjs(voidElements);
+  function requireVoidElements () {
+  	if (hasRequiredVoidElements) return voidElements;
+  	hasRequiredVoidElements = 1;
+  	voidElements = {
+  	  "area": true,
+  	  "base": true,
+  	  "br": true,
+  	  "col": true,
+  	  "embed": true,
+  	  "hr": true,
+  	  "img": true,
+  	  "input": true,
+  	  "link": true,
+  	  "meta": true,
+  	  "param": true,
+  	  "source": true,
+  	  "track": true,
+  	  "wbr": true
+  	};
+  	return voidElements;
+  }
+
+  var voidElementsExports = requireVoidElements();
+  var e = /*@__PURE__*/getDefaultExportFromCjs(voidElementsExports);
 
   var t = /\s([^'"/\s><]+?)[\s/>]|([^\s=]+)=\s?(".*?"|'.*?')/g;
   function n(n) {
@@ -2538,8 +2548,9 @@
           stringNode += `<${childIndex}></${childIndex}>`;
           return;
         }
-        if (shouldKeepChild && childPropsCount === 1 && isString(childChildren)) {
-          stringNode += `<${type}>${childChildren}</${type}>`;
+        if (shouldKeepChild && childPropsCount <= 1) {
+          const cnt = isString(childChildren) ? childChildren : nodesToString(childChildren, i18nOptions, i18n, i18nKey);
+          stringNode += `<${type}>${cnt}</${type}>`;
           return;
         }
         const content = nodesToString(childChildren, i18nOptions, i18n, i18nKey);
@@ -3444,77 +3455,93 @@
    * LICENSE file in the root directory of this source tree.
    */
 
-  (function () {
-    function is(x, y) {
-      return x === y && (0 !== x || 1 / x === 1 / y) || x !== x && y !== y;
-    }
-    function useSyncExternalStore$2(subscribe, getSnapshot) {
-      didWarnOld18Alpha || void 0 === React$1.startTransition || (didWarnOld18Alpha = true, console.error("You are using an outdated, pre-release alpha of React 18 that does not support useSyncExternalStore. The use-sync-external-store shim will not work correctly. Upgrade to a newer pre-release."));
-      var value = getSnapshot();
-      if (!didWarnUncachedGetSnapshot) {
-        var cachedValue = getSnapshot();
-        objectIs(value, cachedValue) || (console.error("The result of getSnapshot should be cached to avoid an infinite loop"), didWarnUncachedGetSnapshot = true);
-      }
-      cachedValue = useState({
-        inst: {
-          value: value,
-          getSnapshot: getSnapshot
-        }
-      });
-      var inst = cachedValue[0].inst,
-        forceUpdate = cachedValue[1];
-      useLayoutEffect(function () {
-        inst.value = value;
-        inst.getSnapshot = getSnapshot;
-        checkIfSnapshotChanged(inst) && forceUpdate({
-          inst: inst
-        });
-      }, [subscribe, value, getSnapshot]);
-      useEffect(function () {
-        checkIfSnapshotChanged(inst) && forceUpdate({
-          inst: inst
-        });
-        return subscribe(function () {
-          checkIfSnapshotChanged(inst) && forceUpdate({
-            inst: inst
-          });
-        });
-      }, [subscribe]);
-      useDebugValue(value);
-      return value;
-    }
-    function checkIfSnapshotChanged(inst) {
-      var latestGetSnapshot = inst.getSnapshot;
-      inst = inst.value;
-      try {
-        var nextValue = latestGetSnapshot();
-        return !objectIs(inst, nextValue);
-      } catch (error) {
-        return true;
-      }
-    }
-    function useSyncExternalStore$1(subscribe, getSnapshot) {
-      return getSnapshot();
-    }
-    "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-    var React$1 = React,
-      objectIs = "function" === typeof Object.is ? Object.is : is,
-      useState = React$1.useState,
-      useEffect = React$1.useEffect,
-      useLayoutEffect = React$1.useLayoutEffect,
-      useDebugValue = React$1.useDebugValue,
-      didWarnOld18Alpha = false,
-      didWarnUncachedGetSnapshot = false,
-      shim = "undefined" === typeof window || "undefined" === typeof window.document || "undefined" === typeof window.document.createElement ? useSyncExternalStore$1 : useSyncExternalStore$2;
-    useSyncExternalStoreShim_development.useSyncExternalStore = void 0 !== React$1.useSyncExternalStore ? React$1.useSyncExternalStore : shim;
-    "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
-  })();
+  var hasRequiredUseSyncExternalStoreShim_development;
 
-  {
-    shim.exports = useSyncExternalStoreShim_development;
+  function requireUseSyncExternalStoreShim_development () {
+  	if (hasRequiredUseSyncExternalStoreShim_development) return useSyncExternalStoreShim_development;
+  	hasRequiredUseSyncExternalStoreShim_development = 1;
+
+  	(function () {
+  	  function is(x, y) {
+  	    return x === y && (0 !== x || 1 / x === 1 / y) || x !== x && y !== y;
+  	  }
+  	  function useSyncExternalStore$2(subscribe, getSnapshot) {
+  	    didWarnOld18Alpha || void 0 === React$1.startTransition || (didWarnOld18Alpha = true, console.error("You are using an outdated, pre-release alpha of React 18 that does not support useSyncExternalStore. The use-sync-external-store shim will not work correctly. Upgrade to a newer pre-release."));
+  	    var value = getSnapshot();
+  	    if (!didWarnUncachedGetSnapshot) {
+  	      var cachedValue = getSnapshot();
+  	      objectIs(value, cachedValue) || (console.error("The result of getSnapshot should be cached to avoid an infinite loop"), didWarnUncachedGetSnapshot = true);
+  	    }
+  	    cachedValue = useState({
+  	      inst: {
+  	        value: value,
+  	        getSnapshot: getSnapshot
+  	      }
+  	    });
+  	    var inst = cachedValue[0].inst,
+  	      forceUpdate = cachedValue[1];
+  	    useLayoutEffect(function () {
+  	      inst.value = value;
+  	      inst.getSnapshot = getSnapshot;
+  	      checkIfSnapshotChanged(inst) && forceUpdate({
+  	        inst: inst
+  	      });
+  	    }, [subscribe, value, getSnapshot]);
+  	    useEffect(function () {
+  	      checkIfSnapshotChanged(inst) && forceUpdate({
+  	        inst: inst
+  	      });
+  	      return subscribe(function () {
+  	        checkIfSnapshotChanged(inst) && forceUpdate({
+  	          inst: inst
+  	        });
+  	      });
+  	    }, [subscribe]);
+  	    useDebugValue(value);
+  	    return value;
+  	  }
+  	  function checkIfSnapshotChanged(inst) {
+  	    var latestGetSnapshot = inst.getSnapshot;
+  	    inst = inst.value;
+  	    try {
+  	      var nextValue = latestGetSnapshot();
+  	      return !objectIs(inst, nextValue);
+  	    } catch (error) {
+  	      return true;
+  	    }
+  	  }
+  	  function useSyncExternalStore$1(subscribe, getSnapshot) {
+  	    return getSnapshot();
+  	  }
+  	  "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
+  	  var React$1 = React,
+  	    objectIs = "function" === typeof Object.is ? Object.is : is,
+  	    useState = React$1.useState,
+  	    useEffect = React$1.useEffect,
+  	    useLayoutEffect = React$1.useLayoutEffect,
+  	    useDebugValue = React$1.useDebugValue,
+  	    didWarnOld18Alpha = false,
+  	    didWarnUncachedGetSnapshot = false,
+  	    shim = "undefined" === typeof window || "undefined" === typeof window.document || "undefined" === typeof window.document.createElement ? useSyncExternalStore$1 : useSyncExternalStore$2;
+  	  useSyncExternalStoreShim_development.useSyncExternalStore = void 0 !== React$1.useSyncExternalStore ? React$1.useSyncExternalStore : shim;
+  	  "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
+  	})();
+  	return useSyncExternalStoreShim_development;
   }
 
-  var shimExports = shim.exports;
+  var hasRequiredShim;
+
+  function requireShim () {
+  	if (hasRequiredShim) return shim.exports;
+  	hasRequiredShim = 1;
+
+  	{
+  	  shim.exports = requireUseSyncExternalStoreShim_development();
+  	}
+  	return shim.exports;
+  }
+
+  var shimExports = requireShim();
 
   const notReadyT = (k, optsOrDefaultValue) => {
     if (isString(optsOrDefaultValue)) return optsOrDefaultValue;

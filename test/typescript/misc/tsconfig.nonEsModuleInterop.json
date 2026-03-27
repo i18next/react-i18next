@@ -3,6 +3,6 @@
   "compilerOptions": {
     // typescript defaults to these
     "esModuleInterop": false,
-    "allowSyntheticDefaultImports": false
+    "ignoreDeprecations": "6.0"
   }
 }

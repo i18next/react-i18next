@@ -1,4 +1,4 @@
-import { assertType, expectTypeOf, it } from 'vitest';
+import { assertType, describe, expectTypeOf, it } from 'vitest';
 import * as React from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { TFunction, i18n } from 'i18next';

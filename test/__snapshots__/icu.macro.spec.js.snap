@@ -3,7 +3,7 @@
 exports[`macros > 1. macros > 1. macros 1`] = `
 "
 
-import { Trans } from '../../../icu.macro'
+import { Trans } from '../icu.macro'
 
 const x = <Trans>Welcome, { name }!</Trans>
     
@@ -26,7 +26,7 @@ const x = (
 exports[`macros > 2. macros > 2. macros 1`] = `
 "
 
-import { Trans } from '../../../icu.macro'
+import { Trans } from '../icu.macro'
 
 const x = <Trans>Welcome, <strong>{ name }</strong>!</Trans>
     
@@ -53,7 +53,7 @@ const x = (
 exports[`macros > 3. macros > 3. macros 1`] = `
 "
 
-import { Trans } from '../../../icu.macro'
+import { Trans } from '../icu.macro'
 import { useTranslation } from 'react-i18next'
 
 const x = <Trans>Trainers: { trainersCount, number }</Trans>
@@ -77,7 +77,7 @@ const x = (
 exports[`macros > 4. macros > 4. macros 1`] = `
 "
 
-import { Trans } from '../../../icu.macro'
+import { Trans } from '../icu.macro'
 
 const x = <Trans>Trainers: <strong>{ trainersCount, number }</strong>!</Trans>
     
@@ -104,7 +104,7 @@ const x = (
 exports[`macros > 5. macros > 5. macros 1`] = `
 "
 
-import { Trans } from '../../../icu.macro'
+import { Trans } from '../icu.macro'
 
 const x = <Trans>Caught on { catchDate, date, short }</Trans>
     
@@ -127,7 +127,7 @@ const x = (
 exports[`macros > 6. macros > 6. macros 1`] = `
 "
 
-import { Trans } from '../../../icu.macro'
+import { Trans } from '../icu.macro'
 
 const x = <Trans>Caught on <strong>{ catchDate, date, short }</strong>!</Trans>
     
@@ -154,7 +154,7 @@ const x = (
 exports[`macros > 7. macros > 7. macros 1`] = `
 "
 
-import { Trans } from '../../../icu.macro'
+import { Trans } from '../icu.macro'
 
 const x = <Trans defaults="Trainers: { trainersCount, number }" />
     
@@ -177,7 +177,7 @@ const x = (
 exports[`macros > 8. macros > 8. macros 1`] = `
 "
 
-import { Trans } from '../../../icu.macro'
+import { Trans } from '../icu.macro'
 
 const x = <Trans i18nKey="trainersWithDefaults" defaults="Trainers: <strong>{ trainersCount, number }</strong>!" />
     
@@ -205,7 +205,7 @@ const x = (
 exports[`macros > 9. macros > 9. macros 1`] = `
 "
 
-import { Trans } from '../../../icu.macro'
+import { Trans } from '../icu.macro'
 
 const x = <Trans i18nKey="caughtWithDefaults" defaults="Caught on { catchDate, date, short }" />
     
@@ -229,7 +229,7 @@ const x = (
 exports[`macros > 10. macros > 10. macros 1`] = `
 "
 
-import { Trans } from '../../../icu.macro'
+import { Trans } from '../icu.macro'
 
 const x = <Trans defaults="Caught on <strong>{ catchDate, date, short }</strong>!" />
     
@@ -256,7 +256,7 @@ const x = (
 exports[`macros > 11. macros > 11. macros 1`] = `
 "
 
-import { Trans } from '../../../icu.macro'
+import { Trans } from '../icu.macro'
 const Link = ({to, children}) => (<a href={to}>{children}</a>)
 
 const x = <Trans defaults="Caught on <Link to='/dest'>{ catchDate, date, short }</Link>!" values={{catchDate: Date.now()}}>This should be overridden by defaults</Trans>
@@ -288,7 +288,7 @@ const x = (
 exports[`macros > 12. macros > 12. macros 1`] = `
 "
 
-import { Trans } from '../../../icu.macro'
+import { Trans } from '../icu.macro'
 
 const x = <Trans i18nKey="trainersWithDefaults" values={{trainersCount}} defaults="Trainers: <strong>{ trainersCount, number }</strong>!" components={[]} />
     
@@ -312,7 +312,7 @@ const x = (
 exports[`macros > 13. macros > 13. macros 1`] = `
 "
 
-import { Select } from '../../../icu.macro'
+import { Select } from '../icu.macro'
 
 const x = <Select
   i18nKey="selectExample"
@@ -342,7 +342,7 @@ const x = (
 exports[`macros > 14. macros > 14. macros 1`] = `
 "
 
-import { Select } from '../../../icu.macro'
+import { Select } from '../icu.macro'
 
 const x = <Select
   switch={gender}
@@ -380,7 +380,7 @@ const x = (
 exports[`macros > 15. macros > 15. macros 1`] = `
 "
 
-import { Plural } from '../../../icu.macro'
+import { Plural } from '../icu.macro'
 
 const x = <Plural
   count={itemsCount1}
@@ -408,7 +408,7 @@ const x = (
 exports[`macros > 16. macros > 16. macros 1`] = `
 "
 
-import { Plural } from '../../../icu.macro'
+import { Plural } from '../icu.macro'
 
 const x = <Plural
   i18nKey="testKey"
@@ -448,7 +448,7 @@ const x = (
 exports[`macros > 17. macros > 17. macros 1`] = `
 "
 
-import { Plural } from '../../../icu.macro'
+import { Plural } from '../icu.macro'
 
 const x = <Plural
   i18nKey="testKey"
@@ -499,7 +499,7 @@ const x = (
 exports[`macros > 18. macros > 18. macros 1`] = `
 "
 
-import { SelectOrdinal } from '../../../icu.macro'
+import { SelectOrdinal } from '../icu.macro'
 
 const x = <SelectOrdinal
   count={position}
@@ -531,7 +531,7 @@ const x = (
 exports[`macros > 19. macros > 19. macros 1`] = `
 "
 
-import { SelectOrdinal } from '../../../icu.macro'
+import { SelectOrdinal } from '../icu.macro'
 
 const x = <SelectOrdinal
   i18nKey="testKey"
@@ -581,7 +581,7 @@ exports[`macros > 20. macros > 20. macros 1`] = `
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plural, Select, SelectOrdinal, Trans } from '../../../icu.macro'
+import { Plural, Select, SelectOrdinal, Trans } from '../icu.macro'
 const Link = ({to, children}) => (<a href={to}>{children}</a>)
 
 export default function TestPage({count = 1}) {
@@ -968,7 +968,7 @@ exports[`macros > 21. macros > 21. macros 1`] = `
 "
 
 import React from "react"
-import { Trans, number, date, time, plural, select, selectOrdinal } from "../../../icu.macro";
+import { Trans, number, date, time, plural, select, selectOrdinal } from "../icu.macro";
 
 function Component({ children, style }) {
   return <div style={style}>{children}</div>
@@ -1042,7 +1042,7 @@ const x = (
 exports[`macros > 22. macros > 22. macros 1`] = `
 "
 
-import { Trans } from "../../../icu.macro";
+import { Trans } from "../icu.macro";
 
 const x = <Trans>Welcome, &quot;{ name }&quot;!</Trans>
     
@@ -1065,7 +1065,7 @@ const x = (
 exports[`macros > 23. macros > 23. macros 1`] = `
 "
 
-import { Trans } from "../../../icu.macro";
+import { Trans } from "../icu.macro";
 
 const x = <Trans data-cy="test">Welcome, { name }!</Trans>
     
@@ -1089,7 +1089,7 @@ const x = (
 exports[`macros > 24. macros > 24. macros 1`] = `
 "
 
-import { Trans } from "../../../icu.macro";
+import { Trans } from "../icu.macro";
 
 const x = <Trans data-cy="test" data-testid="trans-component">Welcome, <strong data-cy="name">{ name }</strong>!</Trans>
     
@@ -1125,8 +1125,8 @@ import type { PackageDetail } from "@api/package";
 import type { ReactElement } from "react";
 import React from "react";
 
-import { number } from "../../../icu.macro";
-import { Trans } from "../../../icu.macro";
+import { number } from "../icu.macro";
+import { Trans } from "../icu.macro";
 import ProgressBar from "/ProgressBar";
 
 const UsageTracker = ({
@@ -1208,7 +1208,7 @@ export default UsageTracker;
 exports[`macros > 36. macros > 36. macros 1`] = `
 "
 
-import { Trans } from '../../../icu.macro'
+import { Trans } from '../icu.macro'
 
 const spreadProps = { className: 'test', id: 'bold-text' }
 const x = <Trans><b {...spreadProps}>test</b></Trans>
@@ -1241,7 +1241,7 @@ const x = (
 exports[`macros > 37. macros > 37. macros 1`] = `
 "
 
-import { Trans } from '../../../icu.macro'
+import { Trans } from '../icu.macro'
 
 const x = <Trans><b aria-hidden>test</b></Trans>
     

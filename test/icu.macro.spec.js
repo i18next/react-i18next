@@ -21,81 +21,81 @@ pluginTester({
   babelOptions: { filename: __filename, parserOpts: { plugins: ['jsx', 'typescript'] } },
   tests: [
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../icu.macro'
 
       const x = <Trans>Welcome, { name }!</Trans>
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../icu.macro'
 
       const x = <Trans>Welcome, <strong>{ name }</strong>!</Trans>
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../icu.macro'
       import { useTranslation } from 'react-i18next'
 
       const x = <Trans>Trainers: { trainersCount, number }</Trans>
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../icu.macro'
 
       const x = <Trans>Trainers: <strong>{ trainersCount, number }</strong>!</Trans>
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../icu.macro'
 
       const x = <Trans>Caught on { catchDate, date, short }</Trans>
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../icu.macro'
 
       const x = <Trans>Caught on <strong>{ catchDate, date, short }</strong>!</Trans>
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../icu.macro'
 
       const x = <Trans defaults="Trainers: { trainersCount, number }" />
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../icu.macro'
 
       const x = <Trans i18nKey="trainersWithDefaults" defaults="Trainers: <strong>{ trainersCount, number }</strong>!" />
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../icu.macro'
 
       const x = <Trans i18nKey="caughtWithDefaults" defaults="Caught on { catchDate, date, short }" />
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../icu.macro'
 
       const x = <Trans defaults="Caught on <strong>{ catchDate, date, short }</strong>!" />
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../icu.macro'
       const Link = ({to, children}) => (<a href={to}>{children}</a>)
 
       const x = <Trans defaults="Caught on <Link to='/dest'>{ catchDate, date, short }</Link>!" values={{catchDate: Date.now()}}>This should be overridden by defaults</Trans>
     `,
 
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../icu.macro'
 
       const x = <Trans i18nKey="trainersWithDefaults" values={{trainersCount}} defaults="Trainers: <strong>{ trainersCount, number }</strong>!" components={[]} />
     `,
 
     `
-      import { Select } from '../../../icu.macro'
+      import { Select } from '../icu.macro'
 
       const x = <Select
         i18nKey="selectExample"
@@ -107,7 +107,7 @@ pluginTester({
     `,
 
     `
-      import { Select } from '../../../icu.macro'
+      import { Select } from '../icu.macro'
 
       const x = <Select
         switch={gender}
@@ -118,7 +118,7 @@ pluginTester({
     `,
 
     `
-      import { Plural } from '../../../icu.macro'
+      import { Plural } from '../icu.macro'
 
       const x = <Plural
         count={itemsCount1}
@@ -129,7 +129,7 @@ pluginTester({
     `,
 
     `
-      import { Plural } from '../../../icu.macro'
+      import { Plural } from '../icu.macro'
 
       const x = <Plural
         i18nKey="testKey"
@@ -141,7 +141,7 @@ pluginTester({
     `,
 
     `
-      import { Plural } from '../../../icu.macro'
+      import { Plural } from '../icu.macro'
 
       const x = <Plural
         i18nKey="testKey"
@@ -154,7 +154,7 @@ pluginTester({
     `,
 
     `
-      import { SelectOrdinal } from '../../../icu.macro'
+      import { SelectOrdinal } from '../icu.macro'
 
       const x = <SelectOrdinal
         count={position}
@@ -169,7 +169,7 @@ pluginTester({
     `,
 
     `
-      import { SelectOrdinal } from '../../../icu.macro'
+      import { SelectOrdinal } from '../icu.macro'
 
       const x = <SelectOrdinal
         i18nKey="testKey"
@@ -185,7 +185,7 @@ pluginTester({
     `
       import React from 'react'
       import { useTranslation } from 'react-i18next'
-      import { Plural, Select, SelectOrdinal, Trans } from '../../../icu.macro'
+      import { Plural, Select, SelectOrdinal, Trans } from '../icu.macro'
       const Link = ({to, children}) => (<a href={to}>{children}</a>)
 
       export default function TestPage({count = 1}) {
@@ -292,7 +292,7 @@ pluginTester({
     `,
     `
       import React from "react"
-      import { Trans, number, date, time, plural, select, selectOrdinal } from "../../../icu.macro";
+      import { Trans, number, date, time, plural, select, selectOrdinal } from "../icu.macro";
 
       function Component({ children, style }) {
         return <div style={style}>{children}</div>
@@ -316,17 +316,17 @@ pluginTester({
       );
     `,
     `
-      import { Trans } from "../../../icu.macro";
+      import { Trans } from "../icu.macro";
 
       const x = <Trans>Welcome, &quot;{ name }&quot;!</Trans>
     `,
     `
-      import { Trans } from "../../../icu.macro";
+      import { Trans } from "../icu.macro";
 
       const x = <Trans data-cy="test">Welcome, { name }!</Trans>
     `,
     `
-      import { Trans } from "../../../icu.macro";
+      import { Trans } from "../icu.macro";
 
       const x = <Trans data-cy="test" data-testid="trans-component">Welcome, <strong data-cy="name">{ name }</strong>!</Trans>
     `,
@@ -335,8 +335,8 @@ pluginTester({
       import type { ReactElement } from "react";
       import React from "react";
 
-      import { number } from "../../../icu.macro";
-      import { Trans } from "../../../icu.macro";
+      import { number } from "../icu.macro";
+      import { Trans } from "../icu.macro";
       import ProgressBar from "/ProgressBar";
 
       const UsageTracker = ({
@@ -371,7 +371,7 @@ pluginTester({
     {
       code: `
         import React from "react"
-        import { Trans, number } from "../../../icu.macro";
+        import { Trans, number } from "../icu.macro";
 
         const count = 2;
         const outside = number\`\${count}\`;
@@ -382,7 +382,7 @@ pluginTester({
     {
       code: `
         import React from "react"
-        import { Trans, date } from "../../../icu.macro";
+        import { Trans, date } from "../icu.macro";
 
         const d = new Date;
         const outside = date\`\${d}\`;
@@ -393,7 +393,7 @@ pluginTester({
     {
       code: `
         import React from "react"
-        import { Trans, time } from "../../../icu.macro";
+        import { Trans, time } from "../icu.macro";
 
         const d = new Date;
         const outside = time\`\${d}\`;
@@ -404,7 +404,7 @@ pluginTester({
     {
       code: `
         import React from "react"
-        import { Trans, select } from "../../../icu.macro";
+        import { Trans, select } from "../icu.macro";
 
         const d = "f";
         const outside = select\`\${d}, f { chose f } other { chose something else }\`;
@@ -415,7 +415,7 @@ pluginTester({
     {
       code: `
         import React from "react"
-        import { Trans, selectOrdinal } from "../../../icu.macro";
+        import { Trans, selectOrdinal } from "../icu.macro";
 
         const d = 1;
         const outside = selectOrdinal\`\${d}, =0 { # } other { chose # }\`;
@@ -426,7 +426,7 @@ pluginTester({
     {
       code: `
         import React from "react"
-        import { Trans, plural } from "../../../icu.macro";
+        import { Trans, plural } from "../icu.macro";
 
         const d = 1;
         const outside = plural\`\${d}, =0 { # } other { chose # }\`;
@@ -437,7 +437,7 @@ pluginTester({
     {
       code: `
         import React from "react"
-        import { Trans, plural } from "../../../icu.macro";
+        import { Trans, plural } from "../icu.macro";
 
         const d = 1;
         const x = (
@@ -453,7 +453,7 @@ pluginTester({
     {
       code: `
         import React from "react"
-        import { Trans, date } from "../../../icu.macro";
+        import { Trans, date } from "../icu.macro";
 
         const d = 1;
         const x = (
@@ -468,7 +468,7 @@ pluginTester({
     {
       code: `
         import React from "react"
-        import { Trans, date } from "../../../icu.macro";
+        import { Trans, date } from "../icu.macro";
 
         const tooLate = new Date();
         const x = (
@@ -483,7 +483,7 @@ pluginTester({
     {
       code: `
         import React from "react"
-        import { Trans, number } from "../../../icu.macro";
+        import { Trans, number } from "../icu.macro";
 
         const tooLate = funcThatReturnsNumberOrUndefined;
         const x = (
@@ -496,13 +496,13 @@ pluginTester({
       error: /Must pass a variable, not an expression to "number``" in "[^"]+" on line 8/,
     },
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../icu.macro'
 
       const spreadProps = { className: 'test', id: 'bold-text' }
       const x = <Trans><b {...spreadProps}>test</b></Trans>
     `,
     `
-      import { Trans } from '../../../icu.macro'
+      import { Trans } from '../icu.macro'
 
       const x = <Trans><b aria-hidden>test</b></Trans>
     `,

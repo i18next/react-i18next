@@ -1,3 +1,16 @@
+## 17.0.0
+
+### Potentially breaking changes
+
+- fix: `transKeepBasicHtmlNodesFor` now correctly preserves HTML tag names when children contain interpolations or mixed content [230](https://github.com/i18next/i18next-cli/issues/230)
+  - Previously, `<strong>{{name}}</strong>` was incorrectly serialized as `<1>{{name}}</1>` — the tag name was only preserved for plain string children
+  - This bug existed since the feature was introduced and affects auto-generated keys (when no explicit `i18nKey` is provided)
+  - If you rely on auto-generated Trans keys containing indexed tags for kept HTML elements with interpolation children, you will need to update your translation files
+
+### Other changes
+
+- updated dev dependencies (vitest, rollup plugins, happy-dom, typescript, etc.)
+
 ### 16.6.6
 
 - fix(peer-deps): bump i18next peer dependency to `>= 25.10.9` to match required type exports (`ConstrainTarget`, `ApplyTarget`, `GetSource`) used by `TransSelector` [1911](https://github.com/i18next/react-i18next/issues/1911)

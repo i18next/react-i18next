@@ -59,6 +59,36 @@ describe('trans nodeToString', () => {
       });
       expect(actual).toEqual(expected);
     });
+
+    it('should handle non voidElements with interpolation children', () => {
+      const fragment = (
+        <>
+          lorem <strong>{{ insert: 'x' }}</strong> ipsum
+        </>
+      );
+      const expected = 'lorem <strong>{{insert}}</strong> ipsum';
+      const transKeepBasicHtmlNodesFor = ['br', 'strong', 'i'];
+      const actual = nodesToString(fragment.props.children, {
+        transSupportBasicHtmlNodes: true,
+        transKeepBasicHtmlNodesFor,
+      });
+      expect(actual).toEqual(expected);
+    });
+
+    it('should handle non voidElements with mixed text and interpolation children', () => {
+      const fragment = (
+        <>
+          lorem <strong>Level {{ level: 5 }}</strong> ipsum
+        </>
+      );
+      const expected = 'lorem <strong>Level {{level}}</strong> ipsum';
+      const transKeepBasicHtmlNodesFor = ['br', 'strong', 'i'];
+      const actual = nodesToString(fragment.props.children, {
+        transSupportBasicHtmlNodes: true,
+        transKeepBasicHtmlNodesFor,
+      });
+      expect(actual).toEqual(expected);
+    });
   });
 
   describe('treat like other components if not simple (legacy)', () => {

@@ -86,10 +86,13 @@ export const nodesToString = (children, i18nOptions, i18n, i18nKey) => {
         stringNode += `<${childIndex}></${childIndex}>`;
         return;
       }
-      if (shouldKeepChild && childPropsCount === 1 && isString(childChildren)) {
+      if (shouldKeepChild && childPropsCount <= 1) {
         // actual e.g. dolor <strong>bold</strong> amet
         // expected e.g. dolor <strong>bold</strong> amet
-        stringNode += `<${type}>${childChildren}</${type}>`;
+        const cnt = isString(childChildren)
+          ? childChildren
+          : nodesToString(childChildren, i18nOptions, i18n, i18nKey);
+        stringNode += `<${type}>${cnt}</${type}>`;
         return;
       }
       // regular case mapping the inner children

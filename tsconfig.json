@@ -13,7 +13,7 @@
     "baseUrl": ".",
     "paths": { "react-i18next": ["./"] },
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "ignoreDeprecations": "6.0",
     "skipLibCheck": true
   }
 }
