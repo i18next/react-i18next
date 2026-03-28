@@ -76,10 +76,6 @@ i18n.init({
   interpolation: {
     escapeValue: false, // not needed for react!!
     formatSeparator: ',',
-    format(value, format) {
-      if (format === 'uppercase') return value.toUpperCase();
-      return value;
-    },
     defaultVariables: {
       defaultInsert: 'first',
       defaultUp: 'second',
@@ -93,5 +89,7 @@ i18n.init({
     transKeepBasicHtmlNodesFor: ['br', 'strong', 'i'],
   },
 });
+
+i18n.services.formatter.add('uppercase', (value) => value.toUpperCase());
 
 export default i18n;

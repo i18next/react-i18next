@@ -18,7 +18,7 @@
   };
   const makeString = object => {
     if (object == null) return '';
-    return '' + object;
+    return String(object);
   };
   const copy = (a, s, t) => {
     a.forEach(m => {
@@ -26,7 +26,7 @@
     });
   };
   const lastOfPathSeparatorRegExp = /###/g;
-  const cleanKey = key => key && key.indexOf('###') > -1 ? key.replace(lastOfPathSeparatorRegExp, '.') : key;
+  const cleanKey = key => key && key.includes('###') ? key.replace(lastOfPathSeparatorRegExp, '.') : key;
   const canNotTraverseDeeper = object => !object || isString$1(object);
   const getLastOfPath = (object, path, Empty) => {
     const stack = !isString$1(path) ? path : path.split('.');
@@ -111,7 +111,7 @@
     return target;
   };
   const regexEscape = str => str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
-  var _entityMap = {
+  const _entityMap = {
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
@@ -150,7 +150,7 @@
   const looksLikeObjectPath = (key, nsSeparator, keySeparator) => {
     nsSeparator = nsSeparator || '';
     keySeparator = keySeparator || '';
-    const possibleChars = chars.filter(c => nsSeparator.indexOf(c) < 0 && keySeparator.indexOf(c) < 0);
+    const possibleChars = chars.filter(c => !nsSeparator.includes(c) && !keySeparator.includes(c));
     if (possibleChars.length === 0) return true;
     const r = looksLikeObjectPathRegExpCache.getRegExp(`(${possibleChars.map(c => c === '?' ? '\\?' : c).join('|')})`);
     let matched = !r.test(key);
@@ -183,7 +183,7 @@
         nextPath += tokens[j];
         next = current[nextPath];
         if (next !== undefined) {
-          if (['string', 'number', 'boolean'].indexOf(typeof next) > -1 && j < tokens.length - 1) {
+          if (['string', 'number', 'boolean'].includes(typeof next) && j < tokens.length - 1) {
             continue;
           }
           i += j - i + 1;
@@ -272,6 +272,14 @@
       }
       this.observers[event].delete(listener);
     }
+    once(event, listener) {
+      const wrapper = (...args) => {
+        listener(...args);
+        this.off(event, wrapper);
+      };
+      this.on(event, wrapper);
+      return this;
+    }
     emit(event, ...args) {
       if (this.observers[event]) {
         const cloned = Array.from(this.observers[event].entries());
@@ -285,7 +293,7 @@
         const cloned = Array.from(this.observers['*'].entries());
         cloned.forEach(([observer, numTimesAdded]) => {
           for (let i = 0; i < numTimesAdded; i++) {
-            observer.apply(observer, [event, ...args]);
+            observer(event, ...args);
           }
         });
       }
@@ -307,7 +315,7 @@
       }
     }
     addNamespaces(ns) {
-      if (this.options.ns.indexOf(ns) < 0) {
+      if (!this.options.ns.includes(ns)) {
         this.options.ns.push(ns);
       }
     }
@@ -321,7 +329,7 @@
       const keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator;
       const ignoreJSONStructure = options.ignoreJSONStructure !== undefined ? options.ignoreJSONStructure : this.options.ignoreJSONStructure;
       let path;
-      if (lng.indexOf('.') > -1) {
+      if (lng.includes('.')) {
         path = lng.split('.');
       } else {
         path = [lng, ns];
@@ -336,7 +344,7 @@
         }
       }
       const result = getPath(this.data, path);
-      if (!result && !ns && !key && lng.indexOf('.') > -1) {
+      if (!result && !ns && !key && lng.includes('.')) {
         lng = path[0];
         ns = path[1];
         key = path.slice(2).join('.');
@@ -350,7 +358,7 @@
       const keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator;
       let path = [lng, ns];
       if (key) path = path.concat(keySeparator ? key.split(keySeparator) : key);
-      if (lng.indexOf('.') > -1) {
+      if (lng.includes('.')) {
         path = lng.split('.');
         value = ns;
         ns = path[1];
@@ -374,7 +382,7 @@
       skipCopy: false
     }) {
       let path = [lng, ns];
-      if (lng.indexOf('.') > -1) {
+      if (lng.includes('.')) {
         path = lng.split('.');
         deep = resources;
         resources = ns;
@@ -461,7 +469,6 @@
     }
     return path.join(keySeparator);
   }
-  const checkedLoadedFor = {};
   const shouldHandleAsObject = res => !isString$1(res) && typeof res !== 'boolean' && typeof res !== 'number';
   class Translator extends EventEmitter {
     constructor(services, options = {}) {
@@ -472,6 +479,7 @@
         this.options.keySeparator = '.';
       }
       this.logger = baseLogger.create('translator');
+      this.checkedLoadedFor = {};
     }
     changeLanguage(lng) {
       if (lng) this.language = lng;
@@ -496,7 +504,7 @@
       if (nsSeparator === undefined) nsSeparator = ':';
       const keySeparator = opt.keySeparator !== undefined ? opt.keySeparator : this.options.keySeparator;
       let namespaces = opt.ns || this.options.defaultNS || [];
-      const wouldCheckForNsInKey = nsSeparator && key.indexOf(nsSeparator) > -1;
+      const wouldCheckForNsInKey = nsSeparator && key.includes(nsSeparator);
       const seemsNaturalLanguage = !this.options.userDefinedKeySeparator && !opt.keySeparator && !this.options.userDefinedNsSeparator && !opt.nsSeparator && !looksLikeObjectPath(key, nsSeparator, keySeparator);
       if (wouldCheckForNsInKey && !seemsNaturalLanguage) {
         const m = key.match(this.interpolator.nestingRegexp);
@@ -507,7 +515,7 @@
           };
         }
         const parts = key.split(nsSeparator);
-        if (nsSeparator !== keySeparator || nsSeparator === keySeparator && this.options.ns.indexOf(parts[0]) > -1) namespaces = parts.shift();
+        if (nsSeparator !== keySeparator || nsSeparator === keySeparator && this.options.ns.includes(parts[0])) namespaces = parts.shift();
         key = parts.join(keySeparator);
       }
       return {
@@ -594,7 +602,7 @@
       }
       const handleAsObject = shouldHandleAsObject(resForObjHndl);
       const resType = Object.prototype.toString.apply(resForObjHndl);
-      if (handleAsObjectInI18nFormat && resForObjHndl && handleAsObject && noObject.indexOf(resType) < 0 && !(isString$1(joinArrays) && Array.isArray(resForObjHndl))) {
+      if (handleAsObjectInI18nFormat && resForObjHndl && handleAsObject && !noObject.includes(resType) && !(isString$1(joinArrays) && Array.isArray(resForObjHndl))) {
         if (!opt.returnObjects && !this.options.returnObjects) {
           if (!this.options.returnedObjectHandler) {
             this.logger.warn('accessing an object - but returnObjects options is not enabled!');
@@ -690,7 +698,7 @@
             if (this.options.saveMissingPlurals && needsPluralHandling) {
               lngs.forEach(language => {
                 const suffixes = this.pluralResolver.getSuffixes(language, opt);
-                if (needsZeroSuffixLookup && opt[`defaultValue${this.options.pluralSeparator}zero`] && suffixes.indexOf(`${this.options.pluralSeparator}zero`) < 0) {
+                if (needsZeroSuffixLookup && opt[`defaultValue${this.options.pluralSeparator}zero`] && !suffixes.includes(`${this.options.pluralSeparator}zero`)) {
                   suffixes.push(`${this.options.pluralSeparator}zero`);
                 }
                 suffixes.forEach(suffix => {
@@ -800,8 +808,8 @@
         namespaces.forEach(ns => {
           if (this.isValidLookup(found)) return;
           usedNS = ns;
-          if (!checkedLoadedFor[`${codes[0]}-${ns}`] && this.utils?.hasLoadedNamespace && !this.utils?.hasLoadedNamespace(usedNS)) {
-            checkedLoadedFor[`${codes[0]}-${ns}`] = true;
+          if (!this.checkedLoadedFor[`${codes[0]}-${ns}`] && this.utils?.hasLoadedNamespace && !this.utils?.hasLoadedNamespace(usedNS)) {
+            this.checkedLoadedFor[`${codes[0]}-${ns}`] = true;
             this.logger.warn(`key "${usedKey}" for languages "${codes.join(', ')}" won't get resolved as namespace "${usedNS}" was not yet loaded`, 'This means something IS WRONG in your setup. You access the t function before i18next.init / i18next.loadNamespace / i18next.changeLanguage was done. Wait for the callback or Promise to resolve before accessing it!!!');
           }
           codes.forEach(code => {
@@ -816,7 +824,7 @@
               const zeroSuffix = `${this.options.pluralSeparator}zero`;
               const ordinalPrefix = `${this.options.pluralSeparator}ordinal${this.options.pluralSeparator}`;
               if (needsPluralHandling) {
-                if (opt.ordinal && pluralSuffix.indexOf(ordinalPrefix) === 0) {
+                if (opt.ordinal && pluralSuffix.startsWith(ordinalPrefix)) {
                   finalKeys.push(key + pluralSuffix.replace(ordinalPrefix, this.options.pluralSeparator));
                 }
                 finalKeys.push(key + pluralSuffix);
@@ -828,7 +836,7 @@
                 const contextKey = `${key}${this.options.contextSeparator || '_'}${opt.context}`;
                 finalKeys.push(contextKey);
                 if (needsPluralHandling) {
-                  if (opt.ordinal && pluralSuffix.indexOf(ordinalPrefix) === 0) {
+                  if (opt.ordinal && pluralSuffix.startsWith(ordinalPrefix)) {
                     finalKeys.push(contextKey + pluralSuffix.replace(ordinalPrefix, this.options.pluralSeparator));
                   }
                   finalKeys.push(contextKey + pluralSuffix);
@@ -889,7 +897,7 @@
     static hasDefaultValue(options) {
       const prefix = 'defaultValue';
       for (const option in options) {
-        if (Object.prototype.hasOwnProperty.call(options, option) && prefix === option.substring(0, prefix.length) && undefined !== options[option]) {
+        if (Object.prototype.hasOwnProperty.call(options, option) && option.startsWith(prefix) && undefined !== options[option]) {
           return true;
         }
       }
@@ -904,7 +912,7 @@
     }
     getScriptPartFromCode(code) {
       code = getCleanedCode(code);
-      if (!code || code.indexOf('-') < 0) return null;
+      if (!code || !code.includes('-')) return null;
       const p = code.split('-');
       if (p.length === 2) return null;
       p.pop();
@@ -913,12 +921,12 @@
     }
     getLanguagePartFromCode(code) {
       code = getCleanedCode(code);
-      if (!code || code.indexOf('-') < 0) return code;
+      if (!code || !code.includes('-')) return code;
       const p = code.split('-');
       return this.formatLanguageCode(p[0]);
     }
     formatLanguageCode(code) {
-      if (isString$1(code) && code.indexOf('-') > -1) {
+      if (isString$1(code) && code.includes('-')) {
         let formattedCode;
         try {
           formattedCode = Intl.getCanonicalLocales(code)[0];
@@ -938,7 +946,7 @@
       if (this.options.load === 'languageOnly' || this.options.nonExplicitSupportedLngs) {
         code = this.getLanguagePartFromCode(code);
       }
-      return !this.supportedLngs || !this.supportedLngs.length || this.supportedLngs.indexOf(code) > -1;
+      return !this.supportedLngs || !this.supportedLngs.length || this.supportedLngs.includes(code);
     }
     getBestMatchFromCodes(codes) {
       if (!codes) return null;
@@ -956,10 +964,11 @@
           const lngOnly = this.getLanguagePartFromCode(code);
           if (this.isSupportedCode(lngOnly)) return found = lngOnly;
           found = this.options.supportedLngs.find(supportedLng => {
-            if (supportedLng === lngOnly) return supportedLng;
-            if (supportedLng.indexOf('-') < 0 && lngOnly.indexOf('-') < 0) return;
-            if (supportedLng.indexOf('-') > 0 && lngOnly.indexOf('-') < 0 && supportedLng.substring(0, supportedLng.indexOf('-')) === lngOnly) return supportedLng;
-            if (supportedLng.indexOf(lngOnly) === 0 && lngOnly.length > 1) return supportedLng;
+            if (supportedLng === lngOnly) return true;
+            if (!supportedLng.includes('-') && !lngOnly.includes('-')) return false;
+            if (supportedLng.includes('-') && !lngOnly.includes('-') && supportedLng.slice(0, supportedLng.indexOf('-')) === lngOnly) return true;
+            if (supportedLng.startsWith(lngOnly) && lngOnly.length > 1) return true;
+            return false;
           });
         });
       }
@@ -990,7 +999,7 @@
           this.logger.warn(`rejecting language code not found in supportedLngs: ${c}`);
         }
       };
-      if (isString$1(code) && (code.indexOf('-') > -1 || code.indexOf('_') > -1)) {
+      if (isString$1(code) && (code.includes('-') || code.includes('_'))) {
         if (this.options.load !== 'languageOnly') addCode(this.formatLanguageCode(code));
         if (this.options.load !== 'languageOnly' && this.options.load !== 'currentOnly') addCode(this.getScriptPartFromCode(code));
         if (this.options.load !== 'currentOnly') addCode(this.getLanguagePartFromCode(code));
@@ -998,7 +1007,7 @@
         addCode(this.formatLanguageCode(code));
       }
       fallbackCodes.forEach(fc => {
-        if (codes.indexOf(fc) < 0) addCode(this.formatLanguageCode(fc));
+        if (!codes.includes(fc)) addCode(this.formatLanguageCode(fc));
       });
       return codes;
     }
@@ -1152,7 +1161,7 @@
       let replaces;
       const defaultData = this.options && this.options.interpolation && this.options.interpolation.defaultVariables || {};
       const handleFormat = key => {
-        if (key.indexOf(this.formatSeparator) < 0) {
+        if (!key.includes(this.formatSeparator)) {
           const path = deepFindWithDefaults(data, defaultData, key, this.options.keySeparator, this.options.ignoreJSONStructure);
           return this.alwaysFormat ? this.format(path, undefined, lng, {
             ...options,
@@ -1222,7 +1231,7 @@
       let clonedOptions;
       const handleHasOptions = (key, inheritedOptions) => {
         const sep = this.nestingOptionsSeparator;
-        if (key.indexOf(sep) < 0) return key;
+        if (!key.includes(sep)) return key;
         const c = key.split(new RegExp(`${regexEscape(sep)}[ ]*{`));
         let optionsString = `{${c[1]}`;
         key = c[0];
@@ -1242,7 +1251,7 @@
           this.logger.warn(`failed parsing options string in nesting for key ${key}`, e);
           return `${key}${sep}${optionsString}`;
         }
-        if (clonedOptions.defaultValue && clonedOptions.defaultValue.indexOf(this.prefix) > -1) delete clonedOptions.defaultValue;
+        if (clonedOptions.defaultValue && clonedOptions.defaultValue.includes(this.prefix)) delete clonedOptions.defaultValue;
         return key;
       };
       while (match = this.nestingRegexp.exec(str)) {
@@ -1280,13 +1289,13 @@
   const parseFormatStr = formatStr => {
     let formatName = formatStr.toLowerCase().trim();
     const formatOptions = {};
-    if (formatStr.indexOf('(') > -1) {
+    if (formatStr.includes('(')) {
       const p = formatStr.split('(');
       formatName = p[0].toLowerCase().trim();
-      const optStr = p[1].substring(0, p[1].length - 1);
-      if (formatName === 'currency' && optStr.indexOf(':') < 0) {
+      const optStr = p[1].slice(0, -1);
+      if (formatName === 'currency' && !optStr.includes(':')) {
         if (!formatOptions.currency) formatOptions.currency = optStr.trim();
-      } else if (formatName === 'relativetime' && optStr.indexOf(':') < 0) {
+      } else if (formatName === 'relativetime' && !optStr.includes(':')) {
         if (!formatOptions.range) formatOptions.range = optStr.trim();
       } else {
         const opts = optStr.split(';');
@@ -1380,9 +1389,11 @@
       this.formats[name.toLowerCase().trim()] = createCachedFormatter(fc);
     }
     format(value, format, lng, options = {}) {
+      if (!format) return value;
+      if (value == null) return value;
       const formats = format.split(this.formatSeparator);
-      if (formats.length > 1 && formats[0].indexOf('(') > 1 && formats[0].indexOf(')') < 0 && formats.find(f => f.indexOf(')') > -1)) {
-        const lastIndex = formats.findIndex(f => f.indexOf(')') > -1);
+      if (formats.length > 1 && formats[0].indexOf('(') > 1 && !formats[0].includes(')') && formats.find(f => f.includes(')'))) {
+        const lastIndex = formats.findIndex(f => f.includes(')'));
         formats[0] = [formats[0], ...formats.splice(1, lastIndex)].join(this.formatSeparator);
       }
       const result = formats.reduce((mem, f) => {
@@ -1535,7 +1546,7 @@
         }
         if (err && data && tried < this.maxRetries) {
           setTimeout(() => {
-            this.read.call(this, lng, ns, fcName, tried + 1, wait * 2, callback);
+            this.read(lng, ns, fcName, tried + 1, wait * 2, callback);
           }, wait);
           return;
         }
@@ -1638,7 +1649,6 @@
     nonExplicitSupportedLngs: false,
     load: 'all',
     preload: false,
-    simplifyPluralSuffix: true,
     keySeparator: '.',
     nsSeparator: ':',
     pluralSeparator: '_',
@@ -1675,7 +1685,6 @@
     },
     interpolation: {
       escapeValue: true,
-      format: value => value,
       prefix: '{{',
       suffix: '}}',
       formatSeparator: ',',
@@ -1692,10 +1701,9 @@
     if (isString$1(options.ns)) options.ns = [options.ns];
     if (isString$1(options.fallbackLng)) options.fallbackLng = [options.fallbackLng];
     if (isString$1(options.fallbackNS)) options.fallbackNS = [options.fallbackNS];
-    if (options.supportedLngs?.indexOf?.('cimode') < 0) {
+    if (options.supportedLngs && !options.supportedLngs.includes('cimode')) {
       options.supportedLngs = options.supportedLngs.concat(['cimode']);
     }
-    if (typeof options.initImmediate === 'boolean') options.initAsync = options.initImmediate;
     return options;
   };
   const noop = () => {};
@@ -1706,28 +1714,6 @@
         inst[mem] = inst[mem].bind(inst);
       }
     });
-  };
-  const SUPPORT_NOTICE_KEY = '__i18next_supportNoticeShown';
-  const getSupportNoticeShown = () => {
-    if (typeof globalThis !== 'undefined' && !!globalThis[SUPPORT_NOTICE_KEY]) return true;
-    if (typeof process !== 'undefined' && process.env && process.env.I18NEXT_NO_SUPPORT_NOTICE) return true;
-    if (typeof process !== 'undefined' && process.env && "development" === 'production') ;
-    return false;
-  };
-  const setSupportNoticeShown = () => {
-    if (typeof globalThis !== 'undefined') globalThis[SUPPORT_NOTICE_KEY] = true;
-  };
-  const usesLocize = inst => {
-    if (inst?.modules?.backend?.name?.indexOf('Locize') > 0) return true;
-    if (inst?.modules?.backend?.constructor?.name?.indexOf('Locize') > 0) return true;
-    if (inst?.options?.backend?.backends) {
-      if (inst.options.backend.backends.some(b => b?.name?.indexOf('Locize') > 0 || b?.constructor?.name?.indexOf('Locize') > 0)) return true;
-    }
-    if (inst?.options?.backend?.projectId) return true;
-    if (inst?.options?.backend?.backendOptions) {
-      if (inst.options.backend.backendOptions.some(b => b?.projectId)) return true;
-    }
-    return false;
   };
   class I18n extends EventEmitter {
     constructor(options = {}, callback) {
@@ -1758,7 +1744,7 @@
       if (options.defaultNS == null && options.ns) {
         if (isString$1(options.ns)) {
           options.defaultNS = options.ns;
-        } else if (options.ns.indexOf('translation') < 0) {
+        } else if (!options.ns.includes('translation')) {
           options.defaultNS = options.ns[0];
         }
       }
@@ -1780,10 +1766,6 @@
       }
       if (typeof this.options.overloadTranslationOptionHandler !== 'function') {
         this.options.overloadTranslationOptionHandler = defOpts.overloadTranslationOptionHandler;
-      }
-      if (this.options.showSupportNotice !== false && !usesLocize(this) && !getSupportNoticeShown()) {
-        if (typeof console !== 'undefined' && typeof console.info !== 'undefined') console.info('🌐 i18next is made possible by our own product, Locize — consider powering your project with managed localization (AI, CDN, integrations): https://locize.com 💙');
-        setSupportNoticeShown();
       }
       const createClassOnDemand = ClassOrObject => {
         if (!ClassOrObject) return null;
@@ -1809,14 +1791,9 @@
         s.resourceStore = this.store;
         s.languageUtils = lu;
         s.pluralResolver = new PluralResolver(lu, {
-          prepend: this.options.pluralSeparator,
-          simplifyPluralSuffix: this.options.simplifyPluralSuffix
+          prepend: this.options.pluralSeparator
         });
-        const usingLegacyFormatFunction = this.options.interpolation.format && this.options.interpolation.format !== defOpts.interpolation.format;
-        if (usingLegacyFormatFunction) {
-          this.logger.deprecate(`init: you are still using the legacy format function, please use the new approach: https://www.i18next.com/translation-function/formatting`);
-        }
-        if (formatter && (!this.options.interpolation.format || this.options.interpolation.format === defOpts.interpolation.format)) {
+        if (formatter) {
           s.formatter = createClassOnDemand(formatter);
           if (s.formatter.init) s.formatter.init(s, this.options);
           this.options.interpolation.format = s.formatter.format.bind(s.formatter);
@@ -1899,7 +1876,7 @@
           const lngs = this.services.languageUtils.toResolveHierarchy(lng);
           lngs.forEach(l => {
             if (l === 'cimode') return;
-            if (toLoad.indexOf(l) < 0) toLoad.push(l);
+            if (!toLoad.includes(l)) toLoad.push(l);
           });
         };
         if (!usedLng) {
@@ -1964,16 +1941,16 @@
     }
     setResolvedLanguage(l) {
       if (!l || !this.languages) return;
-      if (['cimode', 'dev'].indexOf(l) > -1) return;
+      if (['cimode', 'dev'].includes(l)) return;
       for (let li = 0; li < this.languages.length; li++) {
         const lngInLngs = this.languages[li];
-        if (['cimode', 'dev'].indexOf(lngInLngs) > -1) continue;
+        if (['cimode', 'dev'].includes(lngInLngs)) continue;
         if (this.store.hasLanguageSomeTranslations(lngInLngs)) {
           this.resolvedLanguage = lngInLngs;
           break;
         }
       }
-      if (!this.resolvedLanguage && this.languages.indexOf(l) < 0 && this.store.hasLanguageSomeTranslations(l)) {
+      if (!this.resolvedLanguage && !this.languages.includes(l) && this.store.hasLanguageSomeTranslations(l)) {
         this.resolvedLanguage = l;
         this.languages.unshift(l);
       }
@@ -2115,7 +2092,7 @@
       }
       if (isString$1(ns)) ns = [ns];
       ns.forEach(n => {
-        if (this.options.ns.indexOf(n) < 0) this.options.ns.push(n);
+        if (!this.options.ns.includes(n)) this.options.ns.push(n);
       });
       this.loadResources(err => {
         deferred.resolve();
@@ -2127,7 +2104,7 @@
       const deferred = defer();
       if (isString$1(lngs)) lngs = [lngs];
       const preloaded = this.options.preload || [];
-      const newLngs = lngs.filter(lng => preloaded.indexOf(lng) < 0 && this.services.languageUtils.isSupportedCode(lng));
+      const newLngs = lngs.filter(lng => !preloaded.includes(lng) && this.services.languageUtils.isSupportedCode(lng));
       if (!newLngs.length) {
         if (callback) callback();
         return Promise.resolve();
@@ -2152,7 +2129,7 @@
       const rtlLngs = ['ar', 'shu', 'sqr', 'ssh', 'xaa', 'yhd', 'yud', 'aao', 'abh', 'abv', 'acm', 'acq', 'acw', 'acx', 'acy', 'adf', 'ads', 'aeb', 'aec', 'afb', 'ajp', 'apc', 'apd', 'arb', 'arq', 'ars', 'ary', 'arz', 'auz', 'avl', 'ayh', 'ayl', 'ayn', 'ayp', 'bbz', 'pga', 'he', 'iw', 'ps', 'pbt', 'pbu', 'pst', 'prp', 'prd', 'ug', 'ur', 'ydd', 'yds', 'yih', 'ji', 'yi', 'hbo', 'men', 'xmn', 'fa', 'jpr', 'peo', 'pes', 'prs', 'dv', 'sam', 'ckb'];
       const languageUtils = this.services?.languageUtils || new LanguageUtil(get());
       if (lng.toLowerCase().indexOf('-latn') > 1) return 'ltr';
-      return rtlLngs.indexOf(languageUtils.getLanguagePartFromCode(lng)) > -1 || lng.toLowerCase().indexOf('-arab') > 1 ? 'rtl' : 'ltr';
+      return rtlLngs.includes(languageUtils.getLanguagePartFromCode(lng)) || lng.toLowerCase().indexOf('-arab') > 1 ? 'rtl' : 'ltr';
     }
     static createInstance(options = {}, callback) {
       const instance = new I18n(options, callback);

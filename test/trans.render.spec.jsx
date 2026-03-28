@@ -1024,12 +1024,12 @@ describe('trans with formatting', () => {
     `);
     expect(container.childNodes[1]).toMatchInlineSnapshot(`
       <div>
-        Treat value as number: 1234
+        Treat value as number: 1,234
       </div>
     `);
     expect(container.childNodes[2]).toMatchInlineSnapshot(`
       <div>
-        Treat value as number: 1234
+        Treat value as number: 1,234
       </div>
     `);
   });
@@ -1040,13 +1040,18 @@ describe('trans with formatting with alwaysFormat', () => {
 
   beforeEach(() => {
     newI18n = i18n.createInstance();
-    newI18n.init({
-      interpolation: {
-        alwaysFormat: true,
-        escapeValue: false,
+    newI18n
+      .use({
+        type: 'formatter',
+        init() {},
         format: (value) => `(formatted ${value})`,
-      },
-    });
+      })
+      .init({
+        interpolation: {
+          alwaysFormat: true,
+          escapeValue: false,
+        },
+      });
   });
 
   function TestComponent({ parent }) {

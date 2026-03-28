@@ -1,3 +1,8 @@
+## 17.0.1
+
+- chore: bump minimum i18next peer dependency to `>= 26.0.1` _(forgot to do it in last version)_
+- fix: migrate test setup from removed legacy `interpolation.format` to `i18n.services.formatter.add()` (i18next v26)
+
 ## 17.0.0
 
 ### Potentially breaking changes
