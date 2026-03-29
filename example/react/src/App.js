@@ -40,6 +40,9 @@ function Page() {
         <button type="button" onClick={() => changeLanguage('en')}>
           en
         </button>
+        <button type="button" onClick={() => changeLanguage('sv')}>
+          sv
+        </button>
       </div>
       <div className="App-intro">
         <MyComponent />
