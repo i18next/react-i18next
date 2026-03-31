@@ -32,6 +32,7 @@ export type TransProps<
   KPrefix = undefined,
   TContext extends string | undefined = undefined,
   TOpt extends TOptions & { context?: TContext } = { context: TContext },
+  Ret = TFunctionReturn<Ns, _AppendKeyPrefix<Key, KPrefix>, TOpt>,
   E = React.HTMLProps<HTMLDivElement>,
 > = E & {
   children?: TransChild | readonly TransChild[];
@@ -44,21 +45,26 @@ export type TransProps<
   ns?: Ns;
   parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
   tOptions?: TOpt;
-  values?: InterpolationMap<TFunctionReturn<Ns, _AppendKeyPrefix<Key, KPrefix>, TOpt>>;
+  values?: InterpolationMap<Ret>;
   shouldUnescape?: boolean;
   t?: TFunction<Ns, KPrefix>;
 };
 
 export interface TransLegacy {
   <
-    Key extends ParseKeys<Ns, TOpt, KPrefix>,
+    const Key extends ParseKeys<Ns, TOpt, KPrefix>,
     Ns extends Namespace = _DefaultNamespace,
     KPrefix = undefined,
     TContext extends string | undefined = undefined,
     TOpt extends TOptions & { context?: TContext } = { context: TContext },
+    Ret extends TFunctionReturn<Ns, _AppendKeyPrefix<Key, KPrefix>, TOpt> = TFunctionReturn<
+      Ns,
+      _AppendKeyPrefix<Key, KPrefix>,
+      TOpt
+    >,
     E = React.HTMLProps<HTMLDivElement>,
   >(
-    props: TransProps<Key, Ns, KPrefix, TContext, TOpt, E>,
+    props: TransProps<Key, Ns, KPrefix, TContext, TOpt, Ret, E>,
   ): React.ReactElement;
 }
 

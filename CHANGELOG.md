@@ -1,3 +1,7 @@
+## 17.0.2
+
+- fix(types): `values` prop on `<Trans />` now only requires interpolation variables for the specific `i18nKey`, not all variables in the namespace [1913](https://github.com/i18next/react-i18next/issues/1913)
+
 ## 17.0.1
 
 - chore: bump minimum i18next peer dependency to `>= 26.0.1` _(forgot to do it in last version)_
