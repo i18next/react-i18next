@@ -1263,6 +1263,25 @@ describe('Trans edge cases', () => {
     expect(container).toBeTruthy();
   });
 
+  // #1914 — Fragment inside Trans must not receive invalid props
+  it('should render a Fragment child without invalid prop warnings', () => {
+    function TestComponent() {
+      return (
+        <Trans>
+          {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
+          Some text <>and a fragment</>
+        </Trans>
+      );
+    }
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        Some text 
+        and a fragment
+      </div>
+    `);
+  });
+
   describe('Trans ref forwarding', () => {
     function TestComponent({ cb }) {
       const ref = useRef(null);

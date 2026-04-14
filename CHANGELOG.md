@@ -1,3 +1,7 @@
+## 17.0.3
+
+- fix: avoid invalid prop on `React.Fragment` inside `<Trans />` [1914](https://github.com/i18next/react-i18next/issues/1914)
+
 ## 17.0.2
 
 - fix(types): `values` prop on `<Trans />` now only requires interpolation variables for the specific `i18nKey`, not all variables in the namespace [1913](https://github.com/i18next/react-i18next/issues/1913)

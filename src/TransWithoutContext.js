@@ -270,27 +270,28 @@ const renderNodes = (
     } else {
       mem.push(
         ...Children.map([child], (c) => {
-          // Build an override props object while deliberately NOT reading c.ref or c.props.ref
-          // use a DOM-safe marker name and never forward it to DOM nodes
-          const INTERNAL_DYNAMIC_MARKER = 'data-i18n-is-dynamic-list';
-          const override = { key: i, [INTERNAL_DYNAMIC_MARKER]: undefined };
+          // Fragments only accept key and children — createElement builds props from
+          // scratch so i18nIsDynamicList and other internal props are naturally excluded.
+          // Fragments cannot have refs, so this does not regress #1887. Fixes #1914.
+          if (c.type === Fragment) {
+            return createElement(Fragment, { key: i }, isVoid ? null : inner);
+          }
+
+          // For non-Fragment elements use cloneElement so React preserves/forwards refs
+          // internally and we never access element.ref or c.props.ref ourselves. (#1887)
+          const override = { key: i };
 
           if (c && c.props) {
             Object.keys(c.props).forEach((k) => {
-              // skip special/internal props and the dynamic-list marker so it never reaches DOM
-              if (
-                k === 'ref' ||
-                k === 'children' ||
-                k === 'i18nIsDynamicList' ||
-                k === INTERNAL_DYNAMIC_MARKER
-              )
-                return;
+              if (k === 'ref' || k === 'children' || k === 'i18nIsDynamicList') return;
               override[k] = c.props[k];
             });
           }
 
-          // Use cloneElement for all element types so React preserves/forwards refs internally
-          // and we don't access element.ref nor c.props.ref ourselves.
+          // cloneElement merges props, so we must explicitly set i18nIsDynamicList to
+          // undefined to strip it from the cloned element and prevent it reaching the DOM.
+          override.i18nIsDynamicList = undefined;
+
           return cloneElement(c, override, isVoid ? null : inner);
         }),
       );

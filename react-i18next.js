@@ -2637,17 +2637,21 @@
         }, isVoid ? undefined : inner));
       } else {
         mem.push(...React.Children.map([child], c => {
-          const INTERNAL_DYNAMIC_MARKER = 'data-i18n-is-dynamic-list';
+          if (c.type === React.Fragment) {
+            return React.createElement(React.Fragment, {
+              key: i
+            }, isVoid ? null : inner);
+          }
           const override = {
-            key: i,
-            [INTERNAL_DYNAMIC_MARKER]: undefined
+            key: i
           };
           if (c && c.props) {
             Object.keys(c.props).forEach(k => {
-              if (k === 'ref' || k === 'children' || k === 'i18nIsDynamicList' || k === INTERNAL_DYNAMIC_MARKER) return;
+              if (k === 'ref' || k === 'children' || k === 'i18nIsDynamicList') return;
               override[k] = c.props[k];
             });
           }
+          override.i18nIsDynamicList = undefined;
           return React.cloneElement(c, override, isVoid ? null : inner);
         }));
       }
