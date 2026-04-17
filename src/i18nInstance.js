@@ -1,7 +1,8 @@
 let i18nInstance;
+const isBrowser = typeof window !== 'undefined';
 
 export const setI18n = (instance) => {
-  i18nInstance = instance;
+  if (isBrowser) i18nInstance = instance;
 };
 
-export const getI18n = () => i18nInstance;
+export const getI18n = () => (isBrowser ? i18nInstance : undefined);
