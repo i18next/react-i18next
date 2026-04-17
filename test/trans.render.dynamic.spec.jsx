@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import React from 'react';
 import { render, cleanup } from '@testing-library/react';
 import './i18n';
@@ -118,5 +118,28 @@ describe('Trans should render nested components', () => {
         testing
       </div>
     `);
+  });
+
+  // #1915 — cloned DOM elements without i18nIsDynamicList must not receive any
+  // internal prop (previously leaked via override.i18nIsDynamicList = undefined)
+  it('should not emit unknown-prop warnings for plain DOM components', () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    function TestComponent() {
+      return (
+        <Trans
+          defaults="By continuing you agree to our <termsLink>Terms</termsLink> and <policyLink>Policy</policyLink>."
+          components={{
+            // eslint-disable-next-line jsx-a11y/control-has-associated-label, jsx-a11y/anchor-has-content
+            termsLink: <a href="https://example.com" target="_blank" rel="noreferrer" />,
+            // eslint-disable-next-line jsx-a11y/control-has-associated-label, jsx-a11y/anchor-has-content
+            policyLink: <a href="https://example.com" target="_blank" rel="noreferrer" />,
+          }}
+        />
+      );
+    }
+    render(<TestComponent />);
+    const warnings = errorSpy.mock.calls.map((args) => String(args[0]));
+    expect(warnings.some((w) => w.includes('i18nIsDynamicList'))).toBe(false);
+    errorSpy.mockRestore();
   });
 });

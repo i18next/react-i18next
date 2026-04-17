@@ -2637,21 +2637,27 @@
         }, isVoid ? undefined : inner));
       } else {
         mem.push(...React.Children.map([child], c => {
-          if (c.type === React.Fragment) {
-            return React.createElement(React.Fragment, {
+          if (c.type === React.Fragment || c.props?.i18nIsDynamicList !== undefined) {
+            const freshProps = {
               key: i
-            }, isVoid ? null : inner);
+            };
+            if (c && c.props) {
+              Object.keys(c.props).forEach(k => {
+                if (k === 'children' || k === 'i18nIsDynamicList') return;
+                freshProps[k] = c.props[k];
+              });
+            }
+            return React.createElement(c.type, freshProps, isVoid ? null : inner);
           }
           const override = {
             key: i
           };
           if (c && c.props) {
             Object.keys(c.props).forEach(k => {
-              if (k === 'ref' || k === 'children' || k === 'i18nIsDynamicList') return;
+              if (k === 'ref' || k === 'children') return;
               override[k] = c.props[k];
             });
           }
-          override.i18nIsDynamicList = undefined;
           return React.cloneElement(c, override, isVoid ? null : inner);
         }));
       }

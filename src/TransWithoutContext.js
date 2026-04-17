@@ -270,28 +270,33 @@ const renderNodes = (
     } else {
       mem.push(
         ...Children.map([child], (c) => {
-          // Fragments only accept key and children — createElement builds props from
-          // scratch so i18nIsDynamicList and other internal props are naturally excluded.
-          // Fragments cannot have refs, so this does not regress #1887. Fixes #1914.
-          if (c.type === Fragment) {
-            return createElement(Fragment, { key: i }, isVoid ? null : inner);
+          // Fragments only accept key/children (#1914), and elements carrying the internal
+          // i18nIsDynamicList prop must not forward it to the DOM (#1915). cloneElement
+          // cannot remove props from the merged result, so in both cases we rebuild the
+          // props via createElement. Fragments can't have refs, and i18nIsDynamicList is
+          // typically used on list wrappers rather than ref'd elements, so the common
+          // ref-forwarding path (#1887) still goes through cloneElement below.
+          if (c.type === Fragment || c.props?.i18nIsDynamicList !== undefined) {
+            const freshProps = { key: i };
+            if (c && c.props) {
+              Object.keys(c.props).forEach((k) => {
+                if (k === 'children' || k === 'i18nIsDynamicList') return;
+                // On React >= 19 `ref` is a regular prop and flows through here.
+                freshProps[k] = c.props[k];
+              });
+            }
+            return createElement(c.type, freshProps, isVoid ? null : inner);
           }
 
-          // For non-Fragment elements use cloneElement so React preserves/forwards refs
-          // internally and we never access element.ref or c.props.ref ourselves. (#1887)
+          // Use cloneElement so React preserves/forwards refs internally without us
+          // ever accessing element.ref or c.props.ref (avoids the React 19 warning). (#1887)
           const override = { key: i };
-
           if (c && c.props) {
             Object.keys(c.props).forEach((k) => {
-              if (k === 'ref' || k === 'children' || k === 'i18nIsDynamicList') return;
+              if (k === 'ref' || k === 'children') return;
               override[k] = c.props[k];
             });
           }
-
-          // cloneElement merges props, so we must explicitly set i18nIsDynamicList to
-          // undefined to strip it from the cloned element and prevent it reaching the DOM.
-          override.i18nIsDynamicList = undefined;
-
           return cloneElement(c, override, isVoid ? null : inner);
         }),
       );

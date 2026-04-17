@@ -1,3 +1,7 @@
+## 17.0.4
+
+- fix: avoid `React does not recognize the 'i18nIsDynamicList' prop on a DOM element` warning [1915](https://github.com/i18next/react-i18next/issues/1915)
+
 ## 17.0.3
 
 - fix: avoid invalid prop on `React.Fragment` inside `<Trans />` [1914](https://github.com/i18next/react-i18next/issues/1914)
