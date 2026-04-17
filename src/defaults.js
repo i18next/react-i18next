@@ -15,7 +15,16 @@ let defaultOptions = {
 };
 
 export const setDefaults = (options = {}) => {
-  defaultOptions = { ...defaultOptions, ...options };
+  defaultOptions = {
+    ...defaultOptions,
+    ...options,
+    ...(options.transKeepBasicHtmlNodesFor
+      ? { transKeepBasicHtmlNodesFor: [...options.transKeepBasicHtmlNodesFor] }
+      : {}),
+  };
 };
 
-export const getDefaults = () => defaultOptions;
+export const getDefaults = () => ({
+  ...defaultOptions,
+  transKeepBasicHtmlNodesFor: [...defaultOptions.transKeepBasicHtmlNodesFor],
+});
