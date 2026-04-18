@@ -30,3 +30,10 @@ out
 
 # vitest temp / cache files
 tsconfig.vitest-temp.json
+
+# Secrets & credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
