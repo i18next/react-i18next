@@ -192,6 +192,56 @@ describe('trans simple with custom html tag', () => {
   });
 });
 
+describe('trans keep-tag wrapping a non-keep React element (#1919)', () => {
+  const originalReactOptions = i18n.options.react;
+
+  beforeAll(() => {
+    i18n.options.react = {
+      ...originalReactOptions,
+      transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'p'],
+    };
+  });
+
+  afterAll(() => {
+    i18n.options.react = originalReactOptions;
+  });
+
+  it('preserves non-keep child elements (e.g. <a>) inside a kept <p>', () => {
+    const { container } = render(
+      <Trans i18n={i18n}>
+        <div>
+          <ul>
+            <li>PDF</li>
+          </ul>
+          <p>
+            You can <a href="http://example.com">click here</a>.
+          </p>
+        </div>
+      </Trans>,
+    );
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        <div>
+          <ul>
+            <li>
+              PDF
+            </li>
+          </ul>
+          <p>
+            You can 
+            <a
+              href="http://example.com"
+            >
+              click here
+            </a>
+            .
+          </p>
+        </div>
+      </div>
+    `);
+  });
+});
+
 describe('trans bracketNotation', () => {
   function TestComponent() {
     const numOfItems = 4;

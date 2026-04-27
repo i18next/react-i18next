@@ -121,6 +121,24 @@ describe('trans nodeToString', () => {
       });
       expect(actual).toEqual(expected);
     });
+
+    it('should fall back to indexed placeholder when a keep-tag wraps a non-keep React element (#1919)', () => {
+      const fragment = (
+        <p>
+          You can <a href="http://example.com">click here</a>.
+        </p>
+      );
+      // <p> is in keepArray but its children include <a> which is not. Using the
+      // keep-tag form (`<p>You can <1>click here</1>.</p>`) would force the renderer
+      // to look up `<1>` in the wrong scope, so we emit the indexed form instead.
+      const expected = '<0>You can <1>click here</1>.</0>';
+      const transKeepBasicHtmlNodesFor = ['br', 'strong', 'i', 'p'];
+      const actual = nodesToString([fragment], {
+        transSupportBasicHtmlNodes: true,
+        transKeepBasicHtmlNodesFor,
+      });
+      expect(actual).toEqual(expected);
+    });
   });
 
   describe('having dynamic list maps', () => {

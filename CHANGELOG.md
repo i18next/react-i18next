@@ -1,3 +1,8 @@
+## 17.0.5
+
+- fix: `<Trans />` no longer breaks child rendering when a kept HTML node (`transKeepBasicHtmlNodesFor`) wraps a non-keep React element [1919](https://github.com/i18next/react-i18next/issues/1919)
+  - Regression introduced in 17.0.0 alongside the fix for [i18next-cli/230](https://github.com/i18next/i18next-cli/issues/230); the keep-tag path is now only used when descendants are pure text/interpolation or other keep-eligible tags, so the i18next-cli/230 behavior (`<strong>{{name}}</strong>`, `<strong>Level {{level}}</strong>`, etc.) is preserved.
+
 ## 17.0.4
 
 - fix: avoid `React does not recognize the 'i18nIsDynamicList' prop on a DOM element` warning [1915](https://github.com/i18next/react-i18next/issues/1915)
