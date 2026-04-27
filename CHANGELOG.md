@@ -1,7 +1,12 @@
+## 17.0.6
+
+- fix: restore the v17 `nodesToString` output format consumed by `i18next-cli`'s extractor while still rendering [1919](https://github.com/i18next/react-i18next/issues/1919) correctly
+  - 17.0.5 fixed [1919](https://github.com/i18next/react-i18next/issues/1919) by changing what `nodesToString` produced, which inadvertently changed the extracted translation strings for keep-tags wrapping non-keep React elements
+  - The fix now lives in the renderer: indexed `<N>` placeholders nested inside a keep-tag are scoped to that tag's own original React children (matching kept tags by name and positional occurrence at each level), so the translation string format produced by `nodesToString` is unchanged
+
 ## 17.0.5
 
-- fix: `<Trans />` no longer breaks child rendering when a kept HTML node (`transKeepBasicHtmlNodesFor`) wraps a non-keep React element [1919](https://github.com/i18next/react-i18next/issues/1919)
-  - Regression introduced in 17.0.0 alongside the fix for [i18next-cli/230](https://github.com/i18next/i18next-cli/issues/230); the keep-tag path is now only used when descendants are pure text/interpolation or other keep-eligible tags, so the i18next-cli/230 behavior (`<strong>{{name}}</strong>`, `<strong>Level {{level}}</strong>`, etc.) is preserved.
+- fix: `<Trans />` no longer breaks child rendering when a kept HTML node (`transKeepBasicHtmlNodesFor`) wraps a non-keep React element [1919](https://github.com/i18next/react-i18next/issues/1919) — superseded by 17.0.6, which keeps the same runtime fix without changing the `nodesToString` output
 
 ## 17.0.4
 

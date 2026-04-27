@@ -24,23 +24,6 @@ const hasValidReactChildren = (children) =>
 
 const getAsArray = (data) => (Array.isArray(data) ? data : [data]);
 
-// True if any descendant React element cannot be re-emitted as a keep-tag
-// (i.e. its tag is not in keepArray, or it carries props beyond `children`).
-// Such descendants produce numbered <N> placeholders in the translation string,
-// which the renderer's keep-tag branch cannot scope correctly (#1919).
-const hasNonKeepReactDescendant = (children, keepArray) => {
-  if (children == null) return false;
-  return getAsArray(children).some((child) => {
-    if (!isValidElement(child)) return false;
-    const props = child.props || {};
-    const propCount = Object.keys(props).length;
-    const isKeepEligible =
-      keepArray.indexOf(child.type) > -1 && propCount <= 1 && !props.i18nIsDynamicList;
-    if (!isKeepEligible) return true;
-    return hasNonKeepReactDescendant(props.children, keepArray);
-  });
-};
-
 const mergeProps = (source, target) => {
   const newTarget = { ...target };
   // translation props (source.props) should override component props (target.props)
@@ -103,16 +86,9 @@ export const nodesToString = (children, i18nOptions, i18n, i18nKey) => {
         stringNode += `<${childIndex}></${childIndex}>`;
         return;
       }
-      if (
-        shouldKeepChild &&
-        childPropsCount <= 1 &&
-        !hasNonKeepReactDescendant(childChildren, keepArray)
-      ) {
+      if (shouldKeepChild && childPropsCount <= 1) {
         // actual e.g. dolor <strong>bold</strong> amet
         // expected e.g. dolor <strong>bold</strong> amet
-        // Only enter the keep-tag path when descendants are pure text/interpolation
-        // or other keep-eligible tags. Numbered <N> placeholders inside a keep-tag
-        // would be looked up in the wrong reactNodes scope at render time. (#1919)
         const cnt = isString(childChildren)
           ? childChildren
           : nodesToString(childChildren, i18nOptions, i18n, i18nKey);
@@ -334,6 +310,10 @@ const renderNodes = (
     const reactNodes = getAsArray(reactNode);
     const astNodes = getAsArray(astNode);
 
+    // Track keep-tag occurrences at this level so we can match the n-th `<p>` AST
+    // node to the n-th original React element with type === 'p' (#1919).
+    const keepTagOccurrence = {};
+
     return astNodes.reduce((mem, node, i) => {
       const translationContent =
         node.children?.[0]?.content &&
@@ -401,11 +381,26 @@ const renderNodes = (
             if (node.voidElement) {
               mem.push(createElement(node.name, { key: `${node.name}-${i}` }));
             } else {
-              const inner = mapAST(
-                reactNodes /* wrong but we need something */,
-                node.children,
-                rootReactNode,
-              );
+              // Find the matching React element by tag name (positional among
+              // same-named keep-tags at this level) so its children become the
+              // scope for any indexed <N> placeholders nested inside. Without
+              // this, `<N>` would be looked up in the parent scope. (#1919)
+              const occurrence = keepTagOccurrence[node.name] || 0;
+              keepTagOccurrence[node.name] = occurrence + 1;
+              let matched;
+              let seen = 0;
+              for (let r = 0; r < reactNodes.length; r += 1) {
+                const rn = reactNodes[r];
+                if (isValidElement(rn) && rn.type === node.name) {
+                  if (seen === occurrence) {
+                    matched = rn;
+                    break;
+                  }
+                  seen += 1;
+                }
+              }
+              const innerScope = matched ? getAsArray(getChildren(matched)) : reactNodes;
+              const inner = mapAST(innerScope, node.children, rootReactNode);
 
               mem.push(createElement(node.name, { key: `${node.name}-${i}` }, inner));
             }

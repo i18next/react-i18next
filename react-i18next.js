@@ -2476,17 +2476,6 @@
   };
   const hasValidReactChildren = children => Array.isArray(children) && children.every(React.isValidElement);
   const getAsArray = data => Array.isArray(data) ? data : [data];
-  const hasNonKeepReactDescendant = (children, keepArray) => {
-    if (children == null) return false;
-    return getAsArray(children).some(child => {
-      if (!React.isValidElement(child)) return false;
-      const props = child.props || {};
-      const propCount = Object.keys(props).length;
-      const isKeepEligible = keepArray.indexOf(child.type) > -1 && propCount <= 1 && !props.i18nIsDynamicList;
-      if (!isKeepEligible) return true;
-      return hasNonKeepReactDescendant(props.children, keepArray);
-    });
-  };
   const mergeProps = (source, target) => {
     const newTarget = {
       ...target
@@ -2536,7 +2525,7 @@
           stringNode += `<${childIndex}></${childIndex}>`;
           return;
         }
-        if (shouldKeepChild && childPropsCount <= 1 && !hasNonKeepReactDescendant(childChildren, keepArray)) {
+        if (shouldKeepChild && childPropsCount <= 1) {
           const cnt = isString(childChildren) ? childChildren : nodesToString(childChildren, i18nOptions, i18n, i18nKey);
           stringNode += `<${type}>${cnt}</${type}>`;
           return;
@@ -2676,6 +2665,7 @@
     const mapAST = (reactNode, astNode, rootReactNode) => {
       const reactNodes = getAsArray(reactNode);
       const astNodes = getAsArray(astNode);
+      const keepTagOccurrence = {};
       return astNodes.reduce((mem, node, i) => {
         const translationContent = node.children?.[0]?.content && i18n.services.interpolator.interpolate(node.children[0].content, opts, i18n.language);
         if (node.type === 'tag') {
@@ -2720,7 +2710,22 @@
                   key: `${node.name}-${i}`
                 }));
               } else {
-                const inner = mapAST(reactNodes, node.children, rootReactNode);
+                const occurrence = keepTagOccurrence[node.name] || 0;
+                keepTagOccurrence[node.name] = occurrence + 1;
+                let matched;
+                let seen = 0;
+                for (let r = 0; r < reactNodes.length; r += 1) {
+                  const rn = reactNodes[r];
+                  if (React.isValidElement(rn) && rn.type === node.name) {
+                    if (seen === occurrence) {
+                      matched = rn;
+                      break;
+                    }
+                    seen += 1;
+                  }
+                }
+                const innerScope = matched ? getAsArray(getChildren(matched)) : reactNodes;
+                const inner = mapAST(innerScope, node.children, rootReactNode);
                 mem.push(React.createElement(node.name, {
                   key: `${node.name}-${i}`
                 }, inner));
