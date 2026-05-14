@@ -106,7 +106,9 @@ export interface TransSelector {
   ): React.ReactElement;
 }
 
-export const Trans: _EnableSelector extends true | 'optimize' ? TransSelector : TransLegacy;
+export const Trans: _EnableSelector extends true | 'optimize' | 'strict'
+  ? TransSelector
+  : TransLegacy;
 
 export function nodesToString(
   children: React.ReactNode,
