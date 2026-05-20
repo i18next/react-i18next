@@ -110,7 +110,6 @@ export const renderTranslation = (translation, declarations = []) => {
   };
 
   tokens.forEach((token) => {
-    // eslint-disable-next-line default-case
     switch (token.type) {
       case 'Text':
         {
@@ -197,6 +196,15 @@ export const renderTranslation = (translation, declarations = []) => {
           elementTargetArray.push(element);
         }
 
+        break;
+
+      default:
+        // Handle unknown token types gracefully by treating them as text
+        // This provides forward compatibility for future token types
+        if (token.value !== undefined) {
+          const targetArray = stack.length > 0 ? stack[stack.length - 1].children : result;
+          targetArray.push(token.value);
+        }
         break;
     }
   });

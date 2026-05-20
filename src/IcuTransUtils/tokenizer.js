@@ -29,6 +29,7 @@ export const tokenize = (translation) => {
 
     // Check for opening tag: <0>, <1>, etc.
     if (char === '<') {
+      // First check if this is a valid opening tag
       const tagMatch = translation.slice(position).match(/^<(\d+)>/);
 
       if (tagMatch) {
@@ -58,10 +59,19 @@ export const tokenize = (translation) => {
 
           position += closeTagMatch[0].length;
         } else {
-          // Regular text (including any { } characters that aren't our tags)
-          currentText += char;
+          // Check if this looks like an invalid tag pattern (e.g., <foo>, <=, <>)
+          // These should be treated as text, not ignored
+          const invalidTagMatch = translation.slice(position).match(/^<[^\d>][^>]*>/);
 
-          position += 1;
+          if (invalidTagMatch) {
+            // Treat invalid tag patterns as text
+            currentText += invalidTagMatch[0];
+            position += invalidTagMatch[0].length;
+          } else {
+            // Regular text (including lone '<' character)
+            currentText += char;
+            position += 1;
+          }
         }
       }
     } else {

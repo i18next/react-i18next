@@ -90,4 +90,13 @@ export const getDisplayName = (Component) =>
 
 export const isString = (obj) => typeof obj === 'string';
 
-export const isObject = (obj) => typeof obj === 'object' && obj !== null;
+export const isObject = (obj) => typeof obj === 'object' && obj !== null && !Array.isArray(obj);
+
+/**
+ * Check if a value is a plain object (not an array, RegExp, Date, etc.)
+ * Useful when you need to distinguish actual object literals from other object-like values
+ * @param {any} obj - Value to check
+ * @returns {boolean} True if the value is a plain object
+ */
+export const isPlainObject = (obj) =>
+  typeof obj === 'object' && obj !== null && !Array.isArray(obj) && Object.prototype.toString.call(obj) === '[object Object]';
