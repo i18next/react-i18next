@@ -15,15 +15,15 @@ describe('isString', () => {
 });
 
 describe('isObject', () => {
-  it.each([[{}], [{ key: 'value' }], [[]]])(
+  it.each([[{}], [{ key: 'value' }]])(
     'should return true for objects, testing %o',
     (value) => {
       expect(isObject(value)).toBe(true);
     },
   );
 
-  it.each([[undefined], [null], [1], ['string'], [() => {}]])(
-    'should return false for non-objects, testing %o',
+  it.each([[undefined], [null], [1], ['string'], [[]], [() => {}]])(
+    'should return false for non-objects including arrays, testing %o',
     (value) => {
       expect(isObject(value)).toBe(false);
     },
