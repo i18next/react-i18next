@@ -42,7 +42,9 @@ export type TransProps<
   defaults?: string;
   i18n?: i18n;
   i18nKey?: Key | Key[];
-  ns?: Ns;
+  // allow a single namespace from an array-typed `t` (e.g. useTranslation(['ns'])); TS7 intersects
+  // inference candidates from `t` and `ns`, so a bare `Ns` here rejects ns="ns" when t is passed
+  ns?: Ns | (Ns extends readonly (infer S extends string)[] ? S : never);
   parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
   tOptions?: TOpt;
   values?: InterpolationMap<Ret>;
@@ -82,7 +84,8 @@ export interface TransSelectorProps<
   defaults?: string | Key;
   i18n?: i18n;
   i18nKey?: Key | readonly Key[];
-  ns?: Ns;
+  // see TransProps.ns: keep single-namespace values assignable when `t` fixes Ns to an array
+  ns?: Ns | (Ns extends readonly (infer S extends string)[] ? S : never);
   parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
   tOptions?: TOpt;
   values?: Key extends (...args: any[]) => infer R ? InterpolationMap<R> : {};

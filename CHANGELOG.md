@@ -1,3 +1,8 @@
+## 17.0.9
+
+- fix: allow TypeScript 7 in the optional `typescript` peer dependency range (`^5 || ^6 || ^7`). With `typescript@7.0.2` in a project, `npm install` failed with an `ERESOLVE` peer conflict. Fixes [#1927](https://github.com/i18next/react-i18next/issues/1927), thanks @andikapradanaarif.
+- fix(types): `<Trans t={t} ns="ns" …>` with a `t` from `useTranslation(['ns'])` now typechecks under TypeScript 7. TS7 intersects the `Ns` inference candidates coming from the `t` prop (`readonly ['ns']`) and the `ns` prop (`'ns'`) into an unsatisfiable `'ns' & readonly ['ns']`, where TS6 resolved them. The `ns` prop on `TransProps`, `TransSelectorProps` and `IcuTransWithoutContextProps` now also accepts a single namespace out of an array-typed `Ns` (`Ns | (Ns extends readonly (infer S extends string)[] ? S : never)`) — which matches runtime behavior and is unchanged under TS5/TS6.
+
 ## 17.0.8
 
 - fix(types): `<Trans i18nKey={$ => ...}>` now typechecks under `enableSelector: 'strict'`. The `Trans` component's conditional type was gated on `_EnableSelector extends true | 'optimize'`, excluding `'strict'` and falling back to the legacy string-key signature. Runtime was already correct (it calls `keyFromSelector(i18nKey)` whenever `typeof i18nKey === 'function'`); this is a type-only fix that widens the conditional to include `'strict'`. Thanks @Faithfinder ([#1921](https://github.com/i18next/react-i18next/pull/1921))
