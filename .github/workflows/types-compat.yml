@@ -28,9 +28,24 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Override react types with @next
+      - name: Override react types with newest available (pre-release tag if any)
         run: |
-          npm install --no-save @types/react@next @types/react-dom@next
+          # DefinitelyTyped only publishes pre-release tags (next/rc/beta/canary) around
+          # a React major; outside those windows fall back to latest so the job keeps running.
+          TAG=latest
+          for candidate in next rc beta canary; do
+            if npm view "@types/react@$candidate" version >/dev/null 2>&1; then
+              TAG="$candidate"
+              break
+            fi
+          done
+          echo "Using @types/react tag: $TAG"
+          npm install --no-save "@types/react@$TAG"
+          if npm view "@types/react-dom@$TAG" version >/dev/null 2>&1; then
+            npm install --no-save "@types/react-dom@$TAG"
+          else
+            npm install --no-save @types/react-dom@latest
+          fi
           node -p "'@types/react: ' + require('@types/react/package.json').version"
           node -p "'@types/react-dom: ' + require('@types/react-dom/package.json').version"
 
