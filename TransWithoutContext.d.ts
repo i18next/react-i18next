@@ -128,7 +128,8 @@ export type ErrorCode =
   | 'TRANS_INVALID_OBJ'
   | 'TRANS_INVALID_VAR'
   | 'TRANS_INVALID_COMPONENTS'
-  | 'USE_T_BEFORE_READY';
+  | 'USE_T_BEFORE_READY'
+  | 'SUSPENDED_WHILE_LOADING';
 
 export type ErrorMeta = {
   code: ErrorCode;
