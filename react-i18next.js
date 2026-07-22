@@ -2245,127 +2245,318 @@
   instance.loadNamespaces;
   instance.loadLanguages;
 
-  function getDefaultExportFromCjs (x) {
-  	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
-  }
-
-  var voidElements;
-  var hasRequiredVoidElements;
-
-  function requireVoidElements () {
-  	if (hasRequiredVoidElements) return voidElements;
-  	hasRequiredVoidElements = 1;
-  	voidElements = {
-  	  "area": true,
-  	  "base": true,
-  	  "br": true,
-  	  "col": true,
-  	  "embed": true,
-  	  "hr": true,
-  	  "img": true,
-  	  "input": true,
-  	  "link": true,
-  	  "meta": true,
-  	  "param": true,
-  	  "source": true,
-  	  "track": true,
-  	  "wbr": true
-  	};
-  	return voidElements;
-  }
-
-  var voidElementsExports = requireVoidElements();
-  var e = /*@__PURE__*/getDefaultExportFromCjs(voidElementsExports);
-
-  var t = /\s([^'"/\s><]+?)[\s/>]|([^\s=]+)=\s?(".*?"|'.*?')/g;
-  function n(n) {
-    var r = {
-        type: "tag",
-        name: "",
-        voidElement: false,
-        attrs: {},
-        children: []
-      },
-      i = n.match(/<\/?([^\s]+?)[/\s>]/);
-    if (i && (r.name = i[1], (e[i[1]] || "/" === n.charAt(n.length - 2)) && (r.voidElement = true), r.name.startsWith("!--"))) {
-      var s = n.indexOf("--\x3e");
-      return {
-        type: "comment",
-        comment: -1 !== s ? n.slice(4, s) : ""
-      };
-    }
-    for (var a = new RegExp(t), c = null; null !== (c = a.exec(n));) if (c[0].trim()) if (c[1]) {
-      var o = c[1].trim(),
-        l = [o, ""];
-      o.indexOf("=") > -1 && (l = o.split("=")), r.attrs[l[0]] = l[1], a.lastIndex--;
-    } else c[2] && (r.attrs[c[2]] = c[3].trim().substring(1, c[3].length - 1));
-    return r;
-  }
-  var r = /<[a-zA-Z0-9\-\!\/](?:"[^"]*"|'[^']*'|[^'">])*>/g,
-    i = /^\s*$/,
-    s = Object.create(null);
-  function a(e, t) {
-    switch (t.type) {
-      case "text":
-        return e + t.content;
-      case "tag":
-        return e += "<" + t.name + (t.attrs ? function (e) {
-          var t = [];
-          for (var n in e) t.push(n + '="' + e[n] + '"');
-          return t.length ? " " + t.join(" ") : "";
-        }(t.attrs) : "") + (t.voidElement ? "/>" : ">"), t.voidElement ? e : e + t.children.reduce(a, "") + "</" + t.name + ">";
-      case "comment":
-        return e + "\x3c!--" + t.comment + "--\x3e";
-    }
-  }
-  var c = {
-    parse: function (e, t) {
-      t || (t = {}), t.components || (t.components = s);
-      var a,
-        c = [],
-        o = [],
-        l = -1,
-        m = false;
-      if (0 !== e.indexOf("<")) {
-        var u = e.indexOf("<");
-        c.push({
-          type: "text",
-          content: -1 === u ? e : e.substring(0, u)
-        });
+  const voidElements = {
+    area: true,
+    base: true,
+    br: true,
+    col: true,
+    embed: true,
+    hr: true,
+    img: true,
+    input: true,
+    link: true,
+    meta: true,
+    param: true,
+    source: true,
+    track: true,
+    wbr: true,
+    '!doctype': true,
+    '!DOCTYPE': true
+  };
+  const attrRE = /\s([^'"/\s><]+?)[\s/>]|([^\s=]+)=\s?("[^"]*"|'[^']*')/g;
+  function parseTag(tag) {
+    const res = {
+      type: 'tag',
+      name: '',
+      voidElement: false,
+      attrs: {},
+      children: []
+    };
+    const tagMatch = tag.match(/<\/?([^\s]+?)[/\s>]/);
+    if (tagMatch) {
+      res.name = tagMatch[1];
+      if (voidElements[tagMatch[1]] || tag.charAt(tag.length - 2) === '/') {
+        res.voidElement = true;
       }
-      return e.replace(r, function (r, s) {
-        if (m) {
-          if (r !== "</" + a.name + ">") return;
-          m = false;
+      if (res.name.startsWith('!--')) {
+        const endIndex = tag.indexOf('-->');
+        return {
+          type: 'comment',
+          comment: endIndex !== -1 ? tag.slice(4, endIndex) : ''
+        };
+      }
+    }
+    const reg = new RegExp(attrRE);
+    let result = null;
+    for (;;) {
+      result = reg.exec(tag);
+      if (result === null) {
+        break;
+      }
+      if (!result[0].trim()) {
+        continue;
+      }
+      if (result[1]) {
+        const attr = result[1].trim();
+        let arr = [attr, null];
+        const eq = attr.indexOf('=');
+        if (eq > -1) {
+          arr = [attr.slice(0, eq), attr.slice(eq + 1)];
         }
-        var u,
-          f = "/" !== r.charAt(1),
-          h = r.startsWith("\x3c!--"),
-          p = s + r.length,
-          d = e.charAt(p);
-        if (h) {
-          var v = n(r);
-          return l < 0 ? (c.push(v), c) : ((u = o[l]).children.push(v), c);
+        res.attrs[arr[0]] = arr[1];
+        reg.lastIndex--;
+      } else if (result[2]) {
+        res.attrs[result[2]] = result[3].trim().substring(1, result[3].length - 1);
+      }
+    }
+    return res;
+  }
+  const tagRE = /<!--[\s\S]*?-->|<[a-zA-Z0-9\-!/](?:"[^"]*"|'[^']*'|[^'">])*>/g;
+  const tagNameRE = /<\/?([^\s]+?)[/\s>]/;
+  const whitespaceRE = /^\s*$/;
+  const rawTextRE = /^(script|style)$/i;
+  const sentinel = '\u0000';
+  const empty = Object.create(null);
+  function restoreSentinels(nodes) {
+    nodes.forEach(function (node) {
+      if (node.type === 'text') {
+        node.content = node.content.split(sentinel).join('<');
+        return;
+      }
+      if (node.type === 'comment') {
+        node.comment = node.comment.split(sentinel).join('<');
+        return;
+      }
+      for (const key in node.attrs) {
+        const value = node.attrs[key];
+        if (typeof value === 'string' && value.indexOf(sentinel) > -1) {
+          node.attrs[key] = value.split(sentinel).join('<');
         }
-        if (f && (l++, "tag" === (a = n(r)).type && t.components[a.name] && (a.type = "component", m = true), a.voidElement || m || !d || "<" === d || a.children.push({
-          type: "text",
-          content: e.slice(p, e.indexOf("<", p))
-        }), 0 === l && c.push(a), (u = o[l - 1]) && u.children.push(a), o[l] = a), (!f || a.voidElement) && (l > -1 && (a.voidElement || a.name === r.slice(2, -1)) && (l--, a = -1 === l ? c : o[l]), !m && "<" !== d && d)) {
-          u = -1 === l ? c : o[l].children;
-          var x = e.indexOf("<", p),
-            g = e.slice(p, -1 === x ? void 0 : x);
-          i.test(g) && (g = " "), (x > -1 && l + u.length >= 0 || " " !== g) && u.push({
-            type: "text",
-            content: g
+      }
+      if (node.children.length) {
+        restoreSentinels(node.children);
+      }
+    });
+  }
+  function parse(html, options) {
+    const components = options && options.components || empty;
+    const allowedTags = options && options.allowedTags;
+    let restoreNeeded = false;
+    if (allowedTags) {
+      const isAllowed = typeof allowedTags === 'function' ? allowedTags : function (name) {
+        return allowedTags.indexOf(name) > -1;
+      };
+      let out = '';
+      let pos = 0;
+      tagRE.lastIndex = 0;
+      let am;
+      while (am = tagRE.exec(html)) {
+        const tag = am[0];
+        out += html.slice(pos, am.index);
+        const nameMatch = tag.match(tagNameRE);
+        if (tag.startsWith('<!--') || nameMatch && isAllowed(nameMatch[1])) {
+          out += tag;
+          pos = am.index + tag.length;
+        } else {
+          restoreNeeded = true;
+          out += sentinel;
+          pos = am.index + 1;
+          tagRE.lastIndex = pos;
+        }
+      }
+      html = out + html.slice(pos);
+    }
+    const result = [];
+    const arr = [];
+    let current;
+    let level = -1;
+    let inComponent = false;
+    let rawUntil = 0;
+    let htmlLower;
+    if (html.indexOf('<') !== 0) {
+      const end = html.indexOf('<');
+      result.push({
+        type: 'text',
+        content: end === -1 ? html : html.substring(0, end)
+      });
+    }
+    const matches = [];
+    let m;
+    while (m = tagRE.exec(html)) {
+      matches.push(m);
+    }
+    matches.forEach(function (match, i) {
+      const tag = match[0];
+      if (!tag) return;
+      if (tag.startsWith('<!--')) return;
+      let lts = 0;
+      let gts = 0;
+      let secondLt = -1;
+      let quote = null;
+      for (let j = 0; j < tag.length; j++) {
+        const c = tag.charAt(j);
+        if (quote) {
+          if (c === quote) quote = null;
+        } else if (c === '"' || c === "'") {
+          quote = c;
+        } else if (c === '<') {
+          lts++;
+          if (lts === 2) secondLt = j;
+        } else if (c === '>') {
+          gts++;
+        }
+      }
+      const validSplit = secondLt > -1 && /[a-zA-Z0-9\-!/]/.test(tag.charAt(secondLt + 1));
+      if (lts > gts && validSplit) {
+        const firstPart = tag.substring(0, secondLt);
+        const secondPart = tag.substring(firstPart.length);
+        matches[i][0] = secondPart;
+        matches[i].index += firstPart.length;
+      }
+    });
+    matches.forEach(function (match, i) {
+      const tag = match[0];
+      if (!tag) return;
+      const index = match.index;
+      if (index < rawUntil) return;
+      if (inComponent) {
+        if (tag !== '</' + current.name + '>') {
+          return;
+        } else {
+          inComponent = false;
+        }
+      }
+      const isOpen = tag.charAt(1) !== '/';
+      const isComment = tag.startsWith('<!--');
+      const start = index + tag.length;
+      const nextChar = html.charAt(start);
+      const nextMatch = matches[i + 1];
+      let isText;
+      if (nextChar === '<' && nextMatch) {
+        const nextTag = html.substring(start, nextMatch.index);
+        isText = nextTag.split('<').length > nextTag.split('>').length;
+      }
+      let parent;
+      if (isComment) {
+        const comment = parseTag(tag);
+        if (level < 0) {
+          result.push(comment);
+          return result;
+        }
+        parent = arr[level];
+        parent.children.push(comment);
+        const text = html.slice(start, nextMatch ? nextMatch.index : undefined);
+        if (text.length > 0) {
+          parent.children.push({
+            type: 'text',
+            content: text
           });
         }
-      }), c;
-    },
-    stringify: function (e) {
-      return e.reduce(function (e, t) {
-        return e + a("", t);
-      }, "");
+        return result;
+      }
+      if (isOpen) {
+        level++;
+        current = parseTag(tag);
+        if (current.type === 'tag' && components[current.name]) {
+          current.type = 'component';
+          inComponent = true;
+        }
+        let isRawText = false;
+        if (!inComponent && !current.voidElement && rawTextRE.test(current.name)) {
+          isRawText = true;
+          htmlLower || (htmlLower = html.toLowerCase());
+          const closeIndex = htmlLower.indexOf('</' + current.name.toLowerCase() + '>', start);
+          const contentEnd = closeIndex === -1 ? html.length : closeIndex;
+          const content = html.slice(start, contentEnd);
+          if (content) {
+            current.children.push({
+              type: 'text',
+              content
+            });
+          }
+          rawUntil = contentEnd;
+        }
+        if (!current.voidElement && !inComponent && !isRawText && nextChar && nextChar !== '<') {
+          current.children.push({
+            type: 'text',
+            content: html.slice(start, nextMatch ? nextMatch.index : undefined)
+          });
+        }
+        if (level === 0) {
+          result.push(current);
+        }
+        parent = arr[level - 1];
+        if (parent) {
+          parent.children.push(current);
+        }
+        arr[level] = current;
+      }
+      if (!isOpen || current.voidElement) {
+        if (level > -1 && (current.voidElement || current.name === tag.slice(2, -1))) {
+          level--;
+          current = level === -1 ? result : arr[level];
+        }
+        if (!inComponent && (nextChar !== '<' || isText) && nextChar) {
+          parent = level === -1 ? result : arr[level].children;
+          const end = nextMatch ? nextMatch.index : -1;
+          let content = html.slice(start, end === -1 ? undefined : end);
+          if (whitespaceRE.test(content)) {
+            content = ' ';
+          }
+          if (end > -1 && level + parent.length >= 0 || content !== ' ') {
+            parent.push({
+              type: 'text',
+              content
+            });
+          }
+        }
+      }
+    });
+    if (restoreNeeded) {
+      restoreSentinels(result);
     }
+    return result;
+  }
+  function attrString(attrs) {
+    const buff = [];
+    for (const key in attrs) {
+      if (attrs[key] === null) {
+        buff.push(key);
+      } else {
+        buff.push(key + '="' + String(attrs[key]).replace(/"/g, '&quot;') + '"');
+      }
+    }
+    if (!buff.length) {
+      return '';
+    }
+    return ' ' + buff.join(' ');
+  }
+  function stringifyNode(buff, doc) {
+    switch (doc.type) {
+      case 'text':
+        return buff + doc.content;
+      case 'tag':
+        {
+          const tagEnd = doc.voidElement && doc.name.toLowerCase() !== '!doctype' ? '/>' : '>';
+          buff += '<' + doc.name + (doc.attrs ? attrString(doc.attrs) : '') + tagEnd;
+          if (doc.voidElement) {
+            return buff;
+          }
+          return buff + doc.children.reduce(stringifyNode, '') + '</' + doc.name + '>';
+        }
+      case 'comment':
+        buff += '<!--' + doc.comment + '-->';
+        return buff;
+    }
+  }
+  function stringify(doc) {
+    return doc.reduce(function (token, rootEl) {
+      return token + stringifyNode('', rootEl);
+    }, '');
+  }
+  var index = {
+    parse,
+    stringify
   };
 
   const warn = (i18n, code, msg, rest) => {
@@ -2583,46 +2774,6 @@
     });
     return stringNode;
   };
-  const escapeLiteralLessThan = (str, keepArray = [], knownComponentsMap = {}) => {
-    if (!str) return str;
-    const knownNames = Object.keys(knownComponentsMap);
-    const allValidNames = [...keepArray, ...knownNames];
-    let result = '';
-    let i = 0;
-    while (i < str.length) {
-      if (str[i] === '<') {
-        let isValidTag = false;
-        const closingMatch = str.slice(i).match(/^<\/(\d+|[a-zA-Z][a-zA-Z0-9_-]*)>/);
-        if (closingMatch) {
-          const tagName = closingMatch[1];
-          if (/^\d+$/.test(tagName) || allValidNames.includes(tagName)) {
-            isValidTag = true;
-            result += closingMatch[0];
-            i += closingMatch[0].length;
-          }
-        }
-        if (!isValidTag) {
-          const openingMatch = str.slice(i).match(/^<(\d+|[a-zA-Z][a-zA-Z0-9_-]*)(\s+[\w-]+(?:=(?:"[^"]*"|'[^']*'|[^\s>]+))?)*\s*(\/)?>/);
-          if (openingMatch) {
-            const tagName = openingMatch[1];
-            if (/^\d+$/.test(tagName) || allValidNames.includes(tagName)) {
-              isValidTag = true;
-              result += openingMatch[0];
-              i += openingMatch[0].length;
-            }
-          }
-        }
-        if (!isValidTag) {
-          result += '&lt;';
-          i += 1;
-        }
-      } else {
-        result += str[i];
-        i += 1;
-      }
-    }
-    return result;
-  };
   const renderNodes = (children, knownComponentsMap, targetString, i18n, i18nOptions, combinedTOpts, shouldUnescape) => {
     if (targetString === '') return [];
     const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
@@ -2637,8 +2788,11 @@
       });
     };
     getData(children);
-    const escapedString = escapeLiteralLessThan(targetString, keepArray, data);
-    const ast = c.parse(`<0>${escapedString}</0>`);
+    const knownNames = Object.keys(data);
+    const allowedTags = name => /^\d+$/.test(name) || keepArray.indexOf(name) > -1 || knownNames.indexOf(name) > -1;
+    const ast = index.parse(`<0>${targetString}</0>`, {
+      allowedTags
+    });
     const opts = {
       ...data,
       ...combinedTOpts
