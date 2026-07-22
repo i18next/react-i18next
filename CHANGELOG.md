@@ -1,3 +1,8 @@
+## 17.0.11
+
+- chore: `html-parse-stringify` updated to `^4.0.1`. The parser powering `<Trans>` is now actively maintained under the i18next org ([i18next/html-parse-stringify](https://github.com/i18next/html-parse-stringify)) after years without upstream releases. 4.x brings modern dual ESM/CJS packaging with an `exports` map, zero runtime dependencies, reworked TypeScript types and a long list of parser fixes (literal `<` in text, multiline/CRLF attribute values, comments containing `>`, doctype handling, quote-aware bracket handling).
+- refactor(Trans): the internal `escapeLiteralLessThan` scanner (~80 lines) is replaced by the parser's new `allowedTags` option with identical semantics: only numbered tags, kept basic HTML tags and known component names are parsed as markup, any other tag-shaped sequence in the translation stays literal text. Rendered output is unchanged (all 493 tests pass, including the [#1880](https://github.com/i18next/react-i18next/issues/1880) and [#1893](https://github.com/i18next/react-i18next/issues/1893) escaping cases).
+
 ## 17.0.10
 
 - fix(warnings): the `useTranslation` and `Trans` "You will need to pass in an i18next instance" warnings now match the `useSSR` wording, mentioning the props/context alternatives and the most common unexplained cause at scale: duplicate react-i18next copies in monorepo setups. The `Trans` variant also referenced the internal `i18nextReactModule` name; it now points to the public `initReactI18next` API.
