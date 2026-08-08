@@ -137,7 +137,7 @@ Some basics of i18next and some cool possibilities on how to optimize your local
 
 #### v9
 
-- react >= **0.14.0** (in case of < v16 or preact you will need to define parent in [Trans component](https://react.i18next.com/legacy-v9/trans-component#trans-props) or globally in [i18next.react options](https://react.i18next.com/legacy-v9/trans-component#additional-options-on-i-18-next-init))
+- react >= **0.14.0** (in case of < v16 or preact you will need to define parent in [Trans component](https://react.i18next.com/latest/trans-component#trans-props) or globally in [i18next.react options](https://react.i18next.com/latest/trans-component#i18next-options))
 - i18next >= **2.0.0**
 
 ## Core Contributors
