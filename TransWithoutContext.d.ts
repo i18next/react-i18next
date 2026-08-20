@@ -97,8 +97,7 @@ export interface TransSelector {
   <
     Target extends ConstrainTarget<TOpt>,
     Key extends
-      | SelectorFn<GetSource<$NoInfer<Ns>, KPrefix>, ApplyTarget<Target, TOpt>, TOpt>
-      | SelectorKey,
+      SelectorFn<GetSource<$NoInfer<Ns>, KPrefix>, ApplyTarget<Target, TOpt>, TOpt> | SelectorKey,
     const Ns extends Namespace = _DefaultNamespace,
     KPrefix = undefined,
     TContext extends string | undefined = undefined,
