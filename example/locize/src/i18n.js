@@ -16,6 +16,7 @@ const locizeOptions = {
   projectId: 'ce0cf818-32e5-44a5-b7f0-4ea9e840d962',
   apiKey: '5c2bbc21-027d-4f41-995a-e8beb451cdef', // YOU should not expose your apps API key to production!!!
   referenceLng: 'en',
+  cdnType: 'pro', // this demo project uses the pro CDN (api.locize.app); default since i18next-locize-backend v9 is 'standard'
 };
 
 i18n

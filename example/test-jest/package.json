@@ -2,21 +2,32 @@
   "name": "test-jest",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
-    "enzyme": "3.11.0",
-    "@cfaester/enzyme-adapter-react-18": "0.6.0",
-    "i18next": "22.4.11",
-    "i18next-browser-languagedetector": "7.0.1",
-    "i18next-http-backend": "2.1.1",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-i18next": "12.2.0",
-    "react-scripts": "5.0.1"
+    "i18next": "^26.4.0",
+    "i18next-browser-languagedetector": "^8.2.1",
+    "i18next-http-backend": "^4.0.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-i18next": "^17.0.11"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "@babel/preset-react": "^7.29.7",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.2",
+    "@vitejs/plugin-react": "^6.1.0",
+    "babel-jest": "^30.4.1",
+    "jest": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1",
+    "vite": "^8.2.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "jest"
   }
 }

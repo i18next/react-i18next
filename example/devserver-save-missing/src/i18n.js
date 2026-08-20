@@ -23,7 +23,7 @@ i18n
     },
     saveMissing: true,
     backend: {
-      addPath: 'http://localhost:3000/locales/{{lng}}/{{ns}}',
+      addPath: '/locales/{{lng}}/{{ns}}',
     },
   });
 

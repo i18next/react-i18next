@@ -1,6 +1,6 @@
 **A step by step tutorial can also be found [here](https://github.com/locize/react-tutorial).**
 
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
+This project uses [Vite](https://vite.dev).
 
 [![video](video_sample.png)](https://youtu.be/osScyaGMVqo)
 [watch the video](https://youtu.be/osScyaGMVqo)
@@ -35,8 +35,16 @@ Set projectId and apiKey in `/src/i18n.js`.
 # npm start
 ```
 
-insert `http://localhost:3000` in the locize client to open your application with the locize incontext editor.
+insert `http://localhost:5173` in the locize client to open your application with the locize incontext editor.
 
 ### for old locize client:
 
-open `http://localhost:3000?locize=true` to open your application with the locize incontext editor.
+open `http://localhost:5173?locize=true` to open your application with the locize incontext editor.
+
+## build
+
+```bash
+# npm run build
+```
+
+creates the production build in `dist/` (`npm run preview` serves it locally).

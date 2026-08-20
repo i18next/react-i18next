@@ -9,11 +9,23 @@ locale of your stories.
 
 ```bash
 # Install dependencies
-yarn install
+npm install
 
-# Start the React app
-yarn start
+# Start the React app (Vite dev server at http://localhost:5173)
+npm start
 
-# Start Storybook
-yarn storybook
+# Start Storybook (http://localhost:9009)
+npm run storybook
+
+# Build the static Storybook into storybook-static/
+npm run build-storybook
 ```
+
+## How the locale toolbar works
+
+See [`.storybook/preview.jsx`](./.storybook/preview.jsx):
+
+- `globalTypes.locale` adds a "Locale" dropdown to the Storybook toolbar (`initialGlobals` sets the default to `en`).
+- A decorator reads `context.globals.locale`, calls `i18n.changeLanguage(locale)` whenever it changes and wraps every
+  story in `I18nextProvider` (plus a `Suspense` fallback while translations are loading).
+- `.storybook/main.js` uses `staticDirs: ['../public']` so `i18next-http-backend` can load `/locales/{lng}/translation.json`.

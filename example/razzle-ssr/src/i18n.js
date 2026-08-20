@@ -13,6 +13,10 @@ const options = {
 
   saveMissing: true,
   debug: true,
+  backend: {
+    // missing keys are posted here (see server.js)
+    addPath: '/locales/{{lng}}/{{ns}}',
+  },
 
   interpolation: {
     escapeValue: false, // not needed for react!!
@@ -22,11 +26,10 @@ const options = {
       return value;
     },
   },
-  useSuspense: process && !process.release,
 };
 
 // for browser use http backend to load translations and browser lng detector
-if (process && !process.release) {
+if (typeof window !== 'undefined') {
   i18n.use(Backend).use(initReactI18next).use(LanguageDetector);
 }
 

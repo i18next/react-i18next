@@ -1,5 +1,4 @@
-import Enzyme from 'enzyme';
-import Adapter from '@cfaester/enzyme-adapter-react-18';
+import '@testing-library/jest-dom';
 
 // without stubbing do this:
 // import i18n from 'i18next';
@@ -21,5 +20,3 @@ import Adapter from '@cfaester/enzyme-adapter-react-18';
 
 //   resources: { en: { translations: {} } },
 // });
-
-Enzyme.configure({ adapter: new Adapter() });

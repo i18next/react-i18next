@@ -1,32 +1,29 @@
 {
-  "name": "my-razzle-app",
+  "name": "react-i18next-vite-ssr",
   "version": "0.1.0",
   "license": "MIT",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "start": "razzle start",
-    "build": "razzle build",
-    "test": "razzle test --env=jsdom",
-    "start:static": "serve -s build/public",
-    "start:prod": "NODE_ENV=production node build/server.js"
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "vite build --outDir dist/client && vite build --ssr src/entry-server.jsx --outDir dist/server",
+    "start:prod": "NODE_ENV=production node server.js"
   },
   "dependencies": {
-    "babel-preset-razzle": "^4.2.18",
-    "express": "^4.19.2",
-    "html-webpack-plugin": "^5.6.0",
-    "i18next": "^23.12.3",
-    "i18next-browser-languagedetector": "^8.0.0",
-    "i18next-fs-backend": "^2.3.2",
-    "i18next-http-backend": "^2.5.2",
-    "i18next-http-middleware": "^3.6.0",
-    "mini-css-extract-plugin": "^0.12.0",
-    "razzle": "^4.2.18",
-    "razzle-dev-utils": "^4.2.18",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-i18next": "^15.0.1",
-    "react-router-dom": "^5.3.4",
-    "serve": "^14.2.3",
-    "webpack": "^5.93.0",
-    "webpack-dev-server": "^3.11.3"
+    "express": "^5.2.1",
+    "i18next": "^26.4.0",
+    "i18next-browser-languagedetector": "^8.2.1",
+    "i18next-fs-backend": "^2.6.7",
+    "i18next-http-backend": "^4.0.1",
+    "i18next-http-middleware": "^3.9.8",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-i18next": "^17.0.11",
+    "react-router-dom": "^7.18.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.0",
+    "vite": "^8.2.2"
   }
 }

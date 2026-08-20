@@ -2,39 +2,28 @@
   "name": "storybook",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
-    "i18next": "20.3.1",
-    "i18next-browser-languagedetector": "6.1.1",
-    "i18next-http-backend": "1.2.6",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-i18next": "^11.10.0",
-    "react-scripts": "4.0.3"
+    "i18next": "^26.4.0",
+    "i18next-browser-languagedetector": "^8.2.1",
+    "i18next-http-backend": "^4.0.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-i18next": "^17.0.11"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public"
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "storybook": "storybook dev -p 9009",
+    "build-storybook": "storybook build"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
   "devDependencies": {
-    "@babel/core": "^7.14.3",
-    "@storybook/addon-actions": "^6.5.10",
-    "@storybook/addon-essentials": "^6.5.10",
-    "@storybook/addon-links": "^6.5.10",
-    "@storybook/addons": "^6.5.10",
-    "@storybook/react": "^6.5.10",
-    "babel-loader": "8.1.0"
+    "@storybook/addon-links": "^10.5.9",
+    "@storybook/react-vite": "^10.5.9",
+    "@vitejs/plugin-react": "^6.1.0",
+    "storybook": "^10.5.9",
+    "vite": "^8.2.2"
   }
 }
