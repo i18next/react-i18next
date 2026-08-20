@@ -28,6 +28,19 @@ describe('IcuTransWithoutContext', () => {
       expect(container.textContent).toBe('Hello World');
     });
 
+    it('should use defaultTranslation as key when no i18nKey is given (icu.macro key-less nodes)', () => {
+      const { container } = render(
+        <IcuTransWithoutContext
+          defaultTranslation="Welcome <0>back</0>!"
+          content={[{ type: 'strong', props: {} }]}
+          i18n={i18n}
+        />,
+      );
+
+      // without the key fallback t(undefined, ...) returns '' and nothing is rendered
+      expect(container.innerHTML).toBe('Welcome <strong>back</strong>!');
+    });
+
     it('should render with components', () => {
       const { container } = render(
         <IcuTransWithoutContext

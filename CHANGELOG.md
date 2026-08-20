@@ -1,3 +1,7 @@
+## 17.0.12
+
+- fix(IcuTrans): key-less `icu.macro` nodes (`<Trans>Welcome, {name}!</Trans>`, `<Select>`, `<Plural>` without `i18nKey`) rendered an empty string since 17.0.0. The macro now emits `<IcuTrans defaultTranslation="…">` without a key and `IcuTrans` passed `undefined` to `t()`, which returns `''`. Like `Trans`, `IcuTrans` now uses `defaultTranslation` as the key when `i18nKey` is not provided.
+
 ## 17.0.11
 
 - chore: `html-parse-stringify` updated to `^4.0.1`. The parser powering `<Trans>` is now actively maintained under the i18next org ([i18next/html-parse-stringify](https://github.com/i18next/html-parse-stringify)) after years without upstream releases. 4.x brings modern dual ESM/CJS packaging with an `exports` map, zero runtime dependencies, reworked TypeScript types and a long list of parser fixes (literal `<` in text, multiline/CRLF attribute values, comments containing `>`, doctype handling, quote-aware bracket handling).
