@@ -1,8 +1,0 @@
-namespace react_native_windows
-{
-    [default_interface]
-    runtimeclass MainPage : Windows.UI.Xaml.Controls.Page
-    {
-        MainPage();
-    }
-}
