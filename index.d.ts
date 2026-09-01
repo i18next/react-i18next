@@ -222,7 +222,7 @@ export type FallbackNs<Ns> = Ns extends undefined
     ? Ns
     : _DefaultNamespace;
 
-export const useTranslation: _EnableSelector extends true | 'optimize'
+export const useTranslation: _EnableSelector extends true | 'optimize' | 'strict'
   ? UseTranslationSelector
   : UseTranslationLegacy;
 
