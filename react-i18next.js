@@ -3848,6 +3848,7 @@
     const finalI18n = i18n || {};
     const wrapperRef = React.useRef(null);
     const wrapperLangRef = React.useRef();
+    const languageKey = inst => `${inst.language}|${inst.resolvedLanguage}|${inst.languages?.join(',')}`;
     const createI18nWrapper = original => {
       const descriptors = Object.getOwnPropertyDescriptors(original);
       if (descriptors.__original) delete descriptors.__original;
@@ -3866,7 +3867,7 @@
     };
     const ret = React.useMemo(() => {
       const original = finalI18n;
-      const lang = original?.language;
+      const lang = original && languageKey(original);
       let i18nWrapper = original;
       if (original) {
         if (wrapperRef.current && wrapperRef.current.__original === original) {

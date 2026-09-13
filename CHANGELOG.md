@@ -1,3 +1,7 @@
+## 17.0.14
+
+- fix: the `i18n` object returned by `useTranslation` was only refreshed when `i18n.language` changed, so a `resolvedLanguage` (or `languages`) change of its own kept handing components the previous snapshot. That happens whenever the translations for the current language arrive after the switch — i18next resolves to the fallback until its store has them — and components reading `i18n.resolvedLanguage` (language switchers, for example) then stayed one switch behind. The cached wrapper is now keyed on all three language fields, which are exactly the ones the surrounding `useMemo` already depends on; wrapper identity still only changes when the language state does, so the caching from [#1885](https://github.com/i18next/react-i18next/issues/1885) is unaffected. Reported via [next-i18next#2348](https://github.com/i18next/next-i18next/issues/2348).
+
 ## 17.0.13
 
 - fix(types): the selector-form `keyPrefix` overload of `useTranslation()` is now available under `enableSelector: 'strict'`. `useTranslation` was gated on `true | 'optimize'` only, so under `'strict'` it resolved to the legacy signature and the selector overload disappeared entirely (`keyPrefix: ($) => $.ns.foo` failed with `Type '($: any) => any' is not assignable to type 'undefined'`). `Trans` already handled all three modes. Companion to the same fix for `getFixedT` in [i18next#2446](https://github.com/i18next/i18next/pull/2446). Thanks @hovelopin ([#1930](https://github.com/i18next/react-i18next/pull/1930)).

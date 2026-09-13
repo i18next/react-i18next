@@ -140,9 +140,16 @@ export const useTranslation = (ns, props = {}) => {
 
   const finalI18n = i18n || {};
 
-  // cache one wrapper per hook caller and only recreate it when language changes
+  // cache one wrapper per hook caller and only recreate it when the language state changes
   const wrapperRef = useRef(null);
   const wrapperLangRef = useRef();
+
+  // the wrapper is a snapshot of the instance, so its identity has to change whenever any
+  // of the language fields does - resolvedLanguage and languages change on their own when
+  // the resources for the current language only arrive later (until then i18next resolves
+  // to the fallback), and a wrapper keyed on `language` alone would keep handing that out
+  const languageKey = (inst) =>
+    `${inst.language}|${inst.resolvedLanguage}|${inst.languages?.join(',')}`;
 
   // helper to create a wrapper instance (avoid duplicating descriptor logic)
   const createI18nWrapper = (original) => {
@@ -168,7 +175,7 @@ export const useTranslation = (ns, props = {}) => {
 
   const ret = useMemo(() => {
     const original = finalI18n;
-    const lang = original?.language;
+    const lang = original && languageKey(original);
 
     let i18nWrapper = original;
 

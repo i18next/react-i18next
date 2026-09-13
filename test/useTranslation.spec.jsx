@@ -370,6 +370,34 @@ describe('useTranslation', () => {
       await i18nInstance.changeLanguage('en');
       rerender();
     });
+
+    it('replaces the wrapper when only resolvedLanguage changes', async () => {
+      const i18n = createInstance();
+      await i18n.init({
+        lng: 'en',
+        fallbackLng: 'en',
+        resources: { en: { translation: { hi: 'hi' } } },
+      });
+
+      const { result, rerender } = renderHook(() => useTranslation('translation', { i18n }));
+
+      // no translations for 'de' yet -> i18next resolves it to the fallback
+      await act(async () => {
+        await i18n.changeLanguage('de');
+      });
+      rerender();
+      const beforeWrapper = result.current.i18n;
+      expect(beforeWrapper.resolvedLanguage).toBe('en');
+
+      // the resources arrive afterwards, so the language now resolves to itself
+      await act(async () => {
+        i18n.addResourceBundle('de', 'translation', { hi: 'hallo' });
+        await i18n.changeLanguage('de');
+      });
+      rerender();
+      expect(result.current.i18n).not.toBe(beforeWrapper);
+      expect(result.current.i18n.resolvedLanguage).toBe('de');
+    });
   });
 
   it('should not trigger loadNamespaces on every render if namespaces array is unstable (inline)', async () => {
