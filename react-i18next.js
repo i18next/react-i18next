@@ -2711,7 +2711,7 @@
     const children = node.props?.children ?? node.children;
     return node.props?.i18nIsDynamicList ? getAsArray(children) : children;
   };
-  const hasValidReactChildren = children => Array.isArray(children) && children.every(React.isValidElement);
+  const hasValidReactChildren = children => getAsArray(children).every(React.isValidElement);
   const getAsArray = data => Array.isArray(data) ? data : [data];
   const mergeProps = (source, target) => {
     const newTarget = {

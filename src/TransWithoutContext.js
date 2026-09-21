@@ -19,8 +19,7 @@ const getChildren = (node) => {
   return node.props?.i18nIsDynamicList ? getAsArray(children) : children;
 };
 
-const hasValidReactChildren = (children) =>
-  Array.isArray(children) && children.every(isValidElement);
+const hasValidReactChildren = (children) => getAsArray(children).every(isValidElement);
 
 const getAsArray = (data) => (Array.isArray(data) ? data : [data]);
 

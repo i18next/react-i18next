@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import React from 'react';
-import { render, cleanup } from '@testing-library/react';
+import { render, cleanup, screen, within } from '@testing-library/react';
 import './i18n';
 import { Trans } from '../src/Trans';
 
@@ -32,6 +32,26 @@ describe('trans using no children but components (object) - base case using arra
         </strong>
       </div>
     `);
+  });
+});
+
+describe('trans using no children but components (array) - empty paired tag with a single child', () => {
+  function TestComponent() {
+    return (
+      <Trans
+        defaults="Link: <0></0>"
+        components={[
+          <a aria-label="Array icon link" href="/link">
+            <svg aria-label="Icon" role="img" />
+          </a>,
+        ]}
+      />
+    );
+  }
+  it('should preserve the component child', () => {
+    render(<TestComponent />);
+    const link = screen.getByRole('link', { name: 'Array icon link' });
+    expect(link).toContainElement(within(link).getByRole('img', { name: 'Icon' }));
   });
 });
 
@@ -248,6 +268,46 @@ describe('trans using no children but components (object) - empty content', () =
         </button>
       </div>
     `);
+  });
+});
+
+describe('trans using no children but components (object) - empty paired tag with a single child', () => {
+  function TestComponent() {
+    return (
+      <Trans
+        defaults="Link: <wrap></wrap>"
+        components={{
+          wrap: (
+            <a aria-label="Icon link" href="/link">
+              <svg aria-label="Icon" role="img" />
+            </a>
+          ),
+        }}
+      />
+    );
+  }
+  it('should preserve the component child', () => {
+    render(<TestComponent />);
+    const link = screen.getByRole('link', { name: 'Icon link' });
+    expect(link).toContainElement(within(link).getByRole('img', { name: 'Icon' }));
+  });
+});
+
+describe('trans using children - empty paired tag with a single child', () => {
+  function TestComponent() {
+    return (
+      <Trans defaults="Link: <1></1>">
+        {'Link: '}
+        <a aria-label="Child icon link" href="/link">
+          <svg aria-label="Icon" role="img" />
+        </a>
+      </Trans>
+    );
+  }
+  it('should preserve the component child', () => {
+    render(<TestComponent />);
+    const link = screen.getByRole('link', { name: 'Child icon link' });
+    expect(link).toContainElement(within(link).getByRole('img', { name: 'Icon' }));
   });
 });
 
