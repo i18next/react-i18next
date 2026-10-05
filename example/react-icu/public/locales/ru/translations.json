@@ -15,5 +15,5 @@
   "{itemsCount1, plural,  =0 {There is no item.} one {There is # item.} other {There are # items.}}": "{itemsCount1, plural,  =0 {Нет ни одной штуки} one {Есть # штука.} few {Есть # штуки.} many {Есть # штук.} other {Есть # штук.}}",
   "{itemsCount2, plural,  =0 {There is no item.} one {There is # item.} other {There are # items.}}": "{itemsCount2, plural,  =0 {Нет ни одной штуки} one {Есть # штука.} few {Есть # штуки.} many {Есть # штук.} other {Есть # штук.}}",
   "{itemsCount3, plural,  =0 {There is no item.} one {There is # item.} other {There are # items.}}": "{itemsCount3, plural,  =0 {Нет ни одной штуки} one {Есть # штука.} few {Есть # штуки.} many {Есть # штук.} other {Есть # штук.}}",
-  "testKey": "{itemsCount3, plural,  =0 {Нет <0>ни одной</0> штуки. } one {Есть <0>#</0> штука.} few {Есть <0>#</0> штуки.} many {Есть <0>#</0> штук.} other {Есть <0>#</0> штук.}}"
+  "testKey": "{itemsCount3, plural,  =0 {Нет <0>ни одной</0> штуки. } one {Есть <1>#</1> штука.} few {Есть <2>#</2> штуки.} many {Есть <2>#</2> штук.} other {Есть <2>#</2> штук.}}"
 }
