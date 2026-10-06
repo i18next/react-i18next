@@ -3,6 +3,7 @@ import React, { useRef, useEffect } from 'react';
 import { render, cleanup, waitFor, screen } from '@testing-library/react';
 import i18n from './i18n';
 import { withTranslation } from '../src/withTranslation';
+import { useTranslation } from '../src/useTranslation';
 import { Trans } from '../src/Trans';
 import { Trans as TransWithoutContext } from '../src/TransWithoutContext';
 
@@ -566,6 +567,25 @@ describe('trans with t as prop', () => {
         .
       </div>
     `);
+  });
+});
+
+describe('trans with t from useTranslation and a selector into a secondary namespace (#1933)', () => {
+  it.each([
+    ['Trans', Trans],
+    ['TransWithoutContext', TransWithoutContext],
+  ])('%s resolves the key like t() does', (_, Component) => {
+    function TestComponent() {
+      const { t } = useTranslation(['translation', 'other']);
+      return (
+        <Component t={t} i18nKey={($) => $.other.transTest1}>
+          Open <Link to="/msgs">here</Link>.
+        </Component>
+      );
+    }
+
+    const { container } = render(<TestComponent />);
+    expect(container).toHaveTextContent('Another go there.');
   });
 });
 

@@ -491,9 +491,10 @@ export function Trans({
 
   const reactI18nextOptions = { ...getDefaults(), ...i18n.options?.react };
 
-  // prepare having a namespace
-  let namespaces = ns || t.ns || i18n.options?.defaultNS;
-  namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
+  // prepare having a namespace; a fixed t (useTranslation, getFixedT) applies its own ns, and an
+  // explicit ns would stop it resolving selectors into its secondary namespaces (#1933)
+  let namespaces = ns || (t.ns ? undefined : i18n.options?.defaultNS || 'translation');
+  if (isString(namespaces)) namespaces = [namespaces];
 
   const { transDefaultProps } = reactI18nextOptions;
   const mergedTOptions = transDefaultProps?.tOptions
