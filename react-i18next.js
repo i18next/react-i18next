@@ -3034,8 +3034,8 @@
       ...getDefaults(),
       ...i18n.options?.react
     };
-    let namespaces = ns || t.ns || i18n.options?.defaultNS;
-    namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
+    let namespaces = ns || (t.ns ? undefined : i18n.options?.defaultNS || 'translation');
+    if (isString(namespaces)) namespaces = [namespaces];
     const {
       transDefaultProps
     } = reactI18nextOptions;
@@ -3184,7 +3184,7 @@
       values,
       defaults,
       components,
-      ns: ns || t?.ns || defaultNSFromContext || i18n?.options?.defaultNS,
+      ns: ns || (t?.ns ? undefined : defaultNSFromContext || i18n?.options?.defaultNS),
       i18n,
       t: tFromProps,
       shouldUnescape,
