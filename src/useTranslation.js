@@ -48,7 +48,7 @@ export const useTranslation = (ns, props = {}) => {
     [i18n, props],
   );
 
-  const { useSuspense, keyPrefix } = i18nOptions;
+  const { useSuspense, keyPrefix, bindI18n, bindI18nStore } = i18nOptions;
 
   const nsOrContext = ns || defaultNSFromContext || i18n?.options?.defaultNS;
   const unstableNamespaces = isString(nsOrContext) ? [nsOrContext] : nsOrContext || ['translation'];
@@ -60,7 +60,6 @@ export const useTranslation = (ns, props = {}) => {
   const subscribe = useCallback(
     (callback) => {
       if (!i18n) return dummySubscribe;
-      const { bindI18n, bindI18nStore } = i18nOptions;
 
       const wrappedCallback = () => {
         revisionRef.current += 1;
@@ -75,7 +74,10 @@ export const useTranslation = (ns, props = {}) => {
           bindI18nStore.split(' ').forEach((e) => i18n.store.off(e, wrappedCallback));
       };
     },
-    [i18n, i18nOptions],
+    // the event names, not `i18nOptions`: that object is rebuilt whenever `props` is a new
+    // object (the `{}` default, inline options), and a new `subscribe` makes React
+    // unsubscribe and resubscribe on every render
+    [i18n, bindI18n, bindI18nStore],
   );
 
   const snapshotRef = useRef();
