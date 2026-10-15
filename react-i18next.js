@@ -3781,7 +3781,9 @@
     }), [i18n, props]);
     const {
       useSuspense,
-      keyPrefix
+      keyPrefix,
+      bindI18n,
+      bindI18nStore
     } = i18nOptions;
     const nsOrContext = ns || defaultNSFromContext || i18n?.options?.defaultNS;
     const unstableNamespaces = isString(nsOrContext) ? [nsOrContext] : nsOrContext || ['translation'];
@@ -3790,10 +3792,6 @@
     const revisionRef = React.useRef(0);
     const subscribe = React.useCallback(callback => {
       if (!i18n) return dummySubscribe;
-      const {
-        bindI18n,
-        bindI18nStore
-      } = i18nOptions;
       const wrappedCallback = () => {
         revisionRef.current += 1;
         callback();
@@ -3804,7 +3802,7 @@
         if (bindI18n) bindI18n.split(' ').forEach(e => i18n.off(e, wrappedCallback));
         if (bindI18nStore) bindI18nStore.split(' ').forEach(e => i18n.store.off(e, wrappedCallback));
       };
-    }, [i18n, i18nOptions]);
+    }, [i18n, bindI18n, bindI18nStore]);
     const snapshotRef = React.useRef();
     const getSnapshot = React.useCallback(() => {
       if (!i18n) {
