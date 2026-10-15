@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach, vi } from 'vitest';
 import React, { useRef, useEffect } from 'react';
-import { render, cleanup, waitFor, screen } from '@testing-library/react';
+import { render, cleanup, waitFor, screen, getDefaultNormalizer } from '@testing-library/react';
 import i18n from './i18n';
 import { withTranslation } from '../src/withTranslation';
 import { useTranslation } from '../src/useTranslation';
@@ -957,19 +957,11 @@ describe('trans should allow escaped html', () => {
     );
   }
 
-  it('should unescape &lt; &nbsp; &amp; &gt; to < SPACE & >', () => {
-    const { container } = render(<TestComponent />);
-    expect(container.firstChild).toMatchInlineSnapshot(`
-      <div>
-        Escaped html should unescape correctly 
-        <a
-          href="/msgs"
-        >
-          &lt; &&gt;
-        </a>
-        .
-      </div>
-    `);
+  it('should unescape &lt; &nbsp; &amp; &gt; to < NO-BREAK SPACE & >', () => {
+    render(<TestComponent />);
+    // the default normalizer would turn the no-break space into a regular one
+    const normalizer = getDefaultNormalizer({ collapseWhitespace: false });
+    expect(screen.getByText('<\u00A0&>', { normalizer })).toBeInTheDocument();
   });
 });
 
