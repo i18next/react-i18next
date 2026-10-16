@@ -227,6 +227,54 @@ describe('useTranslation', () => {
       expect(t2.keyPrefix).toBe('deeply.nested_b');
       expect(t2(($) => $.key)).toBe('here_b!');
     });
+
+    it('should keep t stable for an inline selector keyPrefix that resolves to the same key', () => {
+      let selector = ($) => $.deeply.nested_a;
+      const { result, rerender } = renderHook(() =>
+        useTranslation('translation', { i18n: i18nInstance, keyPrefix: selector }),
+      );
+      const { t: t1 } = result.current;
+      expect(t1('key')).toBe('here_a!');
+
+      selector = ($) => $.deeply.nested_a;
+      rerender();
+      expect(result.current.t).toBe(t1);
+
+      selector = ($) => $.deeply.nested_b;
+      rerender();
+      expect(result.current.t).not.toBe(t1);
+      expect(result.current.t('key')).toBe('here_b!');
+    });
+  });
+
+  describe('namespace change', () => {
+    it('should return a t bound to the new namespace', () => {
+      i18nInstance.addResource('en', 'nsA', 'k', 'A');
+      i18nInstance.addResource('en', 'nsB', 'k', 'B');
+      let ns = 'nsA';
+      const { result, rerender } = renderHook(() => useTranslation(ns, { i18n: i18nInstance }));
+      expect(result.current.t('k')).toBe('A');
+
+      ns = 'nsB';
+      rerender();
+      expect(result.current.t('k')).toBe('B');
+    });
+  });
+
+  describe('instance change with the same language', () => {
+    it('should return a t bound to the new instance', () => {
+      const a = createInstance();
+      a.init({ lng: 'en', resources: { en: { translation: { k: 'A' } } } });
+      const b = createInstance();
+      b.init({ lng: 'en', resources: { en: { translation: { k: 'B' } } } });
+      let i18n = a;
+      const { result, rerender } = renderHook(() => useTranslation('translation', { i18n }));
+      expect(result.current.t('k')).toBe('A');
+
+      i18n = b;
+      rerender();
+      expect(result.current.t('k')).toBe('B');
+    });
   });
 
   describe('replacing i18n instance in provider', () => {

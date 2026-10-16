@@ -1,6 +1,7 @@
 import { useContext, useCallback, useMemo, useEffect, useRef, useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
+import { keyFromSelector } from 'i18next';
 import { getI18n, getDefaults, ReportNamespaces, I18nContext } from './context.js';
 import {
   warnOnce,
@@ -90,13 +91,21 @@ export const useTranslation = (ns, props = {}) => {
       namespaces.every((n) => hasLoadedNamespace(n, i18n, i18nOptions));
     const currentLng = props.lng || i18n.language;
     const currentRevision = revisionRef.current;
+    // an inline selector is a new function on every render, so compare the key it resolves
+    // to (with the options getFixedT resolves it with), not the function itself
+    const keyPrefixKey =
+      typeof keyPrefix === 'function'
+        ? keyFromSelector(keyPrefix, { ...i18n.options, ns: namespaces })
+        : keyPrefix;
 
     const lastSnapshot = snapshotRef.current;
     if (
       lastSnapshot &&
+      lastSnapshot.i18n === i18n &&
       lastSnapshot.ready === calculatedReady &&
       lastSnapshot.lng === currentLng &&
-      lastSnapshot.keyPrefix === keyPrefix &&
+      lastSnapshot.namespaces === namespaces &&
+      lastSnapshot.keyPrefix === keyPrefixKey &&
       lastSnapshot.revision === currentRevision // Check revision
     ) {
       return lastSnapshot;
@@ -116,9 +125,11 @@ export const useTranslation = (ns, props = {}) => {
 
     const newSnapshot = {
       t: calculatedT,
+      i18n,
       ready: calculatedReady,
       lng: currentLng,
-      keyPrefix,
+      namespaces,
+      keyPrefix: keyPrefixKey,
       revision: currentRevision, // Store revision
     };
     snapshotRef.current = newSnapshot;
