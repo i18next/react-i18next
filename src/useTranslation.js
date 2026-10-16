@@ -138,7 +138,21 @@ export const useTranslation = (ns, props = {}) => {
 
   // We still need a state to manually trigger a re-render on load when the store doesn't emit an event.
   const [loadCount, setLoadCount] = useState(0);
-  const { t, ready } = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+  let { t, ready } = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+  let pendingTranslationLoad;
+  if (i18n && useSuspense && !ready) {
+    pendingTranslationLoad = new Promise((resolve) => {
+      const onLoaded = () => resolve();
+      if (props.lng) {
+        loadLanguages(i18n, props.lng, namespaces, onLoaded);
+      } else {
+        loadNamespaces(i18n, namespaces, onLoaded);
+      }
+    });
+    // Synchronous backends can finish during this call. Refresh the snapshot
+    // before deciding whether React still needs to suspend.
+    ({ t, ready } = getSnapshot());
+  }
 
   useEffect(() => {
     if (i18n && !ready && !useSuspense) {
@@ -249,14 +263,7 @@ export const useTranslation = (ns, props = {}) => {
         'useTranslation: suspended while translations are loading (useSuspense is true by default). Add a <Suspense> boundary above this component, or set react.useSuspense: false in the i18next init options. https://react.i18next.com/latest/usetranslation-hook',
       );
     }
-    throw new Promise((resolve) => {
-      const onLoaded = () => resolve();
-      if (props.lng) {
-        loadLanguages(i18n, props.lng, namespaces, onLoaded);
-      } else {
-        loadNamespaces(i18n, namespaces, onLoaded);
-      }
-    });
+    throw pendingTranslationLoad;
   }
 
   return ret;
