@@ -3835,10 +3835,25 @@
       return newSnapshot;
     }, [i18n, namespaces, keyPrefix, i18nOptions, props.lng]);
     const [loadCount, setLoadCount] = React.useState(0);
-    const {
+    let {
       t,
       ready
     } = shimExports.useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+    let pendingTranslationLoad;
+    if (i18n && useSuspense && !ready) {
+      pendingTranslationLoad = new Promise(resolve => {
+        const onLoaded = () => resolve();
+        if (props.lng) {
+          loadLanguages(i18n, props.lng, namespaces, onLoaded);
+        } else {
+          loadNamespaces(i18n, namespaces, onLoaded);
+        }
+      });
+      ({
+        t,
+        ready
+      } = getSnapshot());
+    }
     React.useEffect(() => {
       if (i18n && !ready && !useSuspense) {
         const onLoaded = () => setLoadCount(c => c + 1);
@@ -3906,14 +3921,7 @@
       if (inDevelopment) {
         warnOnce(i18n, 'SUSPENDED_WHILE_LOADING', 'useTranslation: suspended while translations are loading (useSuspense is true by default). Add a <Suspense> boundary above this component, or set react.useSuspense: false in the i18next init options. https://react.i18next.com/latest/usetranslation-hook');
       }
-      throw new Promise(resolve => {
-        const onLoaded = () => resolve();
-        if (props.lng) {
-          loadLanguages(i18n, props.lng, namespaces, onLoaded);
-        } else {
-          loadNamespaces(i18n, namespaces, onLoaded);
-        }
-      });
+      throw pendingTranslationLoad;
     }
     return ret;
   };
