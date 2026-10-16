@@ -3811,8 +3811,12 @@
       const calculatedReady = !!(i18n.isInitialized || i18n.initializedStoreOnce) && namespaces.every(n => hasLoadedNamespace(n, i18n, i18nOptions));
       const currentLng = props.lng || i18n.language;
       const currentRevision = revisionRef.current;
+      const keyPrefixKey = typeof keyPrefix === 'function' ? keysFromSelector(keyPrefix, {
+        ...i18n.options,
+        ns: namespaces
+      }) : keyPrefix;
       const lastSnapshot = snapshotRef.current;
-      if (lastSnapshot && lastSnapshot.ready === calculatedReady && lastSnapshot.lng === currentLng && lastSnapshot.keyPrefix === keyPrefix && lastSnapshot.revision === currentRevision) {
+      if (lastSnapshot && lastSnapshot.i18n === i18n && lastSnapshot.ready === calculatedReady && lastSnapshot.lng === currentLng && lastSnapshot.namespaces === namespaces && lastSnapshot.keyPrefix === keyPrefixKey && lastSnapshot.revision === currentRevision) {
         return lastSnapshot;
       }
       const calculatedT = i18n.getFixedT(currentLng, i18nOptions.nsMode === 'fallback' ? namespaces : namespaces[0], keyPrefix, {
@@ -3820,9 +3824,11 @@
       });
       const newSnapshot = {
         t: calculatedT,
+        i18n,
         ready: calculatedReady,
         lng: currentLng,
-        keyPrefix,
+        namespaces,
+        keyPrefix: keyPrefixKey,
         revision: currentRevision
       };
       snapshotRef.current = newSnapshot;
