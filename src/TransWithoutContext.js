@@ -523,11 +523,9 @@ export function Trans({
     i18nKey ||
     (hashTransKey ? hashTransKey(nodeAsString || defaultValue) : nodeAsString || defaultValue);
   if (i18n.options?.interpolation?.defaultVariables) {
+    // explicit values win over defaultVariables, like in t()
     // eslint-disable-next-line no-param-reassign
-    values =
-      mergedValues && Object.keys(mergedValues).length > 0
-        ? { ...mergedValues, ...i18n.options.interpolation.defaultVariables }
-        : { ...i18n.options.interpolation.defaultVariables };
+    values = { ...i18n.options.interpolation.defaultVariables, ...mergedValues };
   } else {
     // eslint-disable-next-line no-param-reassign
     values = mergedValues;

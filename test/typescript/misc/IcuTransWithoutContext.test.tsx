@@ -1,7 +1,7 @@
 import { describe, it, expectTypeOf } from 'vitest';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { IcuTransWithoutContext } from '../../../';
+import { IcuTransWithoutContext } from '../../../IcuTransWithoutContext';
 
 describe('<IcuTransWithoutContext />', () => {
   describe('default namespace', () => {

@@ -202,6 +202,26 @@ describe('IcuTransWithoutContext', () => {
       expect(container.textContent).toBeTruthy();
     });
 
+    it('should let explicit values win over default variables, like t()', () => {
+      const customI18n = i18n.cloneInstance({
+        interpolation: { defaultVariables: { user: 'DEFAULT_USER', team: 'DEFAULT_TEAM' } },
+      });
+      const props = {
+        i18nKey: 'test.values.precedence',
+        defaultTranslation: 'We invited <0>{{user}}</0> to {{team}}.',
+        content: [{ type: 'strong' }],
+        i18n: customI18n,
+      };
+
+      const { container } = render(
+        <IcuTransWithoutContext {...props} values={{ user: 'John Doe' }} />,
+      );
+      expect(container.innerHTML).toBe('We invited <strong>John Doe</strong> to DEFAULT_TEAM.');
+      expect(
+        customI18n.t(props.i18nKey, { defaultValue: props.defaultTranslation, user: 'John Doe' }),
+      ).toBe('We invited <0>John Doe</0> to DEFAULT_TEAM.');
+    });
+
     it('should use only default variables when no values provided', () => {
       const customI18n = i18n.cloneInstance({
         interpolation: {

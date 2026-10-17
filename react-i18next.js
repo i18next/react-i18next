@@ -3059,11 +3059,9 @@
     } = reactI18nextOptions;
     const key = i18nKey || (hashTransKey ? hashTransKey(nodeAsString || defaultValue) : nodeAsString || defaultValue);
     if (i18n.options?.interpolation?.defaultVariables) {
-      values = mergedValues && Object.keys(mergedValues).length > 0 ? {
-        ...mergedValues,
-        ...i18n.options.interpolation.defaultVariables
-      } : {
-        ...i18n.options.interpolation.defaultVariables
+      values = {
+        ...i18n.options.interpolation.defaultVariables,
+        ...mergedValues
       };
     } else {
       values = mergedValues;
@@ -3590,15 +3588,10 @@
     const t = tFromProps || i18n.t?.bind(i18n) || (k => k);
     let namespaces = ns || t.ns || i18n.options?.defaultNS;
     namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
-    let mergedValues = values;
-    if (i18n.options?.interpolation?.defaultVariables) {
-      mergedValues = values && Object.keys(values).length > 0 ? {
-        ...values,
-        ...i18n.options.interpolation.defaultVariables
-      } : {
-        ...i18n.options.interpolation.defaultVariables
-      };
-    }
+    const mergedValues = {
+      ...i18n.options?.interpolation?.defaultVariables,
+      ...values
+    };
     const translation = t(i18nKey || defaultTranslation, {
       defaultValue: defaultTranslation,
       ...mergedValues,

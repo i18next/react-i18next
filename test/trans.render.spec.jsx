@@ -698,6 +698,13 @@ describe('trans should work with defaultVariables', () => {
       </div>
     `);
   });
+
+  it('should let explicit values win over defaultVariables, like t()', () => {
+    const { container } = render(
+      <Trans i18nKey="interpolateKeyWithDefaultVariables" values={{ defaultInsert: 'explicit' }} />,
+    );
+    expect(container.firstChild).toHaveTextContent('add explicit SECOND');
+  });
 });
 
 describe('trans should work with lowercase elements in components', () => {

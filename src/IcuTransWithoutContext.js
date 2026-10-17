@@ -108,14 +108,8 @@ export function IcuTransWithoutContext({
   let namespaces = ns || t.ns || i18n.options?.defaultNS;
   namespaces = isString(namespaces) ? [namespaces] : namespaces || ['translation'];
 
-  // Merge default interpolation variables if they exist
-  let mergedValues = values;
-  if (i18n.options?.interpolation?.defaultVariables) {
-    mergedValues =
-      values && Object.keys(values).length > 0
-        ? { ...values, ...i18n.options.interpolation.defaultVariables }
-        : { ...i18n.options.interpolation.defaultVariables };
-  }
+  // Merge default interpolation variables; explicit values win, like in t()
+  const mergedValues = { ...i18n.options?.interpolation?.defaultVariables, ...values };
 
   // Get the translation, falling back to defaultTranslation.
   // Like `Trans`, use the default string as the key when none is given (icu.macro emits
