@@ -300,6 +300,7 @@
       }
     }
   }
+  const nonEmptyBundles = new WeakSet();
   class ResourceStore extends EventEmitter {
     constructor(data, options = {
       ns: ['translation'],
@@ -423,7 +424,13 @@
     hasLanguageSomeTranslations(lng) {
       const data = this.getDataByLanguage(lng);
       const n = data && Object.keys(data) || [];
-      return !!n.find(v => data[v] && Object.keys(data[v]).length > 0);
+      return !!n.find(v => {
+        const bundle = data[v];
+        if (nonEmptyBundles.has(bundle)) return true;
+        if (!bundle || Object.keys(bundle).length === 0) return false;
+        if (typeof bundle === 'object') nonEmptyBundles.add(bundle);
+        return true;
+      });
     }
     toJSON() {
       return this.data;
@@ -1038,7 +1045,8 @@
         addCode(this.formatLanguageCode(code));
       }
       fallbackCodes.forEach(fc => {
-        if (!codes.includes(fc)) addCode(this.formatLanguageCode(fc));
+        const formattedFc = this.formatLanguageCode(fc);
+        if (!codes.includes(formattedFc)) addCode(formattedFc);
       });
       if (cacheKey !== null) {
         this.resolveHierarchyCache[cacheKey] = codes;
@@ -1188,7 +1196,7 @@
       };
       this.regexp = getOrResetRegExp(this.regexp, `${this.prefix}(.+?)${this.suffix}`);
       this.regexpUnescape = getOrResetRegExp(this.regexpUnescape, `${this.prefix}${this.unescapePrefix}(.+?)${this.unescapeSuffix}${this.suffix}`);
-      this.nestingRegexp = getOrResetRegExp(this.nestingRegexp, `${this.nestingPrefix}((?:[^()"']+|"[^"]*"|'[^']*'|\\((?:[^()]|"[^"]*"|'[^']*')*\\))*?)${this.nestingSuffix}`);
+      this.nestingRegexp = getOrResetRegExp(this.nestingRegexp, `${this.nestingPrefix}((?:[^()"']|"[^"]*"|'[^']*'|\\((?:[^()"']|"[^"]*"|'[^']*')*\\))*?)${this.nestingSuffix}`);
     }
     interpolate(str, data, lng, options) {
       let match;
@@ -1292,7 +1300,10 @@
         if (clonedOptions.defaultValue && clonedOptions.defaultValue.includes(this.prefix)) delete clonedOptions.defaultValue;
         return key;
       };
-      while (match = this.nestingRegexp.exec(str)) {
+      const nestingRegexp = new RegExp(this.nestingRegexp);
+      let out = '';
+      let lastEnd = 0;
+      while (match = nestingRegexp.exec(str)) {
         let formatters = [];
         clonedOptions = {
           ...options
@@ -1318,10 +1329,11 @@
             interpolationkey: match[1].trim()
           }), value.trim());
         }
-        str = str.replace(match[0], value);
+        out += str.slice(lastEnd, match.index) + makeString(value);
+        lastEnd = nestingRegexp.lastIndex;
         this.regexp.lastIndex = 0;
       }
-      return str;
+      return lastEnd ? out + str.slice(lastEnd) : str;
     }
   }
   const parseFormatStr = formatStr => {
@@ -2127,7 +2139,11 @@
       }
       if (this.hasResourceBundle(lng, ns)) return true;
       if (!this.services.backendConnector.backend || this.options.resources && !this.options.partialBundledLanguages) return true;
-      if (loadNotPending(lng, ns) && (!fallbackLng || loadNotPending(lastLng, ns))) return true;
+      const {
+        languageUtils
+      } = this.services;
+      const loadLng = !options.lng ? lng : languageUtils.isSupportedCode(lng) && languageUtils.toResolveHierarchy(lng, false)[0];
+      if ((!loadLng || loadNotPending(loadLng, ns)) && (!fallbackLng || loadNotPending(lastLng, ns))) return true;
       return false;
     }
     loadNamespaces(ns, callback) {
@@ -2187,6 +2203,7 @@
       if (forkResourceStore) delete options.forkResourceStore;
       const mergedOptions = {
         ...this.options,
+        preload: false,
         ...options,
         ...{
           isClone: true
