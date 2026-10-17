@@ -1,3 +1,8 @@
+## 17.1.0
+
+- feat(types): with i18next's new `parseInterpolation: 'icu'` (or `'mf2'`) type option (i18next v26.5.0), the `values` of `IcuTrans` and `IcuTransWithoutContext` are typed from the message of `i18nKey`, like the options of `t()`: a misspelled argument, a value of the wrong type or a value meant for another key is a type error. `values` was `Record<string, any>` before, and still is with any other `parseInterpolation` setting. `values` stays optional, as on `Trans`. `useTranslation`'s `t` and `Trans` `values` get the checks from i18next's types without changes here.
+- fix(types): `IcuTrans` and `IcuTransWithoutContext` now infer the literal `i18nKey` (`const` type parameter, as `Trans` does), so props that depend on the key are checked against that key instead of all keys of the namespace.
+
 ## 17.0.21
 
 - fix(IcuTrans): explicit `values` now win over `interpolation.defaultVariables`, as they do in `t()`. `IcuTrans` merged them the other way round, so `<IcuTrans values={{ user: 'John Doe' }} />` rendered the configured default variable `user` instead of `John Doe`. `Trans` had the same inverted merge and is fixed too. Compatibility note: only names that are set both in `values` and in `defaultVariables` render differently.

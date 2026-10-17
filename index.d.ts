@@ -12,6 +12,8 @@ import type {
   NsResource,
   ParseKeys,
   TOptions,
+  InterpolationMap,
+  TFunctionReturn,
 } from 'i18next';
 import * as React from 'react';
 import {
@@ -64,8 +66,19 @@ export type IcuTransWithoutContextProps<
   /** Optional namespace(s) for the translation */
   // see TransProps.ns: keep single-namespace values assignable when `t` fixes Ns to an array
   ns?: Ns | (Ns extends readonly (infer S extends string)[] ? S : never);
-  /** Optional values for ICU variable interpolation */
-  values?: Record<string, any>;
+  /**
+   * Values for ICU variable interpolation. Under `parseInterpolation: 'icu'`
+   * (or `'mf2'`) they are typed from the message.
+   */
+  values?: [TypeOptions['parseInterpolation']] extends ['icu'] | ['mf2']
+    ? InterpolationMap<
+        TFunctionReturn<
+          Ns,
+          KPrefix extends string ? `${KPrefix}${TypeOptions['keySeparator']}${Key & string}` : Key,
+          TOpt
+        >
+      >
+    : Record<string, any>;
   /** i18next instance. If not provided, uses global instance */
   i18n?: i18n;
   /** Custom translation function */
@@ -99,7 +112,7 @@ export type IcuTransProps<
  */
 export interface IcuTransComponent {
   <
-    Key extends ParseKeys<Ns, TOpt, KPrefix>,
+    const Key extends ParseKeys<Ns, TOpt, KPrefix>,
     Ns extends Namespace = _DefaultNamespace,
     KPrefix = undefined,
     TContext extends string | undefined = undefined,
@@ -126,7 +139,7 @@ export interface IcuTransComponent {
  */
 export interface IcuTransWithoutContextComponent {
   <
-    Key extends ParseKeys<Ns, TOpt, KPrefix>,
+    const Key extends ParseKeys<Ns, TOpt, KPrefix>,
     Ns extends Namespace = _DefaultNamespace,
     KPrefix = undefined,
     TContext extends string | undefined = undefined,
