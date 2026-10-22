@@ -1,3 +1,7 @@
+## 17.1.1
+
+- fix(Trans): with `components` as an object with index keys, the component for key `0` is now rendered. `components={{ 0: <a href={path} /> }}` with `"You're eligible. <0>Get started here.</0>"` rendered the text without the link, a self-closing `<0/>` rendered nothing, and in `<0>a <1>b</1></0>` both elements were lost, while keys `1` and up and the array form worked. The object was passed on as the indexed children, so `<0>` resolved to the object itself. It is now looked up by key, like a named components map. This also fixes an array `components` next to `react.transDefaultProps.components`, which the merge turns into such an object (`{ Bold, 0, 1 }`) and so lost its first entry, and a self-closing named tag in a mixed object (`{ 0: <a />, Bold: <b /> }` with `<Bold/>`), which rendered as the text `<Bold />`. Arrays, named maps and index objects starting at `1` render as before. Thanks @nk-batman21 ([#1938](https://github.com/i18next/react-i18next/pull/1938)).
+
 ## 17.1.0
 
 - feat(types): with i18next's new `parseInterpolation: 'icu'` (or `'mf2'`) type option (i18next v26.5.0), the `values` of `IcuTrans` and `IcuTransWithoutContext` are typed from the message of `i18nKey`, like the options of `t()`: a misspelled argument, a value of the wrong type or a value meant for another key is a type error. `values` was `Record<string, any>` before, and still is with any other `parseInterpolation` setting. `values` stays optional, as on `Trans`. `useTranslation`'s `t` and `Trans` `values` get the checks from i18next's types without changes here.
