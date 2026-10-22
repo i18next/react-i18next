@@ -3111,6 +3111,9 @@
     if (isComponentsMap(generatedComponents)) {
       componentsMap = generatedComponents;
       indexedChildren = children;
+    } else if (generatedComponents && !Array.isArray(generatedComponents)) {
+      componentsMap = generatedComponents;
+      indexedChildren = undefined;
     }
     const content = renderNodes(indexedChildren, componentsMap, translation, i18n, reactI18nextOptions, combinedTOpts, mergedShouldUnescape);
     const useAsParent = parent ?? reactI18nextOptions.defaultTransParent;
