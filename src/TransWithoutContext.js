@@ -562,6 +562,10 @@ export function Trans({
   if (isComponentsMap(generatedComponents)) {
     componentsMap = generatedComponents;
     indexedChildren = children;
+  } else if (generatedComponents && !Array.isArray(generatedComponents)) {
+    // look up index keys ({ 0: <b /> }) by key: as indexed children, <0> would be the object itself
+    componentsMap = generatedComponents;
+    indexedChildren = undefined;
   }
 
   const content = renderNodes(

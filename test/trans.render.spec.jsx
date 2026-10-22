@@ -1566,4 +1566,28 @@ describe('trans with default props', () => {
     render(<Trans i18n={i18nInst} i18nKey="key1" />);
     expect(screen.getByText('world', { selector: 'strong' })).toHaveTextContent('world');
   });
+
+  it('should keep the first components array entry next to transDefaultProps components', () => {
+    const i18nInst = i18n.createInstance();
+    i18nInst.init({
+      lng: 'en',
+      resources: {
+        en: {
+          translation: {
+            key1: 'read the <0>terms</0> and the <1>notes</1> <Bold>first</Bold>',
+          },
+        },
+      },
+      react: {
+        transDefaultProps: {
+          components: { Bold: <strong /> },
+        },
+      },
+    });
+
+    render(<Trans i18n={i18nInst} i18nKey="key1" components={[<em />, <i />]} />);
+    expect(screen.getByText('terms', { selector: 'em' })).toBeInTheDocument();
+    expect(screen.getByText('notes', { selector: 'i' })).toBeInTheDocument();
+    expect(screen.getByText('first', { selector: 'strong' })).toBeInTheDocument();
+  });
 });
