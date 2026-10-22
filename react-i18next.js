@@ -2888,7 +2888,7 @@
         if (node.type === 'tag') {
           let tmp = reactNodes[parseInt(node.name, 10)];
           if (!tmp && knownComponentsMap) tmp = knownComponentsMap[node.name];
-          if (rootReactNode.length === 1 && !tmp) tmp = rootReactNode[0][node.name];
+          if (rootReactNode.length === 1 && !tmp && isObject(rootReactNode[0])) tmp = rootReactNode[0][node.name];
           if (!tmp) tmp = {};
           const props = {
             ...node.attrs
