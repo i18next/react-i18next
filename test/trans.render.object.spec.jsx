@@ -82,6 +82,23 @@ describe('trans using no children but components (object) - using index', () => 
   });
 });
 
+describe('trans using no children but components (object) - using index starting at 0', () => {
+  function TestComponent() {
+    return (
+      <Trans
+        defaults="hello <0>beautiful</0> <1>{{what}}</1>"
+        values={{ what: 'world' }}
+        components={{ 0: <i>just dummy</i>, 1: <strong>univers</strong> }}
+      />
+    );
+  }
+  it('should render translated string', () => {
+    const { container } = render(<TestComponent />);
+    expect(within(container).getByText('beautiful', { selector: 'i' })).toBeInTheDocument();
+    expect(within(container).getByText('world', { selector: 'strong' })).toBeInTheDocument();
+  });
+});
+
 describe('trans using no children but components (object) - using names with less-than sign', () => {
   function TestComponent() {
     return (
