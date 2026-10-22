@@ -3432,7 +3432,8 @@
     '&alefsym;': 'ℵ'
   };
   const entityPattern = new RegExp(Object.keys(commonEntities).map(entity => entity.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
-  const decodeHtmlEntities = text => text.replace(entityPattern, match => commonEntities[match]).replace(/&#(\d+);/g, (_, num) => String.fromCharCode(parseInt(num, 10))).replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+  const decodeCodePoint = (match, codePoint) => codePoint <= 0x10ffff ? String.fromCodePoint(codePoint) : match;
+  const decodeHtmlEntities = text => text.replace(entityPattern, match => commonEntities[match]).replace(/&#(\d+);/g, (match, num) => decodeCodePoint(match, parseInt(num, 10))).replace(/&#x([0-9a-fA-F]+);/g, (match, hex) => decodeCodePoint(match, parseInt(hex, 16)));
 
   const tokenize = translation => {
     const tokens = [];
