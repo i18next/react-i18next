@@ -424,6 +424,15 @@ describe('htmlEntityDecoder', () => {
       expect(decodeHtmlEntities('&#x2F;')).toBe('/');
       expect(decodeHtmlEntities('&#x3C;')).toBe('<');
     });
+
+    it('should decode numeric entities above U+FFFF', () => {
+      expect(decodeHtmlEntities('Hi &#128075;')).toBe('Hi \u{1F44B}');
+      expect(decodeHtmlEntities('&#x1F600; &#x1d11e;')).toBe('\u{1F600} \u{1D11E}');
+    });
+
+    it('should leave numeric entities above U+10FFFF unchanged', () => {
+      expect(decodeHtmlEntities('&#1114112; &#x110000;')).toBe('&#1114112; &#x110000;');
+    });
   });
 
   describe('combined entities', () => {

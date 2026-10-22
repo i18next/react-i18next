@@ -244,6 +244,10 @@ const entityPattern = new RegExp(
   'g',
 );
 
+// fromCodePoint throws above U+10FFFF, so such entities are left as they are
+const decodeCodePoint = (match, codePoint) =>
+  codePoint <= 0x10ffff ? String.fromCodePoint(codePoint) : match;
+
 /**
  * Decode HTML entities in text
  *
@@ -259,6 +263,6 @@ export const decodeHtmlEntities = (text) =>
     // First pass: common named entities
     .replace(entityPattern, (match) => commonEntities[match])
     // Second pass: numeric entities (decimal)
-    .replace(/&#(\d+);/g, (_, num) => String.fromCharCode(parseInt(num, 10)))
+    .replace(/&#(\d+);/g, (match, num) => decodeCodePoint(match, parseInt(num, 10)))
     // Third pass: numeric entities (hexadecimal)
-    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+    .replace(/&#x([0-9a-fA-F]+);/g, (match, hex) => decodeCodePoint(match, parseInt(hex, 16)));
