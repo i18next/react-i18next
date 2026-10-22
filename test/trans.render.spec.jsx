@@ -1591,3 +1591,61 @@ describe('trans with default props', () => {
     expect(screen.getByText('first', { selector: 'strong' })).toBeInTheDocument();
   });
 });
+
+describe('trans with a single child and out-of-range tags', () => {
+  let i18nInst;
+  beforeAll(() => {
+    i18nInst = i18n.createInstance();
+    i18nInst.init({
+      lng: 'en',
+      resources: {
+        en: {
+          translation: {
+            oneTag: 'Welcome <1>friend</1>',
+            twoTags: 'Welcome <2>friend</2> and <1>you</1>',
+          },
+        },
+      },
+    });
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should render the inner text when the only child is a string', () => {
+    const { container } = render(
+      <Trans i18n={i18nInst} i18nKey="oneTag">
+        Welcome
+      </Trans>,
+    );
+    expect(container).toHaveTextContent(/^Welcome friend$/);
+  });
+
+  it('should render the inner text of every tag when the only child is a string', () => {
+    const { container } = render(
+      <Trans i18n={i18nInst} i18nKey="twoTags">
+        Hi there
+      </Trans>,
+    );
+    expect(container).toHaveTextContent(/^Welcome friend and you$/);
+  });
+
+  it('should still look up the tag in a single object child', () => {
+    render(
+      <Trans i18n={i18nInst} i18nKey="oneTag">
+        {{ 1: <strong /> }}
+      </Trans>,
+    );
+    expect(screen.getByText('friend', { selector: 'strong' })).toBeInTheDocument();
+  });
+
+  it('should render the inner text of a default value when the only child is a string', () => {
+    const { container } = render(
+      <Trans i18n={i18nInst} i18nKey="missing" defaults="Hi <1>there</1>">
+        Hi
+      </Trans>,
+    );
+    expect(container).toHaveTextContent(/^Hi there$/);
+  });
+});

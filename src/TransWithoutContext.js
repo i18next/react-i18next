@@ -252,7 +252,8 @@ const renderNodes = (
         if (!tmp && knownComponentsMap) tmp = knownComponentsMap[node.name];
 
         // trans components is an object
-        if (rootReactNode.length === 1 && !tmp) tmp = rootReactNode[0][node.name];
+        if (rootReactNode.length === 1 && !tmp && isObject(rootReactNode[0]))
+          tmp = rootReactNode[0][node.name];
 
         // neither
         if (!tmp) tmp = {};
