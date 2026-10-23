@@ -192,10 +192,13 @@ declare module 'react' {
   }
 
   interface HTMLAttributes<T> {
-    // This union is inspired by the typings for React.ReactNode. We do this to fix "This JSX tag's 'children' prop
+    // Without allowObjectInHTMLChildren this is React's own children type, so it follows @types/react (#1928).
+    // The union is inspired by the typings for React.ReactNode. We do this to fix "This JSX tag's 'children' prop
     // expects a single child of type 'ReactI18NextChildren', but multiple children were provided":
     // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/5a1e9f91ed0143adede394adb3f540e650455f71/types/react/index.d.ts#L268
-    children?: ReactI18NextChildren | Iterable<ReactI18NextChildren>;
+    children?: TypeOptions['allowObjectInHTMLChildren'] extends true
+      ? ReactI18NextChildren | Iterable<ReactI18NextChildren>
+      : DOMAttributes<T>['children'];
   }
 }
 
