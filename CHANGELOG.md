@@ -1,3 +1,7 @@
+## 17.1.5
+
+- fix(Trans): with an array of keys and no children, `Trans` now falls back to the last key when none of them has a translation, as `t()` does. It used the array itself as `defaultValue`, which i18next handles as an object, so `<Trans i18nKey={['notifications.crm_item_created', 'crm_item_created']} components={[<strong />]} />` rendered `key 'crm_item_created (en)' returned an object instead of string.` instead of `crm_item_created`. An array of selectors falls back to the key of the last selector. The first key that has a translation still wins, and `children`, `defaults` and `tOptions.defaultValue` are used as before. With `saveMissing`, these calls now report the missing key, like a single `i18nKey` does. Thanks @nk-batman21 ([#1941](https://github.com/i18next/react-i18next/pull/1941)).
+
 ## 17.1.4
 
 - fix(types): without `allowObjectInHTMLChildren`, the `children` of HTML elements now use React's own type (`DOMAttributes<T>['children']`) instead of the `ReactI18NextChildren | Iterable<ReactI18NextChildren>` union. Both accept the same children, so nothing compiles differently. For default installs the global `HTMLAttributes` augmentation now repeats whatever `@types/react` declares, so changes in React's types flow through instead of meeting a copy, and type errors on element children no longer list an extra `Iterable<...>`. With `allowObjectInHTMLChildren: true` nothing changes. First step of [#1928](https://github.com/i18next/react-i18next/issues/1928).
