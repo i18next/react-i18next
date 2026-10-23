@@ -3070,7 +3070,8 @@
       ...components
     } : components;
     const nodeAsString = nodesToString(children, reactI18nextOptions, i18n, i18nKey);
-    const defaultValue = defaults || mergedTOptions?.defaultValue || nodeAsString || reactI18nextOptions.transEmptyNodeValue || (typeof i18nKey === 'function' ? keysFromSelector(i18nKey) : i18nKey);
+    const fallbackKey = Array.isArray(i18nKey) ? i18nKey[i18nKey.length - 1] : i18nKey;
+    const defaultValue = defaults || mergedTOptions?.defaultValue || nodeAsString || reactI18nextOptions.transEmptyNodeValue || (typeof fallbackKey === 'function' ? keysFromSelector(fallbackKey) : fallbackKey);
     const {
       hashTransKey
     } = reactI18nextOptions;
