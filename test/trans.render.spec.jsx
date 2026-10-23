@@ -1649,3 +1649,28 @@ describe('trans with a single child and out-of-range tags', () => {
     expect(container).toHaveTextContent(/^Hi there$/);
   });
 });
+
+describe('trans with an array of keys and no children', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should render the first key that has a translation', () => {
+    const { container } = render(<Trans i18nKey={['missing-key-here', 'key1']} />);
+    expect(container).toHaveTextContent(/^test$/);
+  });
+
+  it('should render the last key, like t(), when none of the keys has a translation', () => {
+    const { container } = render(
+      <Trans i18nKey={['missing-key-here', 'other-missing-key']} components={[<strong />]} />,
+    );
+    expect(container).toHaveTextContent(/^other-missing-key$/);
+  });
+
+  it('should render the key of the last selector when none of the keys has a translation', () => {
+    const { container } = render(
+      <Trans i18nKey={[($) => $['missing-key-here'], ($) => $.deep.missing]} />,
+    );
+    expect(container).toHaveTextContent(/^deep\.missing$/);
+  });
+});
