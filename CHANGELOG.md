@@ -1,3 +1,7 @@
+## 17.1.4
+
+- fix(types): without `allowObjectInHTMLChildren`, the `children` of HTML elements now use React's own type (`DOMAttributes<T>['children']`) instead of the `ReactI18NextChildren | Iterable<ReactI18NextChildren>` union. Both accept the same children, so nothing compiles differently. For default installs the global `HTMLAttributes` augmentation now repeats whatever `@types/react` declares, so changes in React's types flow through instead of meeting a copy, and type errors on element children no longer list an extra `Iterable<...>`. With `allowObjectInHTMLChildren: true` nothing changes. First step of [#1928](https://github.com/i18next/react-i18next/issues/1928).
+
 ## 17.1.3
 
 - fix(IcuTrans): numeric HTML entities above U+FFFF, like emoji, now decode to the right character. `"Hello &#x1F44B; <0>friend</0> &#127881;"` rendered U+F44B and U+F389, private-use glyphs that usually show as a box, instead of 👋 and 🎉: the decoder used `String.fromCharCode`, which keeps only the low 16 bits of the code point. This shows up with translations that a TMS or CMS exports HTML-encoded. Entities above U+10FFFF, which are no valid code points, now stay as written instead of becoming U+0000. Entities below U+10000, including surrogate pairs written as two entities, decode as before. Thanks @nk-batman21 ([#1940](https://github.com/i18next/react-i18next/pull/1940)).
