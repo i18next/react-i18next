@@ -236,13 +236,9 @@ const commonEntities = {
   '&alefsym;': 'ℵ',
 };
 
-// Create regex pattern for all entities
-const entityPattern = new RegExp(
-  Object.keys(commonEntities)
-    .map((entity) => entity.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-    .join('|'),
-  'g',
-);
+// Named, decimal and hexadecimal entities in one pattern, so that each entity is decoded once:
+// decoding them in separate passes turned "&amp;#60;" (a literal "&#60;") into "<"
+const entityPattern = /&(?:#(\d+)|#x([0-9a-fA-F]+)|[A-Za-z][A-Za-z0-9]*);/g;
 
 // fromCodePoint throws above U+10FFFF, so such entities are left as they are
 const decodeCodePoint = (match, codePoint) =>
@@ -251,18 +247,17 @@ const decodeCodePoint = (match, codePoint) =>
 /**
  * Decode HTML entities in text
  *
- * Uses a hybrid approach:
- * 1. First pass: decode common named entities using a map
- * 2. Second pass: decode numeric entities (decimal and hexadecimal)
+ * Decodes the common named entities from the map above and numeric entities (decimal and
+ * hexadecimal) in a single pass. Unknown named entities are left as they are.
  *
  * @param {string} text - Text with HTML entities
  * @returns {string} Decoded text
  */
 export const decodeHtmlEntities = (text) =>
-  text
-    // First pass: common named entities
-    .replace(entityPattern, (match) => commonEntities[match])
-    // Second pass: numeric entities (decimal)
-    .replace(/&#(\d+);/g, (match, num) => decodeCodePoint(match, parseInt(num, 10)))
-    // Third pass: numeric entities (hexadecimal)
-    .replace(/&#x([0-9a-fA-F]+);/g, (match, hex) => decodeCodePoint(match, parseInt(hex, 16)));
+  text.replace(entityPattern, (match, decimal, hex) => {
+    if (decimal) return decodeCodePoint(match, parseInt(decimal, 10));
+    if (hex) return decodeCodePoint(match, parseInt(hex, 16));
+    return Object.prototype.hasOwnProperty.call(commonEntities, match)
+      ? commonEntities[match]
+      : match;
+  });

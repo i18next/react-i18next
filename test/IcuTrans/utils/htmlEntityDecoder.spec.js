@@ -546,4 +546,22 @@ describe('htmlEntityDecoder', () => {
       expect(decodeHtmlEntities(input)).toBe(expected);
     });
   });
+
+  describe('escaped entities', () => {
+    it('should decode an escaped numeric entity only once', () => {
+      expect(decodeHtmlEntities('&amp;#60;')).toBe('&#60;');
+      expect(decodeHtmlEntities('&amp;#x3C;')).toBe('&#x3C;');
+      expect(decodeHtmlEntities('&#38;#x3C;')).toBe('&#x3C;');
+      expect(decodeHtmlEntities('Write &amp;#169; to get &#169;')).toBe('Write &#169; to get ©');
+    });
+
+    it('should decode an escaped named entity only once', () => {
+      expect(decodeHtmlEntities('&amp;lt;b&amp;gt;')).toBe('&lt;b&gt;');
+      expect(decodeHtmlEntities('&#38;copy;')).toBe('&copy;');
+    });
+
+    it('should leave unknown named entities as they are', () => {
+      expect(decodeHtmlEntities('&unknown; &amp;')).toBe('&unknown; &');
+    });
+  });
 });
