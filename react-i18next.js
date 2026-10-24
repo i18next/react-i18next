@@ -3088,6 +3088,7 @@
     if (valuesFromChildren && typeof valuesFromChildren.count === 'number' && count === undefined) {
       count = valuesFromChildren.count;
     }
+    if (count === undefined) count = mergedTOptions?.count;
     const interpolationOverride = values || count !== undefined && !i18n.options?.interpolation?.alwaysFormat || !children ? mergedTOptions.interpolation : {
       interpolation: {
         ...mergedTOptions.interpolation,
