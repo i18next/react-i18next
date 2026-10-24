@@ -2805,6 +2805,10 @@
           stringNode += `{{${value}}}`;
           return;
         }
+        if (!keys.length && Object.keys(child).length === 1 && 'format' in child) {
+          stringNode += '{{format}}';
+          return;
+        }
         warn(i18n, 'TRANS_INVALID_OBJ', `Invalid child - Object should only have keys {{ value, format }} (format is optional).`, {
           i18nKey,
           child
