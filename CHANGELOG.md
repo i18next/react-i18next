@@ -1,3 +1,7 @@
+## 17.1.6
+
+- fix(Trans): a `count` passed in `tOptions` is now used. `Trans` spread `tOptions` and then set its own `count` prop, so a count only in `tOptions` was overwritten with `undefined`: `<Trans i18nKey="items" tOptions={{ count: 5 }} />` rendered the key `items` instead of `5 items`, and with children `Trans` could pick the wrong plural form. Like `context`, `Trans` now falls back to `tOptions.count`, handled the same way as the `count` prop. A `count` prop, a count in the children or `values.count` still take precedence, and `tOptions` is not modified. Thanks @nk-batman21 ([#1942](https://github.com/i18next/react-i18next/pull/1942)).
+
 ## 17.1.5
 
 - fix(Trans): with an array of keys and no children, `Trans` now falls back to the last key when none of them has a translation, as `t()` does. It used the array itself as `defaultValue`, which i18next handles as an object, so `<Trans i18nKey={['notifications.crm_item_created', 'crm_item_created']} components={[<strong />]} />` rendered `key 'crm_item_created (en)' returned an object instead of string.` instead of `crm_item_created`. An array of selectors falls back to the key of the last selector. The first key that has a translation still wins, and `children`, `defaults` and `tOptions.defaultValue` are used as before. With `saveMissing`, these calls now report the missing key, like a single `i18nKey` does. Thanks @nk-batman21 ([#1941](https://github.com/i18next/react-i18next/pull/1941)).
