@@ -3433,9 +3433,13 @@
     '&real;': 'ℜ',
     '&alefsym;': 'ℵ'
   };
-  const entityPattern = new RegExp(Object.keys(commonEntities).map(entity => entity.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
+  const entityPattern = /&(?:#(\d+)|#x([0-9a-fA-F]+)|[A-Za-z][A-Za-z0-9]*);/g;
   const decodeCodePoint = (match, codePoint) => codePoint <= 0x10ffff ? String.fromCodePoint(codePoint) : match;
-  const decodeHtmlEntities = text => text.replace(entityPattern, match => commonEntities[match]).replace(/&#(\d+);/g, (match, num) => decodeCodePoint(match, parseInt(num, 10))).replace(/&#x([0-9a-fA-F]+);/g, (match, hex) => decodeCodePoint(match, parseInt(hex, 16)));
+  const decodeHtmlEntities = text => text.replace(entityPattern, (match, decimal, hex) => {
+    if (decimal) return decodeCodePoint(match, parseInt(decimal, 10));
+    if (hex) return decodeCodePoint(match, parseInt(hex, 16));
+    return Object.prototype.hasOwnProperty.call(commonEntities, match) ? commonEntities[match] : match;
+  });
 
   const tokenize = translation => {
     const tokens = [];
