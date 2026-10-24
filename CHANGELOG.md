@@ -1,3 +1,7 @@
+## 17.1.7
+
+- fix(IcuTrans): each HTML entity in a translation is now decoded exactly once. Named, decimal and hexadecimal entities were decoded in three passes, and each pass decoded the output of the previous one, so an escaped numeric entity was decoded twice: `"Write &amp;#169; to get &#169;"` rendered `Write © to get ©` instead of `Write &#169; to get ©`, and `&amp;#60;` rendered `<` instead of `&#60;`. This also hit interpolated values with `escapeValue: true`, where a value containing `&#60;` is escaped to `&amp;#60;`. Escaped named entities like `&amp;lt;` already stayed `&lt;`, as browsers and `Trans` decode them. Unknown named entities and entities above U+10FFFF still stay as written. Thanks @Pharex38 ([#1943](https://github.com/i18next/react-i18next/pull/1943)).
+
 ## 17.1.6
 
 - fix(Trans): a `count` passed in `tOptions` is now used. `Trans` spread `tOptions` and then set its own `count` prop, so a count only in `tOptions` was overwritten with `undefined`: `<Trans i18nKey="items" tOptions={{ count: 5 }} />` rendered the key `items` instead of `5 items`, and with children `Trans` could pick the wrong plural form. Like `context`, `Trans` now falls back to `tOptions.count`, handled the same way as the `count` prop. A `count` prop, a count in the children or `values.count` still take precedence, and `tOptions` is not modified. Thanks @nk-batman21 ([#1942](https://github.com/i18next/react-i18next/pull/1942)).
