@@ -205,6 +205,19 @@ describe('trans nodeToString', () => {
       expect(actual).toEqual(expected);
     });
 
+    it('should treat a single variable named format as the interpolated value', () => {
+      const fragment = (
+        <>
+          {'export as '}
+          {{ format: 'pdf' }}
+        </>
+      );
+
+      const expected = 'export as {{format}}';
+      const actual = nodesToString(fragment.props.children, {});
+      expect(actual).toEqual(expected);
+    });
+
     it('should ignore invalid primitive children (e.g. numbers)', () => {
       const fragment = (
         <>
