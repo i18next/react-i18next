@@ -296,6 +296,18 @@ describe('trans testTransKey1 singular', () => {
   });
 });
 
+describe('trans with a variable named format', () => {
+  function TestComponent() {
+    const format = 'pdf';
+    return <Trans i18nKey="exportAsFormatNotInResources">Export as {{ format }}</Trans>;
+  }
+
+  it('should interpolate it like any other variable', () => {
+    const { container } = render(<TestComponent />);
+    expect(container).toHaveTextContent('Export as pdf');
+  });
+});
+
 describe('trans testTransKey1 plural', () => {
   function TestComponent() {
     const numOfItems = 10;

@@ -113,6 +113,11 @@ export const nodesToString = (children, i18nOptions, i18n, i18nKey) => {
         stringNode += `{{${value}}}`;
         return;
       }
+      // a single variable that happens to be called `format`, e.g. {{ format }}
+      if (!keys.length && Object.keys(child).length === 1 && 'format' in child) {
+        stringNode += '{{format}}';
+        return;
+      }
       warn(
         i18n,
         'TRANS_INVALID_OBJ',
