@@ -541,6 +541,10 @@ export function Trans({
     count = valuesFromChildren.count;
   }
 
+  // like context, fall back to tOptions.count instead of overwriting it with undefined
+  // eslint-disable-next-line no-param-reassign
+  if (count === undefined) count = mergedTOptions?.count;
+
   const interpolationOverride =
     values ||
     (count !== undefined && !i18n.options?.interpolation?.alwaysFormat) || // https://github.com/i18next/react-i18next/issues/1719 + https://github.com/i18next/react-i18next/issues/1801

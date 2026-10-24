@@ -1046,6 +1046,34 @@ describe('trans with context via tOptions', () => {
   });
 });
 
+describe('trans with count via tOptions', () => {
+  function TestComponent() {
+    const numOfItems = 10;
+    return (
+      <Trans i18nKey="testTransKey1" tOptions={{ count: numOfItems }}>
+        {{ numOfItems }} items matched.
+      </Trans>
+    );
+  }
+
+  it('should render correct content', () => {
+    const { container } = render(<TestComponent />);
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <div>
+        10
+         items matched.
+      </div>
+    `);
+  });
+
+  it('should render the plural form without children', () => {
+    const { container } = render(
+      <Trans i18nKey="You have {{count}} message" tOptions={{ count: 2 }} />,
+    );
+    expect(container).toHaveTextContent(/^You have 2 messages$/);
+  });
+});
+
 describe('trans with context property', () => {
   function TestComponent({ parent }) {
     return (
