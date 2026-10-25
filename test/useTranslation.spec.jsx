@@ -248,6 +248,23 @@ describe('useTranslation', () => {
   });
 
   describe('namespace change', () => {
+    it('uses a newly added fallback namespace', () => {
+      i18nInstance.addResource('en', 'nsB', 'onlyInB', 'B');
+      let ns = ['nsA'];
+      const { result, rerender } = renderHook(() =>
+        useTranslation(ns, { i18n: i18nInstance, nsMode: 'fallback' }),
+      );
+      expect(result.current.t('onlyInB')).toBe('onlyInB');
+
+      ns = ['nsA', 'nsB'];
+      rerender();
+      expect(result.current.t('onlyInB')).toBe('B');
+
+      ns = ['nsA'];
+      rerender();
+      expect(result.current.t('onlyInB')).toBe('onlyInB');
+    });
+
     it('should return a t bound to the new namespace', () => {
       i18nInstance.addResource('en', 'nsA', 'k', 'A');
       i18nInstance.addResource('en', 'nsB', 'k', 'B');
