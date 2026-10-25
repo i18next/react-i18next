@@ -53,7 +53,8 @@ export const useTranslation = (ns, props = {}) => {
 
   const nsOrContext = ns || defaultNSFromContext || i18n?.options?.defaultNS;
   const unstableNamespaces = isString(nsOrContext) ? [nsOrContext] : nsOrContext || ['translation'];
-  const namespaces = useMemo(() => unstableNamespaces, unstableNamespaces);
+  const namespacesKey = JSON.stringify(unstableNamespaces);
+  const namespaces = useMemo(() => unstableNamespaces, [namespacesKey]);
 
   i18n?.reportNamespaces?.addUsedNamespaces?.(namespaces);
 
