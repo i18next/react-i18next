@@ -4,6 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/i18next/react-i18next/badge.svg)](https://coveralls.io/github/i18next/react-i18next)
 [![Quality][quality-badge]][quality-url]
 [![npm][npm-dl-badge]][npm-url]
+[![Socket Badge](https://badge.socket.dev/npm/package/react-i18next)](https://socket.dev/npm/package/react-i18next)
 
 [npm-icon]: https://nodei.co/npm/react-i18next.png?downloads=true
 [npm-url]: https://npmjs.org/package/react-i18next
