@@ -3131,12 +3131,22 @@
         escapeValue: true
       }
     };
+    const interpolationOptions = {
+      ...i18n.options?.interpolation,
+      ...mergedTOptions.interpolation
+    };
+    const escapeFn = interpolationOptions.escape || i18n.services?.interpolator?.escape;
+    const childPlaceholders = Object.keys(valuesFromChildren).map(name => `${interpolationOptions.prefix ?? '{{'}${name}${interpolationOptions.suffix ?? '}}'}`);
+    const keepChildPlaceholders = interpolateBeforeParsing && !formatPlugin && childPlaceholders.length > 0 && interpolationOptions.skipOnVariables !== false && !mergedTOptions.missingInterpolationHandler && !i18n.options?.missingInterpolationHandler && typeof escapeFn === 'function' && childPlaceholders.every(placeholder => escapeFn(placeholder) === placeholder);
     const escapeForPlugin = escapeValues && formatPlugin ? escapeStringValues : v => v;
     const combinedTOpts = {
       ...escapeForPlugin(mergedTOptions),
       context: context || mergedTOptions.context,
       count,
       ...escapeForPlugin(values),
+      ...(keepChildPlaceholders && {
+        missingInterpolationHandler: (str, match, opts) => opts && Object.prototype.hasOwnProperty.call(opts, match[1].trim()) ? '' : match[0]
+      }),
       ...interpolationOverride,
       defaultValue,
       ns: namespaces
