@@ -579,6 +579,29 @@ export function Trans({
     interpolationOverride = {
       interpolation: { ...mergedTOptions.interpolation, escapeValue: true },
     };
+  // The variables of object children (`<Trans count={n}>Hello {{ name }}</Trans>`) are filled in
+  // after parsing, so this t() call leaves their placeholders as they are. i18next >= 26.7 logs such
+  // a placeholder as a missing variable in debug mode; a handler that does what i18next does without
+  // one (keep the placeholder, '' for a variable passed as undefined) avoids that. Only where the
+  // placeholders stay as they are anyway: skipOnVariables, no handler of the user, and an escape
+  // that leaves the placeholders of the children alone.
+  const interpolationOptions = {
+    ...i18n.options?.interpolation,
+    ...mergedTOptions.interpolation,
+  };
+  const escapeFn = interpolationOptions.escape || i18n.services?.interpolator?.escape;
+  const childPlaceholders = Object.keys(valuesFromChildren).map(
+    (name) => `${interpolationOptions.prefix ?? '{{'}${name}${interpolationOptions.suffix ?? '}}'}`,
+  );
+  const keepChildPlaceholders =
+    interpolateBeforeParsing &&
+    !formatPlugin &&
+    childPlaceholders.length > 0 &&
+    interpolationOptions.skipOnVariables !== false &&
+    !mergedTOptions.missingInterpolationHandler &&
+    !i18n.options?.missingInterpolationHandler &&
+    typeof escapeFn === 'function' &&
+    childPlaceholders.every((placeholder) => escapeFn(placeholder) === placeholder);
   // a format plugin gets the variables in tOptions too; context, defaultValue and ns are set below
   const escapeForPlugin = escapeValues && formatPlugin ? escapeStringValues : (v) => v;
   const combinedTOpts = {
@@ -586,6 +609,10 @@ export function Trans({
     context: context || mergedTOptions.context, // Add `context` from the props or fallback to the value from `tOptions`
     count,
     ...escapeForPlugin(values),
+    ...(keepChildPlaceholders && {
+      missingInterpolationHandler: (str, match, opts) =>
+        opts && Object.prototype.hasOwnProperty.call(opts, match[1].trim()) ? '' : match[0],
+    }),
     ...interpolationOverride,
     defaultValue,
     ns: namespaces,
