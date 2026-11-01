@@ -2665,6 +2665,26 @@
   const getDisplayName = Component => Component.displayName || Component.name || (isString(Component) && Component.length > 0 ? Component : 'Unknown');
   const isString = obj => typeof obj === 'string';
   const isObject = obj => typeof obj === 'object' && obj !== null;
+  const getFormatPlugin = i18n => {
+    const plugin = i18n?.services?.i18nFormat;
+    return typeof plugin?.parse === 'function' ? plugin : undefined;
+  };
+  const htmlEscapes = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  };
+  const escapeStringValues = values => {
+    if (!values) return values;
+    const escaped = {};
+    Object.keys(values).forEach(k => {
+      const v = values[k];
+      escaped[k] = isString(v) ? v.replace(/[&<>"']/g, c => htmlEscapes[c]) : v;
+    });
+    return escaped;
+  };
 
   const matchHtmlEntity = /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34|nbsp|#160|copy|#169|reg|#174|hellip|#8230|#x2F|#47);/g;
   const htmlEntities = {
@@ -2822,11 +2842,13 @@
     });
     return stringNode;
   };
-  const renderNodes = (children, knownComponentsMap, targetString, i18n, i18nOptions, combinedTOpts, shouldUnescape) => {
+  const renderNodes = (children, knownComponentsMap, targetString, i18n, i18nOptions, combinedTOpts, shouldUnescapeOption, escapedValues) => {
     if (targetString === '') return [];
     const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
     const emptyChildrenButNeedsHandling = targetString && new RegExp(keepArray.map(keep => `<${keep}`).join('|')).test(targetString);
-    if (!children && !knownComponentsMap && !emptyChildrenButNeedsHandling && !shouldUnescape) return [targetString];
+    const unescapeFn = typeof i18nOptions.unescape === 'function' ? i18nOptions.unescape : getDefaults().unescape;
+    if (!children && !knownComponentsMap && !emptyChildrenButNeedsHandling && !shouldUnescapeOption) return [escapedValues && isString(targetString) ? unescapeFn(targetString) : targetString];
+    const shouldUnescape = shouldUnescapeOption || escapedValues;
     const data = knownComponentsMap ?? {};
     const getData = childs => {
       const childrenArray = getAsArray(childs);
@@ -2888,7 +2910,8 @@
       const astNodes = getAsArray(astNode);
       const keepTagOccurrence = {};
       return astNodes.reduce((mem, node, i) => {
-        const translationContent = node.children?.[0]?.content && i18n.services.interpolator.interpolate(node.children[0].content, opts, i18n.language);
+        const rawContent = node.children?.[0]?.content && i18n.services.interpolator.interpolate(node.children[0].content, opts, i18n.language);
+        const translationContent = shouldUnescape && rawContent ? unescapeFn(rawContent) : rawContent;
         if (node.type === 'tag') {
           let tmp = reactNodes[parseInt(node.name, 10)];
           if (!tmp && knownComponentsMap) tmp = knownComponentsMap[node.name];
@@ -2965,7 +2988,6 @@
           }
         } else if (node.type === 'text') {
           const wrapTextNodes = i18nOptions.transWrapTextNodes;
-          const unescapeFn = typeof i18nOptions.unescape === 'function' ? i18nOptions.unescape : getDefaults().unescape;
           const content = shouldUnescape ? unescapeFn(i18n.services.interpolator.interpolate(node.content, opts, i18n.language)) : i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
           if (wrapTextNodes) {
             mem.push(React.createElement(wrapTextNodes, {
@@ -3093,18 +3115,28 @@
       count = valuesFromChildren.count;
     }
     if (count === undefined) count = mergedTOptions?.count;
-    const interpolationOverride = values || count !== undefined && !i18n.options?.interpolation?.alwaysFormat || !children ? mergedTOptions.interpolation : {
+    const interpolateBeforeParsing = values || count !== undefined && !i18n.options?.interpolation?.alwaysFormat || !children;
+    const formatPlugin = getFormatPlugin(i18n);
+    const escapeValues = interpolateBeforeParsing && (formatPlugin ? !formatPlugin.options?.escapeVariables : (mergedTOptions.interpolation?.escapeValue ?? i18n.options?.interpolation?.escapeValue) === false);
+    let interpolationOverride = interpolateBeforeParsing ? mergedTOptions.interpolation : {
       interpolation: {
         ...mergedTOptions.interpolation,
         prefix: '#$?',
         suffix: '?$#'
       }
     };
+    if (escapeValues && !formatPlugin) interpolationOverride = {
+      interpolation: {
+        ...mergedTOptions.interpolation,
+        escapeValue: true
+      }
+    };
+    const escapeForPlugin = escapeValues && formatPlugin ? escapeStringValues : v => v;
     const combinedTOpts = {
-      ...mergedTOptions,
+      ...escapeForPlugin(mergedTOptions),
       context: context || mergedTOptions.context,
       count,
-      ...values,
+      ...escapeForPlugin(values),
       ...interpolationOverride,
       defaultValue,
       ns: namespaces
@@ -3121,7 +3153,7 @@
       componentsMap = generatedComponents;
       indexedChildren = undefined;
     }
-    const content = renderNodes(indexedChildren, componentsMap, translation, i18n, reactI18nextOptions, combinedTOpts, mergedShouldUnescape);
+    const content = renderNodes(indexedChildren, componentsMap, translation, i18n, reactI18nextOptions, combinedTOpts, mergedShouldUnescape, escapeValues);
     const useAsParent = parent ?? reactI18nextOptions.defaultTransParent;
     return useAsParent ? React.createElement(useAsParent, additionalProps, content) : content;
   }
@@ -3623,9 +3655,16 @@
       ...i18n.options?.interpolation?.defaultVariables,
       ...values
     };
+    const formatPlugin = getFormatPlugin(i18n);
+    const escapeValues = formatPlugin ? !formatPlugin.options?.escapeVariables : i18n.options?.interpolation?.escapeValue === false;
     const translation = t(i18nKey || defaultTranslation, {
       defaultValue: defaultTranslation,
-      ...mergedValues,
+      ...(escapeValues && formatPlugin ? escapeStringValues(mergedValues) : mergedValues),
+      ...(escapeValues && !formatPlugin && {
+        interpolation: {
+          escapeValue: true
+        }
+      }),
       ns: namespaces
     });
     try {
