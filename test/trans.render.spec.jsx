@@ -1424,6 +1424,10 @@ describe('Trans edge cases', () => {
 });
 
 describe('trans issue 1893 - double escaping in props', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   function Item({ title }) {
     return <span title={title}>{title}</span>;
   }
@@ -1443,9 +1447,16 @@ describe('trans issue 1893 - double escaping in props', () => {
   it('should render correctly with quotes in interpolation (case 1: escapeValue false)', () => {
     const value = 'World " \' Test';
     const { container } = render(<TestComponent name={value} />);
+    // the quote in the value is escaped before parsing, so it can't close the attribute
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div>
-        Hello &lt;Item title="World " ' Test" /&gt;!
+        Hello 
+        <span
+          title="World " ' Test"
+        >
+          World " ' Test
+        </span>
+        !
       </div>
     `);
   });
@@ -1712,5 +1723,225 @@ describe('trans with an array of keys and no children', () => {
       <Trans i18nKey={[($) => $['missing-key-here'], ($) => $.deep.missing]} />,
     );
     expect(container).toHaveTextContent(/^deep\.missing$/);
+  });
+});
+
+describe('trans with markup in values (escapeValue false)', () => {
+  const i18nInst = i18n.createInstance();
+  i18nInst.init({
+    lng: 'en',
+    resources: {
+      en: {
+        translation: {
+          welcome: 'Welcome {{name}}, see <0>your profile</0>.',
+          welcomeRaw: 'Welcome {{- name}}, see <0>your profile</0>.',
+          welcomeNested: '<Box>Welcome {{name}}, see <Link>your profile</Link>.</Box>',
+          welcomeBasic: 'Welcome {{name}}.',
+          welcomeObject: 'Hello <1><0>{{name}}</0></1>.',
+          messages_one: '{{count}} message from {{name}}, <1>open</1>.',
+          messages_other: '{{count}} messages from {{name}}, <1>open</1>.',
+        },
+      },
+    },
+    interpolation: { escapeValue: false },
+  });
+  // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label
+  const profileLink = <a href="/profile" />;
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it.each([
+    'Eve <0 href="https://evil.example/login">verify account</0>',
+    '<0 href="javascript:alert(1)" target="_blank" rel="opener">x</0>',
+  ])('should render the value %s as text, not as a component', (name) => {
+    const { container } = render(
+      <Trans i18n={i18nInst} i18nKey="welcome" values={{ name }} components={[profileLink]} />,
+    );
+    expect(container).toHaveTextContent(`Welcome ${name}, see your profile.`);
+    const link = screen.getByRole('link');
+    expect(link).toHaveAttribute('href', '/profile');
+    expect(link).not.toHaveAttribute('target');
+    expect(link).toHaveTextContent(/^your profile$/);
+  });
+
+  it('should render a value interpolated through count as text', () => {
+    const name = '<1 href="https://evil.example">x</1>';
+    const { container } = render(
+      <Trans i18n={i18nInst} i18nKey="messages" count={2} tOptions={{ name }}>
+        You have <a href="/inbox">messages</a>
+      </Trans>,
+    );
+    expect(container).toHaveTextContent(`2 messages from ${name}, open.`);
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/inbox');
+  });
+
+  it('should render a value inside nested components as text', () => {
+    const name = '<Link href="https://evil.example">x</Link> & co';
+    const { container } = render(
+      <Trans
+        i18n={i18nInst}
+        i18nKey="welcomeNested"
+        values={{ name }}
+        components={{ Box: <div />, Link: profileLink }}
+      />,
+    );
+    expect(container).toHaveTextContent(`Welcome ${name}, see your profile.`);
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/profile');
+  });
+
+  it('should decode a value in a tag around an interpolation object', () => {
+    const name = "O'Brien & co";
+    const { container } = render(
+      <Trans i18n={i18nInst} i18nKey="welcomeObject" values={{ name }}>
+        Hello <strong>{{ name }}</strong>.
+      </Trans>,
+    );
+    expect(container).toMatchInlineSnapshot(`
+      <div>
+        Hello 
+        <strong>
+          O'Brien & co
+        </strong>
+        .
+      </div>
+    `);
+  });
+
+  it('should keep the value as it is with escapeValue true in tOptions', () => {
+    const { container } = render(
+      <Trans
+        i18n={i18nInst}
+        i18nKey="welcomeBasic"
+        values={{ name: 'Tom & Jerry' }}
+        tOptions={{ interpolation: { escapeValue: true } }}
+      />,
+    );
+    // unchanged: without shouldUnescape the escaped value stays visible
+    expect(container).toHaveTextContent(/^Welcome Tom &amp; Jerry\.$/);
+  });
+
+  it('should render basic html in a value as text', () => {
+    const { container } = render(
+      <Trans i18n={i18nInst} i18nKey="welcomeBasic" values={{ name: '<strong>Eve</strong>' }} />,
+    );
+    expect(container).toMatchInlineSnapshot(`
+      <div>
+        Welcome &lt;strong&gt;Eve&lt;/strong&gt;.
+      </div>
+    `);
+  });
+
+  it('should still parse markup in a {{- var}} value, the explicit unescaped path', () => {
+    const { container } = render(
+      <Trans
+        i18n={i18nInst}
+        i18nKey="welcomeRaw"
+        values={{ name: '<1>Eve</1>' }}
+        components={[profileLink, <strong />]}
+      />,
+    );
+    expect(container).toMatchInlineSnapshot(`
+      <div>
+        Welcome 
+        <strong>
+          Eve
+        </strong>
+        , see 
+        <a
+          href="/profile"
+        >
+          your profile
+        </a>
+        .
+      </div>
+    `);
+  });
+});
+
+describe('trans with markup in values and an i18nFormat plugin', () => {
+  // inserts values as they are, like i18next-icu, i18next-mf2 and i18next-fluent;
+  // numbers get two decimals so a stringified number would show
+  const createFormatPlugin = (options = {}) => ({
+    type: 'i18nFormat',
+    options,
+    parse: (res, values) =>
+      res.replace(/\{(\w+)\}/g, (m, k) => {
+        const v = values[k];
+        if (typeof v === 'number') return v.toFixed(2);
+        // i18next-icu escapes the values itself with escapeVariables: true
+        return options.escapeVariables ? v.replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`) : v;
+      }),
+  });
+  const createInstance = (options) => {
+    const i18nInst = i18n.createInstance();
+    i18nInst.use(createFormatPlugin(options)).init({
+      lng: 'en',
+      resources: {
+        en: {
+          translation: {
+            welcome: 'Welcome {name}, see <0>your profile</0>.',
+            paid: '{name} paid {price}.',
+          },
+        },
+      },
+    });
+    return i18nInst;
+  };
+  // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label
+  const profileLink = <a href="/profile" />;
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should render markup in a value as text, whatever escapeValue is', () => {
+    const name = '<0 href="https://evil.example" target="_blank">x</0>';
+    const { container } = render(
+      <Trans
+        i18n={createInstance()}
+        i18nKey="welcome"
+        values={{ name }}
+        components={[profileLink]}
+      />,
+    );
+    expect(container).toHaveTextContent(`Welcome ${name}, see your profile.`);
+    const link = screen.getByRole('link');
+    expect(link).toHaveAttribute('href', '/profile');
+    expect(link).not.toHaveAttribute('target');
+  });
+
+  it('should render markup in a variable passed in tOptions as text', () => {
+    const name = '<0 href="https://evil.example">x</0>';
+    const { container } = render(
+      <Trans
+        i18n={createInstance()}
+        i18nKey="welcome"
+        tOptions={{ name }}
+        components={[profileLink]}
+      />,
+    );
+    expect(container).toHaveTextContent(`Welcome ${name}, see your profile.`);
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/profile');
+  });
+
+  it('should escape string values only and decode them once', () => {
+    const { container } = render(
+      <Trans i18n={createInstance()} i18nKey="paid" values={{ name: 'Tom & Jerry', price: 5 }} />,
+    );
+    expect(container).toHaveTextContent(/^Tom & Jerry paid 5\.00\.$/);
+  });
+
+  it('should not escape the values again when i18next-icu escapes them (escapeVariables)', () => {
+    const { container } = render(
+      <Trans
+        i18n={createInstance({ escapeVariables: true })}
+        i18nKey="paid"
+        values={{ name: 'Tom & <Jerry>', price: 5 }}
+        shouldUnescape
+      />,
+    );
+    expect(container).toHaveTextContent(/^Tom & <Jerry> paid 5\.00\.$/);
   });
 });

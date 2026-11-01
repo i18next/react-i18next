@@ -1,5 +1,5 @@
 import React from 'react';
-import { warn, warnOnce, isString } from './utils.js';
+import { warn, warnOnce, isString, getFormatPlugin, escapeStringValues } from './utils.js';
 import { getI18n } from './i18nInstance.js';
 import { renderTranslation } from './IcuTransUtils/index.js';
 
@@ -111,12 +111,20 @@ export function IcuTransWithoutContext({
   // Merge default interpolation variables; explicit values win, like in t()
   const mergedValues = { ...i18n.options?.interpolation?.defaultVariables, ...values };
 
+  // values are interpolated before the tags are parsed, so markup in a value must arrive escaped;
+  // renderTranslation decodes the entities in the text
+  const formatPlugin = getFormatPlugin(i18n);
+  const escapeValues = formatPlugin
+    ? !formatPlugin.options?.escapeVariables // i18next-icu escapes them itself with this option
+    : i18n.options?.interpolation?.escapeValue === false;
+
   // Get the translation, falling back to defaultTranslation.
   // Like `Trans`, use the default string as the key when none is given (icu.macro emits
   // key-less nodes for `<Trans>Welcome, {name}!</Trans>`): t(undefined) would return ''.
   const translation = t(i18nKey || defaultTranslation, {
     defaultValue: defaultTranslation,
-    ...mergedValues,
+    ...(escapeValues && formatPlugin ? escapeStringValues(mergedValues) : mergedValues),
+    ...(escapeValues && !formatPlugin && { interpolation: { escapeValue: true } }),
     ns: namespaces,
   });
 

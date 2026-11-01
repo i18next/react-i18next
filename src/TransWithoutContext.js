@@ -1,7 +1,14 @@
 import { Fragment, isValidElement, cloneElement, createElement, Children } from 'react';
 import { keyFromSelector } from 'i18next';
 import HTML from 'html-parse-stringify';
-import { isObject, isString, warn, warnOnce } from './utils.js';
+import {
+  escapeStringValues,
+  getFormatPlugin,
+  isObject,
+  isString,
+  warn,
+  warnOnce,
+} from './utils.js';
 import { getDefaults } from './defaults.js';
 import { getI18n } from './i18nInstance.js';
 import { unescape } from './unescape.js';
@@ -144,7 +151,8 @@ const renderNodes = (
   i18n,
   i18nOptions,
   combinedTOpts,
-  shouldUnescape,
+  shouldUnescapeOption,
+  escapedValues,
 ) => {
   if (targetString === '') return [];
 
@@ -152,10 +160,14 @@ const renderNodes = (
   const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
   const emptyChildrenButNeedsHandling =
     targetString && new RegExp(keepArray.map((keep) => `<${keep}`).join('|')).test(targetString);
+  const unescapeFn =
+    typeof i18nOptions.unescape === 'function' ? i18nOptions.unescape : getDefaults().unescape;
 
   // no need to replace tags in the targetstring
-  if (!children && !knownComponentsMap && !emptyChildrenButNeedsHandling && !shouldUnescape)
-    return [targetString];
+  if (!children && !knownComponentsMap && !emptyChildrenButNeedsHandling && !shouldUnescapeOption)
+    return [escapedValues && isString(targetString) ? unescapeFn(targetString) : targetString];
+
+  const shouldUnescape = shouldUnescapeOption || escapedValues;
 
   // v2 -> interpolates upfront no need for "some <0>{{var}}</0>"" -> will be just "some {{var}}" in translation file
   const data = knownComponentsMap ?? {};
@@ -247,9 +259,10 @@ const renderNodes = (
     const keepTagOccurrence = {};
 
     return astNodes.reduce((mem, node, i) => {
-      const translationContent =
+      const rawContent =
         node.children?.[0]?.content &&
         i18n.services.interpolator.interpolate(node.children[0].content, opts, i18n.language);
+      const translationContent = shouldUnescape && rawContent ? unescapeFn(rawContent) : rawContent;
 
       if (node.type === 'tag') {
         // regular array (components or children)
@@ -369,10 +382,6 @@ const renderNodes = (
         }
       } else if (node.type === 'text') {
         const wrapTextNodes = i18nOptions.transWrapTextNodes;
-        const unescapeFn =
-          typeof i18nOptions.unescape === 'function'
-            ? i18nOptions.unescape
-            : getDefaults().unescape;
         const content = shouldUnescape
           ? unescapeFn(i18n.services.interpolator.interpolate(node.content, opts, i18n.language))
           : i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
@@ -550,17 +559,33 @@ export function Trans({
   // eslint-disable-next-line no-param-reassign
   if (count === undefined) count = mergedTOptions?.count;
 
-  const interpolationOverride =
+  const interpolateBeforeParsing =
     values ||
     (count !== undefined && !i18n.options?.interpolation?.alwaysFormat) || // https://github.com/i18next/react-i18next/issues/1719 + https://github.com/i18next/react-i18next/issues/1801
-    !children // if !children gets problems in future, undo that fix: https://github.com/i18next/react-i18next/issues/1729 by removing !children from this condition
-      ? mergedTOptions.interpolation
-      : { interpolation: { ...mergedTOptions.interpolation, prefix: '#$?', suffix: '?$#' } };
+    !children; // if !children gets problems in future, undo that fix: https://github.com/i18next/react-i18next/issues/1729 by removing !children from this condition
+  // values interpolated before parsing must not add markup: escape them for this t() call and
+  // decode the entities after parsing ({{- var}} stays the explicit unescaped path)
+  const formatPlugin = getFormatPlugin(i18n);
+  const escapeValues =
+    interpolateBeforeParsing &&
+    (formatPlugin
+      ? !formatPlugin.options?.escapeVariables // i18next-icu escapes them itself with this option
+      : (mergedTOptions.interpolation?.escapeValue ?? i18n.options?.interpolation?.escapeValue) ===
+        false);
+  let interpolationOverride = interpolateBeforeParsing
+    ? mergedTOptions.interpolation
+    : { interpolation: { ...mergedTOptions.interpolation, prefix: '#$?', suffix: '?$#' } };
+  if (escapeValues && !formatPlugin)
+    interpolationOverride = {
+      interpolation: { ...mergedTOptions.interpolation, escapeValue: true },
+    };
+  // a format plugin gets the variables in tOptions too; context, defaultValue and ns are set below
+  const escapeForPlugin = escapeValues && formatPlugin ? escapeStringValues : (v) => v;
   const combinedTOpts = {
-    ...mergedTOptions,
+    ...escapeForPlugin(mergedTOptions),
     context: context || mergedTOptions.context, // Add `context` from the props or fallback to the value from `tOptions`
     count,
-    ...values,
+    ...escapeForPlugin(values),
     ...interpolationOverride,
     defaultValue,
     ns: namespaces,
@@ -588,6 +613,7 @@ export function Trans({
     reactI18nextOptions,
     combinedTOpts,
     mergedShouldUnescape,
+    escapeValues,
   );
 
   // allows user to pass `null` to `parent`

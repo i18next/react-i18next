@@ -91,3 +91,23 @@ export const getDisplayName = (Component) =>
 export const isString = (obj) => typeof obj === 'string';
 
 export const isObject = (obj) => typeof obj === 'object' && obj !== null;
+
+// An i18nFormat plugin (i18next-icu, i18next-mf2, i18next-fluent) replaces the core interpolation, so
+// interpolation.escapeValue does not apply to the values it inserts
+export const getFormatPlugin = (i18n) => {
+  const plugin = i18n?.services?.i18nFormat;
+  return typeof plugin?.parse === 'function' ? plugin : undefined;
+};
+
+const htmlEscapes = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+
+// only strings: numbers, dates and objects reach the formatter unchanged
+export const escapeStringValues = (values) => {
+  if (!values) return values;
+  const escaped = {};
+  Object.keys(values).forEach((k) => {
+    const v = values[k];
+    escaped[k] = isString(v) ? v.replace(/[&<>"']/g, (c) => htmlEscapes[c]) : v;
+  });
+  return escaped;
+};

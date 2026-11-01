@@ -300,6 +300,48 @@ describe('IcuTransWithoutContext', () => {
     });
   });
 
+  describe('markup in values', () => {
+    const content = [{ type: 'a', props: { href: '/profile' } }];
+
+    it('should render markup in a value as text with escapeValue false', () => {
+      const { container } = render(
+        <IcuTransWithoutContext
+          i18nKey="test.values.markup"
+          defaultTranslation="Hi {{name}}, see <0>profile</0>."
+          values={{ name: '<0>x</0> & co' }}
+          content={content}
+          i18n={i18n}
+        />,
+      );
+
+      expect(container.textContent).toBe('Hi <0>x</0> & co, see profile.');
+      expect(container.querySelectorAll('a')).toHaveLength(1);
+    });
+
+    it('should render markup in a value as text with an i18nFormat plugin', () => {
+      const i18nInst = i18n.createInstance();
+      i18nInst
+        .use({
+          type: 'i18nFormat',
+          parse: (res, values) => res.replace(/\{(\w+)\}/g, (m, k) => values[k]),
+        })
+        .init({ lng: 'en' });
+
+      const { container } = render(
+        <IcuTransWithoutContext
+          i18nKey="test.values.markup"
+          defaultTranslation="Hi {name}, see <0>profile</0>."
+          values={{ name: '<0>x</0> & co' }}
+          content={content}
+          i18n={i18nInst}
+        />,
+      );
+
+      expect(container.textContent).toBe('Hi <0>x</0> & co, see profile.');
+      expect(container.querySelectorAll('a')).toHaveLength(1);
+    });
+  });
+
   describe('displayName', () => {
     it('should have correct displayName', () => {
       expect(IcuTransWithoutContext.displayName).toBe('IcuTransWithoutContext');
