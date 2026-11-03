@@ -29,4 +29,13 @@ describe('issue #1913 - values prop should only require variables for the given 
       <Trans t={t} ns="custom" i18nKey="title" values={{ appName: 'My App' }} />,
     );
   });
+
+  it('should reject variables of another key', () => {
+    const { t } = useTranslation();
+    assertType<React.ReactElement>(<Trans t={t} i18nKey="greeting" values={{ userName: 'Ann' }} />);
+    // @ts-expect-error - 'userName' belongs to 'greeting', not to 'title'
+    assertType<React.ReactElement>(<Trans t={t} i18nKey="title" values={{ userName: 'Ann' }} />);
+    // @ts-expect-error - 'appName' belongs to 'title', not to 'greeting'
+    assertType<React.ReactElement>(<Trans i18nKey="greeting" values={{ appName: 'My App' }} />);
+  });
 });

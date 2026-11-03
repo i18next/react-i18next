@@ -32,7 +32,6 @@ export type TransProps<
   KPrefix = undefined,
   TContext extends string | undefined = undefined,
   TOpt extends TOptions & { context?: TContext } = { context: TContext },
-  Ret = TFunctionReturn<Ns, _AppendKeyPrefix<Key, KPrefix>, TOpt>,
   E = React.HTMLProps<HTMLDivElement>,
 > = E & {
   children?: TransChild | readonly TransChild[];
@@ -47,7 +46,9 @@ export type TransProps<
   ns?: Ns | (Ns extends readonly (infer S extends string)[] ? S : never);
   parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
   tOptions?: TOpt;
-  values?: InterpolationMap<Ret>;
+  // keep the return type inside this property: as a type parameter of `Trans`, it was also
+  // computed for every key of the namespace, which is slow with large resources
+  values?: InterpolationMap<TFunctionReturn<Ns, _AppendKeyPrefix<Key, KPrefix>, TOpt>>;
   shouldUnescape?: boolean;
   t?: TFunction<Ns, KPrefix>;
 };
@@ -59,14 +60,9 @@ export interface TransLegacy {
     KPrefix = undefined,
     TContext extends string | undefined = undefined,
     TOpt extends TOptions & { context?: TContext } = { context: TContext },
-    Ret extends TFunctionReturn<Ns, _AppendKeyPrefix<Key, KPrefix>, TOpt> = TFunctionReturn<
-      Ns,
-      _AppendKeyPrefix<Key, KPrefix>,
-      TOpt
-    >,
     E = React.HTMLProps<HTMLDivElement>,
   >(
-    props: TransProps<Key, Ns, KPrefix, TContext, TOpt, Ret, E>,
+    props: TransProps<Key, Ns, KPrefix, TContext, TOpt, E>,
   ): React.ReactElement;
 }
 

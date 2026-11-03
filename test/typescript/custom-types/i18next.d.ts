@@ -9,6 +9,7 @@ declare module 'i18next' {
         foo: 'foo';
         bar: 'bar';
         title: 'Title: <strong>{{appName}}</strong>';
+        greeting: 'Hello {{userName}}';
 
         some: 'some';
         some_me: 'some context';
