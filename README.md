@@ -184,8 +184,6 @@ Needing a translation management? Want to edit your translations with an InConte
 
 **Now with a [Free plan](https://www.locize.com/pricing?utm_source=react_i18next_readme&utm_medium=github&utm_campaign=readme) for small projects!** Perfect for hobbyists or getting started.
 
-![Locize](https://www.locize.com/img/ads/github_locize.png)
-
 By using [Locize](https://www.locize.com/?utm_source=react_i18next_readme&utm_medium=github&utm_campaign=readme) you directly support the future of i18next and react-i18next.
 
 ---

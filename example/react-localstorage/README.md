@@ -2,8 +2,6 @@
 
 Needing a translation management? Want to edit your translations with an InContext Editor? Use the original provided to you by the maintainers of i18next!
 
-![locize](https://www.locize.com/img/ads/github_locize.png)
-
 With using [locize](https://www.locize.com/?utm_source=react_i18next_react_localstorage_readme&utm_medium=github&utm_campaign=example_react_localstorage_readme) you directly support the future of i18next and react-i18next.
 
 ## Here you find a react example for locize:
