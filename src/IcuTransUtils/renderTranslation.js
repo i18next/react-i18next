@@ -24,7 +24,6 @@ const renderDeclarationNode = (declaration, children, childDeclarations) => {
     // This happens when renderTranslation is called recursively
 
     // Remove children from props since we'll pass them as the third argument
-    // eslint-disable-next-line no-unused-vars
     const { children: _childrenToRemove, ...propsWithoutChildren } = props;
 
     return React.createElement(type, propsWithoutChildren, ...children);
@@ -110,7 +109,6 @@ export const renderTranslation = (translation, declarations = []) => {
   };
 
   tokens.forEach((token) => {
-    // eslint-disable-next-line default-case
     switch (token.type) {
       case 'Text':
         {

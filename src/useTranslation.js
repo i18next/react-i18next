@@ -1,5 +1,4 @@
 import { useContext, useCallback, useMemo, useEffect, useRef, useState } from 'react';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import { keyFromSelector } from 'i18next';
 import { getI18n, getDefaults, ReportNamespaces, I18nContext } from './context.js';

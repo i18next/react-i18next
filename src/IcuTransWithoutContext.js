@@ -129,6 +129,7 @@ export function IcuTransWithoutContext({
   });
 
   // Render the translation with the declaration tree
+  // eslint-disable-next-line @eslint-react/error-boundaries -- catches renderTranslation's own errors, not child renders
   try {
     const rendered = renderTranslation(translation, content);
 

@@ -541,22 +541,18 @@ export function Trans({
     (hashTransKey ? hashTransKey(nodeAsString || defaultValue) : nodeAsString || defaultValue);
   if (i18n.options?.interpolation?.defaultVariables) {
     // explicit values win over defaultVariables, like in t()
-    // eslint-disable-next-line no-param-reassign
     values = { ...i18n.options.interpolation.defaultVariables, ...mergedValues };
   } else {
-    // eslint-disable-next-line no-param-reassign
     values = mergedValues;
   }
 
   const valuesFromChildren = getValuesFromChildren(children);
 
   if (valuesFromChildren && typeof valuesFromChildren.count === 'number' && count === undefined) {
-    // eslint-disable-next-line no-param-reassign
     count = valuesFromChildren.count;
   }
 
   // like context, fall back to tOptions.count instead of overwriting it with undefined
-  // eslint-disable-next-line no-param-reassign
   if (count === undefined) count = mergedTOptions?.count;
 
   const interpolateBeforeParsing =

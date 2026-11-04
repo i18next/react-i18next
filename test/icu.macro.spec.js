@@ -1,7 +1,5 @@
 import { describe, it, expect } from 'vitest';
-// Unsure why ESLint can't resolve it but tests run correctly
-// eslint-disable-next-line import/no-unresolved
-import { pluginTester } from 'babel-plugin-tester';
+import { pluginTester, prettierFormatter } from 'babel-plugin-tester';
 import plugin from 'babel-plugin-macros';
 
 /**
@@ -330,7 +328,11 @@ pluginTester({
 
       const x = <Trans data-cy="test" data-testid="trans-component">Welcome, <strong data-cy="name">{ name }</strong>!</Trans>
     `,
-    `
+    {
+      // prettier infers its parser from the filepath; a .tsx one lets it format the TypeScript output
+      formatResult: (code, options) =>
+        prettierFormatter(code, { ...options, filepath: __filename.replace(/\.js$/, '.tsx') }),
+      code: `
       import type { PackageDetail } from "@api/package";
       import type { ReactElement } from "react";
       import React from "react";
@@ -368,6 +370,7 @@ pluginTester({
 
       export default UsageTracker;
     `,
+    },
     {
       code: `
         import React from "react"

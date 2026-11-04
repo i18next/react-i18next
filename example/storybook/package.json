@@ -4,12 +4,12 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "i18next": "^26.4.0",
-    "i18next-browser-languagedetector": "^8.2.1",
-    "i18next-http-backend": "^4.0.1",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "react-i18next": "^17.0.11"
+    "i18next": "^26.7.1",
+    "i18next-browser-languagedetector": "^8.3.0",
+    "i18next-http-backend": "^4.0.10",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-i18next": "^17.1.12"
   },
   "scripts": {
     "start": "vite",
@@ -20,10 +20,14 @@
     "build-storybook": "storybook build"
   },
   "devDependencies": {
-    "@storybook/addon-links": "^10.5.9",
-    "@storybook/react-vite": "^10.5.9",
-    "@vitejs/plugin-react": "^6.1.0",
-    "storybook": "^10.5.9",
-    "vite": "^8.2.2"
+    "@storybook/addon-links": "^10.6.5",
+    "@storybook/react-vite": "^10.6.5",
+    "@vitejs/plugin-react": "^6.2.1",
+    "storybook": "^10.6.5",
+    "vite": "^8.3.5"
+  },
+  "overrides": {
+    "minimatch": "^11.0.4",
+    "glob": "^14.0.3"
   }
 }

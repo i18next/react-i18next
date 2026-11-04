@@ -1170,8 +1170,8 @@ const UsageTracker = ({
   packageDetail,
   className,
 }: {
-  packageDetail: PackageDetail,
-  className?: string,
+  packageDetail: PackageDetail;
+  className?: string;
 }): ReactElement => {
   const { k } = useI18nNamespace('usage');
   const incomingRequestCount = packageDetail.incoming_requests;

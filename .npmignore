@@ -6,6 +6,7 @@ bin/
 .editorconfig
 .eslintignore
 .eslintrc*
+eslint.config.mjs
 .gitignore
 bower.json
 .github

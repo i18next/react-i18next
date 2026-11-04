@@ -28,7 +28,6 @@ export const withTranslation = (ns, options = {}) =>
     I18nextWithTranslation.WrappedComponent = WrappedComponent;
 
     const forwardRef = (props, ref) =>
-      // eslint-disable-next-line prefer-object-spread
       createElement(I18nextWithTranslation, Object.assign({}, props, { forwardedRef: ref }));
 
     return options.withRef ? forwardRefReact(forwardRef) : I18nextWithTranslation;

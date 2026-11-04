@@ -4,24 +4,24 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "i18next": "^26.4.0",
-    "i18next-browser-languagedetector": "^8.2.1",
-    "i18next-http-backend": "^4.0.1",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "react-i18next": "^17.0.11"
+    "i18next": "^26.7.1",
+    "i18next-browser-languagedetector": "^8.3.0",
+    "i18next-http-backend": "^4.0.10",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-i18next": "^17.1.12"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
     "@babel/preset-env": "^7.29.7",
     "@babel/preset-react": "^7.29.7",
     "@testing-library/jest-dom": "^7.0.1",
-    "@testing-library/react": "^16.3.2",
-    "@vitejs/plugin-react": "^6.1.0",
-    "babel-jest": "^30.4.1",
-    "jest": "^30.4.2",
-    "jest-environment-jsdom": "^30.4.1",
-    "vite": "^8.2.2"
+    "@testing-library/react": "^16.3.3",
+    "@vitejs/plugin-react": "^6.2.1",
+    "babel-jest": "^30.5.2",
+    "jest": "^30.5.2",
+    "jest-environment-jsdom": "^30.5.2",
+    "vite": "^8.3.5"
   },
   "scripts": {
     "start": "vite",
@@ -29,5 +29,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "jest"
+  },
+  "overrides": {
+    "minimatch": "^11.0.4",
+    "glob": "^14.0.3"
   }
 }

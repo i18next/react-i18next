@@ -4,25 +4,25 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "i18next": "^26.4.0",
-    "i18next-browser-languagedetector": "^8.2.1",
-    "i18next-http-backend": "^4.0.1",
-    "i18next-icu": "^2.4.4",
-    "intl-messageformat": "^11.2.14",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "react-i18next": "^17.0.11"
+    "i18next": "^26.7.1",
+    "i18next-browser-languagedetector": "^8.3.0",
+    "i18next-http-backend": "^4.0.10",
+    "i18next-icu": "^2.6.1",
+    "intl-messageformat": "^12.1.4",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-i18next": "^17.1.12"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
     "@rolldown/plugin-babel": "^0.2.3",
     "@testing-library/jest-dom": "^7.0.1",
-    "@testing-library/react": "^16.3.2",
-    "@vitejs/plugin-react": "^6.1.0",
+    "@testing-library/react": "^16.3.3",
+    "@vitejs/plugin-react": "^6.2.1",
     "babel-plugin-macros": "^3.1.0",
-    "happy-dom": "^20.11.6",
-    "vite": "^8.2.2",
-    "vitest": "^4.1.11"
+    "happy-dom": "^21.0.4",
+    "vite": "^8.3.5",
+    "vitest": "^5.1.0"
   },
   "scripts": {
     "start": "vite",
