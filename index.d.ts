@@ -14,6 +14,7 @@ import type {
   TOptions,
   InterpolationMap,
   TFunctionReturn,
+  TOptionsBase,
 } from 'i18next';
 import * as React from 'react';
 import {
@@ -175,6 +176,87 @@ declare module 'i18next' {
   // }
   interface CustomInstanceExtensions {
     reportNamespaces?: ReportNamespaces;
+  }
+
+  // i18next 27 declares `ReactOptions` empty and leaves its shape to react-i18next. These are
+  // exactly i18next 26's property types: TypeScript accepts the repeated declarations on i18next 26
+  // and they fill in the empty interface on i18next 27.
+  interface ReactOptions {
+    /**
+     * Set it to fallback to let passed namespaces to translated hoc act as fallbacks
+     * @default 'default'
+     */
+    nsMode?: 'default' | 'fallback';
+    /**
+     * Set it to the default parent element created by the Trans component.
+     * @default 'div'
+     */
+    defaultTransParent?: string;
+    /**
+     * Set which events trigger a re-render, can be set to false or string of events
+     * @default 'languageChanged'
+     */
+    bindI18n?: string | false;
+    /**
+     * Set which events on store trigger a re-render, can be set to false or string of events
+     * @default ''
+     */
+    bindI18nStore?: string | false;
+    /**
+     * Set fallback value for Trans components without children
+     * @default undefined
+     */
+    transEmptyNodeValue?: string;
+    /**
+     * Set it to false if you do not want to use Suspense
+     * @default true
+     */
+    useSuspense?: boolean;
+    /**
+     * Function to generate an i18nKey from the defaultValue (or Trans children)
+     * when no key is provided.
+     * By default, the defaultValue (Trans text) itself is used as the key.
+     * If you want to require keys for all translations, supply a function
+     * that always throws an error.
+     * @default undefined
+     */
+    hashTransKey?(defaultValue: TOptionsBase['defaultValue']): TOptionsBase['defaultValue'];
+    /**
+     * Convert eg. <br/> found in translations to a react component of type br
+     * @default true
+     */
+    transSupportBasicHtmlNodes?: boolean;
+    /**
+     * Which nodes not to convert in defaultValue generation in the Trans component.
+     * @default ['br', 'strong', 'i', 'p']
+     */
+    transKeepBasicHtmlNodesFor?: readonly string[];
+    /**
+     * Wrap text nodes in a user-specified element.
+     * @default ''
+     */
+    transWrapTextNodes?: string;
+    /**
+     * Default props to apply to all Trans components.
+     * Component-level props will override these defaults.
+     */
+    transDefaultProps?: {
+      tOptions?: TOptions;
+      values?: object;
+      shouldUnescape?: boolean;
+      components?: readonly unknown[] | { readonly [tagName: string]: unknown }; // Use `unknown` (or `any`) to be permissive without importing React.
+    };
+    /**
+     * Optional keyPrefix that will be automatically applied to returned t function in useTranslation for example.
+     * Accepts a string or a selector function (e.g. `$ => $.deeply.nested`).
+     * @default undefined
+     */
+    keyPrefix?: string | (($: any) => any);
+    /**
+     * Unescape function
+     * by default it unescapes some basic html entities
+     */
+    unescape?(str: string): string;
   }
 }
 
