@@ -1,3 +1,7 @@
+## 17.1.13
+
+- fix(types): the `react` init options keep their types with i18next 27. i18next 27 declares `ReactOptions` (the type of `i18next.init({ react })`) as an empty interface and leaves its shape to react-i18next, so with react-i18next 17 the `react` options were no longer checked and `getDefaults().useSuspense` did not compile. react-i18next now declares them itself, with exactly the types i18next 26 has: TypeScript accepts the repeated declaration on i18next 26, and on i18next 27 it fills in the empty interface. Nothing changes with i18next 26.
+
 ## 17.1.12
 
 - fix(types): type-checking a `<Trans>` is fast again with large resources. Since 17.0.2 the return type of the key was a type parameter of `Trans`, so TypeScript also computed it for every key of the namespace: with 50 namespaces of 200 keys, one `<Trans>` cost about 1.3 million more type instantiations than in 17.0.1, with or without a `values` prop. The return type is computed inside the `values` prop again, as in 17.0.1, and `values` still only needs the variables of the given `i18nKey` ([#1913](https://github.com/i18next/react-i18next/issues/1913)). The exported `TransProps` type loses the `Ret` parameter added in 17.0.2, so its 6th parameter is the element props `E` again, as before 17.0.2. Thanks @leshaduduk ([#1947](https://github.com/i18next/react-i18next/pull/1947)), fixes [#1946](https://github.com/i18next/react-i18next/issues/1946).
