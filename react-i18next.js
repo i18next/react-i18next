@@ -20,6 +20,8 @@
     if (object == null) return '';
     return String(object);
   };
+  const isSafeLanguageCode = code => isString$1(code) && /^[A-Za-z0-9_@.-]{1,128}$/.test(code) && !code.includes('..') && !['__proto__', 'constructor', 'prototype'].includes(code);
+  const callbackApiOf = plugin => plugin?.callbackApi ?? plugin?.constructor?.callbackApi;
   const copy = (a, s, t) => {
     a.forEach(m => {
       if (s[m]) t[m] = s[m];
@@ -182,6 +184,9 @@
         }
         nextPath += tokens[j];
         next = current[nextPath];
+        if ((typeof next === 'function' || nextPath === '__proto__') && !Object.prototype.hasOwnProperty.call(current, nextPath)) {
+          next = undefined;
+        }
         if (next !== undefined) {
           if (['string', 'number', 'boolean'].includes(typeof next) && j < tokens.length - 1) {
             continue;
@@ -219,6 +224,7 @@
       this.logger = concreteLogger || consoleLogger;
       this.options = options;
       this.debug = options.debug;
+      this.seen = new Set();
     }
     log(...args) {
       return this.forward(args, 'log', '', true);
@@ -231,6 +237,11 @@
     }
     deprecate(...args) {
       return this.forward(args, 'warn', 'WARNING DEPRECATED: ', true);
+    }
+    once(key, lvl, ...args) {
+      if (!this.debug || this.seen.has(key) || this.seen.size >= 1000) return null;
+      this.seen.add(key);
+      return this[lvl](...args);
     }
     forward(args, lvl, prefix, debugOnly) {
       if (debugOnly && !this.debug) return null;
@@ -265,13 +276,15 @@
       });
       return this;
     }
-    off(event, listener) {
-      if (!this.observers[event]) return;
-      if (!listener) {
-        delete this.observers[event];
-        return;
-      }
-      this.observers[event].delete(listener);
+    off(events, listener) {
+      (typeof events === 'string' ? events.split(' ') : [events]).forEach(event => {
+        if (!this.observers[event]) return;
+        if (!listener) {
+          delete this.observers[event];
+          return;
+        }
+        this.observers[event].delete(listener);
+      });
     }
     once(event, listener) {
       const wrapper = (...args) => {
@@ -309,6 +322,7 @@
       super();
       this.data = data || {};
       this.options = options;
+      this.logger = baseLogger.create('resourceStore');
       if (this.options.keySeparator === undefined) {
         this.options.keySeparator = '.';
       }
@@ -327,11 +341,15 @@
         this.options.ns.splice(index, 1);
       }
     }
+    deprecateDottedLng(method) {
+      this.logger.once(method, 'deprecate', `${method}: a dotted language ('en.translation.key') that carries the namespace and key is removed in v27; pass language, namespace and key as separate arguments`);
+    }
     getResource(lng, ns, key, options = {}) {
       const keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator;
       const ignoreJSONStructure = options.ignoreJSONStructure !== undefined ? options.ignoreJSONStructure : this.options.ignoreJSONStructure;
       let path;
       if (lng.includes('.')) {
+        this.deprecateDottedLng('getResource');
         path = lng.split('.');
       } else {
         path = [lng, ns];
@@ -346,12 +364,12 @@
         }
       }
       const result = getPath(this.data, path);
-      if (!result && !ns && !key && lng.includes('.')) {
+      if (result == null && !ns && !key && lng.includes('.')) {
         lng = path[0];
         ns = path[1];
         key = path.slice(2).join('.');
       }
-      if (result || !ignoreJSONStructure || !isString$1(key)) return result;
+      if (result != null || !ignoreJSONStructure || !isString$1(key)) return result;
       return deepFind(this.data?.[lng]?.[ns], key, keySeparator);
     }
     addResource(lng, ns, key, value, options = {
@@ -361,6 +379,7 @@
       let path = [lng, ns];
       if (key) path = path.concat(keySeparator ? key.split(keySeparator) : key);
       if (lng.includes('.')) {
+        this.deprecateDottedLng('addResource');
         path = lng.split('.');
         value = ns;
         ns = path[1];
@@ -385,6 +404,7 @@
     }) {
       let path = [lng, ns];
       if (lng.includes('.')) {
+        this.deprecateDottedLng('addResourceBundle');
         path = lng.split('.');
         deep = resources;
         resources = ns;
@@ -485,7 +505,7 @@
   class Translator extends EventEmitter {
     constructor(services, options = {}) {
       super();
-      copy(['resourceStore', 'languageUtils', 'pluralResolver', 'interpolator', 'backendConnector', 'i18nFormat', 'utils'], services, this);
+      copy(['resourceStore', 'languageUtils', 'pluralResolver', 'interpolator', 'backendConnector', 'i18nFormat', 'utils', 'ownPostProcessors'], services, this);
       this.options = options;
       if (this.options.keySeparator === undefined) {
         this.options.keySeparator = '.';
@@ -618,6 +638,7 @@
         if (!opt.returnObjects && !this.options.returnObjects) {
           if (!this.options.returnedObjectHandler) {
             this.logger.warn('accessing an object - but returnObjects options is not enabled!');
+            this.logger.once('returnedObject', 'deprecate', "accessing an object without returnObjects returns a sentence about it today; from v27 t() returns the key, as for a missing key (returnedObjectHandler can keep today's text)");
           }
           const r = this.options.returnedObjectHandler ? this.options.returnedObjectHandler(resUsedKey, resForObjHndl, {
             ...opt,
@@ -662,7 +683,7 @@
         }
       } else if (handleAsObjectInI18nFormat && isString$1(joinArrays) && Array.isArray(res)) {
         res = res.join(joinArrays);
-        if (res) res = this.extendTranslation(res, keys, opt, lastKey);
+        if (res) res = this.extendTranslation(res, keys, opt, resolved, lastKey);
       } else {
         let usedDefault = false;
         let usedKey = false;
@@ -702,7 +723,7 @@
             if (this.options.missingKeyHandler) {
               this.options.missingKeyHandler(l, namespace, k, defaultForMissing, updateMissing, opt);
             } else if (this.backendConnector?.saveMissing) {
-              this.backendConnector.saveMissing(l, namespace, k, defaultForMissing, updateMissing, opt);
+              this.backendConnector.saveMissing(l, namespace, k, defaultForMissing, updateMissing, opt, undefined, this.utils?.hasLoadedNamespace);
             }
             this.emit('missingKey', l, namespace, k, res);
           };
@@ -785,6 +806,11 @@
       const postProcess = opt.postProcess || this.options.postProcess;
       const postProcessorNames = isString$1(postProcess) ? [postProcess] : postProcess;
       if (res != null && postProcessorNames?.length && opt.applyPostProcessor !== false) {
+        postProcessorNames.forEach(name => {
+          if (this.logger.debug && postProcessor.processors[name] && this.ownPostProcessors && !this.ownPostProcessors.has(name)) {
+            this.logger.once(name, 'deprecate', `postProcess: '${name}' was registered with use() on another i18next instance; from v27 post-processors are per instance, so call use() with it on this instance too`);
+          }
+        });
         res = postProcessor.handle(postProcessorNames, res, key, this.options && this.options.postProcessPassResolved ? {
           i18nResolved: {
             ...resolved,
@@ -959,7 +985,20 @@
         }
         return code;
       }
-      return this.options.cleanCode || this.options.lowerCaseLng ? code.toLowerCase() : code;
+      const formatted = this.options.cleanCode || this.options.lowerCaseLng ? code.toLowerCase() : code;
+      if (this.logger.debug && isString$1(code)) this.deprecateBareCode(code, formatted);
+      return formatted;
+    }
+    deprecateBareCode(code, formatted) {
+      let v27;
+      try {
+        v27 = Intl.getCanonicalLocales(code)[0];
+      } catch (e) {
+        return;
+      }
+      if (this.options.lowerCaseLng) v27 = v27.toLowerCase();
+      if (v27 === formatted) return;
+      this.logger.once(code, 'deprecate', `language code '${code}' is used as '${formatted}'; i18next v27 canonicalizes it to '${v27}', use '${v27}' in lng, fallbackLng, supportedLngs and the resources`);
     }
     isSupportedCode(code) {
       if (this.options.load === 'languageOnly' || this.options.nonExplicitSupportedLngs) {
@@ -986,7 +1025,6 @@
             if (supportedLng === lngOnly) return true;
             if (!supportedLng.includes('-') && !lngOnly.includes('-')) return false;
             if (supportedLng.includes('-') && !lngOnly.includes('-') && supportedLng.slice(0, supportedLng.indexOf('-')) === lngOnly) return true;
-            if (supportedLng.startsWith(lngOnly) && lngOnly.length > 1) return true;
             return false;
           });
         });
@@ -1131,13 +1169,12 @@
   }
   const deepFindWithDefaults = (data, defaultData, key, keySeparator = '.', ignoreJSONStructure = true) => {
     let path = getPathWithDefaults(data, defaultData, key);
-    if (!path && ignoreJSONStructure && isString$1(key)) {
+    if (path == null && ignoreJSONStructure && isString$1(key)) {
       path = deepFind(data, key, keySeparator);
       if (path === undefined) path = deepFind(defaultData, key, keySeparator);
     }
     return path;
   };
-  const regexSafe = val => val.replace(/\$/g, '$$$$');
   class Interpolator {
     constructor(options = {}) {
       this.logger = baseLogger.create('interpolator');
@@ -1168,6 +1205,15 @@
         maxReplaces,
         alwaysFormat
       } = options.interpolation;
+      if (prefixEscaped || suffixEscaped || nestingPrefixEscaped || nestingSuffixEscaped) {
+        const names = Object.entries({
+          prefixEscaped,
+          suffixEscaped,
+          nestingPrefixEscaped,
+          nestingSuffixEscaped
+        }).filter(([, v]) => v).map(([k]) => k);
+        this.logger.once(names.join(), 'deprecate', `interpolation.${names.join(', interpolation.')}: the regex-escaped delimiter options are removed in v27; pass the literal delimiters as prefix, suffix, nestingPrefix and nestingSuffix`);
+      }
       this.escape = escape$1 !== undefined ? escape$1 : escape;
       this.escapeValue = escapeValue !== undefined ? escapeValue : true;
       this.useRawValueToEscape = useRawValueToEscape !== undefined ? useRawValueToEscape : false;
@@ -1202,6 +1248,7 @@
       let match;
       let value;
       let replaces;
+      const original = str;
       const defaultData = this.options && this.options.interpolation && this.options.interpolation.defaultVariables || {};
       const handleFormat = key => {
         if (!key.includes(this.formatSeparator)) {
@@ -1232,11 +1279,25 @@
         safeValue: val => val
       }, {
         regex: this.regexp,
-        safeValue: val => this.escapeValue ? this.escape(val) : val
+        safeValue: val => {
+          if (!this.escapeValue) return val;
+          if (this.escape === escape && this.options?.interpolation?.escapeValue !== false && isString$1(val) && val.includes('/')) {
+            this.logger.once('/', 'deprecate', "escapeValue renders '/' in a value as '&#x2F;' today; from v27 the default escape leaves '/' as it is");
+          }
+          return this.escape(val);
+        }
       }];
+      const unescapedValues = [];
+      let shift = 0;
       todos.forEach(todo => {
         replaces = 0;
         while (match = todo.regex.exec(str)) {
+          const at = match.index - shift;
+          const written = unescapedValues.find(([start, end]) => at >= start && at < end);
+          if (written) {
+            todo.regex.lastIndex = written[1] + shift;
+            continue;
+          }
           const matchedVar = match[1].trim();
           value = handleFormat(matchedVar);
           if (value === undefined) {
@@ -1246,6 +1307,9 @@
             } else if (options && Object.prototype.hasOwnProperty.call(options, matchedVar)) {
               value = '';
             } else if (skipOnVariables) {
+              if (this.logger.debug) {
+                this.logger.once(`${original}\u0000${match[0]}`, 'warn', `missed to pass in variable ${matchedVar} for interpolating ${original}`);
+              }
               value = match[0];
               continue;
             } else {
@@ -1255,9 +1319,14 @@
           } else if (!isString$1(value) && !this.useRawValueToEscape) {
             value = makeString(value);
           }
-          const safeValue = todo.safeValue(value);
-          str = str.replace(match[0], regexSafe(safeValue));
+          const safeValue = makeString(todo.safeValue(value));
+          str = str.slice(0, match.index) + safeValue + str.slice(match.index + match[0].length);
           if (skipOnVariables) {
+            if (todo.regex === this.regexpUnescape) {
+              unescapedValues.push([match.index, match.index + safeValue.length]);
+            } else {
+              shift += safeValue.length - match[0].length;
+            }
             todo.regex.lastIndex += safeValue.length;
             todo.regex.lastIndex -= match[0].length;
           } else {
@@ -1377,7 +1446,12 @@
           [o.interpolationkey]: undefined
         };
       }
-      const key = l + JSON.stringify(optForCache);
+      let key;
+      try {
+        key = l + JSON.stringify(optForCache);
+      } catch (e) {
+        return fn(getCleanedCode(l), o)(v);
+      }
       let frm = cache[key];
       if (!frm) {
         frm = fn(getCleanedCode(l), o);
@@ -1500,6 +1574,10 @@
       this.state = {};
       this.queue = [];
       this.backend?.init?.(services, options.backend, options);
+      this.callbackApi = callbackApiOf(this.backend);
+      if (this.backend && this.callbackApi === undefined && (this.backend.read || this.backend.create)) {
+        this.logger.deprecate('backend: set callbackApi to declare the calling convention (true: read(language, namespace, callback) and create(languages, namespace, key, fallbackValue, callback, options); false: both return a promise or a value); guessing it from the number of parameters is deprecated');
+      }
     }
     queueLoad(languages, namespaces, options, callback) {
       const toLoad = {};
@@ -1512,7 +1590,7 @@
           const name = `${lng}|${ns}`;
           if (!options.reload && this.store.hasResourceBundle(lng, ns)) {
             this.state[name] = 2;
-          } else if (this.state[name] < 0) ;else if (this.state[name] === 1) {
+          } else if (!options.reload && this.state[name] < 0) ;else if (this.state[name] === 1) {
             if (pending[name] === undefined) pending[name] = true;
           } else {
             this.state[name] = 1;
@@ -1607,7 +1685,7 @@
         callback(err, data);
       };
       const fc = this.backend[fcName].bind(this.backend);
-      if (fc.length === 2) {
+      if (this.callbackApi === false || this.callbackApi === undefined && fc.length === 2) {
         try {
           const r = fc(lng, ns);
           if (r && typeof r.then === 'function') {
@@ -1646,32 +1724,38 @@
         reload: true
       }, callback);
     }
+    noticeDevFallback(lng) {
+      if (lng !== 'dev' || !this.devIsDefaultFallback) return;
+      this.logger.once('dev', 'warn', "language 'dev' is requested because fallbackLng is not set (its default is ['dev']); i18next v27 defaults to fallbackLng: false and loads and saves missing keys in the requested language instead. Set fallbackLng to your source language, or to 'dev' to keep this behavior");
+    }
     loadOne(name, prefix = '') {
       const s = name.split('|');
       const lng = s[0];
       const ns = s[1];
+      this.noticeDevFallback(lng);
       this.read(lng, ns, 'read', undefined, undefined, (err, data) => {
         if (err) this.logger.warn(`${prefix}loading namespace ${ns} for language ${lng} failed`, err);
         if (!err && data) this.logger.log(`${prefix}loaded namespace ${ns} for language ${lng}`, data);
         this.loaded(name, err, data);
       });
     }
-    saveMissing(languages, namespace, key, fallbackValue, isUpdate, options = {}, clb = () => {}) {
-      if (this.services?.utils?.hasLoadedNamespace && !this.services?.utils?.hasLoadedNamespace(namespace)) {
+    saveMissing(languages, namespace, key, fallbackValue, isUpdate, options = {}, clb = () => {}, hasLoadedNamespace = this.newestCloneHasLoadedNamespace || this.services?.utils?.hasLoadedNamespace) {
+      if (hasLoadedNamespace && !hasLoadedNamespace(namespace)) {
         this.logger.warn(`did not save key "${key}" as the namespace "${namespace}" was not yet loaded`, 'This means something IS WRONG in your setup. You access the t function before i18next.init / i18next.loadNamespace / i18next.changeLanguage was done. Wait for the callback or Promise to resolve before accessing it!!!');
         return;
       }
       if (key === undefined || key === null || key === '') return;
       if (this.backend?.create) {
+        languages?.forEach?.(l => this.noticeDevFallback(l));
         const opts = {
           ...options,
           isUpdate
         };
         const fc = this.backend.create.bind(this.backend);
-        if (fc.length < 6) {
+        if (this.callbackApi === false || this.callbackApi === undefined && fc.length < 6) {
           try {
             let r;
-            if (fc.length === 5) {
+            if (this.callbackApi === false || fc.length === 5) {
               r = fc(languages, namespace, key, fallbackValue, opts);
             } else {
               r = fc(languages, namespace, key, fallbackValue);
@@ -1762,6 +1846,7 @@
     return options;
   };
   const noop = () => {};
+  let loggerOwner;
   const bindMemberFunctions = inst => {
     const mems = Object.getOwnPropertyNames(Object.getPrototypeOf(inst));
     mems.forEach(mem => {
@@ -1774,7 +1859,9 @@
     constructor(options = {}, callback) {
       super();
       this.options = transformOptions(options);
-      this.services = {};
+      this.services = {
+        ownPostProcessors: new Set()
+      };
       this.logger = baseLogger;
       this.modules = {
         external: []
@@ -1803,6 +1890,7 @@
           options.defaultNS = options.ns[0];
         }
       }
+      const fallbackLngIsDefault = options.fallbackLng === undefined && this.options.fallbackLng === undefined;
       const defOpts = get();
       this.options = {
         ...defOpts,
@@ -1828,11 +1916,17 @@
         return ClassOrObject;
       };
       if (!this.options.isClone) {
+        if (loggerOwner && loggerOwner !== this && loggerOwner.modules.logger !== this.modules.logger) {
+          baseLogger.deprecate('init: this init() replaces the logger another i18next instance set with use(), as the logger is shared in v26; from v27 each instance keeps its own logger');
+        }
+        loggerOwner = this.modules.logger ? this : undefined;
         if (this.modules.logger) {
           baseLogger.init(createClassOnDemand(this.modules.logger), this.options);
         } else {
           baseLogger.init(null, this.options);
         }
+        this.pendingWarnings?.forEach(msg => this.logger.warn(msg));
+        this.pendingWarnings = undefined;
         let formatter;
         if (this.modules.formatter) {
           formatter = this.modules.formatter;
@@ -1855,15 +1949,20 @@
         }
         s.interpolator = new Interpolator(this.options);
         s.utils = {
-          hasLoadedNamespace: this.hasLoadedNamespace.bind(this)
+          hasLoadedNamespace: this.hasLoadedNamespace.bind(this),
+          reloadResources: this.reloadResources.bind(this)
         };
         s.backendConnector = new Connector(createClassOnDemand(this.modules.backend), s.resourceStore, s, this.options);
+        s.backendConnector.devIsDefaultFallback = fallbackLngIsDefault;
         s.backendConnector.on('*', (event, ...args) => {
           this.emit(event, ...args);
         });
         if (this.modules.languageDetector) {
           s.languageDetector = createClassOnDemand(this.modules.languageDetector);
           if (s.languageDetector.init) s.languageDetector.init(s, this.options.detection, this.options);
+          if (s.languageDetector.async && callbackApiOf(s.languageDetector) === undefined) {
+            this.logger.deprecate('languageDetector: set callbackApi to declare how the async detect() answers (true: detect(callback); false: detect() returns a promise); guessing it from the number of parameters is deprecated');
+          }
         }
         if (this.modules.i18nFormat) {
           s.i18nFormat = createClassOnDemand(this.modules.i18nFormat);
@@ -1959,7 +2058,10 @@
         callback = ns;
         ns = undefined;
       }
-      if (!lngs) lngs = this.languages;
+      if (!lngs) {
+        const requested = Object.keys(this.services.backendConnector.state).map(name => name.split('|')[0]);
+        lngs = [...new Set([...(this.languages || []), ...requested])].filter(l => l !== 'cimode');
+      }
       if (!ns) ns = this.options.ns;
       if (!callback) callback = noop;
       this.services.backendConnector.reload(lngs, ns, err => {
@@ -1971,26 +2073,56 @@
     use(module) {
       if (!module) throw new Error('You are passing an undefined module! Please check the object you are passing to i18next.use()');
       if (!module.type) throw new Error('You are passing a wrong module! Please check the object you are passing to i18next.use()');
+      const setModule = type => {
+        if (this.modules[type] && this.modules[type] !== module) {
+          const msg = `use: this ${type} replaces the ${type} passed to an earlier use() call; only one ${type} is used per instance`;
+          if (this.isInitializing || this.isInitialized) this.logger.warn(msg);else (this.pendingWarnings = this.pendingWarnings || []).push(msg);
+        }
+        this.modules[type] = module;
+      };
       if (module.type === 'backend') {
-        this.modules.backend = module;
+        setModule('backend');
       }
       if (module.type === 'logger' || module.log && module.warn && module.error) {
         this.modules.logger = module;
       }
       if (module.type === 'languageDetector') {
-        this.modules.languageDetector = module;
+        setModule('languageDetector');
       }
       if (module.type === 'i18nFormat') {
-        this.modules.i18nFormat = module;
+        setModule('i18nFormat');
       }
       if (module.type === 'postProcessor') {
         postProcessor.addPostProcessor(module);
+        this.services.ownPostProcessors?.add(module.name);
       }
       if (module.type === 'formatter') {
-        this.modules.formatter = module;
+        setModule('formatter');
       }
       if (module.type === '3rdParty') {
         this.modules.external.push(module);
+      }
+      return this;
+    }
+    hydrate(resources, lng) {
+      if (this.options.isClone) return this;
+      if (!this.services.resourceStore) {
+        this.logger.warn('hydrate: call init() first, the instance has no resource store yet');
+        return this;
+      }
+      if (resources && !this.initializedStoreOnce) {
+        this.services.resourceStore.data = resources;
+        Object.values(resources).forEach(lngResources => {
+          Object.keys(lngResources).forEach(ns => {
+            if (!this.options.ns.includes(ns)) this.options.ns.push(ns);
+          });
+        });
+        this.initializedStoreOnce = true;
+        this.isInitialized = true;
+      }
+      if (lng && !this.initializedLanguageOnce) {
+        this.changeLanguage(lng);
+        this.initializedLanguageOnce = true;
       }
       return this;
     }
@@ -2039,6 +2171,12 @@
         if (!lng && !lngs && this.services.languageDetector) lngs = [];
         const fl = isString$1(lngs) ? lngs : lngs && lngs[0];
         const l = this.store.hasLanguageSomeTranslations(fl) ? fl : this.services.languageUtils.getBestMatchFromCodes(isString$1(lngs) ? [lngs] : lngs);
+        if (l && this.logger.debug && !isSafeLanguageCode(l)) {
+          const configured = [].concat(this.options.supportedLngs || [], this.services.languageUtils.getFallbackCodes(this.options.fallbackLng, l), this.options.preload || []);
+          if (!configured.includes(l) && !Object.prototype.hasOwnProperty.call(this.store.data, l)) {
+            this.logger.once(`lng:${l}`, 'deprecate', `changeLanguage: the language code '${l.slice(0, 64)}' comes from lng, changeLanguage() or the language detector and is not configured; from v27 such a code is refused unless it has only letters, digits, '-', '_', '@' and '.' (no '..'), at most 128 characters. Set supportedLngs, or check the code before passing it on`);
+          }
+        }
         if (l) {
           if (!this.language) {
             setLngProps(l);
@@ -2053,7 +2191,8 @@
       if (!lng && this.services.languageDetector && !this.services.languageDetector.async) {
         setLng(this.services.languageDetector.detect());
       } else if (!lng && this.services.languageDetector && this.services.languageDetector.async) {
-        if (this.services.languageDetector.detect.length === 0) {
+        const callbackApi = callbackApiOf(this.services.languageDetector);
+        if (callbackApi === false || callbackApi === undefined && this.services.languageDetector.detect.length === 0) {
           this.services.languageDetector.detect().then(setLng);
         } else {
           this.services.languageDetector.detect(setLng);
@@ -2108,7 +2247,11 @@
       return fixedT;
     }
     t(...args) {
-      return this.translator?.translate(...args);
+      if (!this.translator) {
+        this.logger.warn('t: called before init(); returning an empty string');
+        return '';
+      }
+      return this.translator.translate(...args);
     }
     exists(...args) {
       return this.translator?.exists(...args);
@@ -2180,7 +2323,7 @@
     }
     dir(lng) {
       if (!lng) lng = this.resolvedLanguage || (this.languages?.length > 0 ? this.languages[0] : this.language);
-      if (!lng) return 'rtl';
+      if (!lng) return 'ltr';
       try {
         const l = new Intl.Locale(lng);
         if (l && l.getTextInfo) {
@@ -2200,7 +2343,12 @@
     }
     cloneInstance(options = {}, callback = noop) {
       const forkResourceStore = options.forkResourceStore;
-      if (forkResourceStore) delete options.forkResourceStore;
+      if (forkResourceStore) {
+        options = {
+          ...options
+        };
+        delete options.forkResourceStore;
+      }
       const mergedOptions = {
         ...this.options,
         preload: false,
@@ -2221,21 +2369,21 @@
         ...this.services
       };
       clone.services.utils = {
-        hasLoadedNamespace: clone.hasLoadedNamespace.bind(clone)
+        ...clone.services.utils,
+        hasLoadedNamespace: clone.hasLoadedNamespace.bind(clone),
+        reloadResources: clone.reloadResources.bind(clone)
       };
       if (forkResourceStore) {
-        const clonedData = Object.keys(this.store.data).reduce((prev, l) => {
-          prev[l] = {
-            ...this.store.data[l]
+        const copyData = obj => {
+          const copied = Array.isArray(obj) ? [...obj] : {
+            ...obj
           };
-          prev[l] = Object.keys(prev[l]).reduce((acc, n) => {
-            acc[n] = {
-              ...prev[l][n]
-            };
-            return acc;
-          }, prev[l]);
-          return prev;
-        }, {});
+          Object.keys(copied).forEach(k => {
+            if (copied[k] && typeof copied[k] === 'object') copied[k] = copyData(copied[k]);
+          });
+          return copied;
+        };
+        const clonedData = copyData(this.store.data);
         clone.store = new ResourceStore(clonedData, mergedOptions);
         clone.services.resourceStore = clone.store;
       }
@@ -2258,9 +2406,7 @@
       });
       clone.init(mergedOptions, callback);
       clone.translator.options = mergedOptions;
-      clone.translator.backendConnector.services.utils = {
-        hasLoadedNamespace: clone.hasLoadedNamespace.bind(clone)
-      };
+      clone.translator.backendConnector.newestCloneHasLoadedNamespace = clone.hasLoadedNamespace.bind(clone);
       return clone;
     }
     toJSON() {
