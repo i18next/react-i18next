@@ -15,6 +15,7 @@ import type {
   InterpolationMap,
   TFunctionReturn,
   TOptionsBase,
+  AppendKeyPrefix,
 } from 'i18next';
 import * as React from 'react';
 import {
@@ -25,6 +26,7 @@ import {
   ErrorArgs,
 } from './TransWithoutContext.js';
 export { initReactI18next } from './initReactI18next.js';
+export type { ReactOptions } from 'i18next';
 
 export function nodesToString(
   children: React.ReactNode,
@@ -72,13 +74,7 @@ export type IcuTransWithoutContextProps<
    * (or `'mf2'`) they are typed from the message.
    */
   values?: [TypeOptions['parseInterpolation']] extends ['icu'] | ['mf2']
-    ? InterpolationMap<
-        TFunctionReturn<
-          Ns,
-          KPrefix extends string ? `${KPrefix}${TypeOptions['keySeparator']}${Key & string}` : Key,
-          TOpt
-        >
-      >
+    ? InterpolationMap<TFunctionReturn<Ns, AppendKeyPrefix<Key, KPrefix>, TOpt>>
     : Record<string, any>;
   /** i18next instance. If not provided, uses global instance */
   i18n?: i18n;
@@ -171,16 +167,12 @@ export interface ReportNamespaces {
 }
 
 declare module 'i18next' {
-  // interface i18n {
-  //   reportNamespaces?: ReportNamespaces;
-  // }
   interface CustomInstanceExtensions {
     reportNamespaces?: ReportNamespaces;
   }
 
-  // i18next 27 declares `ReactOptions` empty and leaves its shape to react-i18next. These are
-  // exactly i18next 26's property types: TypeScript accepts the repeated declarations on i18next 26
-  // and they fill in the empty interface on i18next 27.
+  // i18next declares `react?: ReactOptions` in its init options with an empty interface;
+  // react-i18next fills it in
   interface ReactOptions {
     /**
      * Set it to fallback to let passed namespaces to translated hoc act as fallbacks
@@ -189,11 +181,12 @@ declare module 'i18next' {
     nsMode?: 'default' | 'fallback';
     /**
      * Set it to the default parent element created by the Trans component.
-     * @default 'div'
+     * @default undefined (no parent element)
      */
     defaultTransParent?: string;
     /**
-     * Set which events trigger a re-render, can be set to false or string of events
+     * Set which events trigger a re-render (useTranslation, withTranslation, Translation, Trans
+     * and IcuTrans), can be set to false or string of events
      * @default 'languageChanged'
      */
     bindI18n?: string | false;
@@ -243,6 +236,7 @@ declare module 'i18next' {
     transDefaultProps?: {
       tOptions?: TOptions;
       values?: object;
+      /** @deprecated ignored: Trans always decodes HTML entities */
       shouldUnescape?: boolean;
       components?: readonly unknown[] | { readonly [tagName: string]: unknown }; // Use `unknown` (or `any`) to be permissive without importing React.
     };
@@ -253,18 +247,12 @@ declare module 'i18next' {
      */
     keyPrefix?: string | (($: any) => any);
     /**
-     * Unescape function
+     * Unescape function, used by Trans to decode the HTML entities in its output
      * by default it unescapes some basic html entities
      */
     unescape?(str: string): string;
   }
 }
-
-type ObjectOrNever = TypeOptions['allowObjectInHTMLChildren'] extends true
-  ? Record<string, unknown>
-  : never;
-
-type ReactI18NextChildren = React.ReactNode | ObjectOrNever;
 
 declare module 'react' {
   namespace JSX {
@@ -272,30 +260,24 @@ declare module 'react' {
       i18nIsDynamicList?: boolean;
     }
   }
-
-  interface HTMLAttributes<T> {
-    // Without allowObjectInHTMLChildren this is React's own children type, so it follows @types/react (#1928).
-    // The union is inspired by the typings for React.ReactNode. We do this to fix "This JSX tag's 'children' prop
-    // expects a single child of type 'ReactI18NextChildren', but multiple children were provided":
-    // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/5a1e9f91ed0143adede394adb3f540e650455f71/types/react/index.d.ts#L268
-    children?: TypeOptions['allowObjectInHTMLChildren'] extends true
-      ? ReactI18NextChildren | Iterable<ReactI18NextChildren>
-      : DOMAttributes<T>['children'];
-  }
 }
 
 type _DefaultNamespace = TypeOptions['defaultNS'];
 
-export function useSSR(initialI18nStore: Resource, initialLanguage: string): void;
+export function useSSR(
+  initialI18nStore: Resource,
+  initialLanguage: string,
+  props?: { i18n?: i18n },
+): void;
 
-// If the version is earlier than i18next v25.4.0, enableSelector does not exist in TypeOptions, so a conditional type is used to maintain type compatibility.
-type _EnableSelector = TypeOptions extends { enableSelector: infer U } ? U : false;
+type _EnableSelector = TypeOptions['enableSelector'];
 
 export type UseTranslationOptions<KPrefix> = {
   i18n?: i18n;
   useSuspense?: boolean;
   keyPrefix?: KPrefix;
   bindI18n?: string | false;
+  bindI18nStore?: string | false;
   nsMode?: 'fallback' | 'default';
   lng?: string;
   // other of these options might also work: https://github.com/i18next/i18next/blob/master/index.d.ts#L127
@@ -407,7 +389,8 @@ export interface I18nextProviderProps {
 }
 
 export const I18nextProvider: React.FunctionComponent<I18nextProviderProps>;
-export const I18nContext: React.Context<{ i18n: i18n }>;
+// undefined outside an I18nextProvider
+export const I18nContext: React.Context<{ i18n: i18n; defaultNS?: string | string[] } | undefined>;
 
 export interface TranslationProps<
   Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,

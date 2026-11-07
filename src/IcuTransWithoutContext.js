@@ -119,8 +119,8 @@ export function IcuTransWithoutContext({
     : i18n.options?.interpolation?.escapeValue === false;
 
   // Get the translation, falling back to defaultTranslation.
-  // Like `Trans`, use the default string as the key when none is given (icu.macro emits
-  // key-less nodes for `<Trans>Welcome, {name}!</Trans>`): t(undefined) would return ''.
+  // Like `Trans`, use the default string as the key when none is given: t(undefined) would
+  // return ''.
   const translation = t(i18nKey || defaultTranslation, {
     defaultValue: defaultTranslation,
     ...(escapeValues && formatPlugin ? escapeStringValues(mergedValues) : mergedValues),

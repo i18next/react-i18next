@@ -28,7 +28,7 @@ describe('IcuTransWithoutContext', () => {
       expect(container.textContent).toBe('Hello World');
     });
 
-    it('should use defaultTranslation as key when no i18nKey is given (icu.macro key-less nodes)', () => {
+    it('should use defaultTranslation as key when no i18nKey is given', () => {
       const { container } = render(
         <IcuTransWithoutContext
           defaultTranslation="Welcome <0>back</0>!"

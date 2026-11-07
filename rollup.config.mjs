@@ -15,9 +15,10 @@ const babelOptions = {
     [
       '@babel/preset-env',
       {
-        targets: {
-          browsers: ['defaults'],
-        },
+        // ES2020: the same browser versions as i18next's build (keep in sync with .babelrc)
+        targets: 'chrome 80, edge 80, firefox 80, safari 14, ios 14, opera 67, samsung 13',
+        // keep the ES2020 syntax, only work around engine bugs
+        bugfixes: true,
       },
     ],
     '@babel/react',
@@ -27,7 +28,6 @@ const babelOptions = {
 };
 
 const file = {
-  amd: `dist/amd/react-i18next${compress ? '.min' : ''}.js`,
   umd: `dist/umd/react-i18next${compress ? '.min' : ''}.js`,
   iife: `dist/iife/react-i18next${compress ? '.min' : ''}.js`,
 }[format];
@@ -42,7 +42,7 @@ export default {
     nodeResolve({ jsnext: true, main: true }),
     commonjs({}),
   ].concat(compress ? terser() : []),
-  external: ['react', 'react-dom'],
+  external: ['react', 'react-dom', 'i18next'],
   // moduleId: 'react-i18next',
   output: {
     name: 'ReactI18next',
@@ -51,6 +51,7 @@ export default {
     globals: {
       react: 'React',
       'react-dom': 'ReactDOM',
+      i18next: 'i18next',
     },
   },
 };

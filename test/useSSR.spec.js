@@ -1,5 +1,6 @@
-import { describe, it, vitest, beforeAll, afterAll, expect } from 'vitest';
+import { describe, it, vitest, beforeEach, afterAll, expect } from 'vitest';
 import { renderHook } from '@testing-library/react';
+import { createInstance } from 'i18next';
 import i18n from './i18n';
 import { setI18n } from '../src/context';
 import { useSSR } from '../src/useSSR';
@@ -7,41 +8,49 @@ import { useSSR } from '../src/useSSR';
 vitest.unmock('../src/useSSR');
 
 describe('useSSR', () => {
-  const mockI18n = {
-    language: 'en',
-    languages: ['en'],
-    options: {
-      ns: [],
-      defaultNS: 'defaultNS',
-      nsMode: 'fallback',
-    },
-    services: {
-      resourceStore: {
-        data: {},
-      },
-      backendConnector: {},
-    },
-    isInitialized: true,
-    changeLanguage: (lng) => {
-      mockI18n.language = lng;
-    },
-    getFixedT: () => (message) => message,
-    hasResourceBundle: (lng, ns) => ns === 'alreadyLoadedNS',
-    loadNamespaces: () => {},
-  };
+  let instance;
 
-  beforeAll(() => {
-    setI18n(mockI18n);
+  beforeEach(async () => {
+    instance = createInstance();
+    await instance.init({ lng: 'en', ns: ['common'], resources: {} });
+    setI18n(instance);
   });
 
   afterAll(() => {
     setI18n(i18n);
   });
 
+  const initialI18nStore = { de: { other: { hello: 'Hallo' } } };
+
   it('should set values', () => {
-    renderHook(() => useSSR({ foo: 'bar' }, 'de'));
-    expect(mockI18n.language).toBe('de');
-    expect(mockI18n.services.resourceStore.data).toEqual({ foo: 'bar' });
+    renderHook(() => useSSR(initialI18nStore, 'de'));
+    expect(instance.language).toBe('de');
+    expect(instance.services.resourceStore.data).toEqual(initialI18nStore);
+    expect(instance.t('hello', { ns: 'other' })).toBe('Hallo');
+    // a language change loads the hydrated namespaces too
+    expect(instance.options.ns).toEqual(['common', 'other']);
+  });
+
+  it('should only take the store and the language once', () => {
+    renderHook(() => useSSR(initialI18nStore, 'de'));
+    renderHook(() => useSSR({ fr: { other: { hello: 'Bonjour' } } }, 'fr'));
+    expect(instance.language).toBe('de');
+    expect(instance.services.resourceStore.data).toEqual(initialI18nStore);
+  });
+
+  it('should use the instance passed in props', () => {
+    const other = createInstance();
+    other.init({ lng: 'en', resources: {} });
+    renderHook(() => useSSR(initialI18nStore, 'de', { i18n: other }));
+    expect(other.language).toBe('de');
+    expect(instance.language).toBe('en');
+  });
+
+  it('should not touch a cloned instance', () => {
+    const clone = instance.cloneInstance();
+    renderHook(() => useSSR(initialI18nStore, 'de', { i18n: clone }));
+    expect(clone.language).toBe('en');
+    expect(clone.services.resourceStore.data).toEqual({});
   });
 
   it('should not crash and warn when i18n is not available', () => {
@@ -55,7 +64,6 @@ describe('useSSR', () => {
       expect.objectContaining({ code: 'NO_I18NEXT_INSTANCE' }),
     );
     warnSpy.mockRestore();
-    setI18n(mockI18n);
   });
 
   it('should not crash and warn when i18n exists but is not initialized', () => {
@@ -73,6 +81,5 @@ describe('useSSR', () => {
       expect.objectContaining({ code: 'I18N_NOT_INITIALIZED' }),
     );
     warnSpy.mockRestore();
-    setI18n(mockI18n);
   });
 });

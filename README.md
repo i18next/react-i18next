@@ -133,10 +133,15 @@ Some basics of i18next and some cool possibilities on how to optimize your local
 
 ### Requirements
 
+- react >= **18.0.0**
+- react-dom >= **18.0.0**
+- react-native >= **0.69.0**
+- i18next >= **27.0.0**
+
+#### v17
+
 - react >= **16.8.0**
-- react-dom >= **16.8.0**
-- react-native >= **0.59.0**
-- i18next >= **10.0.0** (typescript users: >=17.0.9)
+- i18next >= **26.2.0** (with i18next 27: react-i18next >= **17.1.13**)
 
 #### v9
 

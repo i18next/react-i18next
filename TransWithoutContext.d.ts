@@ -1,6 +1,7 @@
 import type {
   i18n,
   ReactOptions,
+  AppendKeyPrefix,
   ApplyTarget,
   ConstrainTarget,
   GetSource,
@@ -18,10 +19,6 @@ import * as React from 'react';
 
 type _DefaultNamespace = TypeOptions['defaultNS'];
 type _EnableSelector = TypeOptions['enableSelector'];
-type _KeySeparator = TypeOptions['keySeparator'];
-type _AppendKeyPrefix<Key, KPrefix> = KPrefix extends string
-  ? `${KPrefix}${_KeySeparator}${Key & string}`
-  : Key;
 
 type TransChild = React.ReactNode | Record<string, unknown>;
 type $NoInfer<T> = [T][T extends T ? 0 : never];
@@ -48,7 +45,8 @@ export type TransProps<
   tOptions?: TOpt;
   // keep the return type inside this property: as a type parameter of `Trans`, it was also
   // computed for every key of the namespace, which is slow with large resources
-  values?: InterpolationMap<TFunctionReturn<Ns, _AppendKeyPrefix<Key, KPrefix>, TOpt>>;
+  values?: InterpolationMap<TFunctionReturn<Ns, AppendKeyPrefix<Key, KPrefix>, TOpt>>;
+  /** @deprecated ignored: Trans always decodes HTML entities */
   shouldUnescape?: boolean;
   t?: TFunction<Ns, KPrefix>;
 };
@@ -85,6 +83,7 @@ export interface TransSelectorProps<
   parent?: string | React.ComponentType<any> | null; // used in React.createElement if not null
   tOptions?: TOpt;
   values?: Key extends (...args: any[]) => infer R ? InterpolationMap<R> : {};
+  /** @deprecated ignored: Trans always decodes HTML entities */
   shouldUnescape?: boolean;
   t?: TFunction<Ns, KPrefix>;
 }
@@ -124,7 +123,10 @@ export type ErrorCode =
   | 'TRANS_INVALID_VAR'
   | 'TRANS_INVALID_COMPONENTS'
   | 'USE_T_BEFORE_READY'
-  | 'SUSPENDED_WHILE_LOADING';
+  | 'SUSPENDED_WHILE_LOADING'
+  | 'I18N_NOT_INITIALIZED'
+  | 'ICU_TRANS_RENDER_ERROR'
+  | 'GLOBAL_INSTANCE_ON_SERVER';
 
 export type ErrorMeta = {
   code: ErrorCode;

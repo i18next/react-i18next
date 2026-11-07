@@ -1809,7 +1809,7 @@ describe('trans with markup in values (escapeValue false)', () => {
     `);
   });
 
-  it('should keep the value as it is with escapeValue true in tOptions', () => {
+  it('should render the value as text with escapeValue true in tOptions', () => {
     const { container } = render(
       <Trans
         i18n={i18nInst}
@@ -1818,8 +1818,8 @@ describe('trans with markup in values (escapeValue false)', () => {
         tOptions={{ interpolation: { escapeValue: true } }}
       />,
     );
-    // unchanged: without shouldUnescape the escaped value stays visible
-    expect(container).toHaveTextContent(/^Welcome Tom &amp; Jerry\.$/);
+    // the escaped value is decoded after parsing, whatever escapeValue is
+    expect(container).toHaveTextContent(/^Welcome Tom & Jerry\.$/);
   });
 
   it('should render basic html in a value as text', () => {
@@ -1943,5 +1943,137 @@ describe('trans with markup in values and an i18nFormat plugin', () => {
       />,
     );
     expect(container).toHaveTextContent(/^Tom & <Jerry> paid 5\.00\.$/);
+  });
+});
+
+describe('trans decodes entities whatever escapeValue is', () => {
+  const createInst = (escapeValue) => {
+    const inst = i18n.createInstance();
+    inst.init({
+      lng: 'en',
+      resources: {
+        en: {
+          translation: {
+            date: 'Date: {{date}}',
+            names: '<0>{{a}}</0> and {{b}}',
+            written: 'Fish &amp; chips &lt;3',
+            attr: 'See <Item title="{{name}}" />',
+          },
+        },
+      },
+      interpolation: { escapeValue },
+    });
+    return inst;
+  };
+
+  function Item({ title }) {
+    return <span title={title}>{title}</span>;
+  }
+
+  const deprecationWarnings = (spy) =>
+    spy.mock.calls.filter(([args]) => args[1]?.code === 'DEPRECATED_OPTION');
+
+  afterEach(() => {
+    cleanup();
+    vi.restoreAllMocks();
+  });
+
+  it.each([[true], [false]])('should render the same text with escapeValue %s', (escapeValue) => {
+    const inst = createInst(escapeValue);
+    const { container } = render(
+      <>
+        <Trans i18n={inst} i18nKey="date" values={{ date: '17/12/2025' }} />
+        <Trans
+          i18n={inst}
+          i18nKey="names"
+          values={{ a: 'Tom & Jerry', b: 'a < b' }}
+          components={[<strong />]}
+        />
+        <Trans i18n={inst} i18nKey="written" />
+        <Trans
+          i18n={inst}
+          i18nKey="attr"
+          values={{ name: `O'Brien "& co"` }}
+          components={{ Item: <Item /> }}
+        />
+      </>,
+    );
+    expect(container).toHaveTextContent(
+      `Date: 17/12/2025Tom & Jerry and a < bFish & chips <3See O'Brien "& co"`,
+    );
+    expect(container.querySelector('strong')).toHaveTextContent(/^Tom & Jerry$/);
+    expect(container.querySelector('span')).toHaveAttribute('title', `O'Brien "& co"`);
+  });
+
+  it('should decode attribute values with react.unescape, like text', () => {
+    const inst = i18n.createInstance();
+    inst.init({
+      lng: 'en',
+      resources: {
+        en: { translation: { shy: 'Vertrauens&shy;wert <Item title="Ver&shy;trauen" />' } },
+      },
+      react: { unescape: (text) => text.replace(/&shy;/g, '\u00AD') },
+    });
+    const { container } = render(
+      <Trans i18n={inst} i18nKey="shy" components={{ Item: <Item /> }} />,
+    );
+    expect(container).toHaveTextContent('Vertrauens\u00ADwert Ver\u00ADtrauen');
+    expect(container.querySelector('span')).toHaveAttribute('title', 'Ver\u00ADtrauen');
+  });
+
+  it('should ignore shouldUnescape and warn about it', () => {
+    const inst = createInst(true);
+    const warnSpy = vi.spyOn(inst.services.logger, 'forward');
+    const { container } = render(
+      <>
+        <Trans i18n={inst} i18nKey="written" shouldUnescape={false} />
+        <Trans i18n={inst} i18nKey="written" shouldUnescape />
+      </>,
+    );
+    expect(container).toHaveTextContent('Fish & chips <3Fish & chips <3');
+    // once per instance
+    expect(deprecationWarnings(warnSpy)).toHaveLength(1);
+  });
+
+  it('should warn about shouldUnescape in transDefaultProps', () => {
+    const inst = i18n.createInstance();
+    inst.init({
+      lng: 'en',
+      resources: { en: { translation: { written: 'Fish &amp; chips' } } },
+      react: { transDefaultProps: { shouldUnescape: true } },
+    });
+    const warnSpy = vi.spyOn(inst.services.logger, 'forward');
+    const { container } = render(<Trans i18n={inst} i18nKey="written" />);
+    expect(container).toHaveTextContent(/^Fish & chips$/);
+    expect(deprecationWarnings(warnSpy)).toHaveLength(1);
+  });
+});
+
+describe('trans keeps a component given for a self-closing tag mounted', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should not remount it on re-render', () => {
+    let mounts = 0;
+    function Counter({ children }) {
+      useEffect(() => {
+        mounts += 1;
+      }, []);
+      return <b>{children}</b>;
+    }
+    function TestComponent({ n }) {
+      return (
+        <Trans
+          i18nKey="transTestWithSelfClosing"
+          components={{ component: <Counter>count {String(n)}</Counter> }}
+        />
+      );
+    }
+    const { container, rerender } = render(<TestComponent n={1} />);
+    rerender(<TestComponent n={2} />);
+    rerender(<TestComponent n={3} />);
+    expect(container.querySelector('b')).toHaveTextContent('count 3');
+    expect(mounts).toBe(1);
   });
 });

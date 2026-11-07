@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { nodesToString, Trans as TransWithoutContext } from './TransWithoutContext.js';
 import { getI18n, I18nContext } from './context.js';
+import { useRerenderOnEvents } from './useTranslation.js';
 
 export { nodesToString };
 
@@ -22,6 +23,8 @@ export function Trans({
 }) {
   const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = useContext(I18nContext) || {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
+  // follow language changes on its own, not only when a parent re-renders
+  useRerenderOnEvents(i18n);
 
   const t = tFromProps || i18n?.t.bind(i18n);
 

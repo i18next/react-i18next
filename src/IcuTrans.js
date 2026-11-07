@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { IcuTransWithoutContext } from './IcuTransWithoutContext.js';
 import { getI18n, I18nContext } from './context.js';
+import { useRerenderOnEvents } from './useTranslation.js';
 
 /**
  * IcuTrans component for rendering ICU MessageFormat translations with React components
@@ -17,6 +18,7 @@ import { getI18n, I18nContext } from './context.js';
  * - ICU MessageFormat compatible
  * - Type-safe component declarations
  * - Automatic HTML entity decoding
+ * - Re-renders on the instance's bindI18n events (default: languageChanged)
  *
  * @param {Object} props - Component props
  * @param {string} props.i18nKey - The i18n key to look up the translation
@@ -86,6 +88,8 @@ export function IcuTrans({
 }) {
   const { i18n: i18nFromContext, defaultNS: defaultNSFromContext } = useContext(I18nContext) || {};
   const i18n = i18nFromProps || i18nFromContext || getI18n();
+  // follow language changes on its own, not only when a parent re-renders
+  useRerenderOnEvents(i18n);
 
   const t = tFromProps || i18n?.t.bind(i18n);
 

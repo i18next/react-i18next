@@ -20,32 +20,17 @@ export const useSSR = (initialI18nStore, initialLanguage, props = {}) => {
   // -> do not set initial stuff on server side
   if (i18n.options?.isClone) return;
 
-  // nextjs / SSR: getting data from next.js or other ssr stack
-  if (initialI18nStore && !i18n.initializedStoreOnce) {
-    if (!i18n.services?.resourceStore) {
-      warnOnce(
-        i18n,
-        'I18N_NOT_INITIALIZED',
-        'useSSR: i18n instance was found but not initialized (services.resourceStore is missing). Make sure you call i18next.init() before using useSSR — e.g. at module level, not only in getStaticProps/getServerSideProps.',
-      );
-      return;
-    }
-    i18n.services.resourceStore.data = initialI18nStore;
-
-    // add namespaces to the config - so a languageChange call loads all namespaces needed
-    i18n.options.ns = Object.values(initialI18nStore).reduce((mem, lngResources) => {
-      Object.keys(lngResources).forEach((ns) => {
-        if (mem.indexOf(ns) < 0) mem.push(ns);
-      });
-      return mem;
-    }, i18n.options.ns);
-
-    i18n.initializedStoreOnce = true;
-    i18n.isInitialized = true;
+  if (initialI18nStore && !i18n.initializedStoreOnce && !i18n.services?.resourceStore) {
+    warnOnce(
+      i18n,
+      'I18N_NOT_INITIALIZED',
+      'useSSR: i18n instance was found but not initialized (services.resourceStore is missing). Make sure you call i18next.init() before using useSSR, e.g. at module level, not only in getStaticProps/getServerSideProps.',
+    );
+    return;
   }
 
-  if (initialLanguage && !i18n.initializedLanguageOnce) {
-    i18n.changeLanguage(initialLanguage);
-    i18n.initializedLanguageOnce = true;
-  }
+  // nextjs / SSR: getting data from next.js or other ssr stack; only the first call per instance
+  // takes the store and the language (the namespaces are added to the options, so a language
+  // change loads all of them)
+  i18n.hydrate(initialI18nStore, initialLanguage);
 };

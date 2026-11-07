@@ -491,15 +491,31 @@ describe('IcuTrans', () => {
   });
 
   describe('edge cases', () => {
-    it('should handle empty translation', () => {
-      const { container } = render(
-        <I18nextProvider i18n={i18n}>
-          <IcuTrans i18nKey="test.empty.trans" defaultTranslation="" content={[]} />
-        </I18nextProvider>,
-      );
+    // returnEmptyString is false by default since i18next 27: an empty string in the resources is
+    // not a translation, so the default is used, and an explicit '' default is honored
+    it.each([
+      [true, '', ''],
+      [false, '', ''],
+      [true, 'Fallback', ''],
+      [false, 'Fallback', 'Fallback'],
+    ])(
+      'should handle an empty translation with returnEmptyString %s and the default %j',
+      async (returnEmptyString, defaultTranslation, text) => {
+        const inst = i18n.createInstance();
+        await inst.init({
+          lng: 'en',
+          returnEmptyString,
+          resources: { en: { translation: { empty: '' } } },
+        });
+        const { container } = render(
+          <I18nextProvider i18n={inst}>
+            <IcuTrans i18nKey="empty" defaultTranslation={defaultTranslation} content={[]} />
+          </I18nextProvider>,
+        );
 
-      expect(container.textContent).toBe('');
-    });
+        expect(container.textContent).toBe(text);
+      },
+    );
 
     it('should handle translation with only tags', () => {
       const { container } = render(

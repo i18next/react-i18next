@@ -15,12 +15,3 @@ export { setI18n, getI18n } from './i18nInstance.js';
 export { nodesToString } from './Trans.js';
 
 export { I18nContext, composeInitialProps, getInitialProps } from './context.js';
-
-// dummy functions for icu.macro support
-
-export const date = () => '';
-export const time = () => '';
-export const number = () => '';
-export const select = () => '';
-export const plural = () => '';
-export const selectOrdinal = () => '';

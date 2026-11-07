@@ -11,36 +11,44 @@ export const warn = (i18n, code, msg, rest) => {
     console.warn(...args);
   }
 };
-const alreadyWarned = {};
+// deduped per logger, where the warning goes: each i18next instance has its own logger, and a
+// clone shares its parent's, so a second instance (micro-frontends, tests) gets its own warnings
+// and a clone per request does not repeat them; an instance without a logger yet counts itself,
+// no instance at all is deduped per message
+const warnedFor = new WeakMap();
+const warnedWithoutInstance = new Set();
 /** @type {typeof warn} */
 export const warnOnce = (i18n, code, msg, rest) => {
-  if (isString(msg) && alreadyWarned[msg]) return;
-  if (isString(msg)) alreadyWarned[msg] = new Date();
+  if (isString(msg)) {
+    let warned = warnedWithoutInstance;
+    const owner = i18n?.services?.logger || i18n;
+    if (isObject(owner)) {
+      warned = warnedFor.get(owner);
+      if (!warned) warnedFor.set(owner, (warned = new Set()));
+    }
+    if (warned.has(msg)) return;
+    warned.add(msg);
+  }
   warn(i18n, code, msg, rest);
 };
 
-// not needed right now
-//
-// export const deprecated = (i18n, ...args) => {
-//   if (process && process.env && (!process.env.NODE_ENV || process.env.NODE_ENV === 'development')) {
-//     if (isString(args[0])) args[0] = `deprecation warning -> ${args[0]}`;
-//     warnOnce(i18n, ...args);
-//   }
-// }
+export const inDevelopment = () => {
+  try {
+    // statically replaced by bundlers (webpack/vite/metro define it, rollup replaces it
+    // in our UMD builds); evaluated at runtime in Node
+    return process.env.NODE_ENV !== 'production';
+  } catch (e) {
+    // no `process` in this runtime (raw ESM in the browser, some edge runtimes): stay quiet
+    return false;
+  }
+};
 
 const loadedClb = (i18n, cb) => () => {
   // delay ready if not yet initialized i18n instance
   if (i18n.isInitialized) {
     cb();
   } else {
-    const initialized = () => {
-      // due to emitter removing issue in i18next we need to delay remove
-      setTimeout(() => {
-        i18n.off('initialized', initialized);
-      }, 0);
-      cb();
-    };
-    i18n.on('initialized', initialized);
+    i18n.once('initialized', () => cb());
   }
 };
 
@@ -48,7 +56,6 @@ export const loadNamespaces = (i18n, ns, cb) => {
   i18n.loadNamespaces(ns, loadedClb(i18n, cb));
 };
 
-// should work with I18NEXT >= v22.5.0
 export const loadLanguages = (i18n, lng, ns, cb) => {
   if (isString(ns)) ns = [ns];
   if (i18n.options.preload && i18n.options.preload.indexOf(lng) > -1)

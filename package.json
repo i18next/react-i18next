@@ -6,6 +6,16 @@
   "types": "./index.d.mts",
   "jsnext:main": "dist/es/index.js",
   "module": "dist/es/index.js",
+  "files": [
+    "dist",
+    "src",
+    "*.d.ts",
+    "*.d.mts",
+    "augment-react.js",
+    "react-i18next.js",
+    "react-i18next.min.js",
+    "CHANGELOG.md"
+  ],
   "keywords": [
     "i18next",
     "internationalization",
@@ -23,6 +33,11 @@
       "types": {
         "require": "./index.d.ts",
         "import": "./index.d.mts"
+      },
+      "react-server": {
+        "import": "./dist/es/index.react-server.js",
+        "require": "./dist/commonjs/index.react-server.js",
+        "default": "./dist/es/index.react-server.js"
       },
       "module": "./dist/es/index.js",
       "import": "./dist/es/index.js",
@@ -59,15 +74,12 @@
       "require": "./dist/commonjs/initReactI18next.js",
       "default": "./dist/es/initReactI18next.js"
     },
-    "./icu.macro": {
+    "./augment-react": {
       "types": {
-        "require": "./icu.macro.d.ts",
-        "import": "./icu.macro.d.mts"
+        "require": "./augment-react.d.ts",
+        "import": "./augment-react.d.mts"
       },
-      "module": "./icu.macro.js",
-      "import": "./icu.macro.js",
-      "require": "./icu.macro.js",
-      "default": "./icu.macro.js"
+      "default": "./augment-react.js"
     }
   },
   "homepage": "https://github.com/i18next/react-i18next",
@@ -77,22 +89,14 @@
     "url": "https://github.com/i18next/react-i18next.git"
   },
   "dependencies": {
-    "@babel/runtime": "^7.29.7",
-    "html-parse-stringify": "^4.0.1",
-    "use-sync-external-store": "^1.6.0"
+    "html-parse-stringify": "^4.0.1"
   },
   "peerDependencies": {
-    "i18next": ">= 26.2.0",
-    "react": ">= 16.8.0",
+    "i18next": ">= 27.0.0",
+    "react": ">= 18.0.0",
     "typescript": "^5 || ^6 || ^7"
   },
   "peerDependenciesMeta": {
-    "react-dom": {
-      "optional": true
-    },
-    "react-native": {
-      "optional": true
-    },
     "typescript": {
       "optional": true
     }
@@ -100,7 +104,6 @@
   "devDependencies": {
     "@babel/cli": "^7.29.7",
     "@babel/core": "^7.29.7",
-    "@babel/plugin-transform-runtime": "^7.29.7",
     "@babel/preset-env": "^7.29.7",
     "@babel/preset-react": "^7.29.7",
     "@eslint-react/eslint-plugin": "^5.28.8",
@@ -114,8 +117,6 @@
     "@testing-library/react": "^16.3.3",
     "@types/react": "^19.3.0",
     "@vitest/coverage-v8": "^5.1.0",
-    "babel-plugin-macros": "^3.1.0",
-    "babel-plugin-tester": "^12.0.0",
     "cpy-cli": "^7.0.0",
     "cross-env": "^10.1.0",
     "eslint": "^10.14.0",
@@ -123,7 +124,7 @@
     "eslint-plugin-testing-library": "^7.16.2",
     "happy-dom": "^21.0.4",
     "husky": "^9.1.7",
-    "i18next": "^26.7.1",
+    "i18next": "^27.0.0",
     "lint-staged": "^17.6.0",
     "mkdirp": "^3.0.1",
     "neostandard": "^0.14.1",
@@ -146,9 +147,8 @@
     "build:es": "cross-env BABEL_ENV=ESNext babel src --out-dir dist/es",
     "build:cjs": "babel src --out-dir dist/commonjs",
     "build:umd": "rollup -c rollup.config.mjs --format umd && rollup -c rollup.config.mjs --format umd --uglify",
-    "build:amd": "rollup -c rollup.config.mjs --format amd && rollup -c rollup.config.mjs --format amd --uglify",
     "build:iife": "rollup -c rollup.config.mjs --format iife && rollup -c rollup.config.mjs --format iife --uglify",
-    "build": "npm run clean && npm run build:cjs && npm run build:es && npm run build:umd && npm run build:amd && npm run copy",
+    "build": "npm run clean && npm run build:cjs && npm run build:es && npm run build:umd && npm run copy",
     "fix_dist_package": "node -e 'console.log(`{\"type\":\"module\",\"version\":\"${process.env.npm_package_version}\",\"sideEffects\":false}`)' > dist/es/package.json",
     "preversion": "npm run build && git push",
     "postversion": "npm run fix_dist_package && git push && git push --tags",
@@ -162,6 +162,9 @@
   },
   "author": "Jan Mühlemann <jan.muehlemann@gmail.com> (https://github.com/jamuhl)",
   "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
   "lock": false,
   "sideEffects": false,
   "overrides": {

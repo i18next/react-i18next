@@ -1,4 +1,6 @@
 import 'i18next';
+// allowObjectInHTMLChildren needs the opt-in augmentation of React's HTMLAttributes
+import 'react-i18next/augment-react';
 
 declare module 'i18next' {
   interface CustomTypeOptions {

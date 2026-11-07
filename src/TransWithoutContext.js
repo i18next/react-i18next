@@ -4,6 +4,7 @@ import HTML from 'html-parse-stringify';
 import {
   escapeStringValues,
   getFormatPlugin,
+  inDevelopment,
   isObject,
   isString,
   warn,
@@ -11,7 +12,6 @@ import {
 } from './utils.js';
 import { getDefaults } from './defaults.js';
 import { getI18n } from './i18nInstance.js';
-import { unescape } from './unescape.js';
 
 const hasChildren = (node, checkLength) => {
   if (!node) return false;
@@ -151,8 +151,6 @@ const renderNodes = (
   i18n,
   i18nOptions,
   combinedTOpts,
-  shouldUnescapeOption,
-  escapedValues,
 ) => {
   if (targetString === '') return [];
 
@@ -163,11 +161,12 @@ const renderNodes = (
   const unescapeFn =
     typeof i18nOptions.unescape === 'function' ? i18nOptions.unescape : getDefaults().unescape;
 
-  // no need to replace tags in the targetstring
-  if (!children && !knownComponentsMap && !emptyChildrenButNeedsHandling && !shouldUnescapeOption)
-    return [escapedValues && isString(targetString) ? unescapeFn(targetString) : targetString];
+  // the output is text and elements, never HTML: entities (from escaped values, or written in
+  // the translation) are decoded after parsing, whatever interpolation.escapeValue is
 
-  const shouldUnescape = shouldUnescapeOption || escapedValues;
+  // no need to replace tags in the targetstring
+  if (!children && !knownComponentsMap && !emptyChildrenButNeedsHandling)
+    return [isString(targetString) ? unescapeFn(targetString) : targetString];
 
   // v2 -> interpolates upfront no need for "some <0>{{var}}</0>"" -> will be just "some {{var}}" in translation file
   const data = knownComponentsMap ?? {};
@@ -262,7 +261,7 @@ const renderNodes = (
       const rawContent =
         node.children?.[0]?.content &&
         i18n.services.interpolator.interpolate(node.children[0].content, opts, i18n.language);
-      const translationContent = shouldUnescape && rawContent ? unescapeFn(rawContent) : rawContent;
+      const translationContent = rawContent ? unescapeFn(rawContent) : rawContent;
 
       if (node.type === 'tag') {
         // regular array (components or children)
@@ -276,16 +275,14 @@ const renderNodes = (
         // neither
         if (!tmp) tmp = {};
 
-        // should fix #1893
+        // should fix #1893; attribute values are decoded like text, with react.unescape
         const props = { ...node.attrs };
-        if (shouldUnescape) {
-          Object.keys(props).forEach((p) => {
-            const val = props[p];
-            if (isString(val)) {
-              props[p] = unescape(val);
-            }
-          });
-        }
+        Object.keys(props).forEach((p) => {
+          const val = props[p];
+          if (isString(val)) {
+            props[p] = unescapeFn(val);
+          }
+        });
 
         const child = Object.keys(props).length !== 0 ? mergeProps({ props }, tmp) : tmp;
 
@@ -382,9 +379,9 @@ const renderNodes = (
         }
       } else if (node.type === 'text') {
         const wrapTextNodes = i18nOptions.transWrapTextNodes;
-        const content = shouldUnescape
-          ? unescapeFn(i18n.services.interpolator.interpolate(node.content, opts, i18n.language))
-          : i18n.services.interpolator.interpolate(node.content, opts, i18n.language);
+        const content = unescapeFn(
+          i18n.services.interpolator.interpolate(node.content, opts, i18n.language),
+        );
         if (wrapTextNodes) {
           mem.push(createElement(wrapTextNodes, { key: `${node.name}-${i}` }, content));
         } else {
@@ -406,6 +403,13 @@ const renderNodes = (
   return getChildren(result[0]);
 };
 
+// Renders a component given for a self-closing tag (`<0/>`) with its own children: rendering the
+// translation replaces the children of what it gets, not those of the wrapped element. One type
+// for all renders, so React keeps the subtree mounted.
+function Componentized({ i18nComponent }) {
+  return i18nComponent;
+}
+
 const fixComponentProps = (component, index, translation) => {
   const componentKey = component.key || index;
   const comp = cloneElement(component, { key: componentKey });
@@ -417,12 +421,7 @@ const fixComponentProps = (component, index, translation) => {
     return comp;
   }
 
-  function Componentized() {
-    // <>{comp}</>
-    return createElement(Fragment, null, comp);
-  }
-  // <Componentized />
-  return createElement(Componentized, { key: componentKey });
+  return createElement(Componentized, { key: componentKey, i18nComponent: comp });
 };
 
 const generateArrayComponents = (components, translation) =>
@@ -516,7 +515,17 @@ export function Trans({
     ? { ...transDefaultProps.tOptions, ...tOptions }
     : tOptions;
 
-  const mergedShouldUnescape = shouldUnescape ?? transDefaultProps?.shouldUnescape;
+  if (
+    (shouldUnescape !== undefined || transDefaultProps?.shouldUnescape !== undefined) &&
+    inDevelopment()
+  ) {
+    warnOnce(
+      i18n,
+      'DEPRECATED_OPTION',
+      'Trans: shouldUnescape is ignored, Trans always decodes HTML entities now. Remove it from your Trans props and transDefaultProps.',
+      { i18nKey },
+    );
+  }
 
   const mergedValues = transDefaultProps?.values
     ? { ...transDefaultProps.values, ...values }
@@ -559,8 +568,9 @@ export function Trans({
     values ||
     (count !== undefined && !i18n.options?.interpolation?.alwaysFormat) || // https://github.com/i18next/react-i18next/issues/1719 + https://github.com/i18next/react-i18next/issues/1801
     !children; // if !children gets problems in future, undo that fix: https://github.com/i18next/react-i18next/issues/1729 by removing !children from this condition
-  // values interpolated before parsing must not add markup: escape them for this t() call and
-  // decode the entities after parsing ({{- var}} stays the explicit unescaped path)
+  // values interpolated before parsing must not add markup: escape them for this t() call (core
+  // already does with escapeValue: true) and decode the entities after parsing ({{- var}} stays
+  // the explicit unescaped path)
   const formatPlugin = getFormatPlugin(i18n);
   const escapeValues =
     interpolateBeforeParsing &&
@@ -635,8 +645,6 @@ export function Trans({
     i18n,
     reactI18nextOptions,
     combinedTOpts,
-    mergedShouldUnescape,
-    escapeValues,
   );
 
   // allows user to pass `null` to `parent`

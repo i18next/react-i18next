@@ -8,7 +8,8 @@ describe('initReactI18next', () => {
     expect(initReactI18next.type).toBe('3rdParty');
   });
 
-  it('should initialize with i18next instance', () => {
+  it('should set the instance and keep its react options on it', () => {
+    const before = { ...getDefaults() };
     const mockI18n = {
       options: {
         react: {
@@ -20,12 +21,9 @@ describe('initReactI18next', () => {
 
     initReactI18next.init(mockI18n);
 
-    const defaults = getDefaults();
-    expect(defaults.useSuspense).toBe(false);
-    expect(defaults.bindI18n).toBe('languageChanged loaded');
-
-    const storedI18n = getI18n();
-    expect(storedI18n).toBe(mockI18n);
+    expect(getI18n()).toBe(mockI18n);
+    // read per instance where they are used, so a second instance does not inherit them
+    expect(getDefaults()).toEqual(before);
   });
 
   it('should handle setDefaults with options', () => {

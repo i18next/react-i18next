@@ -385,28 +385,31 @@ describe('useTranslation', () => {
     });
   });
 
-  describe('useTranslation __original safety', () => {
-    it('does not throw when the source i18n has a non-configurable __original property', async () => {
-      const mockI18n = createInstance();
-      await mockI18n.init({
+  describe('useTranslation i18n wrapper', () => {
+    it('forwards reads and writes to the instance', async () => {
+      const instance = createInstance();
+      await instance.init({
         lng: 'en',
-        resources: { en: { translation: { key1: 'test' } } },
+        fallbackLng: false,
+        resources: { en: { translation: { key1: 'test' } }, de: { translation: { key1: 'Test' } } },
         react: { useSuspense: false },
       });
+      const { result } = renderHook(() => useTranslation('translation', { i18n: instance }));
+      const wrapper = result.current.i18n;
 
-      // Simulate a non-configurable __original on the source instance
-      Object.defineProperty(mockI18n, '__original', {
-        value: 'existing',
-        writable: false,
-        enumerable: false,
-        configurable: false,
-      });
+      expect(wrapper).not.toBe(instance);
+      expect(wrapper.__original).toBe(instance);
+      expect(wrapper instanceof instance.constructor).toBe(true);
 
-      // Should not throw; wrapper creation should handle the existing non-configurable descriptor
-      const { result } = renderHook(() => useTranslation('translation', { i18n: mockI18n }));
+      // a wrapper held across the change sees the new state, not a copy of the old one
+      await act(() => wrapper.changeLanguage('de'));
+      expect(instance.language).toBe('de');
+      expect(wrapper.language).toBe('de');
+      expect(wrapper.resolvedLanguage).toBe('de');
+      expect(wrapper.t('key1')).toBe('Test');
 
-      // The returned wrapper should expose __original pointing to the original instance
-      expect(result.current.i18n.__original).toBe(mockI18n);
+      wrapper.someFlag = true;
+      expect(instance.someFlag).toBe(true);
     });
   });
 

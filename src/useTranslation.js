@@ -1,5 +1,12 @@
-import { useContext, useCallback, useMemo, useEffect, useRef, useState } from 'react';
-import { useSyncExternalStore } from 'use-sync-external-store/shim';
+import {
+  useContext,
+  useCallback,
+  useMemo,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import { keyFromSelector } from 'i18next';
 import { getI18n, getDefaults, ReportNamespaces, I18nContext } from './context.js';
 import {
@@ -9,6 +16,7 @@ import {
   hasLoadedNamespace,
   isString,
   isObject,
+  inDevelopment,
 } from './utils.js';
 
 const notReadyT = (k, optsOrDefaultValue) => {
@@ -25,8 +33,56 @@ const notReadyT = (k, optsOrDefaultValue) => {
   return k;
 };
 
+// the wrapper's identity has to change whenever any of the language fields does (React
+// Compiler, memo and effect dependencies compare it) - resolvedLanguage and languages change
+// on their own when the resources for the current language only arrive later (until then
+// i18next resolves to the fallback), and a wrapper keyed on `language` alone would keep
+// handing that out
+const languageKey = (inst) =>
+  `${inst.language}|${inst.resolvedLanguage}|${inst.languages?.join(',')}`;
+
+// a Proxy, not a copy: reads always see the instance's current state (a wrapper held across
+// `await i18n.changeLanguage()` reports the new language) and writes reach the instance
+const createI18nWrapper = (original) =>
+  new Proxy(original, {
+    get: (target, prop) => (prop === '__original' ? target : Reflect.get(target, prop)),
+  });
+
 const notReadySnapshot = { t: notReadyT, ready: false };
 const dummySubscribe = () => () => {};
+
+// the events that re-render: `bindI18n` on the instance, `bindI18nStore` on its store
+const subscribeToEvents = (i18n, { bindI18n, bindI18nStore }, callback) => {
+  if (bindI18n) i18n.on(bindI18n, callback);
+  if (bindI18nStore) i18n.store.on(bindI18nStore, callback);
+  return () => {
+    if (bindI18n) i18n.off(bindI18n, callback);
+    if (bindI18nStore) i18n.store.off(bindI18nStore, callback);
+  };
+};
+
+// Re-renders the calling component on the instance's bindI18n/bindI18nStore events, as
+// useTranslation does, without its loading and Suspense logic (used by Trans and IcuTrans)
+export const useRerenderOnEvents = (i18n) => {
+  const { bindI18n, bindI18nStore } = { ...getDefaults(), ...i18n?.options?.react };
+  const revisionRef = useRef(0);
+  const subscribe = useCallback(
+    (callback) =>
+      i18n
+        ? subscribeToEvents(i18n, { bindI18n, bindI18nStore }, () => {
+            revisionRef.current += 1;
+            callback();
+          })
+        : () => {},
+    [i18n, bindI18n, bindI18nStore],
+  );
+  // with the language state in the snapshot, React also re-renders for a change between this
+  // render and the subscription (a parent's layout effect calling changeLanguage), which no
+  // event reaches; bindI18n: '' keeps it off
+  const getSnapshot = () =>
+    bindI18n && i18n ? `${revisionRef.current}|${languageKey(i18n)}` : String(revisionRef.current);
+  useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+};
 
 export const useTranslation = (ns, props = {}) => {
   const { i18n: i18nFromProps } = props;
@@ -67,13 +123,7 @@ export const useTranslation = (ns, props = {}) => {
         callback();
       };
 
-      if (bindI18n) i18n.on(bindI18n, wrappedCallback);
-      if (bindI18nStore) i18n.store.on(bindI18nStore, wrappedCallback);
-      return () => {
-        if (bindI18n) bindI18n.split(' ').forEach((e) => i18n.off(e, wrappedCallback));
-        if (bindI18nStore)
-          bindI18nStore.split(' ').forEach((e) => i18n.store.off(e, wrappedCallback));
-      };
+      return subscribeToEvents(i18n, { bindI18n, bindI18nStore }, wrappedCallback);
     },
     // the event names, not `i18nOptions`: that object is rebuilt whenever `props` is a new
     // object (the `{}` default, inline options), and a new `subscribe` makes React
@@ -169,64 +219,16 @@ export const useTranslation = (ns, props = {}) => {
 
   // cache one wrapper per hook caller and only recreate it when the language state changes
   const wrapperRef = useRef(null);
-  const wrapperLangRef = useRef();
-
-  // the wrapper is a snapshot of the instance, so its identity has to change whenever any
-  // of the language fields does - resolvedLanguage and languages change on their own when
-  // the resources for the current language only arrive later (until then i18next resolves
-  // to the fallback), and a wrapper keyed on `language` alone would keep handing that out
-  const languageKey = (inst) =>
-    `${inst.language}|${inst.resolvedLanguage}|${inst.languages?.join(',')}`;
-
-  // helper to create a wrapper instance (avoid duplicating descriptor logic)
-  const createI18nWrapper = (original) => {
-    const descriptors = Object.getOwnPropertyDescriptors(original);
-    if (descriptors.__original) delete descriptors.__original;
-    const wrapper = Object.create(Object.getPrototypeOf(original), descriptors);
-
-    if (!Object.prototype.hasOwnProperty.call(wrapper, '__original')) {
-      try {
-        Object.defineProperty(wrapper, '__original', {
-          value: original,
-          writable: false,
-          enumerable: false,
-          configurable: false,
-        });
-      } catch (_) {
-        /* ignore */
-      }
-    }
-
-    return wrapper;
-  };
 
   const ret = useMemo(() => {
     const original = finalI18n;
-    const lang = original && languageKey(original);
+    const lang = languageKey(original);
 
-    let i18nWrapper = original;
-
-    if (original) {
-      // if we already created a wrapper for this original instance
-      if (wrapperRef.current && wrapperRef.current.__original === original) {
-        // language changed -> create fresh wrapper so identity changes
-        if (wrapperLangRef.current !== lang) {
-          i18nWrapper = createI18nWrapper(original);
-
-          wrapperRef.current = i18nWrapper;
-          wrapperLangRef.current = lang;
-        } else {
-          // reuse existing wrapper when language didn't change
-          i18nWrapper = wrapperRef.current;
-        }
-      } else {
-        // first time for this original instance -> create wrapper
-        i18nWrapper = createI18nWrapper(original);
-
-        wrapperRef.current = i18nWrapper;
-        wrapperLangRef.current = lang;
-      }
+    // a new wrapper for a new instance, or when the language state changed
+    if (wrapperRef.current?.original !== original || wrapperRef.current.lang !== lang) {
+      wrapperRef.current = { original, lang, wrapper: createI18nWrapper(original) };
     }
+    const i18nWrapper = wrapperRef.current.wrapper;
 
     const effectiveT =
       !ready && !useSuspense
@@ -248,15 +250,7 @@ export const useTranslation = (ns, props = {}) => {
   }, [t, finalI18n, ready, finalI18n.resolvedLanguage, finalI18n.language, finalI18n.languages]);
 
   if (i18n && useSuspense && !ready) {
-    let inDevelopment = false;
-    try {
-      // statically replaced by bundlers (webpack/vite/metro define it, rollup replaces it
-      // in our UMD builds); evaluated at runtime in Node
-      inDevelopment = process.env.NODE_ENV !== 'production';
-    } catch (e) {
-      // no `process` in this runtime (raw ESM in the browser, some edge runtimes): stay quiet
-    }
-    if (inDevelopment) {
+    if (inDevelopment()) {
       warnOnce(
         i18n,
         'SUSPENDED_WHILE_LOADING',
