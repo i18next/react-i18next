@@ -1,3 +1,8 @@
+## 18.0.1
+
+- fix(types): declare `@types/react` as an optional peer dependency. The type declarations import from `react`, and with pnpm's global virtual store (`virtualStoreType: global`) TypeScript resolved that to the untyped `react/index.js`, so every React type in them became `any`: wrong props compiled, callback parameters failed with TS7006. Under the default pnpm layout it only worked through pnpm's hidden hoisting. The range is `*`, so projects without TypeScript install nothing extra and an older `@types/react` does not make npm fail ([#1948](https://github.com/i18next/react-i18next/issues/1948))
+- requires i18next 27.0.1 or later (peer `>= 27.0.1`), which keeps at most 1000 formatters in each cached format
+
 ## 18.0.0
 
 Released together with i18next 27. The migration guide lists every change with what to do: https://react.i18next.com/latest/migrating-v17-to-v18
