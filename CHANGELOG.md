@@ -1,3 +1,7 @@
+## 18.0.2
+
+- fix: `useTranslation`, `Trans` and `IcuTrans` re-render for a `bindI18nStore` event that fires after they rendered but before they subscribed (a bundle added in a parent's layout effect, for example). They kept the old text, because only the events their own subscription received changed their snapshot ([#1949](https://github.com/i18next/react-i18next/issues/1949))
+
 ## 18.0.1
 
 - fix(types): declare `@types/react` as an optional peer dependency. The type declarations import from `react`, and with pnpm's global virtual store (`virtualStoreType: global`) TypeScript resolved that to the untyped `react/index.js`, so every React type in them became `any`: wrong props compiled, callback parameters failed with TS7006. Under the default pnpm layout it only worked through pnpm's hidden hoisting. The range is `*`, so projects without TypeScript install nothing extra and an older `@types/react` does not make npm fail ([#1948](https://github.com/i18next/react-i18next/issues/1948))
