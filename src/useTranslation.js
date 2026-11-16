@@ -61,26 +61,46 @@ const subscribeToEvents = (i18n, { bindI18n, bindI18nStore }, callback) => {
   };
 };
 
+// how often an emitter fired these events, counted once for all components, from the first
+// render that asks. A component subscribes only after it rendered, so an event in between (a
+// bundle added by a parent's layout effect) reaches none of its listeners; with the count in
+// the snapshot, React's check right after subscribing sees it. The counter is registered
+// during render, before the component's own listener, so it is up to date when that runs.
+const eventCounts = new WeakMap();
+const countEvents = (emitter, events) => {
+  if (!events) return 0;
+  let counts = eventCounts.get(emitter);
+  if (!counts) eventCounts.set(emitter, (counts = new Map()));
+  let sum = 0;
+  events.split(' ').forEach((event) => {
+    if (!counts.has(event)) {
+      counts.set(event, 0);
+      emitter.on(event, () => counts.set(event, counts.get(event) + 1));
+    }
+    sum += counts.get(event);
+  });
+  return sum;
+};
+const revision = (i18n, { bindI18n, bindI18nStore }) =>
+  countEvents(i18n, bindI18n) + countEvents(i18n.store, bindI18nStore);
+
 // Re-renders the calling component on the instance's bindI18n/bindI18nStore events, as
 // useTranslation does, without its loading and Suspense logic (used by Trans and IcuTrans)
 export const useRerenderOnEvents = (i18n) => {
   const { bindI18n, bindI18nStore } = { ...getDefaults(), ...i18n?.options?.react };
-  const revisionRef = useRef(0);
   const subscribe = useCallback(
     (callback) =>
-      i18n
-        ? subscribeToEvents(i18n, { bindI18n, bindI18nStore }, () => {
-            revisionRef.current += 1;
-            callback();
-          })
-        : () => {},
+      i18n ? subscribeToEvents(i18n, { bindI18n, bindI18nStore }, callback) : () => {},
     [i18n, bindI18n, bindI18nStore],
   );
   // with the language state in the snapshot, React also re-renders for a change between this
   // render and the subscription (a parent's layout effect calling changeLanguage), which no
   // event reaches; bindI18n: '' keeps it off
-  const getSnapshot = () =>
-    bindI18n && i18n ? `${revisionRef.current}|${languageKey(i18n)}` : String(revisionRef.current);
+  const getSnapshot = () => {
+    if (!i18n) return '';
+    const rev = revision(i18n, { bindI18n, bindI18nStore });
+    return bindI18n ? `${rev}|${languageKey(i18n)}` : String(rev);
+  };
   useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 };
 
@@ -113,18 +133,9 @@ export const useTranslation = (ns, props = {}) => {
 
   i18n?.reportNamespaces?.addUsedNamespaces?.(namespaces);
 
-  const revisionRef = useRef(0);
   const subscribe = useCallback(
-    (callback) => {
-      if (!i18n) return dummySubscribe;
-
-      const wrappedCallback = () => {
-        revisionRef.current += 1;
-        callback();
-      };
-
-      return subscribeToEvents(i18n, { bindI18n, bindI18nStore }, wrappedCallback);
-    },
+    (callback) =>
+      i18n ? subscribeToEvents(i18n, { bindI18n, bindI18nStore }, callback) : dummySubscribe,
     // the event names, not `i18nOptions`: that object is rebuilt whenever `props` is a new
     // object (the `{}` default, inline options), and a new `subscribe` makes React
     // unsubscribe and resubscribe on every render
@@ -140,7 +151,7 @@ export const useTranslation = (ns, props = {}) => {
       !!(i18n.isInitialized || i18n.initializedStoreOnce) &&
       namespaces.every((n) => hasLoadedNamespace(n, i18n, i18nOptions));
     const currentLng = props.lng || i18n.language;
-    const currentRevision = revisionRef.current;
+    const currentRevision = revision(i18n, i18nOptions);
     // an inline selector is a new function on every render, so compare the key it resolves
     // to (with the options getFixedT resolves it with), not the function itself
     const keyPrefixKey =

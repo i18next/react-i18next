@@ -170,8 +170,9 @@ describe('Trans and IcuTrans follow language changes on their own', () => {
   it('should unsubscribe on unmount', async () => {
     const inst = await createInst();
     const { unmount } = render(<Trans i18n={inst} i18nKey="hello" components={[<b />]} />);
-    expect(inst.observers.languageChanged?.size).toBe(1);
+    // its own listener, next to the instance's event counter, which stays
+    expect(inst.observers.languageChanged?.size).toBe(2);
     unmount();
-    expect(inst.observers.languageChanged?.size ?? 0).toBe(0);
+    expect(inst.observers.languageChanged?.size).toBe(1);
   });
 });
