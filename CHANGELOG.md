@@ -1,3 +1,7 @@
+## 18.0.3
+
+- fix: `Trans` with children and `values` (or `count`) no longer fills a placeholder that came in with a value. The text `t()` returned was interpolated a second time after parsing, with all variables, so `values={{ name: '{{otherVar}}', otherVar: 'x' }}` rendered `x` instead of `{{otherVar}}`, and a value containing its own placeholder was filled twice. `interpolation.skipOnVariables` now holds as in `t()`. Text that `t()` did not interpolate (cimode, a `t` that returns the key, a format plugin, `skipInterpolation`) is still filled after parsing ([#1950](https://github.com/i18next/react-i18next/issues/1950))
+
 ## 18.0.2
 
 - fix: `useTranslation`, `Trans` and `IcuTrans` re-render for a `bindI18nStore` event that fires after they rendered but before they subscribed (a bundle added in a parent's layout effect, for example). They kept the old text, because only the events their own subscription received changed their snapshot ([#1949](https://github.com/i18next/react-i18next/issues/1949))
