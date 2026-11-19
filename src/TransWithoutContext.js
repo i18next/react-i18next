@@ -151,6 +151,9 @@ const renderNodes = (
   i18n,
   i18nOptions,
   combinedTOpts,
+  // whether t() already interpolated the values/tOptions (the dummy-prefix path is
+  // the exception: there t() leaves the variables as they were)
+  alreadyInterpolated,
 ) => {
   if (targetString === '') return [];
 
@@ -193,7 +196,15 @@ const renderNodes = (
   // parse ast from string with additional wrapper tag
   // -> avoids issues in parser removing prepending text nodes
   const ast = HTML.parse(`<0>${targetString}</0>`, { allowedTags });
-  const opts = { ...data, ...combinedTOpts };
+  // t() already interpolated every variable passed via values/tOptions, so the
+  // post-parse pass only fills the placeholders of object children whose names the
+  // t() call did not know: a leftover {{name}} for a consumed name is part of a
+  // substituted value and must stay literal — interpolation.skipOnVariables must
+  // hold for the children form too, and the in-call protection of a single
+  // interpolate() run cannot span the two calls (#1950).
+  const opts = alreadyInterpolated
+    ? Object.fromEntries(Object.entries(data).filter(([key]) => !(key in combinedTOpts)))
+    : { ...data, ...combinedTOpts };
 
   const renderInner = (child, node, rootReactNode) => {
     const childs = getChildren(child);
@@ -645,6 +656,7 @@ export function Trans({
     i18n,
     reactI18nextOptions,
     combinedTOpts,
+    interpolateBeforeParsing,
   );
 
   // allows user to pass `null` to `parent`
