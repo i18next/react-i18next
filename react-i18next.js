@@ -567,7 +567,7 @@
     });
     return stringNode;
   };
-  const renderNodes = (children, knownComponentsMap, targetString, i18n, i18nOptions, combinedTOpts) => {
+  const renderNodes = (children, knownComponentsMap, targetString, i18n, i18nOptions, combinedTOpts, tInterpolated) => {
     if (targetString === '') return [];
     const keepArray = i18nOptions.transKeepBasicHtmlNodesFor || [];
     const emptyChildrenButNeedsHandling = targetString && new RegExp(keepArray.map(keep => `<${keep}`).join('|')).test(targetString);
@@ -587,7 +587,7 @@
     const ast = index.parse(`<0>${targetString}</0>`, {
       allowedTags
     });
-    const opts = {
+    const opts = tInterpolated ? Object.fromEntries(Object.entries(data).filter(([name]) => !(name in combinedTOpts))) : {
       ...data,
       ...combinedTOpts
     };
@@ -882,6 +882,7 @@
     };
     let translation = key ? t(key, combinedTOpts) : defaultValue;
     if (translation === key && defaultValue) translation = defaultValue;
+    const tInterpolated = interpolateBeforeParsing && translation !== defaultValue && !formatPlugin && !combinedTOpts.skipInterpolation;
     const generatedComponents = generateComponents(mergedComponents, translation, i18n, i18nKey);
     let indexedChildren = generatedComponents || children;
     let componentsMap = null;
@@ -892,7 +893,7 @@
       componentsMap = generatedComponents;
       indexedChildren = undefined;
     }
-    const content = renderNodes(indexedChildren, componentsMap, translation, i18n, reactI18nextOptions, combinedTOpts);
+    const content = renderNodes(indexedChildren, componentsMap, translation, i18n, reactI18nextOptions, combinedTOpts, tInterpolated);
     const useAsParent = parent ?? reactI18nextOptions.defaultTransParent;
     return useAsParent ? React.createElement(useAsParent, additionalProps, content) : content;
   }
@@ -976,6 +977,25 @@
       if (bindI18nStore) i18n.store.off(bindI18nStore, callback);
     };
   };
+  const eventCounts = new WeakMap();
+  const countEvents = (emitter, events) => {
+    if (!events) return 0;
+    let counts = eventCounts.get(emitter);
+    if (!counts) eventCounts.set(emitter, counts = new Map());
+    let sum = 0;
+    events.split(' ').forEach(event => {
+      if (!counts.has(event)) {
+        counts.set(event, 0);
+        emitter.on(event, () => counts.set(event, counts.get(event) + 1));
+      }
+      sum += counts.get(event);
+    });
+    return sum;
+  };
+  const revision = (i18n, {
+    bindI18n,
+    bindI18nStore
+  }) => countEvents(i18n, bindI18n) + countEvents(i18n.store, bindI18nStore);
   const useRerenderOnEvents = i18n => {
     const {
       bindI18n,
@@ -984,15 +1004,18 @@
       ...getDefaults(),
       ...i18n?.options?.react
     };
-    const revisionRef = React.useRef(0);
     const subscribe = React.useCallback(callback => i18n ? subscribeToEvents(i18n, {
       bindI18n,
       bindI18nStore
-    }, () => {
-      revisionRef.current += 1;
-      callback();
-    }) : () => {}, [i18n, bindI18n, bindI18nStore]);
-    const getSnapshot = () => bindI18n && i18n ? `${revisionRef.current}|${languageKey(i18n)}` : String(revisionRef.current);
+    }, callback) : () => {}, [i18n, bindI18n, bindI18nStore]);
+    const getSnapshot = () => {
+      if (!i18n) return '';
+      const rev = revision(i18n, {
+        bindI18n,
+        bindI18nStore
+      });
+      return bindI18n ? `${rev}|${languageKey(i18n)}` : String(rev);
+    };
     React.useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
   };
   const useTranslation = (ns, props = {}) => {
@@ -1024,18 +1047,10 @@
     const namespacesKey = JSON.stringify(unstableNamespaces);
     const namespaces = React.useMemo(() => unstableNamespaces, [namespacesKey]);
     i18n?.reportNamespaces?.addUsedNamespaces?.(namespaces);
-    const revisionRef = React.useRef(0);
-    const subscribe = React.useCallback(callback => {
-      if (!i18n) return dummySubscribe;
-      const wrappedCallback = () => {
-        revisionRef.current += 1;
-        callback();
-      };
-      return subscribeToEvents(i18n, {
-        bindI18n,
-        bindI18nStore
-      }, wrappedCallback);
-    }, [i18n, bindI18n, bindI18nStore]);
+    const subscribe = React.useCallback(callback => i18n ? subscribeToEvents(i18n, {
+      bindI18n,
+      bindI18nStore
+    }, callback) : dummySubscribe, [i18n, bindI18n, bindI18nStore]);
     const snapshotRef = React.useRef();
     const getSnapshot = React.useCallback(() => {
       if (!i18n) {
@@ -1043,7 +1058,7 @@
       }
       const calculatedReady = !!(i18n.isInitialized || i18n.initializedStoreOnce) && namespaces.every(n => hasLoadedNamespace(n, i18n, i18nOptions));
       const currentLng = props.lng || i18n.language;
-      const currentRevision = revisionRef.current;
+      const currentRevision = revision(i18n, i18nOptions);
       const keyPrefixKey = typeof keyPrefix === 'function' ? i18next.keyFromSelector(keyPrefix, {
         ...i18n.options,
         ns: namespaces
