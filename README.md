@@ -48,9 +48,9 @@ the steps it prints, in order, checking each one before the next.
 
 ### Documentation
 
-The documentation is published on [react.i18next.com](https://react.i18next.com) and PR changes can be supplied [here](https://github.com/i18next/react-i18next-gitbook).
+The documentation is published on [www.i18next.com/react](https://www.i18next.com/react) and PR changes can be supplied [here](https://github.com/i18next/www).
 
-The general i18next documentation is published on [www.i18next.com](https://www.i18next.com) and PR changes can be supplied [here](https://github.com/i18next/i18next-gitbook).
+The general i18next documentation is published on [www.i18next.com](https://www.i18next.com) and PR changes can be supplied [here](https://github.com/i18next/www).
 
 ### What will my code look like?
 
@@ -153,7 +153,7 @@ Some basics of i18next and some cool possibilities on how to optimize your local
 
 #### v9
 
-- react >= **0.14.0** (in case of < v16 or preact you will need to define parent in [Trans component](https://react.i18next.com/latest/trans-component#trans-props) or globally in [i18next.react options](https://react.i18next.com/latest/trans-component#i18next-options))
+- react >= **0.14.0** (in case of < v16 or preact you will need to define parent in [Trans component](https://www.i18next.com/react/latest/trans-component#trans-props) or globally in [i18next.react options](https://www.i18next.com/react/latest/trans-component#i18next-options))
 - i18next >= **2.0.0**
 
 ## Core Contributors

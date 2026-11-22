@@ -82,7 +82,7 @@
       "default": "./augment-react.js"
     }
   },
-  "homepage": "https://github.com/i18next/react-i18next",
+  "homepage": "https://www.i18next.com/react",
   "bugs": "https://github.com/i18next/react-i18next/issues",
   "repository": {
     "type": "git",
