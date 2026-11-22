@@ -31,7 +31,7 @@ i18n
   .use(LastUsed)
   // locize-editor
   // InContext Editor of locize
-  .use(locizePlugin) // will show the incontext editor only if passing ?incontext=true
+  .use(locizePlugin) // will show the incontext editor only if passing ?incontext=true (since locize 4.6.0 remembered for the browser tab, ?incontext=false switches it off)
   // detect user language
   // learn more: https://github.com/i18next/i18next-browser-languageDetector
   .use(LanguageDetector)
